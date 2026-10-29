@@ -57,6 +57,11 @@ prompts, ready for you to review and generate.
 The skill goes through the editor's API (`POST /api/scenes/import`), never by editing files, so the
 editor stays in sync and undo works.
 
+**Audio tags.** The template includes ElevenLabs' audio tags (`[whispers]`, `[sighs]`, `[excited]`, `[pause]`, …)
+and the rules Claude follows to place them when it writes narration from a story. Tags are performed only by the
+**Eleven v4**, **v4 Turbo** and **v3** voice models (Project tab → Voice model). Other models read them out loud,
+and the scene sidebar warns you when that would happen.
+
 ## Workflow
 
 1. **Write the script.** Click **Import script** and paste your narration. Each paragraph becomes a scene.
@@ -197,7 +202,7 @@ The library lives in the same file as a `library` array:
 
 | Method | Path | |
 | --- | --- | --- |
-| GET | `/api/projects` | `{ open, projects: [{ id, title, scenes, duration_sec, aspect_ratio, updated_at, open }] }` |
+| GET | `/api/projects` | `{ open, projects: [{ id, title, scenes, duration_sec, aspect_ratio, tts_model, updated_at, open }] }` |
 | POST | `/api/projects` | create a project: `{ "title", "open"? }` |
 | POST | `/api/projects/:id/open` | switch the editor to another project (409 while a job, upload or generation is running) |
 | GET | `/api/events` | server-sent events `{ type: "storyboard" \| "project", project, label, origin }` on every change |

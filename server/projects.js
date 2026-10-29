@@ -37,7 +37,7 @@ function uniqueId(title) {
 const storyboardOf = (id) => path.join(PROJECTS_DIR, id, 'storyboard.json');
 const exists = (id) => ID.test(id) && fs.existsSync(storyboardOf(id));
 
-/** Every project, most recently changed first: { id, title, scenes, duration_sec, aspect_ratio, updated_at, open }. */
+/** Every project, most recently changed first: { id, title, scenes, duration_sec, aspect_ratio, tts_model, updated_at, open }. */
 export async function listProjects() {
   const entries = await fsp.readdir(PROJECTS_DIR, { withFileTypes: true }).catch(() => []);
   const projects = [];
@@ -58,6 +58,7 @@ export async function listProjects() {
       scenes: scenes.length,
       duration_sec: Math.round(scenes.reduce((t, s) => t + (Number(s.duration_sec) || 0), 0) * 10) / 10,
       aspect_ratio: sb.settings?.aspect_ratio || DEFAULT_SETTINGS.aspect_ratio,
+      tts_model: sb.settings?.tts_model || DEFAULT_SETTINGS.tts_model,
       updated_at: mtime.toISOString(),
       open: e.name === PROJECT_ID,
     });
