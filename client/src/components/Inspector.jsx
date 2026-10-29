@@ -4,7 +4,7 @@ import {
   Wand2, X,
 } from 'lucide-react';
 import {
-  ACCEPT, AUDIO_TAG, AUDIO_TAG_MODELS, MAX_SHOTS, MOTIONS, cueTime, formatTime, motionLabel, newShot, newSfxLayer, sceneTimeline,
+  ACCEPT, AUDIO_TAG, AUDIO_TAG_MODELS, MAX_SHOTS, MOTIONS, SHAKES, cueTime, formatTime, motionLabel, newShot, newSfxLayer, sceneTimeline,
 } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
 import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
@@ -496,6 +496,26 @@ export default function Inspector({
         {layers.length === 0 && <p className="text-[11px] text-zinc-600">Layer more sounds (rain + thunder + footsteps) that play at the same time.</p>}
       </Section>
       )}
+
+      <Section icon={Wand2} color="text-zinc-400" title="Finishing" hint="On export">
+        <label className="label" htmlFor="title_text">On-screen title</label>
+        <input
+          id="title_text"
+          className="field"
+          maxLength={80}
+          value={scene.title_text || ''}
+          placeholder='e.g. DAY 12 or 47 GALLONS LEFT'
+          onChange={(e) => onChange({ title_text: e.target.value })}
+        />
+        <p className="mt-1 text-[11px] text-zinc-600">Shown big over the first 3 seconds of the scene.</p>
+        <label className="label mt-3" htmlFor="shake">Camera shake</label>
+        <select id="shake" className="field" value={scene.shake || ''} onChange={(e) => onChange({ shake: e.target.value || null })}>
+          {SHAKES.map(([id, label]) => (
+            <option key={id} value={id}>{label}</option>
+          ))}
+        </select>
+        <p className="mt-1 text-[11px] text-zinc-600">For tense moments (footsteps overhead, a door hit). Only in the exported video.</p>
+      </Section>
 
       <Section icon={NotebookPen} color="text-zinc-400" title="Notes" hint="Not used for generation">
         <AutoTextarea

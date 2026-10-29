@@ -158,9 +158,32 @@ export const MOTIONS = [
 ];
 export const motionLabel = (id) => MOTIONS.find(([m]) => m === id)?.[1] ?? id;
 
-// Keep in sync with server/ffmpeg.js.
-const KENBURNS_ZOOM = 0.12;
-const PAN_ZOOM = 0.15;
+/**
+ * Colour grades applied on export (keep in sync with LOOKS in server/finish.js), with a CSS filter
+ * that approximates each in the live preview.
+ */
+export const LOOKS = [
+  ['none', 'None', ''],
+  ['cold_bunker', 'Cold bunker: muted blue-green, warm lamp light', 'saturate(0.72) contrast(1.08) brightness(0.97) hue-rotate(-6deg)'],
+  ['teal_orange', 'Teal & orange: blockbuster', 'contrast(1.07) saturate(1.1) sepia(0.1) hue-rotate(-8deg)'],
+  ['bleach_bypass', 'Bleach bypass: gritty, low colour', 'contrast(1.22) saturate(0.5) brightness(0.97)'],
+  ['warm_film', 'Warm film: soft and nostalgic', 'sepia(0.15) saturate(0.95) contrast(1.04)'],
+  ['noir', 'Noir: black and white', 'grayscale(1) contrast(1.3)'],
+];
+export const lookFilter = (id) => LOOKS.find(([l]) => l === id)?.[2] || '';
+
+/** Camera shake on export, per scene (keep in sync with SHAKES in server/finish.js). */
+export const SHAKES = [
+  ['', 'None'],
+  ['light', 'Light (uneasy)'],
+  ['heavy', 'Heavy (impact, panic)'],
+];
+
+/** How far zooms and pans go for settings.motion_amount (percent). Keep in sync with moveZooms in server/ffmpeg.js. */
+export function moveZooms(amountPercent = 12) {
+  const zoom = Math.min(0.4, Math.max(0.01, (Number(amountPercent) || 12) / 100));
+  return { zoom, pan: Math.max(0.03, zoom * 1.25) };
+}
 
 /** The motion a scene's image gets: its own, else the project's, with Ken Burns resolved to a zoom direction. */
 export function sceneMotion(scene, settings, index) {
@@ -169,14 +192,18 @@ export function sceneMotion(scene, settings, index) {
   return motion;
 }
 
-/** CSS transform for `motion` at `progress` (0–1 through the scene), matching the exported video. */
-export function motionTransform(motion, progress) {
-  // Panning: zoomed in by PAN_ZOOM, sliding from one edge of the image to the other.
-  const edge = (PAN_ZOOM / 2) * 100;
-  const pan = (axis, from) => `translate${axis}(${from * edge * (1 - 2 * progress)}%) scale(${1 + PAN_ZOOM})`;
+/**
+ * CSS transform for `motion` at `progress` (0–1 through the scene), matching the exported video.
+ * `amountPercent` is the project's motion_amount.
+ */
+export function motionTransform(motion, progress, amountPercent) {
+  const { zoom, pan: panZoom } = moveZooms(amountPercent);
+  // Panning: zoomed in by panZoom, sliding from one edge of the image to the other.
+  const edge = (panZoom / 2) * 100;
+  const pan = (axis, from) => `translate${axis}(${from * edge * (1 - 2 * progress)}%) scale(${1 + panZoom})`;
   switch (motion) {
-    case 'zoom_in': return `scale(${1 + KENBURNS_ZOOM * progress})`;
-    case 'zoom_out': return `scale(${1 + KENBURNS_ZOOM * (1 - progress)})`;
+    case 'zoom_in': return `scale(${1 + zoom * progress})`;
+    case 'zoom_out': return `scale(${1 + zoom * (1 - progress)})`;
     case 'pan_right': return pan('X', 1);
     case 'pan_left': return pan('X', -1);
     case 'pan_down': return pan('Y', 1);

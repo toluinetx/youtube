@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Loader2, Music, Upload, X } from 'lucide-react';
 import { api } from '../api.js';
-import { ACCEPT, MOTIONS, formatTime } from '../util.js';
+import { ACCEPT, LOOKS, MOTIONS, formatTime } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
 import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
 
@@ -85,6 +85,62 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             ))}
           </select>
         </Field>
+        <Field label={`How far it moves: ${settings.motion_amount ?? 12}%${(settings.motion_amount ?? 12) <= 6 ? ' (slow cinematic push)' : ''}`}>
+          <input
+            type="range" min={2} max={30} step={1} value={settings.motion_amount ?? 12}
+            onChange={(e) => onChange({ motion_amount: Number(e.target.value) })}
+            className="w-full accent-amber-400"
+          />
+        </Field>
+      </Group>
+
+      <Group title="Finishing" subtitle="Applied on export">
+        <Field label="Colour grade">
+          <select className="field" value={settings.look || 'none'} onChange={(e) => onChange({ look: e.target.value })}>
+            {LOOKS.map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
+          </select>
+        </Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label={`Vignette: ${Math.round((settings.vignette || 0) * 100)}%`}>
+            <input
+              type="range" min={0} max={1} step={0.05} value={settings.vignette || 0}
+              onChange={(e) => onChange({ vignette: Number(e.target.value) })}
+              className="w-full accent-amber-400"
+            />
+          </Field>
+          <Field label={`Film grain: ${Math.round((settings.grain || 0) * 100)}%`}>
+            <input
+              type="range" min={0} max={1} step={0.05} value={settings.grain || 0}
+              onChange={(e) => onChange({ grain: Number(e.target.value) })}
+              className="w-full accent-amber-400"
+            />
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Captions">
+            <select className="field" value={settings.captions || 'off'} onChange={(e) => onChange({ captions: e.target.value })}>
+              <option value="off">Off</option>
+              <option value="words">Word by word</option>
+              <option value="lines">Subtitle lines</option>
+            </select>
+          </Field>
+          <Field label="Position">
+            <select
+              className="field"
+              value={settings.caption_position || 'bottom'}
+              disabled={(settings.captions || 'off') === 'off'}
+              onChange={(e) => onChange({ caption_position: e.target.value })}
+            >
+              <option value="bottom">Bottom</option>
+              <option value="center">Center</option>
+            </select>
+          </Field>
+        </div>
+        <p className="text-[11px] text-zinc-600">
+          Captions follow the voiceover word by word, timed from the generated narration. The preview approximates the grade and vignette; see the exact result in the rendered MP4. Scenes add shake and on-screen titles in their own sidebar.
+        </p>
       </Group>
 
       <ReferenceSettings

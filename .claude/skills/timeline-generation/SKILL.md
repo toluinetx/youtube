@@ -6,9 +6,10 @@ description: Turn a scene list (exact timings plus image, voiceover, sound-effec
 # Timeline generation
 
 Load a scene list into the running AI Video Editor (this repository) as ungenerated scenes. The user
-then reviews them and clicks Generate in the editor. **You never generate media**, and you never edit
-`projects/*/storyboard.json` directly: always go through `timeline.mjs` (the editor's API). That way
-the open editor updates live and the import is one Ctrl/Cmd+Z.
+then reviews them and clicks Generate in the editor. **You never generate media**, with one exception:
+the *Cast & locations* reference images (step 4), and only after the user approves the list and its
+cost. You never edit `projects/*/storyboard.json` directly: always go through `timeline.mjs` (the
+editor's API). That way the open editor updates live and the import is one Ctrl/Cmd+Z.
 
 Files in this skill:
 - `template.md`: the input format plus detailed guidance on writing good image, voice and sound
@@ -16,8 +17,11 @@ Files in this skill:
   user when they need a starting point or ask how to write scenes. **Read its "Audio tags" section
   before writing or reviewing any voice lines.**
 - `timeline.mjs`: helper that talks to the editor (`projects`, `voices`, `import <payload.json>`,
-  `estimate <payload.json>`). Run it with `node .claude/skills/timeline-generation/timeline.mjs …`
-  from the repository root.
+  `estimate <payload.json>`, `references <payload.json>`). Run it with
+  `node .claude/skills/timeline-generation/timeline.mjs …` from the repository root.
+
+The template's **Writing like a director** and **Presets** sections set the bar for story videos
+(survival, horror, documentary). Read them before writing or reviewing scenes.
 
 ## 1. Get the scenes
 
@@ -48,10 +52,22 @@ Files in this skill:
   - `motion` ← Camera / Movement for this scene's still image: `none` (still), `zoom_in`,
     `zoom_out`, `kenburns`, `pan_right` (left → right), `pan_left`, `pan_down` (top → bottom),
     `pan_up`. Leave it out to use the project's setting.
+  - `reference_names` ← References / Location: names from *Cast & locations* (or images already in
+    the project's Library) this scene uses as its own references, e.g. `["Kitchen"]`. Every-scene
+    characters don't need listing.
+  - `title_text` ← Title / On-screen text / Title card / Chapter: big text over the scene's first
+    3 s on export (max 80 characters), e.g. `"DAY 12"`. Also when the notes ask for a title card.
+  - `shake` ← Shake / Camera shake: `"light"` or `"heavy"`.
+  - **Cast & locations** → the references payload (step 4): `{ "name", "prompt", "for_every_scene" }`
+    each. Characters are `for_every_scene: true` unless marked *(only where named)*; locations are
+    `false` and go in the scenes' `reference_names`. Write the prompts as described in "Cast &
+    locations" below.
   - `notes` ← Notes, and anything that isn't one of the above (footage to import, on-screen text,
     transitions, music cues for a moment)
   - `duration_sec` ← end − start, or the given length, in seconds rounded to 0.1
 - If you can't tell which field some text belongs to, ask. Don't guess.
+- **Preset:** if the input names one (e.g. "survival horror"), fill in every Project line it leaves
+  blank from the template's *Presets*, and say which lines you filled.
 
 ## 2. Check it before importing
 
@@ -87,6 +103,14 @@ Report problems as a short list and ask how to fix each. Don't silently change t
   … and …"; a crowd or background figures with no place that keeps them out of the main subject's space
   ("outside, beyond the window glass"); several actions by one character's hands at once. Offer the
   reworded prompt, keeping the user's wording otherwise.
+- **References:** every `reference_names` entry must be in *Cast & locations* or already in the
+  project's Library (`timeline.mjs projects` doesn't list the library; if unsure, ask). The import fails
+  on a name it can't find. A scene's own references plus the every-scene ones must stay ≤ 14 (fewer
+  for some models: about 3 for the first Nano Banana). Flag scenes that name a character from the cast
+  without it being an every-scene reference or in their `reference_names`.
+- **Finishing (suggestions only):** titles over 80 characters, or full sentences as titles (suggest
+  the key number or phrase); `shake` on more than about 1 in 10 scenes; captions on while the scenes
+  already burn text into the images.
 - **Video requests:** a scene's video is made on demand in its **Video** tab (Gemini Omni, from
   `video_prompt` or else the image prompt; the scene's image becomes the first frame), never by the
   import. If a scene asks for real motion, keep the image prompt, put the action in `video_prompt`,
@@ -98,7 +122,11 @@ Report problems as a short list and ask how to fix each. Don't silently change t
 - **Project settings** (title, format, style, motion, voice, voice model): map them to `title`,
   `aspect_ratio` (`16:9` | `9:16` | `1:1`), `style_prompt`, `motion` (same values as the scene field),
   `voice_id`, `tts_model` (`eleven_v4` | `eleven_v4_turbo` | `eleven_v3` | `eleven_multilingual_v2` |
-  `eleven_turbo_v2_5` | `eleven_flash_v2_5`). Only the first three perform audio tags. For a voice given by name, run `timeline.mjs voices` and use the matching
+  `eleven_turbo_v2_5` | `eleven_flash_v2_5`), and the finishing and camera lines: `motion_amount`
+  (Camera move, percent, 1–40), `look` (`none` | `cold_bunker` | `teal_orange` | `bleach_bypass` |
+  `warm_film` | `noir`), `vignette` and `grain` (0–1: the template's percent ÷ 100), `captions`
+  (`off` | `words` | `lines`), `caption_position` (`bottom` | `center`), and `tts_params` for voice
+  settings (`{ "stability": 0, "style": 0.3, "speed": 1 }`, only the keys given). Only the first three perform audio tags. For a voice given by name, run `timeline.mjs voices` and use the matching
   `voice_id`. Ask if no voice matches or several do. If the style is repeated in every image prompt,
   suggest moving it to `style_prompt`.
 
@@ -106,11 +134,15 @@ Report problems as a short list and ask how to fix each. Don't silently change t
 
 When the user asks you to turn a story (or notes, an article, an outline) into a timeline:
 1. **Ask first** about anything that decides the result and isn't given: target length or number of
-   scenes, format (16:9 / 9:16), visual style, and whether to use **audio tags**. Tags need the Eleven
-   v4 / v3 voice model. Recommend Eleven v4 when the story is narrative or dramatic.
-2. **Split** the story into scenes of one idea or beat each, usually 4–10 s (shorter for Shorts).
+   scenes, format (16:9 / 9:16), visual style (offer a preset when the genre fits, e.g. *survival
+   horror*), and whether to use **audio tags**. Tags need the Eleven v4 / v3 voice model. Recommend
+   Eleven v4 when the story is narrative or dramatic.
+2. **Cast & locations first.** List the recurring characters (2+ scenes) and places (3+ scenes) with
+   a full description each, as in the template's *Cast & locations*. Every scene prompt then calls
+   them by exactly these names.
+3. **Split** the story into scenes of one idea or beat each, usually 4–10 s (shorter for Shorts).
    Size each scene to its narration with the timing rule above.
-3. **Write** for every scene, following `template.md`:
+4. **Write** for every scene, following `template.md` and its *Writing like a director*:
    - **Voice:** narration written to be heard, in the story's words where possible. If using tags,
      apply the template's "Rules for adding tags": tags only where the delivery shifts (a reveal,
      tension, a joke, a quoted character), right before the words they affect, auditory only, suited
@@ -120,26 +152,54 @@ When the user asks you to turn a story (or notes, an article, an outline) into a
      recurring characters described identically each time, and no text in the image. State who is
      in the frame and how many ("Eli, alone, the only person in the car"; "both of Eli's hands (two
      hands)"), as in "People and hands" above.
+   - **Voice (story channels):** written like a screenplay: concrete numbers, rules and procedures,
+     show-don't-tell, short sentences. No summarising lines.
    - **SFX:** concrete sounds for scenes that need them, split and timed as in "Splitting sound
-     effects" below. Leave it empty otherwise. Put sound effects here, not as tags in the voice.
-   - **Notes:** footage ideas, on-screen text, music cues.
+     effects" below. For story and suspense videos plan **three layers** (template: *Sound in three
+     layers*): suggest a drone as the Music, give every scene a room tone (`sfx_prompt`) and 1–2
+     precise event sounds (`sfx_layers`) timed to the words. Put sound effects here, not as tags in
+     the voice.
+   - **Video:** for the few scenes that deserve a clip, a **micro-motion** `video_prompt`: characters
+     nearly still, only the air and light moving (dust, breath, flicker, rain), at most one slow
+     camera move, "no cuts".
+   - **Title / Shake:** a `title_text` at chapter or day changes and for key numbers; `shake` for the
+     few threat beats.
+   - **References:** `reference_names` for the location the scene is in.
+   - **Notes:** footage ideas, music cues.
    Apply "Suggesting improvements" to your own draft before showing it: pacing, two-shot beats,
    framing variety.
-4. Present it as a filled-in template with timings. Mention the voice model it assumes and say
+5. Present it as a filled-in template with timings, *Cast & locations* first. Mention the voice model it assumes and say
    which tags you used and why, in one line. End it with the **cost estimate** (see "Estimating the
    cost" below). Revise until the user approves, then continue with step 2 (checks) and step 3 (where
    it goes). Re-run the estimate after a revision that adds or removes pictures, voice or sounds.
 
+## Cast & locations
+
+Reference images keep characters and places the same across every picture: the editor sends them
+with each scene, and the image model copies them. Write each reference's `prompt` so it makes a
+clean reference, in the project's style (the editor adds `style_prompt` itself):
+- **Character:** *"Character reference sheet of Bucky, a man in his late thirties with a short dark
+  beard, tired grey eyes and a scar over the left eyebrow, wearing a faded olive field jacket over a
+  grey hoodie, cargo trousers and worn boots; full body, standing, neutral pose, facing the camera,
+  plain light grey background, even soft light"*. One character per image, the whole outfit visible.
+- **Location:** *"Empty establishing shot of the bunker kitchen: narrow concrete room, steel shelves
+  of canned food on the left, a camping stove on a metal counter, a single caged bulb, a small
+  periscope window high on the back wall; wide angle, eye level, no people"*. The layout and light
+  sources that scenes will show from other angles; no people.
+
+Name each exactly as the scenes do. Show the list with the rest of the template for approval.
+
 ## Estimating the cost
 
 Every time you present a filled-in template (one you wrote, or the user's after your suggestions are
-applied), estimate what generating it will cost. Write the scenes as an import payload (step 4's
-format) to a temp file outside the repository and run
+applied), estimate what generating it will cost. Write the scenes as an import payload (step 5's
+format), plus the `references` list if there is one, to a temp file outside the repository and run
 `node .claude/skills/timeline-generation/timeline.mjs estimate <file>`. It doesn't need the editor running.
 - Set `project` to the target if you know it (`{ "id": … }` uses that project's models and
   references). Otherwise use `{ "new": "…" }`, which prices the new-project defaults. Say which.
 - Put the input's project settings (voice model and so on) in `settings`, as for the import.
-- Show the user its result briefly: the total for **Generate missing**, the ElevenLabs credits, the
+- Show the user its result briefly: the cast & location references (generated in step 4), the
+  total for **Generate missing**, the ElevenLabs credits, the
   split (images / voice / sound), the optional video clips priced separately, and any model it has no
   price for. Per-scene costs only if the user asks, or if one scene stands out.
 - It's an estimate of **one generation per item**: each regenerate costs that item again. The prices
@@ -181,6 +241,12 @@ Look for:
    a character on screen and there's no narration.
 7. **Structure.** Over the whole script: acts or beats that run long, a climax that comes too late, a
    jump the viewer can't follow, an ending that drags.
+
+8. **Finishing.** A title card where a chapter, day or key number changes; shake on a threat beat
+   that has none (or off where it's overused); a slower camera move (`motion_amount` 4–6) for
+   suspense; a grade, vignette and captions if the project has none and the genre wants them.
+9. **Consistency.** A recurring character or place without a *Cast & locations* entry; a scene in a
+   known location that doesn't list it in References.
 
 Present them as a numbered list grouped by scene, each with the reason and the exact change, then ask
 which to apply (all, some by number, or none). Keep it to the ones that matter: a handful per scene at
@@ -264,7 +330,21 @@ open now, mention it when asking: an edit typed in the half-second before the sw
 saved. A running export, generation or upload blocks the switch; the helper then reports it, and
 you should ask the user to wait and retry.
 
-## 4. Import
+## 4. Generate the cast & location references (only if there are any)
+
+Only after the user approved the template **and** its estimate (which lists the references):
+1. Ask once more with AskUserQuestion: "Generate N reference images now (~$X)?" Options: "Generate
+   them" / "Skip: I'll add my own images to the Library with these names".
+2. Write `{ "project": …, "settings": { …the project settings… }, "references": [ … ] }` to a temp
+   file (the same `project` as the import; settings first so they're made in the video's style) and
+   run `node .claude/skills/timeline-generation/timeline.mjs references <file>`. A `{ "new": … }`
+   project is created here; the output gives its id: use `{ "id": … }` for the import, not `new`
+   again (that would make a second project).
+3. Show the result per reference, including any image-check problem, and ask the user to look at them
+   in the editor's Library (regenerate or replace one there, keeping its name) before you import. A
+   second run with the same name replaces it as the reference and keeps the old one as "(earlier)".
+
+## 5. Import
 
 Write the payload to a temp file outside the repository (e.g. in the system temp directory), then run
 `node .claude/skills/timeline-generation/timeline.mjs import <file>`:
@@ -279,7 +359,7 @@ Write the payload to a temp file outside the repository (e.g. in the system temp
       "duration_sec": 7, "image_prompt": "…", "voiceover_text": "… Suddenly the glass breaks.", "sfx_prompt": "…",
       "sfx_layers": [{ "prompt": "single glass window shattering", "cue": "breaks", "start_sec": 3.2, "length_sec": 1.5 }],
       "shots": [{ "image_prompt": "Close-up of the window glass shattering inward", "cue": "breaks", "start_sec": 3.2 }],
-      "motion": "pan_right", "notes": "…"
+      "motion": "pan_right", "reference_names": ["Kitchen"], "title_text": "DAY 12", "shake": "light", "notes": "…"
     }
   ]
 }
@@ -289,12 +369,13 @@ Write the payload to a temp file outside the repository (e.g. in the system temp
 - `mode`: `"append"` or `"replace"` (use `"append"` for a new or empty project).
 - `settings`: optional, only the keys the user wants changed.
 - `scenes`: only the scene fields above (`duration_sec`, `image_prompt`, `voiceover_text`, `sfx_prompt`, `sfx_layers`,
-  `shots`, `video_prompt`, `motion`, `notes`). Omit empty fields. `duration_sec` is required.
+  `shots`, `video_prompt`, `motion`, `reference_names`, `title_text`, `shake`, `notes`). Omit empty fields.
+  `duration_sec` is required.
 
 If the editor isn't running, the helper says so. Ask the user to start it with `npm run dev` and
 retry. On any other error, show it and fix the payload rather than retrying blindly.
 
-## 5. Report back
+## 6. Report back
 
 Show the helper's summary (scene numbers, timings, what each scene has, notes) and remind the user:
 - images are checked as they're generated: if one still has problems after its retries (an extra
@@ -303,4 +384,7 @@ Show the helper's summary (scene numbers, timings, what each scene has, notes) a
 - nothing is generated yet: **Generate missing** in the top bar opens a review dialog (tick items, pick models,
   see costs; suggested video clips start unticked), or use each scene's Generate buttons
 - the editor updated live (no reload needed), and **Ctrl/Cmd+Z** in the editor undoes the import
-- any notes that need action (footage to import, music to add in the Library)
+- any notes that need action (footage to import, music to add in the Library: for suspense, the
+  drone bed)
+- the grade, vignette, grain, captions, titles and shake appear in the **exported** video (the live
+  preview approximates the grade and shows titles; captions need the generated voiceover)

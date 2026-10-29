@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Captions, Film, ImageOff, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
-import { formatTime, motionTransform, sceneIndexAt, sceneMotion, sceneTimeline } from '../util.js';
+import { formatTime, lookFilter, motionTransform, sceneIndexAt, sceneMotion, sceneTimeline } from '../util.js';
 
 const RESYNC_THRESHOLD_SEC = 0.25;
 
@@ -124,7 +124,12 @@ export default function Preview({
   const part = parts[k];
   const shot = part?.shot;
   const partProgress = part ? Math.min(1, Math.max(0, (local - part.start) / Math.max(0.01, part.end - part.start))) : progress;
-  const transform = scene ? motionTransform(sceneMotion(shot || scene, settings, idx + k), partProgress) : 'none';
+  const transform = scene ? motionTransform(sceneMotion(shot || scene, settings, idx + k), partProgress, settings.motion_amount) : 'none';
+  // The export's finishing, approximated: the grade as a CSS filter, the vignette as a gradient, and the
+  // scene's on-screen title for its first seconds (as server/finish.js times it).
+  const filter = lookFilter(settings.look) || undefined;
+  const vignette = Math.min(1, Math.max(0, Number(settings.vignette) || 0));
+  const titleShown = scene?.title_text?.trim() && local >= Math.min(0.3, scene.duration_sec / 4) && local < Math.min(scene.duration_sec - 0.2, 3.3);
 
   const jump = (dir) => {
     const target = dir < 0 && local > 0.75 ? idx : Math.max(0, Math.min(scenes.length - 1, idx + dir));
@@ -154,18 +159,18 @@ export default function Preview({
                 alt={shot.image_prompt}
                 draggable={false}
                 className="h-full w-full object-cover will-change-transform"
-                style={{ transform }}
+                style={{ transform, filter }}
               />
             ) : scene?.video_url ? (
               // src is managed by the sync effect so a new clip always gets seeked to the right spot.
-              <video ref={videoRef} playsInline preload="auto" className="h-full w-full bg-black object-cover" />
+              <video ref={videoRef} playsInline preload="auto" className="h-full w-full bg-black object-cover" style={{ filter }} />
             ) : scene?.image_url ? (
               <img
                 src={scene.image_url}
                 alt={scene.image_prompt}
                 draggable={false}
                 className="h-full w-full object-cover will-change-transform"
-                style={{ transform }}
+                style={{ transform, filter }}
               />
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-zinc-900 to-zinc-800 p-8 text-center">
@@ -176,6 +181,19 @@ export default function Preview({
               </div>
             )}
 
+            {mode === 'live' && vignette > 0 && (
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{ background: `radial-gradient(ellipse at center, transparent ${70 - 25 * vignette}%, rgba(0,0,0,${(0.35 + 0.5 * vignette).toFixed(2)}) 100%)` }}
+              />
+            )}
+            {mode === 'live' && titleShown && (
+              <div className={`pointer-events-none absolute inset-x-0 flex justify-center px-[8%] ${settings.caption_position === 'center' ? 'top-[10%]' : 'top-1/2 -translate-y-1/2'}`}>
+                <p className="text-center text-[clamp(16px,6cqmin,72px)] font-extrabold tracking-wider text-white uppercase [text-shadow:0_0_6px_#000,0_2px_2px_#000]">
+                  {scene.title_text}
+                </p>
+              </div>
+            )}
             {mode === 'live' && captions && scene?.voiceover_text && (
               <div className="pointer-events-none absolute inset-x-0 bottom-[6%] flex justify-center px-[8%]">
                 <p className="rounded bg-black/70 px-3 py-1.5 text-center text-[clamp(11px,1.6cqw,20px)] leading-snug text-white">
