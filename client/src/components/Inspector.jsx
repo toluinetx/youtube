@@ -3,7 +3,7 @@ import {
   ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Copy, Film, ImageIcon, Loader2, NotebookPen, RefreshCw, Sparkles, Trash2, TriangleAlert, Upload,
   Wand2, X,
 } from 'lucide-react';
-import { ACCEPT, formatTime } from '../util.js';
+import { ACCEPT, AUDIO_TAG, AUDIO_TAG_MODELS, formatTime } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
 
 const WORDS_PER_SEC = 2.6;
@@ -14,7 +14,11 @@ export default function Inspector({
 }) {
   const isBusy = (slot) => Boolean(busy[`${scene.scene_id}:${slot}`]);
   const errorFor = (slot) => errors[`${scene.scene_id}:${slot}`];
-  const words = scene.voiceover_text.trim() ? scene.voiceover_text.trim().split(/\s+/).length : 0;
+  // Audio tags like [whispers] are performed, not spoken, so they don't count as words.
+  const spoken = scene.voiceover_text.replace(AUDIO_TAG, ' ').trim();
+  const words = spoken ? spoken.split(/\s+/).length : 0;
+  const tags = scene.voiceover_text.match(AUDIO_TAG) || [];
+  const tagsReadAloud = tags.length > 0 && !AUDIO_TAG_MODELS.includes(settings.tts_model);
   const voLen = scene.voiceover_duration_sec;
   const voTooLong = voLen > scene.duration_sec;
   const isVideo = Boolean(scene.video_url);
@@ -208,9 +212,21 @@ export default function Inspector({
           aria-label="Voiceover text"
         />
         <p className="mt-1 text-[11px] text-zinc-600">
-          {words} words · ~{(words / WORDS_PER_SEC).toFixed(1)}s spoken
+          {words} words{tags.length ? ` + ${tags.length} audio tag${tags.length === 1 ? '' : 's'}` : ''} · ~{(words / WORDS_PER_SEC).toFixed(1)}s spoken
           {voLen ? ` · audio is ${voLen.toFixed(1)}s` : ''}
         </p>
+        {tagsReadAloud && (
+          <p className="mt-2 flex items-start gap-1.5 text-xs text-amber-400">
+            <TriangleAlert className="mt-px size-3.5 shrink-0" />
+            <span>
+              Audio tags like {tags[0]} only work with the Eleven v4 / v3 voice models. With the current model they'll be read
+              out loud.{' '}
+              <button className="underline underline-offset-2 hover:text-amber-300" onClick={onOpenProject}>
+                Change the voice model
+              </button>
+            </span>
+          </p>
+        )}
         {scene.voiceover_url && (
           <>
             <audio key={scene.voiceover_url} src={scene.voiceover_url} controls className="mt-2 h-8 w-full" />

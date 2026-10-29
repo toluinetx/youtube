@@ -21,8 +21,10 @@ const REFERENCE_MODELS = [
 ];
 
 const TTS_MODELS = [
-  ['eleven_multilingual_v2', 'Multilingual v2 (best quality)'],
-  ['eleven_v3', 'Eleven v3 (most expressive)'],
+  ['eleven_v4', 'Eleven v4 (recommended, audio tags)'],
+  ['eleven_v4_turbo', 'Eleven v4 Turbo (faster, audio tags)'],
+  ['eleven_v3', 'Eleven v3 (audio tags)'],
+  ['eleven_multilingual_v2', 'Multilingual v2 (no audio tags)'],
   ['eleven_turbo_v2_5', 'Turbo v2.5'],
   ['eleven_flash_v2_5', 'Flash v2.5 (fastest, cheapest)'],
 ];

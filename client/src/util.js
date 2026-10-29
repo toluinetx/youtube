@@ -56,6 +56,10 @@ export const ASSET_MIME = 'application/x-reel-asset';
 
 export const ASPECT = { '16:9': 16 / 9, '9:16': 9 / 16, '1:1': 1 };
 
+/** ElevenLabs audio tags in voiceover text, e.g. [whispers]. Only these voice models perform them; others read them aloud. */
+export const AUDIO_TAG = /\[[^\]\n]{1,60}\]/g;
+export const AUDIO_TAG_MODELS = ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3'];
+
 export function isTyping(e) {
   const el = e.target;
   return el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName);
