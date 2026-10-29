@@ -4,6 +4,7 @@ import path from 'node:path';
 import { CLIPS_DIR, EXPORTS_DIR, mediaUrlToPath } from './paths.js';
 import { RESOLUTIONS, readStoryboard, sceneMotion, sceneTimeline } from './storyboard.js';
 import { concatClips, renderSceneClip } from './ffmpeg.js';
+import { captionWords, captionsAss, finishFilters } from './finish.js';
 import { GENERATORS, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, sceneReferences } from './generate.js';
 import { costEstimator } from './estimate.js';
 import { isGeminiModel } from './gemini.js';
@@ -76,22 +77,31 @@ export function startExport() {
       if (!imagePath && !videoPath) current.warnings.push(`${label} has no image or video (rendered as black)`);
       if (scene.voiceover_duration_sec > scene.duration_sec) current.warnings.push(`${label}: voiceover is cut off`);
 
+      const duration = Math.max(0.5, Number(scene.duration_sec) || 5);
       const opts = {
-        videoPath, imagePath, voPath, sfxPath, width, height, fps,
+        videoPath, imagePath, voPath, sfxPath, width, height, fps, duration,
         videoStart: Number(scene.video_start_sec) || 0,
         videoAudio: Boolean(scene.video_has_audio),
         videoVolume: Number.isFinite(Number(scene.video_volume)) ? Number(scene.video_volume) : 1,
-        duration: Math.max(0.5, Number(scene.duration_sec) || 5),
         motion: sceneMotion(scene, settings, i),
+        moveAmount: moveAmount(settings),
         shots,
         sfxVolume: Number.isFinite(Number(settings.sfx_volume)) ? Number(settings.sfx_volume) : 0.35,
         sfxLayers,
+        finish: finishFilters({ look: settings.look, vignette: settings.vignette, grain: settings.grain, shake: scene.shake, width, height }),
+        captions: captionsAss({
+          words: voPath && settings.captions !== 'off' ? captionWords(scene) : null,
+          mode: settings.captions,
+          position: settings.caption_position,
+          title: scene.title_text,
+          width, height, duration,
+        }),
       };
       // Cache key covers every input, so unchanged scenes are reused instead of re-rendered.
       const key = crypto
         .createHash('sha1')
         .update(JSON.stringify({
-          ...opts, v: 2, videoPath: await fileStamp(videoPath), imagePath: await fileStamp(imagePath), voPath: await fileStamp(voPath), sfxPath: await fileStamp(sfxPath),
+          ...opts, v: 3, videoPath: await fileStamp(videoPath), imagePath: await fileStamp(imagePath), voPath: await fileStamp(voPath), sfxPath: await fileStamp(sfxPath),
           sfxLayers: await Promise.all(sfxLayers.map(async (l) => ({ ...l, path: await fileStamp(l.path) }))),
           shots: await Promise.all(shots.map(async (s) => ({ ...s, imagePath: await fileStamp(s.imagePath) }))),
         }))
@@ -132,6 +142,9 @@ export function startExport() {
     return { url: `/exports/final_output.mp4?t=${Date.now()}`, path: output, duration_sec: totalSec, width, height };
   });
 }
+
+/** How far camera moves go, as a fraction (settings.motion_amount is in percent). */
+const moveAmount = (settings) => Math.min(0.4, Math.max(0.01, (Number(settings.motion_amount) || 12) / 100));
 
 /** Whether a scene asks for a video clip: it has a video prompt, or its notes say "Generate video". */
 const wantsVideo = (scene) => Boolean(scene.video_prompt?.trim() || /generate (a )?video/i.test(scene.notes || ''));

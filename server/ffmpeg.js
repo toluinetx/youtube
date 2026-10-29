@@ -4,22 +4,26 @@ import os from 'node:os';
 import path from 'node:path';
 import ffmpegStatic from 'ffmpeg-static';
 import ffprobeStatic from 'ffprobe-static';
+import { FONT_FILE } from './finish.js';
 
 export const FFMPEG = process.env.FFMPEG_PATH || ffmpegStatic;
 export const FFPROBE = process.env.FFPROBE_PATH || ffprobeStatic.path;
 
-const KENBURNS_ZOOM = 0.12;
-// Pans need some zoom so there's room to move; keep both in sync with client/src/util.js.
-const PAN_ZOOM = 0.15;
+/**
+ * How far camera moves go: a zoom changes the size by `amount` (0.12 = 12%) over the shot, and a pan
+ * is zoomed in by a quarter more than that so there's room to slide. Keep in sync with client/src/util.js.
+ */
+export const moveZooms = (amount = 0.12) => ({ zoom: amount, pan: Math.max(0.03, amount * 1.25) });
 
 /** zoompan expressions for a motion (see MOTIONS in storyboard.js), or null for a still image. */
-function zoompan(motion, frames) {
+function zoompan(motion, frames, amount) {
   const t = `on/${frames}`;
+  const { zoom, pan: panZoom } = moveZooms(amount);
   const center = { x: 'iw/2-(iw/zoom/2)', y: 'ih/2-(ih/zoom/2)' };
-  const pan = { z: String(1 + PAN_ZOOM), ...center };
+  const pan = { z: String(1 + panZoom), ...center };
   switch (motion) {
-    case 'zoom_in': return { z: `1+${KENBURNS_ZOOM}*${t}`, ...center };
-    case 'zoom_out': return { z: `${1 + KENBURNS_ZOOM}-${KENBURNS_ZOOM}*${t}`, ...center };
+    case 'zoom_in': return { z: `1+${zoom}*${t}`, ...center };
+    case 'zoom_out': return { z: `${1 + zoom}-${zoom}*${t}`, ...center };
     case 'pan_right': return { ...pan, x: `(iw-iw/zoom)*${t}` };
     case 'pan_left': return { ...pan, x: `(iw-iw/zoom)*(1-${t})` };
     case 'pan_down': return { ...pan, y: `(ih-ih/zoom)*${t}` };
@@ -28,9 +32,9 @@ function zoompan(motion, frames) {
   }
 }
 
-function run(bin, args, { onStderr } = {}) {
+function run(bin, args, { onStderr, cwd } = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(bin, args, { windowsHide: true });
+    const child = spawn(bin, args, { windowsHide: true, cwd });
     let stdout = '';
     let stderr = '';
     child.stdout.on('data', (d) => (stdout += d));
@@ -109,11 +113,13 @@ const AFORMAT = 'aformat=sample_rates=44100:channel_layouts=stereo';
  * zoom or pan, see `motion`) or black. `shots` are more images that take over at their `start`
  * (seconds), each with its own `motion`; each lasts until the next. The clip's own audio (only while
  * it's on screen), voiceover and SFX are mixed together. Every clip uses identical codec settings so
- * they concat losslessly.
+ * they concat losslessly. `moveAmount` is how far zooms and pans go (see moveZooms); `finish` is a
+ * filter chain from finishFilters() (grade, shake…) and `captions` an ASS file's text (captionsAss()),
+ * both applied over the whole scene.
  */
 export async function renderSceneClip({
   videoPath, videoStart = 0, videoAudio = false, videoVolume = 1, imagePath, voPath, sfxPath,
-  duration, width, height, fps, motion, shots = [], sfxVolume, sfxLayers = [], outPath, onProgress,
+  duration, width, height, fps, motion, moveAmount, shots = [], sfxVolume, sfxLayers = [], finish = '', captions = null, outPath, onProgress,
 }) {
   const args = ['-y', '-hide_banner'];
   const frames = Math.max(1, Math.round(duration * fps));
@@ -136,7 +142,7 @@ export async function renderSceneClip({
     }
     if (seg.imagePath) {
       args.push('-loop', '1', '-framerate', String(fps), '-t', String(d), '-i', seg.imagePath);
-      const move = zoompan(seg.motion, seg.frames);
+      const move = zoompan(seg.motion, seg.frames, moveAmount);
       // Upscale first so zoompan's integer cropping doesn't jitter.
       return move
         ? `[${k}:v]scale=${width * 2}:${height * 2}:force_original_aspect_ratio=increase,crop=${width * 2}:${height * 2},` +
@@ -146,10 +152,15 @@ export async function renderSceneClip({
     args.push('-f', 'lavfi', '-i', `color=c=black:s=${width}x${height}:r=${fps}:d=${d}`);
     return `[${k}:v]setsar=1,format=yuv420p,${end}`;
   });
-  const video =
+  // Captions are an ASS file read from a temporary folder (with the font), which ffmpeg runs in, so
+  // the filter only names relative paths: absolute ones would need escaping per platform.
+  const post = [finish, captions && 'ass=captions.ass:fontsdir=.'].filter(Boolean).join(',');
+  const out = post ? '[vbase]' : '[v]';
+  let video =
     segments.length > 1
-      ? `${filters.join(';')};${segments.map((_, k) => `[v${k}]`).join('')}concat=n=${segments.length}:v=1:a=0[v]`
-      : filters[0].replace(/\[v0\]$/, '[v]');
+      ? `${filters.join(';')};${segments.map((_, k) => `[v${k}]`).join('')}concat=n=${segments.length}:v=1:a=0${out}`
+      : filters[0].replace(/\[v0\]$/, out);
+  if (post) video += `;[vbase]${post},format=yuv420p[v]`;
 
   const audio = [];
   let next = segments.length;
@@ -193,12 +204,22 @@ export async function renderSceneClip({
     outPath,
   );
 
-  await run(FFMPEG, args, {
-    onStderr: (line) => {
-      const t = parseTime(line);
-      if (t != null) onProgress?.(Math.min(1, t / duration));
-    },
-  });
+  const cwd = captions ? await fs.mkdtemp(path.join(os.tmpdir(), 'captions-')) : undefined;
+  try {
+    if (cwd) {
+      await fs.writeFile(path.join(cwd, 'captions.ass'), captions);
+      await fs.copyFile(FONT_FILE, path.join(cwd, path.basename(FONT_FILE)));
+    }
+    await run(FFMPEG, args, {
+      cwd,
+      onStderr: (line) => {
+        const t = parseTime(line);
+        if (t != null) onProgress?.(Math.min(1, t / duration));
+      },
+    });
+  } finally {
+    if (cwd) await fs.rm(cwd, { recursive: true, force: true });
+  }
 }
 
 /**

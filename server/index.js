@@ -11,7 +11,10 @@ import {
 import { historyState } from './history.js';
 import { requestContext, subscribe } from './events.js';
 import { createProject, initProjects, listProjects, openProject, trackBusy } from './projects.js';
-import { GENERATORS, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, imageReferenceCapacity } from './generate.js';
+import {
+  GENERATORS, generateReferenceImage, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, imageReferenceCapacity,
+} from './generate.js';
+import { CAPTION_MODES, CAPTION_POSITIONS, LOOKS, SHAKES } from './finish.js';
 import {
   addToLibrary, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
   snapshotAsset, useAssetInScene,
@@ -84,6 +87,11 @@ function sanitizeScenePatch(body) {
     if (body.motion !== null && !MOTIONS.includes(body.motion)) throw badRequest(`motion must be null or one of ${MOTIONS.join(', ')}`);
     patch.motion = body.motion;
   }
+  if (body.shake !== undefined) {
+    if (body.shake !== null && !SHAKES[body.shake]) throw badRequest(`shake must be null or one of ${Object.keys(SHAKES).join(', ')}`);
+    patch.shake = body.shake;
+  }
+  if (body.title_text !== undefined) patch.title_text = String(body.title_text ?? '').slice(0, 80);
   if (body.video_volume !== undefined) {
     const v = Number(body.video_volume);
     if (!Number.isFinite(v) || v < 0 || v > 2) throw badRequest('video_volume must be between 0 and 2');
@@ -181,6 +189,8 @@ const EDIT_LABELS = {
   notes: 'Edit notes',
   video_prompt: 'Edit video prompt',
   motion: 'Change motion',
+  shake: 'Change shake',
+  title_text: 'Edit on-screen text',
   sfx_layers: 'Edit sound effects',
   shots: 'Edit shots',
   reference_asset_ids: 'Change references',
@@ -291,6 +301,8 @@ function copyOf(sb, src) {
     notes: src.notes,
     video_prompt: src.video_prompt,
     motion: src.motion,
+    shake: src.shake,
+    title_text: src.title_text,
     sfx_layers: (src.sfx_layers || []).map((l) => newSfxLayer({ prompt: l.prompt, volume: l.volume, start_sec: l.start_sec, length_sec: l.length_sec, cue: l.cue })),
     shots: (src.shots || []).map((s) => newShot({ image_prompt: s.image_prompt, motion: s.motion, start_sec: s.start_sec, cue: s.cue })),
   });
@@ -380,9 +392,14 @@ app.post('/api/scenes/import-script', async (req, res) => {
   res.json(sb);
 });
 
-const IMPORT_SCENE_FIELDS = [...SCENE_TEXT_FIELDS, 'video_prompt', 'motion', 'sfx_layers', 'shots', 'duration_sec', 'notes'];
+const IMPORT_SCENE_FIELDS = [
+  ...SCENE_TEXT_FIELDS, 'video_prompt', 'motion', 'shake', 'title_text', 'reference_names', 'sfx_layers', 'shots', 'duration_sec', 'notes',
+];
 const IMPORT_SETTINGS = Object.keys(DEFAULT_SETTINGS).filter((k) => !READONLY_SETTINGS.includes(k) && k !== 'reference_asset_ids');
-const SETTING_CHOICES = { aspect_ratio: Object.keys(RESOLUTIONS), motion: MOTIONS };
+const SETTING_CHOICES = {
+  aspect_ratio: Object.keys(RESOLUTIONS), motion: MOTIONS, look: Object.keys(LOOKS), captions: CAPTION_MODES, caption_position: CAPTION_POSITIONS,
+};
+const SETTING_RANGES = { motion_amount: [1, 40], vignette: [0, 1], grain: [0, 1], image_check_retries: [0, 5] };
 
 /** Check an imported settings object; throws a 400 naming the problem. */
 function sanitizeImportSettings(settings = {}) {
@@ -393,13 +410,17 @@ function sanitizeImportSettings(settings = {}) {
       throw badRequest(`${key} must be one of ${SETTING_CHOICES[key].join(', ')}`);
     }
     if (typeof value !== typeof DEFAULT_SETTINGS[key]) throw badRequest(`${key} must be a ${typeof DEFAULT_SETTINGS[key]}`);
+    const range = SETTING_RANGES[key];
+    if (range && !(value >= range[0] && value <= range[1])) throw badRequest(`${key} must be between ${range[0]} and ${range[1]}`);
   }
   return settings;
 }
 
 /**
  * Exact-timing import (used by the timeline-generation skill):
- * { mode: 'append' | 'replace', scenes: [{ duration_sec, image_prompt, voiceover_text, sfx_prompt, sfx_layers, video_prompt, motion, notes }], settings? }.
+ * { mode: 'append' | 'replace', scenes: [{ duration_sec, image_prompt, voiceover_text, sfx_prompt, sfx_layers, video_prompt, motion,
+ * shake, title_text, reference_names, notes }], settings? }.
+ * reference_names: library images (by name) used as this scene's own references, e.g. ["Bunker kitchen"].
  * sfx_layers: extra sound effects playing at the same time, [{ prompt, volume?, start_sec?, length_sec?, cue? }];
  * shots: more pictures after the scene's own, [{ image_prompt, start_sec?, cue?, motion? }].
  * A cue (words from voiceover_text) sets start_sec to when they're spoken.
@@ -410,6 +431,7 @@ app.post('/api/scenes/import', async (req, res) => {
   if (mode !== 'append' && mode !== 'replace') throw badRequest('mode must be "append" or "replace"');
   if (!Array.isArray(scenes) || !scenes.length) throw badRequest('scenes must be a non-empty list');
   if (scenes.length > 500) throw badRequest('At most 500 scenes per import');
+  const { library } = await readStoryboard();
   const patches = scenes.map((scene, i) => {
     const where = `Scene ${i + 1}`;
     if (!scene || typeof scene !== 'object') throw badRequest(`${where} must be an object`);
@@ -420,7 +442,7 @@ app.post('/api/scenes/import', async (req, res) => {
       if (scene[f] !== undefined && typeof scene[f] !== 'string') throw badRequest(`${where}: ${f} must be text`);
     }
     try {
-      return sanitizeScenePatch(scene);
+      return { ...sanitizeScenePatch(scene), ...referencesByName(library, scene.reference_names) };
     } catch (err) {
       throw badRequest(`${where}: ${err.message}`);
     }
@@ -432,6 +454,32 @@ app.post('/api/scenes/import', async (req, res) => {
     for (const patch of patches) sb.scenes.push(syncCues(newScene(nextSceneId(sb), patch)));
   }, { label: `Import ${patches.length} scene${patches.length === 1 ? '' : 's'}` });
   res.json(sb);
+});
+
+/** { reference_asset_ids } for library images named in `names` (case and extension don't matter), or {}. */
+function referencesByName(library, names) {
+  if (names === undefined) return {};
+  if (!Array.isArray(names) || !names.every((n) => typeof n === 'string')) throw badRequest('reference_names must be a list of names');
+  const key = (name) => name.trim().replace(/\.[a-z0-9]{2,4}$/i, '').toLowerCase();
+  const images = library.filter((a) => a.type === 'image');
+  const ids = names.map((name) => {
+    const asset = images.find((a) => key(a.name) === key(name));
+    if (!asset) throw badRequest(`no library image is named "${name}" (generate it first with timeline.mjs references)`);
+    return asset.asset_id;
+  });
+  return { reference_asset_ids: [...new Set(ids)].slice(0, 14) };
+}
+
+/**
+ * Generate a reference image (a character or location master) into the library under `name`, and
+ * with `for_every_scene`, add it to the project-wide references: { name, prompt, for_every_scene? }.
+ * A library image with the same name is replaced as the reference.
+ */
+app.post('/api/references/generate', async (req, res) => {
+  const name = String(req.body?.name || '').trim().slice(0, 80);
+  const prompt = String(req.body?.prompt || '').trim().slice(0, 4000);
+  if (!name || !prompt) throw badRequest('name and prompt are required');
+  res.status(201).json(await generateReferenceImage({ name, prompt, forEveryScene: Boolean(req.body.for_every_scene) }));
 });
 
 // ---- Undo / redo ------------------------------------------------------------------------------
@@ -526,6 +574,11 @@ app.post('/api/generate-missing/plan', async (req, res) => res.json(await genera
 app.post('/api/generate-missing', (req, res) => res.status(202).json(startGenerateMissing({ kinds: req.body?.kinds, ids: req.body?.items })));
 
 app.post('/api/export', (_req, res) => res.status(202).json(startExport()));
+// The open project's last export, if it has one: { url, size_bytes, updated_at }, or null.
+app.get('/api/export', async (_req, res) => {
+  const stat = await fs.promises.stat(path.join(EXPORTS_DIR, 'final_output.mp4')).catch(() => null);
+  res.json(stat && { url: `/exports/final_output.mp4?t=${Math.round(stat.mtimeMs)}`, size_bytes: stat.size, updated_at: stat.mtime.toISOString() });
+});
 
 app.get('/api/job', (_req, res) => res.json(getJob()));
 
@@ -569,6 +622,14 @@ const serveOpenProject = (dirOf, options) => (req, res, next) => {
   staticHandlers.get(dir)(req, res, next);
 };
 app.use('/media', serveOpenProject(() => MEDIA_DIR, { maxAge: '1y', immutable: true }));
+// With ?download=1 the export is saved as "<video title>.mp4" instead of played in the browser.
+app.get('/exports/final_output.mp4', async (req, res, next) => {
+  if (req.query.download) {
+    const title = (await readStoryboard()).settings.title?.replace(/[\\/:*?"<>|\x00-\x1f]+/g, '').trim();
+    res.attachment(`${title || 'final_output'}.mp4`);
+  }
+  next();
+});
 app.use('/exports', serveOpenProject(() => EXPORTS_DIR));
 if (fs.existsSync(CLIENT_DIST)) {
   app.use(express.static(CLIENT_DIST));

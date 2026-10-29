@@ -120,6 +120,52 @@ function imageUsage(meta = {}) {
   };
 }
 
+// ---- Image check (vision) -------------------------------------------------------------------------
+
+const CHECK_INSTRUCTIONS = `You check pictures generated for a video before they are used. Below is the brief the picture was made from, then the picture.
+
+Look for clear mistakes only:
+- anatomy: a person with extra or missing arms, hands or fingers, hands or limbs not attached to anyone, merged or duplicated bodies or faces
+- cast: more or fewer people than the brief describes (a character described as alone with another person, or another person's hands or arms in the frame), or the same character shown twice
+- contradictions: something the brief clearly asks for that is missing or plainly different
+- garbled or misspelled text that the brief asked for
+
+Don't judge style, taste, lighting or composition, and don't flag small details a viewer wouldn't notice. Count the people and the hands you can see. Answer in JSON.`;
+
+const CHECK_SCHEMA = {
+  type: 'OBJECT',
+  properties: {
+    people: { type: 'INTEGER', description: 'People (or humanoid characters) visible' },
+    hands: { type: 'INTEGER', description: 'Human hands visible' },
+    issues: { type: 'ARRAY', items: { type: 'STRING' }, description: 'Each clear mistake, in one short sentence; empty if none' },
+  },
+  required: ['people', 'hands', 'issues'],
+};
+
+/**
+ * Ask a Gemini vision model whether a generated picture has clear mistakes (extra hands, an extra
+ * person, a missing subject) for `brief`. Resolves with { ok, people, hands, issues, usage }.
+ */
+export async function checkImage({ image, brief, model }) {
+  const data = await call(`models/${bare(model)}:generateContent`, {
+    contents: [{ role: 'user', parts: [{ text: `${CHECK_INSTRUCTIONS}\n\nBrief: ${brief}` }, { inlineData: splitDataUri(image) }] }],
+    generationConfig: { temperature: 0, responseMimeType: 'application/json', responseSchema: CHECK_SCHEMA },
+  });
+  const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text).filter(Boolean).join('') || '';
+  let result;
+  try {
+    result = JSON.parse(text);
+  } catch {
+    throw new Error(`The image check returned no answer${data.promptFeedback?.blockReason ? ` (${data.promptFeedback.blockReason})` : ''}`);
+  }
+  const issues = (Array.isArray(result.issues) ? result.issues : []).map(String).filter((t) => t.trim()).slice(0, 5);
+  return { ok: !issues.length, people: result.people ?? null, hands: result.hands ?? null, issues, usage: textUsage(data.usageMetadata) };
+}
+
+function textUsage(meta = {}) {
+  return { input_tokens: meta.promptTokenCount ?? 0, text_output_tokens: (meta.candidatesTokenCount ?? 0) + (meta.thoughtsTokenCount ?? 0) };
+}
+
 // ---- Video (Interactions API) ---------------------------------------------------------------------
 
 const DONE = new Set(['completed', 'failed', 'cancelled', 'incomplete', 'requires_action', 'requires_continuation']);

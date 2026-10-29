@@ -4,7 +4,7 @@ import {
   Wand2, X,
 } from 'lucide-react';
 import {
-  ACCEPT, AUDIO_TAG, AUDIO_TAG_MODELS, MAX_SHOTS, MOTIONS, cueTime, formatTime, motionLabel, newShot, newSfxLayer, sceneTimeline,
+  ACCEPT, AUDIO_TAG, AUDIO_TAG_MODELS, MAX_SHOTS, MOTIONS, SHAKES, cueTime, formatTime, motionLabel, newShot, newSfxLayer, sceneTimeline,
 } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
 import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
@@ -253,6 +253,7 @@ export default function Inspector({
               uploadTitle="Upload an image"
               onUpload={(file) => onUpload('image', file)}
             />
+            <ImageCheck check={scene.image_check} url={scene.image_url} />
 
             <label className="label mt-3" htmlFor="motion">Camera motion</label>
             <select id="motion" className="field" value={scene.motion || ''} onChange={(e) => onChange({ motion: e.target.value || null })}>
@@ -496,6 +497,26 @@ export default function Inspector({
       </Section>
       )}
 
+      <Section icon={Wand2} color="text-zinc-400" title="Finishing" hint="On export">
+        <label className="label" htmlFor="title_text">On-screen title</label>
+        <input
+          id="title_text"
+          className="field"
+          maxLength={80}
+          value={scene.title_text || ''}
+          placeholder='e.g. DAY 12 or 47 GALLONS LEFT'
+          onChange={(e) => onChange({ title_text: e.target.value })}
+        />
+        <p className="mt-1 text-[11px] text-zinc-600">Shown big over the first 3 seconds of the scene.</p>
+        <label className="label mt-3" htmlFor="shake">Camera shake</label>
+        <select id="shake" className="field" value={scene.shake || ''} onChange={(e) => onChange({ shake: e.target.value || null })}>
+          {SHAKES.map(([id, label]) => (
+            <option key={id} value={id}>{label}</option>
+          ))}
+        </select>
+        <p className="mt-1 text-[11px] text-zinc-600">For tense moments (footsteps overhead, a door hit). Only in the exported video.</p>
+      </Section>
+
       <Section icon={NotebookPen} color="text-zinc-400" title="Notes" hint="Not used for generation">
         <AutoTextarea
           minRows={3}
@@ -548,6 +569,7 @@ function Shot({ shot, number, cue, shown, sceneDuration, defaultMotion, busy, er
           {busy && <BusyOverlay />}
         </div>
       )}
+      <ImageCheck check={shot.image_check} url={shot.image_url} />
       <textarea
         rows={2}
         className="field resize-y"
@@ -755,6 +777,27 @@ function SourceRow({ name, fallback, onClear, busy, extra }) {
       <button className="flex shrink-0 items-center gap-0.5 hover:text-red-400 disabled:opacity-40" onClick={onClear} disabled={busy}>
         <X className="size-3" /> Remove
       </button>
+    </div>
+  );
+}
+
+/**
+ * What the image check found in the picture now shown (a check of a picture since replaced is ignored):
+ * problems it couldn't fix in its retries, or that the check couldn't run. Nothing when it passed.
+ */
+function ImageCheck({ check, url }) {
+  if (!check || !url || check.url !== url || check.ok) return null;
+  return (
+    <div className="mt-1.5 mb-2 flex gap-1.5 rounded border border-amber-500/30 bg-amber-500/5 px-2 py-1.5 text-[11px] text-amber-300">
+      <TriangleAlert className="mt-px size-3.5 shrink-0" />
+      {check.error ? (
+        <span>The image check couldn't run: {check.error}</span>
+      ) : (
+        <span>
+          Still has problems after {check.attempts} {check.attempts === 1 ? 'try' : 'tries'}: {check.issues.join(' ')} Edit the prompt
+          (say who is in the frame and how many hands) and regenerate.
+        </span>
+      )}
     </div>
   );
 }

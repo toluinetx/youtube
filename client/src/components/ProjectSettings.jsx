@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Loader2, Music, Upload, X } from 'lucide-react';
 import { api } from '../api.js';
-import { ACCEPT, MOTIONS, formatTime } from '../util.js';
+import { ACCEPT, LOOKS, MOTIONS, formatTime } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
 import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
 
@@ -41,6 +41,43 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             onChange={(e) => onChange({ style_prompt: e.target.value })}
           />
         </Field>
+        <label className="flex items-start gap-2 text-xs text-zinc-300">
+          <input
+            type="checkbox"
+            className="mt-0.5 accent-amber-400"
+            checked={settings.image_guardrails !== false}
+            onChange={(e) => onChange({ image_guardrails: e.target.checked })}
+          />
+          <span>
+            People &amp; hands guardrails
+            <span className="block text-[11px] text-zinc-600">Tells the image model: only the people the scene describes, two hands each.</span>
+          </span>
+        </label>
+        <label className="flex items-start gap-2 text-xs text-zinc-300">
+          <input
+            type="checkbox"
+            className="mt-0.5 accent-amber-400"
+            checked={Boolean(settings.image_check)}
+            onChange={(e) => onChange({ image_check: e.target.checked })}
+          />
+          <span>
+            Check each image, and retry up to{' '}
+            <input
+              type="number"
+              min={0}
+              max={5}
+              className="field inline-block !w-12 !px-1.5 !py-0 text-center"
+              value={settings.image_check_retries}
+              disabled={!settings.image_check}
+              onChange={(e) => onChange({ image_check_retries: Math.min(5, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
+            />{' '}
+            times
+            <span className="block text-[11px] text-zinc-600">
+              A Gemini vision model looks for extra hands or people and a missing subject. Each retry costs another image.
+              {status && !status.gemini && ' Needs GEMINI_API_KEY in .env; skipped until then.'}
+            </span>
+          </span>
+        </label>
         <Field label="Camera motion for images (scenes can override it)">
           <select className="field" value={settings.motion} onChange={(e) => onChange({ motion: e.target.value })}>
             {MOTIONS.map(([id, label]) => (
@@ -48,6 +85,62 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             ))}
           </select>
         </Field>
+        <Field label={`How far it moves: ${settings.motion_amount ?? 12}%${(settings.motion_amount ?? 12) <= 6 ? ' (slow cinematic push)' : ''}`}>
+          <input
+            type="range" min={2} max={30} step={1} value={settings.motion_amount ?? 12}
+            onChange={(e) => onChange({ motion_amount: Number(e.target.value) })}
+            className="w-full accent-amber-400"
+          />
+        </Field>
+      </Group>
+
+      <Group title="Finishing" subtitle="Applied on export">
+        <Field label="Colour grade">
+          <select className="field" value={settings.look || 'none'} onChange={(e) => onChange({ look: e.target.value })}>
+            {LOOKS.map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
+          </select>
+        </Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label={`Vignette: ${Math.round((settings.vignette || 0) * 100)}%`}>
+            <input
+              type="range" min={0} max={1} step={0.05} value={settings.vignette || 0}
+              onChange={(e) => onChange({ vignette: Number(e.target.value) })}
+              className="w-full accent-amber-400"
+            />
+          </Field>
+          <Field label={`Film grain: ${Math.round((settings.grain || 0) * 100)}%`}>
+            <input
+              type="range" min={0} max={1} step={0.05} value={settings.grain || 0}
+              onChange={(e) => onChange({ grain: Number(e.target.value) })}
+              className="w-full accent-amber-400"
+            />
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Captions">
+            <select className="field" value={settings.captions || 'off'} onChange={(e) => onChange({ captions: e.target.value })}>
+              <option value="off">Off</option>
+              <option value="words">Word by word</option>
+              <option value="lines">Subtitle lines</option>
+            </select>
+          </Field>
+          <Field label="Position">
+            <select
+              className="field"
+              value={settings.caption_position || 'bottom'}
+              disabled={(settings.captions || 'off') === 'off'}
+              onChange={(e) => onChange({ caption_position: e.target.value })}
+            >
+              <option value="bottom">Bottom</option>
+              <option value="center">Center</option>
+            </select>
+          </Field>
+        </div>
+        <p className="text-[11px] text-zinc-600">
+          Captions follow the voiceover word by word, timed from the generated narration. The preview approximates the grade and vignette; see the exact result in the rendered MP4. Scenes add shake and on-screen titles in their own sidebar.
+        </p>
       </Group>
 
       <ReferenceSettings
