@@ -34,7 +34,7 @@ function tickStep(pps) {
 
 export default function Timeline({
   scenes, starts, total, time, playing, seek, selectedId, onSelect, onResize, onAdd, onDropFiles, onDropAsset, dragAsset, settings,
-  onSelectMusic, busy,
+  onSelectMusic, onClipMenu, onMusicMenu, busy,
 }) {
   const [pps, setPps] = useState(40);
   // While something is dragged over the timeline: { source: 'files' | 'asset', target, index, valid }.
@@ -171,6 +171,7 @@ export default function Timeline({
                     dropping={dropStateFor(scene.scene_id, track.kind)}
                     onSelect={onSelect}
                     onResize={onResize}
+                    onMenu={onClipMenu}
                   />
                 ))}
               </div>
@@ -183,6 +184,7 @@ export default function Timeline({
               busy={Boolean(busy.music)}
               dropping={dropStateFor(null, 'music')}
               onSelect={onSelectMusic}
+              onMenu={onMusicMenu}
             />
 
             {insertX != null && (
@@ -214,7 +216,7 @@ export default function Timeline({
   );
 }
 
-function MusicRow({ settings, total, pps, busy, dropping, onSelect }) {
+function MusicRow({ settings, total, pps, busy, dropping, onSelect, onMenu }) {
   const width = Math.max(total * pps, 160);
   const loopLen = settings.music_duration_sec;
   const loops = [];
@@ -230,6 +232,7 @@ function MusicRow({ settings, total, pps, busy, dropping, onSelect }) {
         }`}
         style={{ width: width - 2 }}
         onPointerDown={onSelect}
+        onContextMenu={onMenu}
         title={settings.music_url ? `${settings.music_name}: click for music settings` : 'Drop an audio file here for background music'}
       >
         {loops.map((t) => (
@@ -244,7 +247,7 @@ function MusicRow({ settings, total, pps, busy, dropping, onSelect }) {
   );
 }
 
-const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy, dropping, onSelect, onResize }) {
+const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy, dropping, onSelect, onResize, onMenu }) {
   const width = scene.duration_sec * pps;
   const ring = dropping
     ? dropping === 'ok'
@@ -257,12 +260,13 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
   const names = scene.source_names || {};
   const base = `absolute top-1 bottom-1 overflow-hidden rounded-md cursor-pointer ${ring}`;
   const style = { left: left + 1, width: Math.max(2, width - 2) };
-  const select = () => onSelect(scene.scene_id);
+  const select = (e) => e.button === 0 && onSelect(scene.scene_id);
+  const menu = (e) => onMenu(e, scene.scene_id, track);
 
   if (track === 'image') {
     const thumb = scene.video_thumb_url || scene.image_url;
     return (
-      <div className={`${base} bg-zinc-800`} style={style} onPointerDown={select} title={names.image || scene.image_prompt} {...drop}>
+      <div className={`${base} bg-zinc-800`} style={style} onPointerDown={select} onContextMenu={menu} title={names.image || scene.image_prompt} {...drop}>
         {thumb ? (
           <div className="absolute inset-0 bg-left" style={{ backgroundImage: `url("${thumb}")`, backgroundSize: 'auto 100%', backgroundRepeat: 'repeat-x' }} />
         ) : (
@@ -292,7 +296,7 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
   const overflow = isVoice && audioLen > scene.duration_sec;
 
   return (
-    <div className={`${base} ${url ? '' : 'border border-dashed border-zinc-700/80'}`} style={style} onPointerDown={select} title={sourceName || text} {...drop}>
+    <div className={`${base} ${url ? '' : 'border border-dashed border-zinc-700/80'}`} style={style} onPointerDown={select} onContextMenu={menu} title={sourceName || text} {...drop}>
       {url && (
         <div className={`absolute inset-y-0 left-0 border-l-2 ${color}`} style={{ width: `${filled * 100}%` }}>
           <Wave />

@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, Copy, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles, Trash2, X,
+} from 'lucide-react';
 import { api } from './api.js';
 import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts } from './util.js';
 import AssetLibrary from './components/AssetLibrary.jsx';
@@ -9,8 +12,13 @@ import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
 import ProjectSettings from './components/ProjectSettings.jsx';
 import ScriptImport from './components/ScriptImport.jsx';
+import ContextMenu from './components/ContextMenu.jsx';
 
 const SAVE_DELAY_MS = 600;
+const MOD_KEY = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘' : 'Ctrl+';
+const SLOT_LABEL = { image: 'image', voiceover: 'voiceover', sfx: 'sound effect' };
+const SLOT_PROMPT = { image: 'image_prompt', voiceover: 'voiceover_text', sfx: 'sfx_prompt' };
+const SLOT_ICON = { image: ImageIcon, voiceover: AudioLines, sfx: Sparkles };
 // Fields the server owns after a generate/upload/remove; everything else may have unsaved local edits.
 const MEDIA_FIELDS = [
   'image_url', 'voiceover_url', 'sfx_url', 'voiceover_duration_sec', 'sfx_duration_sec',
@@ -36,6 +44,7 @@ export default function App() {
   const [uploading, setUploading] = useState([]);
   const [dragAsset, setDragAsset] = useState(null);
   const [snapshotTarget, setSnapshotTarget] = useState(null); // { asset, purpose, resolve }
+  const [menu, setMenu] = useState(null); // { x, y, items }
   const [libraryCollapsed, setLibraryCollapsed] = useState(() => localStorage.getItem('libraryCollapsed') === '1');
 
   const scenes = useMemo(() => sb?.scenes ?? [], [sb]);
@@ -186,10 +195,22 @@ export default function App() {
     [scenes, starts, seek],
   );
 
+  // Latest scene actions for the keyboard shortcuts and context menus, which are bound once.
+  const actions = useRef({});
+
   useEffect(() => {
     const onKey = (e) => {
-      if (isTyping(e) || e.ctrlKey || e.metaKey || e.altKey) return;
-      if (e.code === 'Space') {
+      if (isTyping(e) || e.altKey) return;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        if (selectedId != null) actions.current.duplicateScene(selectedId);
+        return;
+      }
+      if (e.ctrlKey || e.metaKey) return;
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault();
+        if (selectedId != null) actions.current.deleteScene(selectedId);
+      } else if (e.code === 'Space') {
         e.preventDefault();
         setPreviewMode('live');
         setPlaying((p) => !p);
@@ -202,7 +223,7 @@ export default function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [scenes, starts, time, selectScene]);
+  }, [scenes, starts, time, selectScene, selectedId]);
 
   // ---- Scene operations -------------------------------------------------------------------------
 
@@ -232,6 +253,10 @@ export default function App() {
   );
 
   const regenerate = (id, kind) => mediaAction(id, kind, () => api.regenerate(id, kind));
+  const regenerateWithConfirm = (scene, kind) => {
+    if (kind === 'image' && scene.video_url && !window.confirm('Generating an image replaces the imported video for this scene. Continue?')) return;
+    regenerate(scene.scene_id, kind);
+  };
   const clearSlot = (id, slot) => mediaAction(id, slot, () => api.clearSceneSlot(id, slot));
 
   const musicAction = async (action) => {
@@ -262,9 +287,9 @@ export default function App() {
     [flushAll, notify],
   );
 
-  const addScene = () =>
+  const addScene = (afterId = selectedId) =>
     run(async () => {
-      const scene = await api.addScene({ after_id: selectedId });
+      const scene = await api.addScene({ after_id: afterId });
       await reload();
       selectScene(scene.scene_id, { seekTo: false });
     });
@@ -296,6 +321,9 @@ export default function App() {
       [order[i], order[j]] = [order[j], order[i]];
       applyServer(await api.reorder(order));
     });
+
+  actions.current.duplicateScene = duplicateScene;
+  actions.current.deleteScene = deleteScene;
 
   // ---- Library ----------------------------------------------------------------------------------
   // Uploads only ever go into the library. Assets reach the reel when the user drags them onto the
@@ -478,6 +506,83 @@ export default function App() {
     return () => clearInterval(t);
   }, [job?.status, job?.id, reload, notify]);
 
+  // ---- Context menus ----------------------------------------------------------------------------
+
+  const openMenu = (e, items) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setMenu({ x: e.clientX, y: e.clientY, items });
+  };
+  const closeMenu = useCallback(() => setMenu(null), []);
+
+  const clipMenuItems = (sceneId, slot) => {
+    const i = scenes.findIndex((s) => s.scene_id === sceneId);
+    const scene = scenes[i];
+    if (!scene) return [];
+    const has = slot === 'image' ? Boolean(scene.image_url || scene.video_url) : Boolean(scene[`${slot}_url`]);
+    const canGenerate = Boolean(scene[SLOT_PROMPT[slot]]?.trim());
+    const slotBusy = Boolean(busy[`${sceneId}:${slot}`]);
+    const label = slot === 'image' && scene.video_url ? 'video' : SLOT_LABEL[slot];
+    const imageInLibrary = library.some((a) => a.url === scene.image_url);
+    return [
+      { heading: `Scene ${i + 1}` },
+      {
+        label: `${has && !scene.video_url ? 'Regenerate' : 'Generate'} ${SLOT_LABEL[slot]}`,
+        icon: has ? RefreshCw : SLOT_ICON[slot],
+        disabled: !canGenerate || slotBusy,
+        onClick: () => regenerateWithConfirm(scene, slot),
+      },
+      ...(slot === 'image' && scene.image_url && !imageInLibrary
+        ? [{ label: 'Save image to library', icon: BookmarkPlus, onClick: () => saveSceneToLibrary(sceneId) }]
+        : []),
+      { label: `Remove ${label}`, icon: X, disabled: !has || slotBusy, onClick: () => clearSlot(sceneId, slot) },
+      '-',
+      { label: 'Insert scene after', icon: Plus, onClick: () => addScene(sceneId) },
+      { label: 'Duplicate scene', icon: Copy, shortcut: `${MOD_KEY}D`, onClick: () => duplicateScene(sceneId) },
+      { label: 'Move earlier', icon: ArrowLeft, disabled: i === 0, onClick: () => moveScene(sceneId, -1) },
+      { label: 'Move later', icon: ArrowRight, disabled: i === scenes.length - 1, onClick: () => moveScene(sceneId, 1) },
+      '-',
+      { label: 'Delete scene', icon: Trash2, danger: true, shortcut: 'Del', onClick: () => deleteScene(sceneId) },
+    ];
+  };
+
+  const musicMenuItems = () => [
+    { label: 'Music settings', icon: Settings2, onClick: () => setSidebarTab('project') },
+    { label: 'Remove music', icon: X, danger: true, disabled: !sb.settings.music_url || Boolean(busy.music), onClick: removeMusic },
+  ];
+
+  const assetMenuItems = (asset) => {
+    const visual = assetFits(asset, 'image');
+    const target = selected ? `scene ${selectedIndex + 1}` : null;
+    const use = (slot, label, icon) =>
+      assetFits(asset, slot) && target ? [{ label: `${label} in ${target}`, icon, onClick: () => placeAsset(selected.scene_id, slot, asset) }] : [];
+    return [
+      { heading: asset.name },
+      ...(visual
+        ? [
+            { label: 'Add as new scene at end', icon: Plus, onClick: () => addAssetAsScene(asset) },
+            ...(target ? [{ label: `Insert after ${target}`, icon: Plus, onClick: () => addAssetAsScene(asset, selectedIndex + 1) }] : []),
+            ...use('image', 'Use as picture', ImageIcon),
+          ]
+        : []),
+      ...use('voiceover', 'Use as voiceover', AudioLines),
+      ...use('sfx', 'Use as sound effect', Sparkles),
+      ...(assetFits(asset, 'music') ? [{ label: 'Use as background music', icon: Music, onClick: () => setMusicAsset(asset) }] : []),
+      ...(asset.type === 'video' ? [{ label: 'Take a snapshot…', icon: Camera, onClick: () => requestSnapshot(asset) }] : []),
+      '-',
+      { label: 'Rename…', icon: Pencil, onClick: () => renameAsset(asset) },
+      { label: 'Delete from library', icon: Trash2, danger: true, onClick: () => deleteAsset(asset) },
+    ];
+  };
+
+  actions.current.clipMenu = (e, sceneId, slot) => {
+    selectScene(sceneId, { seekTo: false });
+    openMenu(e, clipMenuItems(sceneId, slot));
+  };
+  // Stable so the memoized timeline clips don't re-render on every App render.
+  const onClipMenu = useCallback((e, sceneId, slot) => actions.current.clipMenu(e, sceneId, slot), []);
+  const onResizeScene = useCallback((id, d) => patchScene(id, { duration_sec: d }), [patchScene]);
+
   // ---- Render -----------------------------------------------------------------------------------
 
   if (!sb) {
@@ -527,6 +632,7 @@ export default function App() {
           onAddAsScene={(asset) => addAssetAsScene(asset)}
           onSetMusic={setMusicAsset}
           onDragAsset={setDragAsset}
+          onAssetMenu={(e, asset) => openMenu(e, assetMenuItems(asset))}
         />
         <main className="flex min-w-0 flex-1 flex-col">
           <Preview
@@ -553,13 +659,15 @@ export default function App() {
             seek={seek}
             selectedId={selectedId}
             onSelect={selectScene}
-            onResize={(id, d) => patchScene(id, { duration_sec: d })}
-            onAdd={addScene}
+            onResize={onResizeScene}
+            onAdd={() => addScene()}
             onDropFiles={dropFiles}
             onDropAsset={dropAsset}
             dragAsset={dragAsset}
             settings={sb.settings}
             onSelectMusic={() => setSidebarTab('project')}
+            onClipMenu={onClipMenu}
+            onMusicMenu={(e) => openMenu(e, musicMenuItems())}
             busy={busy}
           />
         </main>
@@ -619,7 +727,7 @@ export default function App() {
               <div className="p-6 text-center text-sm text-zinc-500">
                 <p>No scenes yet.</p>
                 <div className="mt-4 flex justify-center gap-2">
-                  <button className="btn-secondary" onClick={addScene}>Add a scene</button>
+                  <button className="btn-secondary" onClick={() => addScene()}>Add a scene</button>
                   <button className="btn-primary" onClick={() => setShowImport(true)}>Import a script</button>
                 </div>
                 <p className="mt-4 text-xs text-zinc-600">Or drag images and videos from the library onto the timeline.</p>
@@ -632,6 +740,8 @@ export default function App() {
       {snapshotTarget && (
         <SnapshotModal asset={snapshotTarget.asset} purpose={snapshotTarget.purpose} onCancel={cancelSnapshot} onCapture={captureSnapshot} />
       )}
+
+      {menu && <ContextMenu key={`${menu.x},${menu.y}`} x={menu.x} y={menu.y} items={menu.items} onClose={closeMenu} />}
 
       {showImport && <ScriptImport hasScenes={scenes.length > 0} onClose={() => setShowImport(false)} onImport={importScript} />}
 

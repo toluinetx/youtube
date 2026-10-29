@@ -18,7 +18,7 @@ const hasFiles = (e) => [...e.dataTransfer.types].includes('Files');
  * assets reach the reel when dragged onto the timeline (or via the explicit + / music buttons).
  */
 export default function AssetLibrary({
-  library, usage, uploading, collapsed, onToggle, onUploadFiles, onDelete, onRename, onSnapshot, onAddAsScene, onSetMusic, onDragAsset,
+  library, usage, uploading, collapsed, onToggle, onUploadFiles, onDelete, onRename, onSnapshot, onAddAsScene, onSetMusic, onDragAsset, onAssetMenu,
 }) {
   const [query, setQuery] = useState('');
   const [closed, setClosed] = useState({});
@@ -163,6 +163,7 @@ export default function AssetLibrary({
                           onRename={() => onRename(a)}
                           onDelete={() => onDelete(a)}
                           onDragAsset={onDragAsset}
+                          onMenu={(e) => onAssetMenu(e, a)}
                         />
                       ))}
                     </ul>
@@ -178,6 +179,7 @@ export default function AssetLibrary({
                           onSnapshot={() => onSnapshot(a)}
                           onDelete={() => onDelete(a)}
                           onDragAsset={onDragAsset}
+                          onMenu={(e) => onAssetMenu(e, a)}
                         />
                       ))}
                     </div>
@@ -224,9 +226,9 @@ function UsageBadge({ uses }) {
   );
 }
 
-function Tile({ asset, uses, onAdd, onRename, onSnapshot, onDelete, onDragAsset }) {
+function Tile({ asset, uses, onAdd, onRename, onSnapshot, onDelete, onDragAsset, onMenu }) {
   return (
-    <div className="group cursor-grab active:cursor-grabbing" title={`${asset.name}\nDrag onto the timeline`} {...dragProps(asset, onDragAsset)}>
+    <div className="group cursor-grab active:cursor-grabbing" title={`${asset.name}\nDrag onto the timeline · right-click for more`} onContextMenu={onMenu} {...dragProps(asset, onDragAsset)}>
       <div className="relative aspect-video overflow-hidden rounded-md bg-zinc-800 ring-1 ring-white/5 group-hover:ring-white/25">
         {asset.thumb_url ? (
           <img src={asset.thumb_url} alt="" draggable={false} loading="lazy" className="h-full w-full object-cover" />
@@ -280,11 +282,12 @@ function TileButton({ title, onClick, danger, children }) {
   );
 }
 
-function SoundRow({ asset, uses, playing, onTogglePlay, onSetMusic, onRename, onDelete, onDragAsset }) {
+function SoundRow({ asset, uses, playing, onTogglePlay, onSetMusic, onRename, onDelete, onDragAsset, onMenu }) {
   return (
     <li
       className="group flex cursor-grab items-center gap-2 rounded-md px-1.5 py-1.5 hover:bg-zinc-800/60 active:cursor-grabbing"
-      title={`${asset.name}\nDrag onto a Voice, SFX or Music track`}
+      title={`${asset.name}\nDrag onto a Voice, SFX or Music track · right-click for more`}
+      onContextMenu={onMenu}
       {...dragProps(asset, onDragAsset)}
     >
       <button
