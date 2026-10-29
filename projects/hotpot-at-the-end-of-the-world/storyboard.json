@@ -3,7 +3,7 @@
     "title": "Hotpot at the End of the World",
     "aspect_ratio": "16:9",
     "fps": 30,
-    "image_model": "gemini:gemini-3.1-flash-lite-image",
+    "image_model": "gemini:gemini-3.1-flash-image",
     "reference_model": "gemini:gemini-3.1-flash-image",
     "image_params": {},
     "video_model": "gemini:gemini-omni-1.1-flash",
@@ -31,18 +31,69 @@
       "sfx_prompt": "Heavy rain and wind, a long train roaring past on rails, distant fires crackling",
       "video_prompt": "",
       "duration_sec": 8,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-1-1793268147939-g2ni.jpg",
+      "voiceover_url": "/media/voiceover/scene-1-1793268150462-6s9y.mp3",
+      "sfx_url": "/media/sfx/scene-1-1793268152931-y0bg.mp3",
+      "voiceover_duration_sec": 4.91,
+      "voiceover_words": [
+        {
+          "text": "The",
+          "start": 0.16,
+          "end": 0.24
+        },
+        {
+          "text": "world",
+          "start": 0.32,
+          "end": 0.64
+        },
+        {
+          "text": "ended",
+          "start": 0.72,
+          "end": 1.04
+        },
+        {
+          "text": "three",
+          "start": 1.28,
+          "end": 1.52
+        },
+        {
+          "text": "winters",
+          "start": 1.6,
+          "end": 1.92
+        },
+        {
+          "text": "ago.",
+          "start": 2.12,
+          "end": 2.36
+        },
+        {
+          "text": "The",
+          "start": 3.44,
+          "end": 3.52
+        },
+        {
+          "text": "train",
+          "start": 3.6,
+          "end": 3.84
+        },
+        {
+          "text": "never",
+          "start": 3.92,
+          "end": 4.16
+        },
+        {
+          "text": "stopped.",
+          "start": 4.24,
+          "end": 4.88
+        }
+      ],
+      "sfx_duration_sec": 8.05,
       "sfx_layers": [
         {
           "layer_id": "l_25eb1636",
           "prompt": "single loud thunder crack rolling into a long rumble",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-1-1793268155045-1bme.mp3",
+          "duration_sec": 4.05,
           "volume": 1,
           "start_sec": 0.5,
           "length_sec": 4,
@@ -71,12 +122,43 @@
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "",
       "duration_sec": 7,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-2-1793268166914-9ree.jpg",
+      "voiceover_url": "/media/voiceover/scene-2-1793268168057-i8qn.mp3",
+      "sfx_url": "/media/sfx/scene-2-1793268170505-ca31.mp3",
+      "voiceover_duration_sec": 3.55,
+      "voiceover_words": [
+        {
+          "text": "And",
+          "start": 0,
+          "end": 0.16
+        },
+        {
+          "text": "tonight…",
+          "start": 0.28,
+          "end": 1.36
+        },
+        {
+          "text": "Eli",
+          "start": 1.44,
+          "end": 1.76
+        },
+        {
+          "text": "is",
+          "start": 1.84,
+          "end": 2
+        },
+        {
+          "text": "making",
+          "start": 2.08,
+          "end": 2.4
+        },
+        {
+          "text": "hotpot.",
+          "start": 2.48,
+          "end": 3.52
+        }
+      ],
+      "sfx_duration_sec": 7.03,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -99,12 +181,12 @@
       "sfx_prompt": "Water running from a small tap into a steel sink, vegetables being rinsed, train rumbling softly underneath",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
+      "image_url": "/media/images/scene-3-1793268179139-3zrz.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-3-1793268181850-pkzl.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -126,19 +208,19 @@
       "voiceover_text": "",
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "The knife chops steadily through the cabbage, leaves falling aside, slight sway of the moving train",
-      "duration_sec": 7,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-4-1793268201483-ol62.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 7.03,
       "sfx_layers": [
         {
           "layer_id": "l_21c16870",
           "prompt": "steady rhythmic knife chopping on a wooden board",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-4-1793268203877-let5.mp3",
+          "duration_sec": 6.53,
           "volume": 1.3,
           "start_sec": 0.3,
           "length_sec": 6.5,
@@ -150,17 +232,17 @@
         {
           "shot_id": "s_92bfb13f",
           "image_prompt": "Extreme close-up of a knife slicing green onions into thin rings on a wooden cutting board, rings scattering, warm lamp light",
-          "image_url": null,
+          "image_url": "/media/images/scene-4-1793268199229-bcm4.jpg",
           "motion": null,
           "start_sec": 3.5,
           "cue": null,
           "source_name": null
         }
       ],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
+      "video_url": "/media/video/scene-4-1793268635267-zfl1.mp4",
+      "video_thumb_url": "/media/video/scene-4-1793268635267-zfl1.thumb.jpg",
+      "video_duration_sec": 10.03,
+      "video_has_audio": true,
       "video_start_sec": 0,
       "video_volume": 1,
       "source_names": {},
@@ -177,18 +259,18 @@
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
+      "image_url": "/media/images/scene-5-1793268212969-g53v.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-5-1793268215519-tnd2.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [
         {
           "layer_id": "l_3906e3aa",
           "prompt": "light precise knife cuts into soft mushrooms",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-5-1793268217403-lefp.mp3",
+          "duration_sec": 4.05,
           "volume": 1,
           "start_sec": 0.5,
           "length_sec": 4,
@@ -217,18 +299,18 @@
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
+      "image_url": "/media/images/scene-6-1793268226314-6tpz.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-6-1793268229003-uzhr.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [
         {
           "layer_id": "l_c64dec12",
           "prompt": "crinkling butcher paper unfolding",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-6-1793268231276-6dsi.mp3",
+          "duration_sec": 2.51,
           "volume": 1,
           "start_sec": 0.3,
           "length_sec": 2.5,
@@ -257,18 +339,74 @@
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "",
       "duration_sec": 7,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-7-1793268241656-rewg.jpg",
+      "voiceover_url": "/media/voiceover/scene-7-1793268243463-60wx.mp3",
+      "sfx_url": "/media/sfx/scene-7-1793268245852-h3ic.mp3",
+      "voiceover_duration_sec": 6.53,
+      "voiceover_words": [
+        {
+          "text": "Sesame,",
+          "start": 0,
+          "end": 0.96
+        },
+        {
+          "text": "chili,",
+          "start": 1.04,
+          "end": 1.92
+        },
+        {
+          "text": "garlic.",
+          "start": 2.04,
+          "end": 3.36
+        },
+        {
+          "text": "Some",
+          "start": 3.52,
+          "end": 3.68
+        },
+        {
+          "text": "rules",
+          "start": 3.76,
+          "end": 4.16
+        },
+        {
+          "text": "survive",
+          "start": 4.28,
+          "end": 4.72
+        },
+        {
+          "text": "the",
+          "start": 4.8,
+          "end": 4.88
+        },
+        {
+          "text": "end",
+          "start": 4.96,
+          "end": 5.04
+        },
+        {
+          "text": "of",
+          "start": 5.12,
+          "end": 5.2
+        },
+        {
+          "text": "the",
+          "start": 5.24,
+          "end": 5.28
+        },
+        {
+          "text": "world.",
+          "start": 5.36,
+          "end": 6.48
+        }
+      ],
+      "sfx_duration_sec": 7.03,
       "sfx_layers": [
         {
           "layer_id": "l_63fb6a4c",
           "prompt": "spoon clinking against a small ceramic bowl",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-7-1793268247539-89x0.mp3",
+          "duration_sec": 1.52,
           "volume": 1,
           "start_sec": 0,
           "length_sec": 1.5,
@@ -297,18 +435,18 @@
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "",
       "duration_sec": 7,
-      "image_url": null,
+      "image_url": "/media/images/scene-8-1793268259867-cv9y.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-8-1793268262654-63b4.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 7.03,
       "sfx_layers": [
         {
           "layer_id": "l_8e044183",
           "prompt": "liquid broth pouring into a cast-iron pot, splashing gently",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-8-1793268264514-4czt.mp3",
+          "duration_sec": 4.05,
           "volume": 1,
           "start_sec": 0.5,
           "length_sec": 4,
@@ -337,18 +475,18 @@
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
+      "image_url": "/media/images/scene-9-1793268275162-6xvh.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-9-1793268277701-3j3h.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [
         {
           "layer_id": "l_763e6eac",
           "prompt": "footsteps on a train carriage floor, plates rattling softly on a tray",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-9-1793268279916-3oe1.mp3",
+          "duration_sec": 4.52,
           "volume": 1,
           "start_sec": 0.5,
           "length_sec": 4.5,
@@ -377,18 +515,18 @@
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
+      "image_url": "/media/images/scene-10-1793268290854-olkm.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-10-1793268293515-zql7.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [
         {
           "layer_id": "l_5bd322b4",
           "prompt": "metal gas canister snapping into a portable stove",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-10-1793268295417-sc5t.mp3",
+          "duration_sec": 1.52,
           "volume": 1,
           "start_sec": 2,
           "length_sec": 1.5,
@@ -416,19 +554,19 @@
       "voiceover_text": "",
       "sfx_prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum",
       "video_prompt": "Fingers turn the knob, the burner clicks and blooms into a steady ring of blue flame",
-      "duration_sec": 5,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-11-1793268307225-8lup.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 5.04,
       "sfx_layers": [
         {
           "layer_id": "l_8211a88a",
           "prompt": "gas stove igniter clicking twice then a soft whoosh of flame",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-11-1793268309415-l7c0.mp3",
+          "duration_sec": 2.51,
           "volume": 1.3,
           "start_sec": 0.8,
           "length_sec": 2.5,
@@ -437,10 +575,10 @@
         }
       ],
       "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
+      "video_url": "/media/video/scene-11-1793268703182-vkko.mp4",
+      "video_thumb_url": "/media/video/scene-11-1793268703182-vkko.thumb.jpg",
+      "video_duration_sec": 10.03,
+      "video_has_audio": true,
       "video_start_sec": 0,
       "video_volume": 1,
       "source_names": {},
@@ -457,12 +595,93 @@
       "sfx_prompt": "Broth bubbling and simmering in a pot, gas flame hissing softly, rain on the window, train rumbling",
       "video_prompt": "",
       "duration_sec": 8,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-12-1793268317945-n2fw.jpg",
+      "voiceover_url": "/media/voiceover/scene-12-1793268319700-2za3.mp3",
+      "sfx_url": "/media/sfx/scene-12-1793268322088-aju9.mp3",
+      "voiceover_duration_sec": 6.03,
+      "voiceover_words": [
+        {
+          "text": "The",
+          "start": 0.08,
+          "end": 0.24
+        },
+        {
+          "text": "broth",
+          "start": 0.32,
+          "end": 0.56
+        },
+        {
+          "text": "comes",
+          "start": 0.64,
+          "end": 0.88
+        },
+        {
+          "text": "up",
+          "start": 0.96,
+          "end": 1.04
+        },
+        {
+          "text": "to",
+          "start": 1.08,
+          "end": 1.12
+        },
+        {
+          "text": "a",
+          "start": 1.2,
+          "end": 1.28
+        },
+        {
+          "text": "boil…",
+          "start": 1.36,
+          "end": 2.4
+        },
+        {
+          "text": "and",
+          "start": 2.48,
+          "end": 2.64
+        },
+        {
+          "text": "for",
+          "start": 2.72,
+          "end": 2.8
+        },
+        {
+          "text": "a",
+          "start": 2.84,
+          "end": 2.88
+        },
+        {
+          "text": "moment,",
+          "start": 2.96,
+          "end": 3.76
+        },
+        {
+          "text": "the",
+          "start": 3.8,
+          "end": 3.84
+        },
+        {
+          "text": "storm",
+          "start": 3.92,
+          "end": 4.24
+        },
+        {
+          "text": "outside",
+          "start": 4.32,
+          "end": 4.88
+        },
+        {
+          "text": "doesn't",
+          "start": 4.96,
+          "end": 5.2
+        },
+        {
+          "text": "exist.",
+          "start": 5.28,
+          "end": 6
+        }
+      ],
+      "sfx_duration_sec": 8.05,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -485,20 +704,81 @@
       "sfx_prompt": "Broth simmering, rain lashing the window, muffled distant growls and moans from outside, train rumbling",
       "video_prompt": "",
       "duration_sec": 9,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-13-1793268332593-txa3.jpg",
+      "voiceover_url": "/media/voiceover/scene-13-1793268344591-l1uq.mp3",
+      "sfx_url": "/media/sfx/scene-13-1793268346939-tpgl.mp3",
+      "voiceover_duration_sec": 6.43,
+      "voiceover_words": [
+        {
+          "text": "Outside,",
+          "start": 0,
+          "end": 1.04
+        },
+        {
+          "text": "they",
+          "start": 1.16,
+          "end": 1.28
+        },
+        {
+          "text": "never",
+          "start": 1.36,
+          "end": 1.68
+        },
+        {
+          "text": "stop",
+          "start": 1.76,
+          "end": 2
+        },
+        {
+          "text": "running.",
+          "start": 2.08,
+          "end": 3.36
+        },
+        {
+          "text": "Eli",
+          "start": 3.44,
+          "end": 3.84
+        },
+        {
+          "text": "stopped",
+          "start": 3.92,
+          "end": 4.16
+        },
+        {
+          "text": "looking",
+          "start": 4.24,
+          "end": 4.56
+        },
+        {
+          "text": "a",
+          "start": 4.72,
+          "end": 4.8
+        },
+        {
+          "text": "long",
+          "start": 4.88,
+          "end": 5.2
+        },
+        {
+          "text": "time",
+          "start": 5.28,
+          "end": 5.44
+        },
+        {
+          "text": "ago.",
+          "start": 5.52,
+          "end": 6.48
+        }
+      ],
+      "sfx_duration_sec": 9.04,
       "sfx_layers": [],
       "shots": [
         {
           "shot_id": "s_e74b02a3",
           "image_prompt": "Close-up of a worn bolt-action hunting rifle with a scuffed wooden stock leaning against the leather booth seat beside Eli's folded jacket, half in shadow, warm lamp light, steam drifting past",
-          "image_url": null,
+          "image_url": "/media/images/scene-13-1793268342737-c10f.jpg",
           "motion": null,
-          "start_sec": 3.1,
+          "start_sec": 3.92,
           "cue": "stopped looking",
           "source_name": null
         }
@@ -522,19 +802,19 @@
       "voiceover_text": "",
       "sfx_prompt": "Broth bubbling vigorously, chopsticks tapping the pot rim, rain on the window, train rumbling",
       "video_prompt": "Eli swishes the pork slice through the boiling broth, it turns pale as it cooks, steam curls up",
-      "duration_sec": 7,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-14-1793268360674-qe1x.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 7.03,
       "sfx_layers": [],
       "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
+      "video_url": "/media/video/scene-14-1793268750929-4w5o.mp4",
+      "video_thumb_url": "/media/video/scene-14-1793268750929-4w5o.thumb.jpg",
+      "video_duration_sec": 10.03,
+      "video_has_audio": true,
       "video_start_sec": 0,
       "video_volume": 1,
       "source_names": {},
@@ -551,12 +831,18 @@
       "sfx_prompt": "Broth simmering softly, rain on the window, train rumbling",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-15-1793268371448-wk7e.jpg",
+      "voiceover_url": "/media/voiceover/scene-15-1793268372234-k4d9.mp3",
+      "sfx_url": "/media/sfx/scene-15-1793268375238-qubm.mp3",
+      "voiceover_duration_sec": 1.23,
+      "voiceover_words": [
+        {
+          "text": "Finally.",
+          "start": 0.32,
+          "end": 1.2
+        }
+      ],
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -579,18 +865,18 @@
       "sfx_prompt": "Train rumbling, broth simmering, sudden near-silence",
       "video_prompt": "",
       "duration_sec": 4,
-      "image_url": null,
+      "image_url": "/media/images/scene-16-1793268386243-3awz.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-16-1793268389323-je3k.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 4.05,
       "sfx_layers": [
         {
           "layer_id": "l_fcdb5023",
           "prompt": "massive metallic bang echoing from the far end of a train car, heavy steel impact",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-16-1793268391024-4v5f.mp3",
+          "duration_sec": 2.04,
           "volume": 1.6,
           "start_sec": 0.3,
           "length_sec": 2,
@@ -619,18 +905,18 @@
       "sfx_prompt": "Lights buzzing and flickering, train rumbling, a low inhuman growl behind a door",
       "video_prompt": "",
       "duration_sec": 4,
-      "image_url": null,
+      "image_url": "/media/images/scene-17-1793268401200-7nqc.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-17-1793268402798-vnqv.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 4.05,
       "sfx_layers": [
         {
           "layer_id": "l_f7889901",
           "prompt": "second massive bang on a steel door, metal groaning and bending",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-17-1793268404930-nghh.mp3",
+          "duration_sec": 2.51,
           "volume": 1.6,
           "start_sec": 0.5,
           "length_sec": 2.5,
@@ -658,19 +944,19 @@
       "voiceover_text": "",
       "sfx_prompt": "Train rumbling, rain blowing in through the open door, lights buzzing",
       "video_prompt": "The brute rips the steel door away, tosses it aside and forces its massive body through the doorframe, roaring",
-      "duration_sec": 6,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-18-1793268418926-oi08.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [
         {
           "layer_id": "l_4ef7c7c7",
           "prompt": "steel door ripped from its hinges and thrown to the floor with a heavy clang",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-18-1793268420808-tc8d.mp3",
+          "duration_sec": 2.51,
           "volume": 1.5,
           "start_sec": 0.3,
           "length_sec": 2.5,
@@ -680,8 +966,8 @@
         {
           "layer_id": "l_dc6375ca",
           "prompt": "deep guttural monstrous roar",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-18-1793268422755-dyt1.mp3",
+          "duration_sec": 2.51,
           "volume": 1.4,
           "start_sec": 3,
           "length_sec": 2.5,
@@ -690,10 +976,10 @@
         }
       ],
       "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
+      "video_url": "/media/video/scene-18-1793268799161-raff.mp4",
+      "video_thumb_url": "/media/video/scene-18-1793268799161-raff.thumb.jpg",
+      "video_duration_sec": 10.03,
+      "video_has_audio": true,
       "video_start_sec": 0,
       "video_volume": 1,
       "source_names": {},
@@ -710,18 +996,29 @@
       "sfx_prompt": "Broth simmering, train rumbling, heavy footsteps approaching",
       "video_prompt": "",
       "duration_sec": 4,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-19-1793268431502-v0aa.jpg",
+      "voiceover_url": "/media/voiceover/scene-19-1793268432394-er6x.mp3",
+      "sfx_url": "/media/sfx/scene-19-1793268434142-9qcz.mp3",
+      "voiceover_duration_sec": 1.41,
+      "voiceover_words": [
+        {
+          "text": "…Of",
+          "start": 0.07,
+          "end": 0.24
+        },
+        {
+          "text": "course.",
+          "start": 0.32,
+          "end": 1.36
+        }
+      ],
+      "sfx_duration_sec": 4.05,
       "sfx_layers": [
         {
           "layer_id": "l_2f3d233d",
           "prompt": "wooden chopsticks placed on a ceramic rest, small click",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-19-1793268435787-clvk.mp3",
+          "duration_sec": 1.04,
           "volume": 1,
           "start_sec": 0.4,
           "length_sec": 1,
@@ -750,18 +1047,18 @@
       "sfx_prompt": "Train rumbling, lights buzzing",
       "video_prompt": "",
       "duration_sec": 4,
-      "image_url": null,
+      "image_url": "/media/images/scene-20-1793268446540-es27.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-20-1793268448566-5c04.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 4.05,
       "sfx_layers": [
         {
           "layer_id": "l_2b338b04",
           "prompt": "heavy pounding footsteps charging across a metal floor",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-20-1793268450309-ai4y.mp3",
+          "duration_sec": 4.05,
           "volume": 1,
           "start_sec": 0,
           "length_sec": 4,
@@ -771,8 +1068,8 @@
         {
           "layer_id": "l_fb1e97b9",
           "prompt": "leather seat crushed and splintering wood",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-20-1793268452092-9h71.mp3",
+          "duration_sec": 1.52,
           "volume": 1,
           "start_sec": 1.5,
           "length_sec": 1.5,
@@ -800,19 +1097,19 @@
       "voiceover_text": "",
       "sfx_prompt": "Train rumbling, monstrous roar growing closer",
       "video_prompt": "Eli snatches the rifle, racks the bolt and swings it up to his shoulder in one fluid motion",
-      "duration_sec": 3,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-21-1793268464486-i85k.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 3.03,
       "sfx_layers": [
         {
           "layer_id": "l_6fa3244b",
           "prompt": "bolt-action rifle bolt racked, sharp metallic clack",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-21-1793268466052-6o3f.mp3",
+          "duration_sec": 1.23,
           "volume": 1.4,
           "start_sec": 1,
           "length_sec": 1.2,
@@ -821,10 +1118,10 @@
         }
       ],
       "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
+      "video_url": "/media/video/scene-21-1793268846422-smxu.mp4",
+      "video_thumb_url": "/media/video/scene-21-1793268846422-smxu.thumb.jpg",
+      "video_duration_sec": 10.03,
+      "video_has_audio": true,
       "video_start_sec": 0,
       "video_volume": 1,
       "source_names": {},
@@ -841,12 +1138,12 @@
       "sfx_prompt": "Roaring brute and thundering footsteps very close, train rumbling",
       "video_prompt": "",
       "duration_sec": 3,
-      "image_url": null,
+      "image_url": "/media/images/scene-22-1793268475569-sevr.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-22-1793268477458-jg6k.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 3.03,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -868,19 +1165,19 @@
       "voiceover_text": "",
       "sfx_prompt": "Ringing ear tone after a gunshot, train rumbling",
       "video_prompt": "The rifle fires with a bright muzzle flash and recoil, the shell casing spins out",
-      "duration_sec": 3,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-23-1793268491084-qa66.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 3.03,
       "sfx_layers": [
         {
           "layer_id": "l_a2895429",
           "prompt": "single powerful rifle gunshot echoing in a confined metal train car",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-23-1793268493031-waxd.mp3",
+          "duration_sec": 1.52,
           "volume": 1.8,
           "start_sec": 0.2,
           "length_sec": 1.5,
@@ -889,10 +1186,10 @@
         }
       ],
       "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
+      "video_url": "/media/video/scene-23-1793268892683-7e7j.mp4",
+      "video_thumb_url": "/media/video/scene-23-1793268892683-7e7j.thumb.jpg",
+      "video_duration_sec": 10.03,
+      "video_has_audio": true,
       "video_start_sec": 0,
       "video_volume": 1,
       "source_names": {},
@@ -908,19 +1205,19 @@
       "voiceover_text": "",
       "sfx_prompt": "Train rumbling, rain on the windows",
       "video_prompt": "The brute topples forward and slams onto the floor, the whole car shudders and the plates rattle",
-      "duration_sec": 5,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-24-1793268504326-rxzl.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 5.04,
       "sfx_layers": [
         {
           "layer_id": "l_9085e6fd",
           "prompt": "massive heavy body falling onto a metal floor, deep thud",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-24-1793268506462-8iv9.mp3",
+          "duration_sec": 2.04,
           "volume": 1.6,
           "start_sec": 0.4,
           "length_sec": 2,
@@ -930,8 +1227,8 @@
         {
           "layer_id": "l_89afeb3f",
           "prompt": "plates, glasses and chopsticks rattling on a table",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-24-1793268508938-ss42.mp3",
+          "duration_sec": 2.04,
           "volume": 1,
           "start_sec": 0.7,
           "length_sec": 2,
@@ -940,10 +1237,10 @@
         }
       ],
       "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
+      "video_url": "/media/video/scene-24-1793268942763-1u2x.mp4",
+      "video_thumb_url": "/media/video/scene-24-1793268942763-1u2x.thumb.jpg",
+      "video_duration_sec": 10.03,
+      "video_has_audio": true,
       "video_start_sec": 0,
       "video_volume": 1,
       "source_names": {},
@@ -960,12 +1257,33 @@
       "sfx_prompt": "Quiet after a gunshot: train rumbling, rain on the window, broth simmering",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-25-1793268519371-243h.jpg",
+      "voiceover_url": "/media/voiceover/scene-25-1793268520438-e10d.mp3",
+      "sfx_url": "/media/sfx/scene-25-1793268523162-dwjj.mp3",
+      "voiceover_duration_sec": 2.77,
+      "voiceover_words": [
+        {
+          "text": "…The",
+          "start": 1.27,
+          "end": 1.36
+        },
+        {
+          "text": "broth's",
+          "start": 1.44,
+          "end": 1.76
+        },
+        {
+          "text": "still",
+          "start": 1.88,
+          "end": 2
+        },
+        {
+          "text": "hot.",
+          "start": 2.08,
+          "end": 2.72
+        }
+      ],
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -988,18 +1306,18 @@
       "sfx_prompt": "Broth simmering, train rumbling, rain on the window",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
+      "image_url": "/media/images/scene-26-1793268534015-634c.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-26-1793268536260-natv.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [
         {
           "layer_id": "l_e96b044e",
           "prompt": "leather seat creaking as someone sits down",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-26-1793268538244-bjhu.mp3",
+          "duration_sec": 1.52,
           "volume": 1,
           "start_sec": 0.5,
           "length_sec": 1.5,
@@ -1009,8 +1327,8 @@
         {
           "layer_id": "l_d895c540",
           "prompt": "rifle stock set down gently against a seat",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-26-1793268540470-81x8.mp3",
+          "duration_sec": 1.04,
           "volume": 1,
           "start_sec": 2.5,
           "length_sec": 1,
@@ -1039,12 +1357,28 @@
       "sfx_prompt": "Broth simmering, gentle train rumble, soft rain",
       "video_prompt": "",
       "duration_sec": 6,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-27-1793268549714-45op.jpg",
+      "voiceover_url": "/media/voiceover/scene-27-1793268550703-27ay.mp3",
+      "sfx_url": "/media/sfx/scene-27-1793268553237-1qym.mp3",
+      "voiceover_duration_sec": 1.96,
+      "voiceover_words": [
+        {
+          "text": "Worth",
+          "start": 0.92,
+          "end": 1.2
+        },
+        {
+          "text": "the",
+          "start": 1.24,
+          "end": 1.28
+        },
+        {
+          "text": "wait.",
+          "start": 1.36,
+          "end": 1.92
+        }
+      ],
+      "sfx_duration_sec": 6.03,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -1067,12 +1401,38 @@
       "sfx_prompt": "Broth simmering, chopsticks on a bowl, rain on the windows, distant thunder, train rumbling",
       "video_prompt": "",
       "duration_sec": 10,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "image_url": "/media/images/scene-28-1793268562183-zsxi.jpg",
+      "voiceover_url": "/media/voiceover/scene-28-1793268563397-rwzr.mp3",
+      "sfx_url": "/media/sfx/scene-28-1793268572297-fom3.mp3",
+      "voiceover_duration_sec": 3.71,
+      "voiceover_words": [
+        {
+          "text": "The",
+          "start": 0,
+          "end": 0.08
+        },
+        {
+          "text": "world",
+          "start": 0.24,
+          "end": 0.56
+        },
+        {
+          "text": "ended.",
+          "start": 0.8,
+          "end": 2.16
+        },
+        {
+          "text": "Dinner",
+          "start": 2.4,
+          "end": 2.72
+        },
+        {
+          "text": "didn't.",
+          "start": 2.88,
+          "end": 3.68
+        }
+      ],
+      "sfx_duration_sec": 10.03,
       "sfx_layers": [],
       "shots": [],
       "video_url": null,
@@ -1095,18 +1455,18 @@
       "sfx_prompt": "Train roaring away into the distance, heavy rain, fading rumble",
       "video_prompt": "",
       "duration_sec": 8,
-      "image_url": null,
+      "image_url": "/media/images/scene-29-1793268582844-czws.jpg",
       "voiceover_url": null,
-      "sfx_url": null,
+      "sfx_url": "/media/sfx/scene-29-1793268585363-iwvx.mp3",
       "voiceover_duration_sec": null,
       "voiceover_words": null,
-      "sfx_duration_sec": null,
+      "sfx_duration_sec": 8.05,
       "sfx_layers": [
         {
           "layer_id": "l_baf45764",
           "prompt": "distant thunder rolling",
-          "url": null,
-          "duration_sec": null,
+          "url": "/media/sfx/scene-29-1793268587419-7urg.mp3",
+          "duration_sec": 4.05,
           "volume": 1,
           "start_sec": 2,
           "length_sec": 4,
@@ -1129,5 +1489,1606 @@
       "notes": "Fade to black over the last 2 s; let the music swell here."
     }
   ],
-  "library": []
+  "library": [
+    {
+      "asset_id": "a_f6136551",
+      "name": "Scene 1 image - Wide establishing shot of a long.jpg",
+      "type": "image",
+      "url": "/media/images/scene-1-1793268147939-g2ni.jpg",
+      "thumb_url": "/media/images/scene-1-1793268147939-g2ni.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 890587,
+      "added_at": "2026-10-29T10:02:27.941Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Wide establishing shot of a long armored passenger train speeding across a ruined wasteland at night, its windows glowing warm amber, a violent thunderstorm overhead with a lightning bolt splitting dark clouds, fires burning among collapsed buildings in the distance, heavy rain"
+      }
+    },
+    {
+      "asset_id": "a_1c1d5d18",
+      "name": "Scene 1 voiceover - The world ended three winters ago..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-1-1793268150462-6s9y.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.91,
+      "has_audio": true,
+      "size_bytes": 79037,
+      "added_at": "2026-10-29T10:02:30.499Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "[quietly] The world ended three winters ago. [pause] The train never stopped."
+      }
+    },
+    {
+      "asset_id": "a_f11f94a2",
+      "name": "Scene 1 sfx - Heavy rain and wind, a long.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-1-1793268152931-y0bg.mp3",
+      "thumb_url": null,
+      "duration_sec": 8.05,
+      "has_audio": true,
+      "size_bytes": 129192,
+      "added_at": "2026-10-29T10:02:32.966Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Heavy rain and wind, a long train roaring past on rails, distant fires crackling"
+      }
+    },
+    {
+      "asset_id": "a_ca33d444",
+      "name": "Scene 1 sfx - single loud thunder crack rolling into.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-1-1793268155045-1bme.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:02:35.079Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "single loud thunder crack rolling into a long rumble"
+      }
+    },
+    {
+      "asset_id": "a_c0e54d68",
+      "name": "Scene 2 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-2-1793268166914-9ree.jpg",
+      "thumb_url": "/media/images/scene-2-1793268166914-9ree.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 792800,
+      "added_at": "2026-10-29T10:02:46.916Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt, tying on a dark canvas apron in the train's narrow galley kitchen: stainless steel counter, a small sink, pans hanging on hooks, warm lamp light, a rain-streaked window; medium shot, Eli on the left third, warm light on his face, calm focused expression"
+      }
+    },
+    {
+      "asset_id": "a_3d401ee1",
+      "name": "Scene 2 voiceover - And tonight… Eli is making hotpot..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-2-1793268168057-i8qn.mp3",
+      "thumb_url": null,
+      "duration_sec": 3.55,
+      "has_audio": true,
+      "size_bytes": 57303,
+      "added_at": "2026-10-29T10:02:48.092Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "And tonight… Eli is making hotpot."
+      }
+    },
+    {
+      "asset_id": "a_e2db7a98",
+      "name": "Scene 2 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-2-1793268170505-ca31.mp3",
+      "thumb_url": null,
+      "duration_sec": 7.03,
+      "has_audio": true,
+      "size_bytes": 112892,
+      "added_at": "2026-10-29T10:02:50.539Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_15618a85",
+      "name": "Scene 3 image - Close-up of Eli's hands rinsing a.jpg",
+      "type": "image",
+      "url": "/media/images/scene-3-1793268179139-3zrz.jpg",
+      "thumb_url": "/media/images/scene-3-1793268179139-3zrz.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 721587,
+      "added_at": "2026-10-29T10:02:59.140Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of Eli's hands rinsing a head of napa cabbage and bunches of green leafy vegetables under a small running tap in the train's narrow galley kitchen: stainless steel counter, a small sink, pans hanging on hooks, warm lamp light, a rain-streaked window, water droplets catching the warm light"
+      }
+    },
+    {
+      "asset_id": "a_4cd1b9da",
+      "name": "Scene 3 sfx - Water running from a small tap.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-3-1793268181850-pkzl.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:03:01.886Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Water running from a small tap into a steel sink, vegetables being rinsed, train rumbling softly underneath"
+      }
+    },
+    {
+      "asset_id": "a_7a4db0ab",
+      "name": "Scene 4 image - Close-up of a kitchen knife chopping.jpg",
+      "type": "image",
+      "url": "/media/images/scene-4-1793268189727-ekku.jpg",
+      "thumb_url": "/media/images/scene-4-1793268189727-ekku.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 717185,
+      "added_at": "2026-10-29T10:03:09.728Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of a kitchen knife chopping napa cabbage into wide strips on a worn wooden cutting board, Eli's hands guiding the leaves, train galley counter, warm lamp light"
+      }
+    },
+    {
+      "asset_id": "a_01018e18",
+      "name": "Scene 4 image - Extreme close-up of a knife slicing.jpg",
+      "type": "image",
+      "url": "/media/images/scene-4-1793268199229-bcm4.jpg",
+      "thumb_url": "/media/images/scene-4-1793268199229-bcm4.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 693181,
+      "added_at": "2026-10-29T10:03:19.233Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Extreme close-up of a knife slicing green onions into thin rings on a wooden cutting board, rings scattering, warm lamp light"
+      }
+    },
+    {
+      "asset_id": "a_355cc3e6",
+      "name": "Scene 4 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-4-1793268201483-ol62.mp3",
+      "thumb_url": null,
+      "duration_sec": 7.03,
+      "has_audio": true,
+      "size_bytes": 112892,
+      "added_at": "2026-10-29T10:03:21.520Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_b1626185",
+      "name": "Scene 4 sfx - steady rhythmic knife chopping on a.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-4-1793268203877-let5.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.53,
+      "has_audio": true,
+      "size_bytes": 104950,
+      "added_at": "2026-10-29T10:03:23.911Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "steady rhythmic knife chopping on a wooden board"
+      }
+    },
+    {
+      "asset_id": "a_3dbbfad8",
+      "name": "Scene 5 image - Top-down close-up of shiitake mushrooms on.jpg",
+      "type": "image",
+      "url": "/media/images/scene-5-1793268212969-g53v.jpg",
+      "thumb_url": "/media/images/scene-5-1793268212969-g53v.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 657536,
+      "added_at": "2026-10-29T10:03:32.970Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Top-down close-up of shiitake mushrooms on a wooden board, Eli's knife carving a star cross into each cap, enoki mushrooms and tofu cubes arranged beside them, warm light"
+      }
+    },
+    {
+      "asset_id": "a_1ecd5344",
+      "name": "Scene 5 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-5-1793268215519-tnd2.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:03:35.553Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_e10b2d27",
+      "name": "Scene 5 sfx - light precise knife cuts into soft.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-5-1793268217403-lefp.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:03:37.438Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "light precise knife cuts into soft mushrooms"
+      }
+    },
+    {
+      "asset_id": "a_af80c4f1",
+      "name": "Scene 6 image - Close-up of Eli's hands unfolding butcher.jpg",
+      "type": "image",
+      "url": "/media/images/scene-6-1793268226314-6tpz.jpg",
+      "thumb_url": "/media/images/scene-6-1793268226314-6tpz.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 746399,
+      "added_at": "2026-10-29T10:03:46.315Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of Eli's hands unfolding butcher paper to reveal thin slices of marbled pork belly and beef, laying them in neat overlapping rows on white plates, train galley counter, warm lamp light"
+      }
+    },
+    {
+      "asset_id": "a_f8586410",
+      "name": "Scene 6 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-6-1793268229003-uzhr.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:03:49.037Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_4cbd51fc",
+      "name": "Scene 6 sfx - crinkling butcher paper unfolding.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-6-1793268231276-6dsi.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.51,
+      "has_audio": true,
+      "size_bytes": 40585,
+      "added_at": "2026-10-29T10:03:51.311Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "crinkling butcher paper unfolding"
+      }
+    },
+    {
+      "asset_id": "a_332af97d",
+      "name": "Scene 7 image - Close-up of three small ceramic dipping.jpg",
+      "type": "image",
+      "url": "/media/images/scene-7-1793268241656-rewg.jpg",
+      "thumb_url": "/media/images/scene-7-1793268241656-rewg.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 730094,
+      "added_at": "2026-10-29T10:04:01.657Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of three small ceramic dipping bowls on a steel counter: creamy sesame paste, glossy red chili oil, minced garlic and chopped cilantro, a spoon swirling the sesame sauce, warm lamp light"
+      }
+    },
+    {
+      "asset_id": "a_6de78e17",
+      "name": "Scene 7 voiceover - Sesame, chili, garlic. Some rules survive.mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-7-1793268243463-60wx.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.53,
+      "has_audio": true,
+      "size_bytes": 104950,
+      "added_at": "2026-10-29T10:04:03.499Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "Sesame, chili, garlic. [pause] Some rules survive the end of the world."
+      }
+    },
+    {
+      "asset_id": "a_2d30bfc0",
+      "name": "Scene 7 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-7-1793268245852-h3ic.mp3",
+      "thumb_url": null,
+      "duration_sec": 7.03,
+      "has_audio": true,
+      "size_bytes": 112892,
+      "added_at": "2026-10-29T10:04:05.886Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_93fec452",
+      "name": "Scene 7 sfx - spoon clinking against a small ceramic.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-7-1793268247539-89x0.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.52,
+      "has_audio": true,
+      "size_bytes": 24702,
+      "added_at": "2026-10-29T10:04:07.573Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "spoon clinking against a small ceramic bowl"
+      }
+    },
+    {
+      "asset_id": "a_4899d870",
+      "name": "Scene 8 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-8-1793268259867-cv9y.jpg",
+      "thumb_url": "/media/images/scene-8-1793268259867-cv9y.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 784609,
+      "added_at": "2026-10-29T10:04:19.868Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt pouring rich golden-red broth from a steel pot into a black cast-iron hotpot, dried red chilies and star anise floating on top, steam rising in the train's narrow galley kitchen: stainless steel counter, a small sink, pans hanging on hooks, warm lamp light, a rain-streaked window; medium close-up, side angle"
+      }
+    },
+    {
+      "asset_id": "a_f8f65d9b",
+      "name": "Scene 8 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-8-1793268262654-63b4.mp3",
+      "thumb_url": null,
+      "duration_sec": 7.03,
+      "has_audio": true,
+      "size_bytes": 112892,
+      "added_at": "2026-10-29T10:04:22.692Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_d92f1dd7",
+      "name": "Scene 8 sfx - liquid broth pouring into a cast-iron.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-8-1793268264514-4czt.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:04:24.551Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "liquid broth pouring into a cast-iron pot, splashing gently"
+      }
+    },
+    {
+      "asset_id": "a_5da36238",
+      "name": "Scene 9 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-9-1793268275162-6xvh.jpg",
+      "thumb_url": "/media/images/scene-9-1793268275162-6xvh.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 710662,
+      "added_at": "2026-10-29T10:04:35.164Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt carrying the cast-iron hotpot and a tray of plates down the aisle inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows, the car swaying slightly, rain and dark storm clouds outside the windows; medium-wide shot from behind the booth"
+      }
+    },
+    {
+      "asset_id": "a_6df5cf0c",
+      "name": "Scene 9 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-9-1793268277701-3j3h.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:04:37.735Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_5edbc6a7",
+      "name": "Scene 9 sfx - footsteps on a train carriage floor,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-9-1793268279916-3oe1.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.52,
+      "has_audio": true,
+      "size_bytes": 72767,
+      "added_at": "2026-10-29T10:04:39.951Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "footsteps on a train carriage floor, plates rattling softly on a tray"
+      }
+    },
+    {
+      "asset_id": "a_3c120f29",
+      "name": "Scene 10 image - Close-up of Eli's hands sliding a.jpg",
+      "type": "image",
+      "url": "/media/images/scene-10-1793268290854-olkm.jpg",
+      "thumb_url": "/media/images/scene-10-1793268290854-olkm.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 652700,
+      "added_at": "2026-10-29T10:04:50.855Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of Eli's hands sliding a gas canister into a small portable butane stove on a wooden table inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows, the canister clicking into place, warm light"
+      }
+    },
+    {
+      "asset_id": "a_fa03f099",
+      "name": "Scene 10 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-10-1793268293515-zql7.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:04:53.552Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_69255e18",
+      "name": "Scene 10 sfx - metal gas canister snapping into a.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-10-1793268295417-sc5t.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.52,
+      "has_audio": true,
+      "size_bytes": 24702,
+      "added_at": "2026-10-29T10:04:55.455Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "metal gas canister snapping into a portable stove"
+      }
+    },
+    {
+      "asset_id": "a_9914ffac",
+      "name": "Scene 11 image - Extreme close-up of a portable butane.jpg",
+      "type": "image",
+      "url": "/media/images/scene-11-1793268304854-ldp9.jpg",
+      "thumb_url": "/media/images/scene-11-1793268304854-ldp9.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 560146,
+      "added_at": "2026-10-29T10:05:04.855Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Extreme close-up of a portable butane stove's burner igniting into a ring of bright blue flame, Eli's fingers on the knob, dark background with warm amber bokeh"
+      }
+    },
+    {
+      "asset_id": "a_7d4c9a30",
+      "name": "Scene 11 sfx - Steady train wheels clacking on rails,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-11-1793268307225-8lup.mp3",
+      "thumb_url": null,
+      "duration_sec": 5.04,
+      "has_audio": true,
+      "size_bytes": 81127,
+      "added_at": "2026-10-29T10:05:07.261Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Steady train wheels clacking on rails, heavy rain on the windows, low cabin hum"
+      }
+    },
+    {
+      "asset_id": "a_aca1009a",
+      "name": "Scene 11 sfx - gas stove igniter clicking twice then.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-11-1793268309415-l7c0.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.51,
+      "has_audio": true,
+      "size_bytes": 40585,
+      "added_at": "2026-10-29T10:05:09.451Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "gas stove igniter clicking twice then a soft whoosh of flame"
+      }
+    },
+    {
+      "asset_id": "a_1cef9a16",
+      "name": "Scene 12 image - The black cast-iron hotpot simmering on.jpg",
+      "type": "image",
+      "url": "/media/images/scene-12-1793268317945-n2fw.jpg",
+      "thumb_url": "/media/images/scene-12-1793268317945-n2fw.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 634529,
+      "added_at": "2026-10-29T10:05:17.946Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "The black cast-iron hotpot simmering on the blue flame of a portable stove on a wooden table inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows, thick steam curling upward, a stormy window behind it with lightning in the distance; medium close-up"
+      }
+    },
+    {
+      "asset_id": "a_0bfa1219",
+      "name": "Scene 12 voiceover - The broth comes up to a.mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-12-1793268319700-2za3.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:05:19.737Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "[softly] The broth comes up to a boil… and for a moment, the storm outside doesn't exist."
+      }
+    },
+    {
+      "asset_id": "a_bbf520c3",
+      "name": "Scene 12 sfx - Broth bubbling and simmering in a.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-12-1793268322088-aju9.mp3",
+      "thumb_url": null,
+      "duration_sec": 8.05,
+      "has_audio": true,
+      "size_bytes": 129192,
+      "added_at": "2026-10-29T10:05:22.122Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth bubbling and simmering in a pot, gas flame hissing softly, rain on the window, train rumbling"
+      }
+    },
+    {
+      "asset_id": "a_2708d7bd",
+      "name": "Scene 13 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-13-1793268332593-txa3.jpg",
+      "thumb_url": "/media/images/scene-13-1793268332593-txa3.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 720257,
+      "added_at": "2026-10-29T10:05:32.594Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt sitting alone in a booth inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows, arranging plates of sliced meat, vegetables, mushrooms and dipping sauces around a steaming hotpot on a portable stove, a candle-like lamp on the table; outside the large rain-streaked window, a storm with lightning, fires burning, and a horde of zombies running alongside the train, ignored by Eli; wide shot"
+      }
+    },
+    {
+      "asset_id": "a_10d1ef17",
+      "name": "Scene 13 image - Close-up of a worn bolt-action hunting.jpg",
+      "type": "image",
+      "url": "/media/images/scene-13-1793268342737-c10f.jpg",
+      "thumb_url": "/media/images/scene-13-1793268342737-c10f.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 704482,
+      "added_at": "2026-10-29T10:05:42.738Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of a worn bolt-action hunting rifle with a scuffed wooden stock leaning against the leather booth seat beside Eli's folded jacket, half in shadow, warm lamp light, steam drifting past"
+      }
+    },
+    {
+      "asset_id": "a_97169d45",
+      "name": "Scene 13 voiceover - Outside, they never stop running. Eli.mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-13-1793268344591-l1uq.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.43,
+      "has_audio": true,
+      "size_bytes": 103278,
+      "added_at": "2026-10-29T10:05:44.629Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "Outside, they never stop running. [pause] Eli stopped looking a long time ago."
+      }
+    },
+    {
+      "asset_id": "a_4f415ca3",
+      "name": "Scene 13 sfx - Broth simmering, rain lashing the window,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-13-1793268346939-tpgl.mp3",
+      "thumb_url": null,
+      "duration_sec": 9.04,
+      "has_audio": true,
+      "size_bytes": 145074,
+      "added_at": "2026-10-29T10:05:46.974Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth simmering, rain lashing the window, muffled distant growls and moans from outside, train rumbling"
+      }
+    },
+    {
+      "asset_id": "a_fb809e3f",
+      "name": "Scene 14 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-14-1793268358210-9jpg.jpg",
+      "thumb_url": "/media/images/scene-14-1793268358210-9jpg.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 752695,
+      "added_at": "2026-10-29T10:05:58.211Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt dipping a thin slice of marbled pork into the boiling hotpot with wooden chopsticks, steam rising, a stormy window with zombies behind him inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; medium shot, side angle"
+      }
+    },
+    {
+      "asset_id": "a_389d018d",
+      "name": "Scene 14 sfx - Broth bubbling vigorously, chopsticks tapping the.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-14-1793268360674-qe1x.mp3",
+      "thumb_url": null,
+      "duration_sec": 7.03,
+      "has_audio": true,
+      "size_bytes": 112892,
+      "added_at": "2026-10-29T10:06:00.712Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth bubbling vigorously, chopsticks tapping the pot rim, rain on the window, train rumbling"
+      }
+    },
+    {
+      "asset_id": "a_0da31d9c",
+      "name": "Scene 15 image - Close-up of a slice of cooked.jpg",
+      "type": "image",
+      "url": "/media/images/scene-15-1793268371448-wk7e.jpg",
+      "thumb_url": "/media/images/scene-15-1793268371448-wk7e.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 616790,
+      "added_at": "2026-10-29T10:06:11.450Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of a slice of cooked pork held in wooden chopsticks, dripping with sesame sauce, being lifted toward Eli's open mouth, steam rising, warm lamp light, shallow depth of field"
+      }
+    },
+    {
+      "asset_id": "a_5797bf30",
+      "name": "Scene 15 voiceover - Finally..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-15-1793268372234-k4d9.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.23,
+      "has_audio": true,
+      "size_bytes": 20105,
+      "added_at": "2026-10-29T10:06:12.270Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "[whispers] Finally."
+      }
+    },
+    {
+      "asset_id": "a_ddf27c9d",
+      "name": "Scene 15 sfx - Broth simmering softly, rain on the.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-15-1793268375238-qubm.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:06:15.274Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth simmering softly, rain on the window, train rumbling"
+      }
+    },
+    {
+      "asset_id": "a_d139a853",
+      "name": "Scene 16 image - Extreme close-up of Eli's face frozen,.jpg",
+      "type": "image",
+      "url": "/media/images/scene-16-1793268386243-3awz.jpg",
+      "thumb_url": "/media/images/scene-16-1793268386243-3awz.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 609011,
+      "added_at": "2026-10-29T10:06:26.244Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Extreme close-up of Eli's face frozen, mouth open, the pork slice an inch from his lips, his eyes sliding sideways toward the back of the train car, warm light, tense"
+      }
+    },
+    {
+      "asset_id": "a_bab18bae",
+      "name": "Scene 16 sfx - Train rumbling, broth simmering, sudden near-silence.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-16-1793268389323-je3k.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:06:29.360Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Train rumbling, broth simmering, sudden near-silence"
+      }
+    },
+    {
+      "asset_id": "a_1f05774e",
+      "name": "Scene 16 sfx - massive metallic bang echoing from the.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-16-1793268391024-4v5f.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.04,
+      "has_audio": true,
+      "size_bytes": 33061,
+      "added_at": "2026-10-29T10:06:31.060Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "massive metallic bang echoing from the far end of a train car, heavy steel impact"
+      }
+    },
+    {
+      "asset_id": "a_82a04cf0",
+      "name": "Scene 17 image - The rear door at the far.jpg",
+      "type": "image",
+      "url": "/media/images/scene-17-1793268401200-7nqc.jpg",
+      "thumb_url": "/media/images/scene-17-1793268401200-7nqc.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 564899,
+      "added_at": "2026-10-29T10:06:41.201Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "The rear door at the far end of the train car bulging inward with a huge dent, the overhead lights flickering, the aisle empty and long inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; low-angle shot down the aisle, ominous"
+      }
+    },
+    {
+      "asset_id": "a_d870ab9d",
+      "name": "Scene 17 sfx - Lights buzzing and flickering, train rumbling,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-17-1793268402798-vnqv.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:06:42.837Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Lights buzzing and flickering, train rumbling, a low inhuman growl behind a door"
+      }
+    },
+    {
+      "asset_id": "a_97d40ac3",
+      "name": "Scene 17 sfx - second massive bang on a steel.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-17-1793268404930-nghh.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.51,
+      "has_audio": true,
+      "size_bytes": 40585,
+      "added_at": "2026-10-29T10:06:44.967Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "second massive bang on a steel door, metal groaning and bending"
+      }
+    },
+    {
+      "asset_id": "a_a9556783",
+      "name": "Scene 18 image - a hulking brute zombie over two.jpg",
+      "type": "image",
+      "url": "/media/images/scene-18-1793268416160-pm6p.jpg",
+      "thumb_url": "/media/images/scene-18-1793268416160-pm6p.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 577445,
+      "added_at": "2026-10-29T10:06:56.162Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "a hulking brute zombie over two meters tall, grotesquely muscular, grey-green rotting skin, torn work overalls straining over its shoulders, jaw hanging open, milky white eyes tearing the rear door of the train car off its hinges and squeezing through the frame, hunched under the low ceiling, flickering amber lights, debris flying inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; low-angle wide shot down the aisle"
+      }
+    },
+    {
+      "asset_id": "a_e7195b1d",
+      "name": "Scene 18 sfx - Train rumbling, rain blowing in through.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-18-1793268418926-oi08.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:06:58.962Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Train rumbling, rain blowing in through the open door, lights buzzing"
+      }
+    },
+    {
+      "asset_id": "a_10a0e4d9",
+      "name": "Scene 18 sfx - steel door ripped from its hinges.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-18-1793268420808-tc8d.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.51,
+      "has_audio": true,
+      "size_bytes": 40585,
+      "added_at": "2026-10-29T10:07:00.845Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "steel door ripped from its hinges and thrown to the floor with a heavy clang"
+      }
+    },
+    {
+      "asset_id": "a_cc796453",
+      "name": "Scene 18 sfx - deep guttural monstrous roar.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-18-1793268422755-dyt1.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.51,
+      "has_audio": true,
+      "size_bytes": 40585,
+      "added_at": "2026-10-29T10:07:02.792Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "deep guttural monstrous roar"
+      }
+    },
+    {
+      "asset_id": "a_58898cbd",
+      "name": "Scene 19 image - Close-up of Eli calmly setting his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-19-1793268431502-v0aa.jpg",
+      "thumb_url": "/media/images/scene-19-1793268431502-v0aa.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 775477,
+      "added_at": "2026-10-29T10:07:11.503Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of Eli calmly setting his wooden chopsticks down on a ceramic chopstick rest beside the steaming hotpot, his expression flat and unbothered, warm lamp light"
+      }
+    },
+    {
+      "asset_id": "a_995b24ef",
+      "name": "Scene 19 voiceover - …Of course..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-19-1793268432394-er6x.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.41,
+      "has_audio": true,
+      "size_bytes": 23030,
+      "added_at": "2026-10-29T10:07:12.431Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "[deadpan] …Of course."
+      }
+    },
+    {
+      "asset_id": "a_6c842fed",
+      "name": "Scene 19 sfx - Broth simmering, train rumbling, heavy footsteps.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-19-1793268434142-9qcz.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:07:14.178Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth simmering, train rumbling, heavy footsteps approaching"
+      }
+    },
+    {
+      "asset_id": "a_6638b7bc",
+      "name": "Scene 19 sfx - wooden chopsticks placed on a ceramic.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-19-1793268435787-clvk.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.04,
+      "has_audio": true,
+      "size_bytes": 17179,
+      "added_at": "2026-10-29T10:07:15.823Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "wooden chopsticks placed on a ceramic rest, small click"
+      }
+    },
+    {
+      "asset_id": "a_7b2ec44b",
+      "name": "Scene 20 image - a hulking brute zombie over two.jpg",
+      "type": "image",
+      "url": "/media/images/scene-20-1793268446540-es27.jpg",
+      "thumb_url": "/media/images/scene-20-1793268446540-es27.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 680596,
+      "added_at": "2026-10-29T10:07:26.541Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "a hulking brute zombie over two meters tall, grotesquely muscular, grey-green rotting skin, torn work overalls straining over its shoulders, jaw hanging open, milky white eyes charging down the aisle of the train car, crushing a leather seat back under one fist, foul breath steaming, flickering lights inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; dramatic front-on shot, the brute filling the frame"
+      }
+    },
+    {
+      "asset_id": "a_3ed99525",
+      "name": "Scene 20 sfx - Train rumbling, lights buzzing.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-20-1793268448566-5c04.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:07:28.602Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Train rumbling, lights buzzing"
+      }
+    },
+    {
+      "asset_id": "a_f272f54e",
+      "name": "Scene 20 sfx - heavy pounding footsteps charging across a.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-20-1793268450309-ai4y.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:07:30.345Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "heavy pounding footsteps charging across a metal floor"
+      }
+    },
+    {
+      "asset_id": "a_3c57ab47",
+      "name": "Scene 20 sfx - leather seat crushed and splintering wood.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-20-1793268452092-9h71.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.52,
+      "has_audio": true,
+      "size_bytes": 24702,
+      "added_at": "2026-10-29T10:07:32.127Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "leather seat crushed and splintering wood"
+      }
+    },
+    {
+      "asset_id": "a_f0ae673d",
+      "name": "Scene 21 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-21-1793268462144-chjk.jpg",
+      "thumb_url": "/media/images/scene-21-1793268462144-chjk.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 681877,
+      "added_at": "2026-10-29T10:07:42.145Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt grabbing a worn bolt-action hunting rifle with a scuffed wooden stock from the booth seat in one smooth motion and racking the bolt, sliding out of the booth, steam from the hotpot drifting past inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; medium shot, dynamic angle"
+      }
+    },
+    {
+      "asset_id": "a_2340af53",
+      "name": "Scene 21 sfx - Train rumbling, monstrous roar growing closer.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-21-1793268464486-i85k.mp3",
+      "thumb_url": null,
+      "duration_sec": 3.03,
+      "has_audio": true,
+      "size_bytes": 48944,
+      "added_at": "2026-10-29T10:07:44.521Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Train rumbling, monstrous roar growing closer"
+      }
+    },
+    {
+      "asset_id": "a_ff99f176",
+      "name": "Scene 21 sfx - bolt-action rifle bolt racked, sharp metallic.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-21-1793268466052-6o3f.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.23,
+      "has_audio": true,
+      "size_bytes": 20105,
+      "added_at": "2026-10-29T10:07:46.097Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "bolt-action rifle bolt racked, sharp metallic clack"
+      }
+    },
+    {
+      "asset_id": "a_edcbabfc",
+      "name": "Scene 22 image - Over-the-shoulder shot from behind Eli aiming.jpg",
+      "type": "image",
+      "url": "/media/images/scene-22-1793268475569-sevr.jpg",
+      "thumb_url": "/media/images/scene-22-1793268475569-sevr.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 659790,
+      "added_at": "2026-10-29T10:07:55.570Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Over-the-shoulder shot from behind Eli aiming a worn bolt-action hunting rifle with a scuffed wooden stock down the aisle, the a hulking brute zombie over two meters tall, grotesquely muscular, grey-green rotting skin, torn work overalls straining over its shoulders, jaw hanging open, milky white eyes lunging toward him a few meters away, claws outstretched, flickering amber lights inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows"
+      }
+    },
+    {
+      "asset_id": "a_c4a465fb",
+      "name": "Scene 22 sfx - Roaring brute and thundering footsteps very.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-22-1793268477458-jg6k.mp3",
+      "thumb_url": null,
+      "duration_sec": 3.03,
+      "has_audio": true,
+      "size_bytes": 48944,
+      "added_at": "2026-10-29T10:07:57.494Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Roaring brute and thundering footsteps very close, train rumbling"
+      }
+    },
+    {
+      "asset_id": "a_54f56a69",
+      "name": "Scene 23 image - Close-up of the muzzle of a.jpg",
+      "type": "image",
+      "url": "/media/images/scene-23-1793268488926-hop0.jpg",
+      "thumb_url": "/media/images/scene-23-1793268488926-hop0.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 638931,
+      "added_at": "2026-10-29T10:08:08.927Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of the muzzle of a worn bolt-action hunting rifle with a scuffed wooden stock firing, a bright orange muzzle flash lighting Eli's calm face from below, shell casing spinning in the air inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows"
+      }
+    },
+    {
+      "asset_id": "a_a285f991",
+      "name": "Scene 23 sfx - Ringing ear tone after a gunshot,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-23-1793268491084-qa66.mp3",
+      "thumb_url": null,
+      "duration_sec": 3.03,
+      "has_audio": true,
+      "size_bytes": 48944,
+      "added_at": "2026-10-29T10:08:11.119Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Ringing ear tone after a gunshot, train rumbling"
+      }
+    },
+    {
+      "asset_id": "a_ac746517",
+      "name": "Scene 23 sfx - single powerful rifle gunshot echoing in.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-23-1793268493031-waxd.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.52,
+      "has_audio": true,
+      "size_bytes": 24702,
+      "added_at": "2026-10-29T10:08:13.067Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "single powerful rifle gunshot echoing in a confined metal train car"
+      }
+    },
+    {
+      "asset_id": "a_f74a7a6a",
+      "name": "Scene 24 image - a hulking brute zombie over two.jpg",
+      "type": "image",
+      "url": "/media/images/scene-24-1793268502327-44e8.jpg",
+      "thumb_url": "/media/images/scene-24-1793268502327-44e8.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 647259,
+      "added_at": "2026-10-29T10:08:22.329Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "a hulking brute zombie over two meters tall, grotesquely muscular, grey-green rotting skin, torn work overalls straining over its shoulders, jaw hanging open, milky white eyes collapsing face-first onto the aisle floor of the train car a few meters from Eli's booth, dark ichor spattered, the impact rattling plates on the table inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; low-angle shot from the floor"
+      }
+    },
+    {
+      "asset_id": "a_5d601e9d",
+      "name": "Scene 24 sfx - Train rumbling, rain on the windows.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-24-1793268504326-rxzl.mp3",
+      "thumb_url": null,
+      "duration_sec": 5.04,
+      "has_audio": true,
+      "size_bytes": 81127,
+      "added_at": "2026-10-29T10:08:24.360Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Train rumbling, rain on the windows"
+      }
+    },
+    {
+      "asset_id": "a_05a56088",
+      "name": "Scene 24 sfx - massive heavy body falling onto a.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-24-1793268506462-8iv9.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.04,
+      "has_audio": true,
+      "size_bytes": 33061,
+      "added_at": "2026-10-29T10:08:26.497Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "massive heavy body falling onto a metal floor, deep thud"
+      }
+    },
+    {
+      "asset_id": "a_f7c08322",
+      "name": "Scene 24 sfx - plates, glasses and chopsticks rattling on.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-24-1793268508938-ss42.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.04,
+      "has_audio": true,
+      "size_bytes": 33061,
+      "added_at": "2026-10-29T10:08:28.973Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "plates, glasses and chopsticks rattling on a table"
+      }
+    },
+    {
+      "asset_id": "a_c625f0c4",
+      "name": "Scene 25 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-25-1793268519371-243h.jpg",
+      "thumb_url": "/media/images/scene-25-1793268519371-243h.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 643270,
+      "added_at": "2026-10-29T10:08:39.372Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt slowly lowering a worn bolt-action hunting rifle with a scuffed wooden stock, a thin curl of smoke rising from the barrel, the brute zombie motionless on the floor in the background, the hotpot still steaming on the table beside him inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; medium shot"
+      }
+    },
+    {
+      "asset_id": "a_e2969241",
+      "name": "Scene 25 voiceover - …The broth's still hot..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-25-1793268520438-e10d.mp3",
+      "thumb_url": null,
+      "duration_sec": 2.77,
+      "has_audio": true,
+      "size_bytes": 44764,
+      "added_at": "2026-10-29T10:08:40.474Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "[exhales] [quietly] …The broth's still hot."
+      }
+    },
+    {
+      "asset_id": "a_b080adb8",
+      "name": "Scene 25 sfx - Quiet after a gunshot train rumbling,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-25-1793268523162-dwjj.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:08:43.196Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Quiet after a gunshot: train rumbling, rain on the window, broth simmering"
+      }
+    },
+    {
+      "asset_id": "a_6e8716d3",
+      "name": "Scene 26 image - Eli, a young man in his.jpg",
+      "type": "image",
+      "url": "/media/images/scene-26-1793268534015-634c.jpg",
+      "thumb_url": "/media/images/scene-26-1793268534015-634c.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 603678,
+      "added_at": "2026-10-29T10:08:54.018Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt sliding back into the booth and leaning a worn bolt-action hunting rifle with a scuffed wooden stock against the seat beside him, picking his chopsticks back up, the hotpot steaming on the table, the fallen brute zombie blurred in the aisle behind inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows; medium shot"
+      }
+    },
+    {
+      "asset_id": "a_d7c59d22",
+      "name": "Scene 26 sfx - Broth simmering, train rumbling, rain on.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-26-1793268536260-natv.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:08:56.295Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth simmering, train rumbling, rain on the window"
+      }
+    },
+    {
+      "asset_id": "a_a3c52fa4",
+      "name": "Scene 26 sfx - leather seat creaking as someone sits.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-26-1793268538244-bjhu.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.52,
+      "has_audio": true,
+      "size_bytes": 24702,
+      "added_at": "2026-10-29T10:08:58.278Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "leather seat creaking as someone sits down"
+      }
+    },
+    {
+      "asset_id": "a_5c527392",
+      "name": "Scene 26 sfx - rifle stock set down gently against.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-26-1793268540470-81x8.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.04,
+      "has_audio": true,
+      "size_bytes": 17179,
+      "added_at": "2026-10-29T10:09:00.508Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "rifle stock set down gently against a seat"
+      }
+    },
+    {
+      "asset_id": "a_727d7c59",
+      "name": "Scene 27 image - Close-up of Eli, a young man.jpg",
+      "type": "image",
+      "url": "/media/images/scene-27-1793268549714-45op.jpg",
+      "thumb_url": "/media/images/scene-27-1793268549714-45op.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 584913,
+      "added_at": "2026-10-29T10:09:09.716Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Close-up of Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt finally eating the slice of pork with wooden chopsticks, eyes closed in quiet satisfaction, steam rising around his face, warm lamp light"
+      }
+    },
+    {
+      "asset_id": "a_67060be8",
+      "name": "Scene 27 voiceover - Worth the wait..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-27-1793268550703-27ay.mp3",
+      "thumb_url": null,
+      "duration_sec": 1.96,
+      "has_audio": true,
+      "size_bytes": 31807,
+      "added_at": "2026-10-29T10:09:10.739Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "[light chuckle] Worth the wait."
+      }
+    },
+    {
+      "asset_id": "a_f392ff0e",
+      "name": "Scene 27 sfx - Broth simmering, gentle train rumble, soft.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-27-1793268553237-1qym.mp3",
+      "thumb_url": null,
+      "duration_sec": 6.03,
+      "has_audio": true,
+      "size_bytes": 97009,
+      "added_at": "2026-10-29T10:09:13.271Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth simmering, gentle train rumble, soft rain"
+      }
+    },
+    {
+      "asset_id": "a_4cbac3f9",
+      "name": "Scene 28 image - Wide shot of Eli, a young.jpg",
+      "type": "image",
+      "url": "/media/images/scene-28-1793268562183-zsxi.jpg",
+      "thumb_url": "/media/images/scene-28-1793268562183-zsxi.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 686592,
+      "added_at": "2026-10-29T10:09:22.184Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Wide shot of Eli, a young man in his mid-twenties with messy dark shoulder-length hair and tired dark eyes, wearing a faded olive-grey button-up work shirt with rolled sleeves over a dark t-shirt eating hotpot alone in his booth inside a dim vintage passenger train car with dark leather booth seats, a wooden table and warm amber ceiling lights, rain-streaked windows, the brute zombie lying still in the aisle behind him, the rear door hanging open, outside the large window a thunderstorm, fires and a horde of zombies running alongside the train; warm cozy light inside, cold blue chaos outside"
+      }
+    },
+    {
+      "asset_id": "a_e8e32da0",
+      "name": "Scene 28 voiceover - The world ended. Dinner didn't..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-28-1793268563397-rwzr.mp3",
+      "thumb_url": null,
+      "duration_sec": 3.71,
+      "has_audio": true,
+      "size_bytes": 59811,
+      "added_at": "2026-10-29T10:09:23.437Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "The world ended. [pause] Dinner didn't."
+      }
+    },
+    {
+      "asset_id": "a_978b95f0",
+      "name": "Scene 28 sfx - Broth simmering, chopsticks on a bowl,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-28-1793268572297-fom3.mp3",
+      "thumb_url": null,
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 160957,
+      "added_at": "2026-10-29T10:09:32.332Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Broth simmering, chopsticks on a bowl, rain on the windows, distant thunder, train rumbling"
+      }
+    },
+    {
+      "asset_id": "a_864ea29a",
+      "name": "Scene 29 image - Wide exterior shot of the long.jpg",
+      "type": "image",
+      "url": "/media/images/scene-29-1793268582844-czws.jpg",
+      "thumb_url": "/media/images/scene-29-1793268582844-czws.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 831780,
+      "added_at": "2026-10-29T10:09:42.846Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-image",
+        "prompt": "Wide exterior shot of the long armored passenger train racing away into the stormy night across the ruined wasteland, one window glowing warm amber, lightning flickering over the clouds, fires on the horizon"
+      }
+    },
+    {
+      "asset_id": "a_94130182",
+      "name": "Scene 29 sfx - Train roaring away into the distance,.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-29-1793268585363-iwvx.mp3",
+      "thumb_url": null,
+      "duration_sec": 8.05,
+      "has_audio": true,
+      "size_bytes": 129192,
+      "added_at": "2026-10-29T10:09:45.398Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Train roaring away into the distance, heavy rain, fading rumble"
+      }
+    },
+    {
+      "asset_id": "a_ba348f39",
+      "name": "Scene 29 sfx - distant thunder rolling.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-29-1793268587419-7urg.mp3",
+      "thumb_url": null,
+      "duration_sec": 4.05,
+      "has_audio": true,
+      "size_bytes": 65244,
+      "added_at": "2026-10-29T10:09:47.453Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "distant thunder rolling"
+      }
+    },
+    {
+      "asset_id": "a_61a4e6d7",
+      "name": "Scene 4 video - The knife chops steadily through the.mp4",
+      "type": "video",
+      "url": "/media/video/scene-4-1793268635267-zfl1.mp4",
+      "thumb_url": "/media/video/scene-4-1793268635267-zfl1.thumb.jpg",
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 6308973,
+      "added_at": "2026-10-29T10:10:35.402Z",
+      "generated": {
+        "kind": "video",
+        "model": "gemini:gemini-omni-1.1-flash",
+        "prompt": "The knife chops steadily through the cabbage, leaves falling aside, slight sway of the moving train"
+      }
+    },
+    {
+      "asset_id": "a_03d57a52",
+      "name": "Scene 11 video - Fingers turn the knob, the burner.mp4",
+      "type": "video",
+      "url": "/media/video/scene-11-1793268703182-vkko.mp4",
+      "thumb_url": "/media/video/scene-11-1793268703182-vkko.thumb.jpg",
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 4834528,
+      "added_at": "2026-10-29T10:11:43.307Z",
+      "generated": {
+        "kind": "video",
+        "model": "gemini:gemini-omni-1.1-flash",
+        "prompt": "Fingers turn the knob, the burner clicks and blooms into a steady ring of blue flame"
+      }
+    },
+    {
+      "asset_id": "a_73edc25a",
+      "name": "Scene 14 video - Eli swishes the pork slice through.mp4",
+      "type": "video",
+      "url": "/media/video/scene-14-1793268750929-4w5o.mp4",
+      "thumb_url": "/media/video/scene-14-1793268750929-4w5o.thumb.jpg",
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 6389936,
+      "added_at": "2026-10-29T10:12:31.076Z",
+      "generated": {
+        "kind": "video",
+        "model": "gemini:gemini-omni-1.1-flash",
+        "prompt": "Eli swishes the pork slice through the boiling broth, it turns pale as it cooks, steam curls up"
+      }
+    },
+    {
+      "asset_id": "a_d32bd74a",
+      "name": "Scene 18 video - The brute rips the steel door.mp4",
+      "type": "video",
+      "url": "/media/video/scene-18-1793268799161-raff.mp4",
+      "thumb_url": "/media/video/scene-18-1793268799161-raff.thumb.jpg",
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 6596186,
+      "added_at": "2026-10-29T10:13:19.297Z",
+      "generated": {
+        "kind": "video",
+        "model": "gemini:gemini-omni-1.1-flash",
+        "prompt": "The brute rips the steel door away, tosses it aside and forces its massive body through the doorframe, roaring"
+      }
+    },
+    {
+      "asset_id": "a_4db759d4",
+      "name": "Scene 21 video - Eli snatches the rifle, racks the.mp4",
+      "type": "video",
+      "url": "/media/video/scene-21-1793268846422-smxu.mp4",
+      "thumb_url": "/media/video/scene-21-1793268846422-smxu.thumb.jpg",
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 5181984,
+      "added_at": "2026-10-29T10:14:06.550Z",
+      "generated": {
+        "kind": "video",
+        "model": "gemini:gemini-omni-1.1-flash",
+        "prompt": "Eli snatches the rifle, racks the bolt and swings it up to his shoulder in one fluid motion"
+      }
+    },
+    {
+      "asset_id": "a_2ea2e6cd",
+      "name": "Scene 23 video - The rifle fires with a bright.mp4",
+      "type": "video",
+      "url": "/media/video/scene-23-1793268892683-7e7j.mp4",
+      "thumb_url": "/media/video/scene-23-1793268892683-7e7j.thumb.jpg",
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 5440478,
+      "added_at": "2026-10-29T10:14:52.813Z",
+      "generated": {
+        "kind": "video",
+        "model": "gemini:gemini-omni-1.1-flash",
+        "prompt": "The rifle fires with a bright muzzle flash and recoil, the shell casing spins out"
+      }
+    },
+    {
+      "asset_id": "a_400a8426",
+      "name": "Scene 24 video - The brute topples forward and slams.mp4",
+      "type": "video",
+      "url": "/media/video/scene-24-1793268942763-1u2x.mp4",
+      "thumb_url": "/media/video/scene-24-1793268942763-1u2x.thumb.jpg",
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 5739249,
+      "added_at": "2026-10-29T10:15:42.893Z",
+      "generated": {
+        "kind": "video",
+        "model": "gemini:gemini-omni-1.1-flash",
+        "prompt": "The brute topples forward and slams onto the floor, the whole car shudders and the plates rattle"
+      }
+    }
+  ]
 }
