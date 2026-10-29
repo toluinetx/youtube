@@ -7,3 +7,4 @@ project/media/
 project/clips/
 project/exports/
 project/*.tmp
+project/.trash.json

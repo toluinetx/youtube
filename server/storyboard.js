@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import { PROJECT_DIR, STORYBOARD_PATH } from './paths.js';
+import { collect, recordChange, takeRedo, takeUndo } from './history.js';
 
 export const DEFAULT_SETTINGS = {
   title: 'Untitled video',
@@ -27,7 +28,6 @@ export const DEFAULT_SETTINGS = {
 export const READONLY_SETTINGS = ['music_url', 'music_name', 'music_duration_sec'];
 
 export const SCENE_TEXT_FIELDS = ['image_prompt', 'voiceover_text', 'sfx_prompt'];
-export const MEDIA_URL_FIELDS = ['image_url', 'video_url', 'video_thumb_url', 'voiceover_url', 'sfx_url'];
 
 export const RESOLUTIONS = {
   '16:9': { width: 1920, height: 1080 },
@@ -127,20 +127,46 @@ async function writeStoryboard(sb) {
 // Serialize read-modify-write cycles so concurrent requests never clobber each other.
 let chain = Promise.resolve();
 
-/**
- * Re-reads storyboard.json (so hand edits are picked up), lets `mutate` change it, then writes it back.
- * Resolves with whatever `mutate` returns, or the storyboard if it returns nothing.
- */
-export function updateStoryboard(mutate) {
-  const run = chain.then(async () => {
-    const sb = await readStoryboard();
-    const result = await mutate(sb);
-    await writeStoryboard(sb);
-    return result === undefined ? sb : result;
-  });
+function serialized(fn) {
+  const run = chain.then(fn);
   chain = run.catch(() => {});
   return run;
 }
+
+/**
+ * Re-reads storyboard.json (so hand edits are picked up), lets `mutate` change it, then writes it back.
+ * Resolves with whatever `mutate` returns, or the storyboard if it returns nothing.
+ * The change becomes one undo step named `label`; consecutive changes with the same `key` are merged.
+ */
+export function updateStoryboard(mutate, history) {
+  return serialized(async () => {
+    const sb = await readStoryboard();
+    const before = JSON.stringify(sb);
+    const result = await mutate(sb);
+    const after = JSON.stringify(sb);
+    if (after !== before) {
+      await writeStoryboard(sb);
+      await recordChange(before, after, history);
+    }
+    return result === undefined ? sb : result;
+  });
+}
+
+/** Step back (or forward) through the history. Resolves with { storyboard, label }, or null if there's nothing to do. */
+function travel(take) {
+  return serialized(async () => {
+    const current = JSON.stringify(await readStoryboard());
+    const entry = take(current);
+    if (!entry) return null;
+    const sb = normalize(JSON.parse(entry.json));
+    await writeStoryboard(sb);
+    await collect(current, entry.json);
+    return { storyboard: sb, label: entry.label };
+  });
+}
+
+export const undo = () => travel(takeUndo);
+export const redo = () => travel(takeRedo);
 
 export function findScene(sb, id) {
   const scene = sb.scenes.find((s) => String(s.scene_id) === String(id));

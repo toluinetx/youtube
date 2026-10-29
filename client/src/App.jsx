@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, Copy, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles, Trash2, X,
 } from 'lucide-react';
-import { api } from './api.js';
+import { api, onHistory } from './api.js';
 import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts } from './util.js';
 import AssetLibrary from './components/AssetLibrary.jsx';
 import SnapshotModal from './components/SnapshotModal.jsx';
@@ -45,6 +45,7 @@ export default function App() {
   const [dragAsset, setDragAsset] = useState(null);
   const [snapshotTarget, setSnapshotTarget] = useState(null); // { asset, purpose, resolve }
   const [menu, setMenu] = useState(null); // { x, y, items }
+  const [history, setHistory] = useState({ undo: null, redo: null }); // labels of the next undo / redo step
   const [libraryCollapsed, setLibraryCollapsed] = useState(() => localStorage.getItem('libraryCollapsed') === '1');
 
   const scenes = useMemo(() => sb?.scenes ?? [], [sb]);
@@ -68,9 +69,12 @@ export default function App() {
     return counts;
   }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids]);
 
-  const notify = useCallback((message, tone = 'error') => {
-    setToast({ message, tone, id: Date.now() });
+  /** Show a toast; `action` ({ label, onClick }) adds a button to it, e.g. Undo. */
+  const notify = useCallback((message, tone = 'error', action = null) => {
+    setToast({ message, tone, action, id: Date.now() });
   }, []);
+
+  useEffect(() => onHistory(setHistory), []);
 
   useEffect(() => {
     if (!toast) return;
@@ -201,7 +205,14 @@ export default function App() {
   useEffect(() => {
     const onKey = (e) => {
       if (isTyping(e) || e.altKey) return;
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+      const key = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && (key === 'z' || key === 'y')) {
+        e.preventDefault();
+        if (key === 'y' || e.shiftKey) actions.current.redo();
+        else actions.current.undo();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && key === 'd') {
         e.preventDefault();
         if (selectedId != null) actions.current.duplicateScene(selectedId);
         return;
@@ -303,12 +314,12 @@ export default function App() {
 
   const deleteScene = (id) => {
     const i = scenes.findIndex((s) => s.scene_id === id);
-    if (!window.confirm(`Delete scene ${i + 1} and its generated media?`)) return;
     run(async () => {
       await api.deleteScene(id);
       const neighbour = scenes[i + 1] ?? scenes[i - 1];
       setSelectedId(neighbour?.scene_id ?? null);
       await reload();
+      notify(`Deleted scene ${i + 1}`, 'info', { label: 'Undo', onClick: () => actions.current.undo() });
     });
   };
 
@@ -322,8 +333,22 @@ export default function App() {
       applyServer(await api.reorder(order));
     });
 
+  // ---- Undo / redo ------------------------------------------------------------------------------
+  // The server keeps the history; unsaved edits are saved first so they become the step that's undone.
+
+  const travel = (direction) =>
+    run(async () => {
+      const result = await (direction === 'undo' ? api.undo() : api.redo());
+      if (!result.storyboard) return;
+      applyServer(result.storyboard);
+      if (!result.storyboard.scenes.some((s) => s.scene_id === selectedId)) setSelectedId(null);
+      notify(`${direction === 'undo' ? 'Undid' : 'Redid'}: ${result.label}`, 'info');
+    });
+
   actions.current.duplicateScene = duplicateScene;
   actions.current.deleteScene = deleteScene;
+  actions.current.undo = () => travel('undo');
+  actions.current.redo = () => travel('redo');
 
   // ---- Library ----------------------------------------------------------------------------------
   // Uploads only ever go into the library. Assets reach the reel when the user drags them onto the
@@ -465,7 +490,7 @@ export default function App() {
   };
 
   const importScript = (script, mode) => {
-    if (mode === 'replace' && scenes.length && !window.confirm('Replace all scenes? Their generated media will be deleted.')) return;
+    if (mode === 'replace' && scenes.length && !window.confirm('Replace all scenes with the imported script? You can undo this.')) return;
     return run(async () => {
       const data = await api.importScript(script, mode);
       applyServer(data);
@@ -613,6 +638,11 @@ export default function App() {
         onGenerateMissing={() => startJob(api.generateMissing)}
         onExport={() => startJob(api.exportVideo)}
         onDismissJob={() => setJob(null)}
+        history={history}
+        undoShortcut={`${MOD_KEY}Z`}
+        redoShortcut={MOD_KEY === '⌘' ? '⇧⌘Z' : 'Ctrl+Y'}
+        onUndo={() => actions.current.undo()}
+        onRedo={() => actions.current.redo()}
       />
 
       <div className="flex min-h-0 flex-1">
@@ -758,6 +788,17 @@ export default function App() {
           }`}
         >
           {toast.message}
+          {toast.action && (
+            <button
+              className="ml-3 font-semibold underline-offset-2 hover:underline"
+              onClick={() => {
+                setToast(null);
+                toast.action.onClick();
+              }}
+            >
+              {toast.action.label}
+            </button>
+          )}
         </div>
       )}
     </div>

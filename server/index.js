@@ -3,8 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import { CLIENT_DIST, EXPORTS_DIR, MEDIA_DIR } from './paths.js';
-import { DEFAULT_SETTINGS, READONLY_SETTINGS, SCENE_TEXT_FIELDS, findScene, newScene, nextSceneId, readStoryboard, updateStoryboard } from './storyboard.js';
-import { GENERATORS, removeMedia, sceneMediaUrls } from './generate.js';
+import {
+  DEFAULT_SETTINGS, READONLY_SETTINGS, SCENE_TEXT_FIELDS, findScene, newScene, nextSceneId, readStoryboard, redo, undo, updateStoryboard,
+} from './storyboard.js';
+import { historyState } from './history.js';
+import { GENERATORS } from './generate.js';
 import {
   addToLibrary, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
   snapshotAsset, useAssetInScene,
@@ -17,6 +20,16 @@ import { FFMPEG } from './ffmpeg.js';
 const PORT = Number(process.env.PORT) || 3001;
 const app = express();
 app.use(express.json({ limit: '2mb' }));
+
+// Every API response says what undo / redo would do next, so the client's buttons stay current.
+app.use('/api', (_req, res, next) => {
+  const json = res.json.bind(res);
+  res.json = (body) => {
+    res.set('X-History', encodeURIComponent(JSON.stringify(historyState())));
+    return json(body);
+  };
+  next();
+});
 
 const badRequest = (message) => Object.assign(new Error(message), { status: 400 });
 
@@ -46,6 +59,23 @@ function sanitizeScenePatch(body) {
     patch.video_volume = v;
   }
   return patch;
+}
+
+const EDIT_LABELS = {
+  image_prompt: 'Edit image prompt',
+  voiceover_text: 'Edit voiceover text',
+  sfx_prompt: 'Edit sound effect prompt',
+  duration_sec: 'Change duration',
+  video_start_sec: 'Trim video',
+  video_volume: 'Change clip volume',
+  reference_asset_ids: 'Change references',
+  use_global_references: 'Change references',
+};
+
+/** Undo label + merge key for a scene edit: successive edits of the same fields of one scene merge. */
+function sceneEditHistory(id, patch) {
+  const fields = Object.keys(patch).sort();
+  return { label: EDIT_LABELS[fields[0]] || 'Edit scene', key: `scene:${id}:${fields.join(',')}` };
 }
 
 /** Turn a pasted script into scenes: one per paragraph, with optional [image: …] and [sfx: …] tags. */
@@ -85,13 +115,13 @@ app.put('/api/settings', async (req, res) => {
     for (const key of Object.keys(DEFAULT_SETTINGS)) {
       if (req.body[key] !== undefined && !READONLY_SETTINGS.includes(key)) sb.settings[key] = req.body[key];
     }
-  });
+  }, { label: 'Edit project settings', key: `settings:${Object.keys(req.body).sort().join(',')}` });
   res.json(sb.settings);
 });
 
 app.put('/api/scene/:id', async (req, res) => {
   const patch = sanitizeScenePatch(req.body);
-  res.json(await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch)));
+  res.json(await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch)));
 });
 
 app.post('/api/scenes', async (req, res) => {
@@ -100,7 +130,7 @@ app.post('/api/scenes', async (req, res) => {
     const after = sb.scenes.findIndex((x) => String(x.scene_id) === String(req.body.after_id));
     sb.scenes.splice(after === -1 ? sb.scenes.length : after + 1, 0, s);
     return s;
-  });
+  }, { label: 'Add scene' });
   res.status(201).json(scene);
 });
 
@@ -113,17 +143,16 @@ app.post('/api/scene/:id/duplicate', async (req, res) => {
     });
     sb.scenes.splice(sb.scenes.indexOf(src) + 1, 0, copy);
     return copy;
-  });
+  }, { label: 'Duplicate scene' });
   res.status(201).json(scene);
 });
 
+// The scene's media files are deleted once no undo step needs them.
 app.delete('/api/scene/:id', async (req, res) => {
-  const removed = await updateStoryboard((sb) => {
+  await updateStoryboard((sb) => {
     const s = findScene(sb, req.params.id);
     sb.scenes.splice(sb.scenes.indexOf(s), 1);
-    return s;
-  });
-  await Promise.all(sceneMediaUrls(removed).map(removeMedia));
+  }, { label: 'Delete scene' });
   res.json({ ok: true });
 });
 
@@ -135,25 +164,25 @@ app.post('/api/scenes/reorder', async (req, res) => {
       throw badRequest('order must list every scene_id exactly once');
     }
     sb.scenes.sort((a, b) => order.indexOf(String(a.scene_id)) - order.indexOf(String(b.scene_id)));
-  });
+  }, { label: 'Move scene' });
   res.json(sb);
 });
 
 app.post('/api/scenes/import-script', async (req, res) => {
   const parsed = parseScript(String(req.body.script || ''));
   if (!parsed.length) throw badRequest('The script is empty');
-  const replace = req.body.mode === 'replace';
-  let dropped = [];
   const sb = await updateStoryboard((sb) => {
-    if (replace) {
-      dropped = sb.scenes;
-      sb.scenes = [];
-    }
+    if (req.body.mode === 'replace') sb.scenes = [];
     for (const fields of parsed) sb.scenes.push(newScene(nextSceneId(sb), fields));
-  });
-  await Promise.all(dropped.flatMap(sceneMediaUrls).map(removeMedia));
+  }, { label: 'Import script' });
   res.json(sb);
 });
+
+// ---- Undo / redo ------------------------------------------------------------------------------
+// Responds with { storyboard, label }, or { storyboard: null } when there is nothing to undo / redo.
+
+app.post('/api/undo', async (_req, res) => res.json((await undo()) ?? { storyboard: null }));
+app.post('/api/redo', async (_req, res) => res.json((await redo()) ?? { storyboard: null }));
 
 // ---- Generation -------------------------------------------------------------------------------
 
@@ -162,7 +191,7 @@ for (const [route, kind] of Object.entries(routes)) {
   app.post(`/api/scene/:id/${route}`, async (req, res) => {
     // Optionally save edited prompt text in the same request.
     const patch = sanitizeScenePatch(req.body || {});
-    if (Object.keys(patch).length) await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch));
+    if (Object.keys(patch).length) await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch));
     res.json(await GENERATORS[kind].fn(req.params.id));
   });
 }

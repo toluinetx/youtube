@@ -104,7 +104,14 @@ Give image generation reference pictures so a character, location or style stays
   Scenes without references keep using the regular image model.
 - References are sent as JPEGs scaled to at most 1024px.
 
-Keyboard: <kbd>Space</kbd> play/pause · <kbd>←</kbd>/<kbd>→</kbd> previous/next scene.
+Keyboard: <kbd>Space</kbd> play/pause · <kbd>←</kbd>/<kbd>→</kbd> previous/next scene · <kbd>Delete</kbd> delete scene ·
+<kbd>Ctrl/⌘</kbd>+<kbd>D</kbd> duplicate scene · <kbd>Ctrl/⌘</kbd>+<kbd>Z</kbd> undo · <kbd>Ctrl</kbd>+<kbd>Y</kbd> or
+<kbd>⇧⌘</kbd>+<kbd>Z</kbd> redo. Right-click a clip, the music row or a library item for more actions.
+
+**Undo / redo** covers every change to the project: edits, deletes, generations, library changes and script
+imports (up to 100 steps; typing in one field is merged into a single step). The history lives in the server's
+memory, so it resets when the server restarts. Media files that leave the project are kept until no undo step
+needs them, then deleted.
 
 ## Project files
 
@@ -152,7 +159,7 @@ To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 | PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references` |
 | POST | `/api/scenes` | add a scene (`after_id` optional) |
 | POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
-| DELETE | `/api/scene/:id` | delete a scene and its media |
+| DELETE | `/api/scene/:id` | delete a scene (its media is deleted once no undo step needs it) |
 | POST | `/api/scenes/reorder` | `{ "order": [3, 1, 2] }` |
 | POST | `/api/scenes/import-script` | `{ "script": "...", "mode": "append" \| "replace" }` |
 | POST | `/api/scene/:id/regenerate-image` | Replicate |
@@ -173,6 +180,7 @@ To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 | POST | `/api/export` | background job: FFmpeg render to `final_output.mp4` |
 | GET | `/api/job` | progress of the current background job |
 | GET | `/api/voices` | your ElevenLabs voices |
+| POST | `/api/undo`, `/api/redo` | step through the history: `{ storyboard, label }`, or `{ storyboard: null }` if there's nothing to do. Every API response carries the next steps' labels in an `X-History` header |
 
 ## Production build
 

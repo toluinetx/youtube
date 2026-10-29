@@ -1,3 +1,10 @@
+let historyListener = null;
+
+/** Called with { undo, redo } (labels or null) whenever the server reports its undo history. */
+export function onHistory(fn) {
+  historyListener = fn;
+}
+
 async function request(method, url, body, opts = {}) {
   const res = await fetch(url, {
     method,
@@ -5,6 +12,8 @@ async function request(method, url, body, opts = {}) {
     body: body ? JSON.stringify(body) : undefined,
     ...opts,
   });
+  const history = res.headers.get('X-History');
+  if (history && historyListener) historyListener(JSON.parse(decodeURIComponent(history)));
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw Object.assign(new Error(data.error || `${res.status} ${res.statusText}`), { status: res.status, data });
   return data;
@@ -46,5 +55,7 @@ export const api = {
   generateMissing: () => request('POST', '/api/generate-missing'),
   exportVideo: () => request('POST', '/api/export'),
   job: () => request('GET', '/api/job'),
+  undo: () => request('POST', '/api/undo'),
+  redo: () => request('POST', '/api/redo'),
   voices: () => request('GET', '/api/voices'),
 };

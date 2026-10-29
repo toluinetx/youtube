@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Clapperboard, Download, FileText, Loader2, Sparkles, TriangleAlert, X } from 'lucide-react';
+import { Clapperboard, Download, FileText, Loader2, Redo2, Sparkles, TriangleAlert, Undo2, X } from 'lucide-react';
 
-export default function TopBar({ title, status, job, missing, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob }) {
+export default function TopBar({
+  title, status, job, missing, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
+}) {
   const running = job?.status === 'running';
   const [showWarnings, setShowWarnings] = useState(false);
 
@@ -22,6 +24,26 @@ export default function TopBar({ title, status, job, missing, exportUrl, onImpor
         )}
 
         <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center">
+            <button
+              className="icon-btn"
+              onClick={onUndo}
+              disabled={!history.undo}
+              title={history.undo ? `Undo ${history.undo} (${undoShortcut})` : 'Nothing to undo'}
+              aria-label="Undo"
+            >
+              <Undo2 className="size-4" />
+            </button>
+            <button
+              className="icon-btn"
+              onClick={onRedo}
+              disabled={!history.redo}
+              title={history.redo ? `Redo ${history.redo} (${redoShortcut})` : 'Nothing to redo'}
+              aria-label="Redo"
+            >
+              <Redo2 className="size-4" />
+            </button>
+          </div>
           <button className="btn-ghost" onClick={onImport} disabled={running}>
             <FileText className="size-4" /> Import script
           </button>
