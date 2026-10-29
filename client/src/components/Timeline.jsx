@@ -1,10 +1,15 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { AudioLines, Film, ImageIcon, Loader2, Music, Plus, Sparkles, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
 import { ASSET_MIME, assetFits, formatTime } from '../util.js';
 
 const MIN_PPS = 10;
 const MAX_PPS = 200;
 const LABEL_W = 88;
+// How far (px) a clip must be dragged before it starts moving rather than just being selected.
+const REORDER_THRESHOLD = 5;
+// Auto-scroll while dragging a clip near the timeline's left/right edge.
+const EDGE_PX = 48;
+const EDGE_SPEED = 14;
 
 const TRACKS = [
   { kind: 'image', label: 'Image', icon: ImageIcon, height: 'h-16', color: 'text-image' },
@@ -34,7 +39,7 @@ function tickStep(pps) {
 
 export default function Timeline({
   scenes, starts, total, time, playing, seek, selectedId, onSelect, onResize, onAdd, onDropFiles, onDropAsset, dragAsset, settings,
-  onSelectMusic, onClipMenu, onMusicMenu, busy,
+  onSelectMusic, onClipMenu, onMusicMenu, onReorder, busy,
 }) {
   const [pps, setPps] = useState(40);
   // While something is dragged over the timeline: { source: 'files' | 'asset', target, index, valid }.
@@ -42,9 +47,79 @@ export default function Timeline({
   const [drag, setDrag] = useState(null);
   const scrollRef = useRef(null);
   const scrubbing = useRef(false);
+  // While a clip is dragged to a new position: { sceneId, from, index } (index = insert before this scene).
+  const [moving, setMoving] = useState(null);
 
   /** Where a new scene dropped at time t would be inserted: before the first scene whose middle is after t. */
   const insertIndexAt = (t) => scenes.filter((sc, i) => starts[i] + sc.duration_sec / 2 < t).length;
+
+  // Latest values for the window listeners of a clip drag, which outlive a render.
+  const latest = useRef({});
+  latest.current = { scenes, insertIndexAt, onReorder, pps };
+
+  /** Pointer pressed on a clip: once it moves past the threshold, drag the scene to a new position. */
+  const grabClip = useCallback((e, sceneId) => {
+    const el = scrollRef.current;
+    const x0 = e.clientX;
+    let state = null;
+    let lastX = x0;
+    const indexAt = (clientX) => {
+      const rect = el.getBoundingClientRect();
+      return latest.current.insertIndexAt((clientX - rect.left + el.scrollLeft) / latest.current.pps);
+    };
+    const update = (clientX) => {
+      const index = indexAt(clientX);
+      if (index !== state.index) setMoving((state = { ...state, index }));
+    };
+    const onMove = (ev) => {
+      lastX = ev.clientX;
+      if (!state) {
+        if (Math.abs(ev.clientX - x0) < REORDER_THRESHOLD) return;
+        const from = latest.current.scenes.findIndex((s) => s.scene_id === sceneId);
+        if (from < 0 || latest.current.scenes.length < 2) return stop();
+        state = { sceneId, from, index: null };
+        document.body.style.cursor = 'grabbing';
+      }
+      update(ev.clientX);
+    };
+    // Keep scrolling while the pointer rests near an edge.
+    const tick = setInterval(() => {
+      if (!state) return;
+      const rect = el.getBoundingClientRect();
+      const dx = lastX < rect.left + EDGE_PX ? -EDGE_SPEED : lastX > rect.right - EDGE_PX ? EDGE_SPEED : 0;
+      if (dx) {
+        el.scrollLeft += dx;
+        update(lastX);
+      }
+    }, 16);
+    const stop = () => {
+      clearInterval(tick);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', stop);
+      window.removeEventListener('keydown', onKey, true);
+      document.body.style.cursor = '';
+      setMoving(null);
+    };
+    const onUp = () => {
+      const done = state;
+      stop();
+      if (!done || done.index == null || done.index === done.from || done.index === done.from + 1) return;
+      const order = latest.current.scenes.map((s) => s.scene_id);
+      order.splice(done.from, 1);
+      order.splice(done.index > done.from ? done.index - 1 : done.index, 0, done.sceneId);
+      latest.current.onReorder(order);
+    };
+    const onKey = (ev) => {
+      if (ev.key !== 'Escape') return;
+      ev.stopPropagation();
+      stop();
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', stop);
+    window.addEventListener('keydown', onKey, true);
+  }, []);
 
   const dragHandlers = {
     onDragOver: (e) => {
@@ -75,6 +150,8 @@ export default function Timeline({
     },
   };
   const dropStateFor = (sceneId, track) => (sameTarget(drag?.target, { sceneId, track }) ? (drag.valid ? 'ok' : 'bad') : null);
+  const movable = moving && moving.index != null && moving.index !== moving.from && moving.index !== moving.from + 1;
+  const moveX = movable ? (moving.index < scenes.length ? starts[moving.index] : total) * pps : null;
   const insertX = drag?.source === 'asset' && !drag.target && drag.valid ? (drag.index < scenes.length ? starts[drag.index] : total) * pps : null;
 
   const width = Math.max(total * pps + 160, 400);
@@ -119,7 +196,7 @@ export default function Timeline({
           <span>
             {scenes.length} scene{scenes.length === 1 ? '' : 's'} · {formatTime(total, true)}
           </span>
-          <span className="hidden text-zinc-600 xl:inline">· drag a scene's edge to resize · drag from the library to add</span>
+          <span className="hidden text-zinc-600 xl:inline">· drag a scene to reorder it, its edge to resize</span>
         </div>
         <div className="flex items-center gap-1">
           <button className="btn-ghost px-2 py-1 text-xs" onClick={onAdd}>
@@ -169,7 +246,9 @@ export default function Timeline({
                     selected={scene.scene_id === selectedId}
                     busy={Boolean(busy[`${scene.scene_id}:${track.kind}`])}
                     dropping={dropStateFor(scene.scene_id, track.kind)}
+                    moving={moving?.sceneId === scene.scene_id}
                     onSelect={onSelect}
+                    onGrab={grabClip}
                     onResize={onResize}
                     onMenu={onClipMenu}
                   />
@@ -186,6 +265,14 @@ export default function Timeline({
               onSelect={onSelectMusic}
               onMenu={onMusicMenu}
             />
+
+            {moveX != null && (
+              <div className="pointer-events-none absolute top-0 bottom-0 z-20 w-0.5 -translate-x-1/2 bg-indigo-400" style={{ left: moveX }}>
+                <span className="absolute top-0.5 left-1.5 rounded bg-indigo-500 px-1.5 text-[10px] leading-4 font-medium whitespace-nowrap text-white">
+                  Move scene {moving.from + 1} here
+                </span>
+              </div>
+            )}
 
             {insertX != null && (
               <div className="pointer-events-none absolute top-0 bottom-0 z-20 w-0.5 -translate-x-1/2 bg-indigo-400" style={{ left: insertX }}>
@@ -247,7 +334,7 @@ function MusicRow({ settings, total, pps, busy, dropping, onSelect, onMenu }) {
   );
 }
 
-const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy, dropping, onSelect, onResize, onMenu }) {
+const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy, dropping, moving, onSelect, onGrab, onResize, onMenu }) {
   const width = scene.duration_sec * pps;
   const ring = dropping
     ? dropping === 'ok'
@@ -258,9 +345,13 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
       : 'ring-1 ring-white/5 hover:ring-white/20';
   const drop = { 'data-drop-track': track, 'data-drop-scene': scene.scene_id };
   const names = scene.source_names || {};
-  const base = `absolute top-1 bottom-1 overflow-hidden rounded-md cursor-pointer ${ring}`;
+  const base = `absolute top-1 bottom-1 overflow-hidden rounded-md cursor-grab active:cursor-grabbing ${ring} ${moving ? 'opacity-40' : ''}`;
   const style = { left: left + 1, width: Math.max(2, width - 2) };
-  const select = (e) => e.button === 0 && onSelect(scene.scene_id);
+  const select = (e) => {
+    if (e.button !== 0) return;
+    onSelect(scene.scene_id);
+    onGrab(e, scene.scene_id);
+  };
   const menu = (e) => onMenu(e, scene.scene_id, track);
 
   if (track === 'image') {

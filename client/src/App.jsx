@@ -350,6 +350,19 @@ export default function App() {
   actions.current.undo = () => travel('undo');
   actions.current.redo = () => travel('redo');
 
+  /** Drag-to-reorder on the timeline: apply the new order locally right away, then save it. */
+  const reorderScenes = (order) => {
+    setSb((prev) => ({ ...prev, scenes: order.map((id) => prev.scenes.find((s) => s.scene_id === id)) }));
+    run(async () => {
+      try {
+        applyServer(await api.reorder(order));
+      } catch (err) {
+        await reload();
+        throw err;
+      }
+    });
+  };
+
   // ---- Library ----------------------------------------------------------------------------------
   // Uploads only ever go into the library. Assets reach the reel when the user drags them onto the
   // timeline or uses an explicit button.
@@ -697,6 +710,7 @@ export default function App() {
             settings={sb.settings}
             onSelectMusic={() => setSidebarTab('project')}
             onClipMenu={onClipMenu}
+            onReorder={reorderScenes}
             onMusicMenu={(e) => openMenu(e, musicMenuItems())}
             busy={busy}
           />

@@ -48,7 +48,8 @@ The top bar shows a green dot for each service that is configured. Restart `npm 
 3. **Generate everything.** **Generate missing** creates every image, voiceover and SFX that has a prompt but
    no file yet. If a voiceover runs longer than its scene, the scene is lengthened so the narration isn't cut off.
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
-   sidebar and click **Regenerate**. Only that asset is regenerated. Drag a scene's right edge to change its length.
+   sidebar and click **Regenerate**. Only that asset is regenerated. Drag a scene's right edge to change its length,
+   or drag the scene itself to move it (<kbd>Esc</kbd> cancels).
 5. **Export.** **Export video** renders `project/exports/final_output.mp4` and opens it in the
    **Rendered MP4** tab. Each scene is cached as its own clip, so re-exporting after a small change only
    re-renders the scenes you touched.
