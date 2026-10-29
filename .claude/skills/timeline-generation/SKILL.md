@@ -80,6 +80,13 @@ Report problems as a short list and ask how to fix each. Don't silently change t
 - **Weak prompts (suggestions only):** for image prompts missing a clear subject, setting, or
   shot/lighting description, for vague SFX (e.g. "spooky"), or for text-in-image requests, offer a
   concrete improved version using the guidance in `template.md`. Apply it only if the user agrees.
+- **People and hands (suggestions only):** image models often add an extra person or an extra hand.
+  Flag image prompts (scene and shots) that show people without saying how many and who: a character
+  who should be alone without "alone, the only person in the frame"; a hand close-up without whose
+  hands and how many ("both of Eli's hands (two hands)"); two or more characters without "two people:
+  … and …"; a crowd or background figures with no place that keeps them out of the main subject's space
+  ("outside, beyond the window glass"); several actions by one character's hands at once. Offer the
+  reworded prompt, keeping the user's wording otherwise.
 - **Video requests:** a scene's video is made on demand in its **Video** tab (Gemini Omni, from
   `video_prompt` or else the image prompt; the scene's image becomes the first frame), never by the
   import. If a scene asks for real motion, keep the image prompt, put the action in `video_prompt`,
@@ -110,7 +117,9 @@ When the user asks you to turn a story (or notes, an article, an outline) into a
      to the narrator and the tone, and at most about one per sentence or two in plain narration. Use
      punctuation (… — ! ?) and occasional CAPS for small effects instead of a tag.
    - **Image:** a full brief (subject, action, setting, composition, lighting, details), with
-     recurring characters described identically each time, and no text in the image.
+     recurring characters described identically each time, and no text in the image. State who is
+     in the frame and how many ("Eli, alone, the only person in the car"; "both of Eli's hands (two
+     hands)"), as in "People and hands" above.
    - **SFX:** concrete sounds for scenes that need them, split and timed as in "Splitting sound
      effects" below. Leave it empty otherwise. Put sound effects here, not as tags in the voice.
    - **Notes:** footage ideas, on-screen text, music cues.
@@ -288,6 +297,9 @@ retry. On any other error, show it and fix the payload rather than retrying blin
 ## 5. Report back
 
 Show the helper's summary (scene numbers, timings, what each scene has, notes) and remind the user:
+- images are checked as they're generated: if one still has problems after its retries (an extra
+  hand, an extra person), the scene shows a warning under its image saying what. Fix the prompt and
+  regenerate. Guardrails and the check are on the Project tab (Images); the check needs a Gemini key
 - nothing is generated yet: **Generate missing** in the top bar opens a review dialog (tick items, pick models,
   see costs; suggested video clips start unticked), or use each scene's Generate buttons
 - the editor updated live (no reload needed), and **Ctrl/Cmd+Z** in the editor undoes the import

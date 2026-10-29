@@ -23,6 +23,8 @@ export const DEFAULT_PRICES = {
   'gemini:gemini-3.1-flash-image-preview': NANO_BANANA_2,
   'gemini:gemini-3.1-flash-lite-image': { input: 0.25, text_output: 1.5, image_output: 30 },
   'gemini:gemini-2.5-flash-image': { input: 0.3, image_output: 30 },
+  // Image check (vision). The alias follows Google's latest Flash model; priced as Gemini 3 Flash.
+  'gemini:gemini-flash-latest': { input: 0.5, text_output: 3 },
   'gemini:gemini-omni-1.1-flash': { input: 1.5, text_output: 9, video_output: 17.5 },
   'black-forest-labs/flux-schnell': { per_image: 0.003 },
   'black-forest-labs/flux-dev': { per_image: 0.025 },

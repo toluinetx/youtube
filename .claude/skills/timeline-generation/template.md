@@ -60,6 +60,13 @@ Delete the guidance in `>` quotes as you go, or leave it. Claude ignores it.
 >
 >   Tips:
 >   - One clear subject and idea per image. Busy prompts give muddled pictures.
+>   - **Say who is in the frame, and how many.** Image models often add a second person, or a third
+>     hand, to a scene with one character. Write the count: *"Eli, alone, the only person in the train
+>     car"*, *"two people: Maya and her father"*. For hands, say whose and how many: *"close-up of both
+>     of Eli's hands (two hands) rinsing cabbage"*, not *"hands rinsing cabbage"*. Keep crowds where they
+>     belong and say so: *"zombies outside, beyond the window glass"*. The editor also adds people and
+>     hands guardrails to every prompt and checks each image (regenerating it when it finds extra hands
+>     or people), but every retry costs another image, so a clear prompt is cheaper.
 >   - Describe what you want, not what you don't ("empty beach", not "no people").
 >   - Avoid text, logos, signs, numbers and charts in images: generators misspell them. Add text in
 >     editing instead.
