@@ -11,6 +11,9 @@ import { OMNI_TOKENS_PER_SECOND } from './gemini.js';
 const HALF_CREDIT_TTS = /turbo|flash/;
 const SFX_CREDITS_PER_SEC = 10;
 const IMAGE_INPUT_TOKENS = 1120; // per reference image sent to a Gemini model
+// An image check sends the picture plus about 300 tokens of instructions and gets a short JSON answer.
+const CHECK_INPUT_TOKENS = 1120 + 300;
+const CHECK_OUTPUT_TOKENS = 150;
 const imageOutputTokens = (model, params = {}) =>
   /2\.5-flash-image/.test(model) ? 1290 : params.imageSize === '4K' ? 2000 : 1120;
 
@@ -30,8 +33,20 @@ export async function costEstimator(settings) {
     unpriced,
     elevenlabsRate: elevenlabs ?? null,
 
-    /** A picture from `prompt` with `refs` reference images (the reference model is used when there are any). */
+    /**
+     * A picture from `prompt` with `refs` reference images (the reference model is used when there are any),
+     * plus its image check if the project has one on (the first attempt; a retry costs it all again).
+     */
     image(prompt, refs) {
+      const picture = this.picture(prompt, refs);
+      const checkModel = settings.image_check ? settings.image_check_model : null;
+      if (!checkModel || picture.usd == null) return picture;
+      const p = table[checkModel];
+      if (!p) return { ...picture, usd: missing(checkModel) };
+      return { ...picture, usd: picture.usd + perM(CHECK_INPUT_TOKENS, p.input) + perM(CHECK_OUTPUT_TOKENS, p.text_output) };
+    },
+
+    picture(prompt, refs) {
       const model = refs ? settings.reference_model : settings.image_model;
       const fullPrompt = prompt + (settings.style_prompt ? `. ${settings.style_prompt}` : '');
       const p = table[model];

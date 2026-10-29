@@ -89,6 +89,11 @@ and the scene sidebar warns you when that would happen.
    you don't want, change the models, voice or style on the left (they're the project's settings), and click
    **Generate**. Video clips are made last, so each starts from its scene's new image. If a voiceover runs longer than
    its scene, the scene is lengthened so the narration isn't cut off.
+   **People and hands.** Image models sometimes add a second person or a third hand. Every image prompt gets a short
+   guardrail (only the people the scene describes, two hands each), and with a Gemini API key each new picture is
+   checked by a Gemini vision model. If it finds extra hands or people or a missing subject, the image is regenerated
+   (up to 2 more times by default), telling the model what was wrong. If problems remain, the scene shows a warning under
+   its image. Both are on the Project tab, under Images. Each retry costs another image.
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
    sidebar and click **Regenerate**. Only that asset is regenerated. Hover between two scenes on the Image track and click
    **+** to insert a blank scene there, or click the **+** box after the last scene. Drag a scene's right edge to change its length,

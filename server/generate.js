@@ -4,7 +4,7 @@ import path from 'node:path';
 import { MEDIA_DIR, mediaPathToUrl, mediaUrlToPath } from './paths.js';
 import { findScene, readStoryboard, sceneTimeline, syncCues, updateStoryboard } from './storyboard.js';
 import { generateImage, referenceCapacity } from './replicate.js';
-import { OMNI_TOKENS_PER_SECOND, generateGeminiImage, generateGeminiVideo, geminiReferenceCapacity, isGeminiModel } from './gemini.js';
+import { OMNI_TOKENS_PER_SECOND, checkImage, generateGeminiImage, generateGeminiVideo, geminiReferenceCapacity, isGeminiModel } from './gemini.js';
 import { recordUsage } from './usage.js';
 import { soundEffect, textToSpeech } from './elevenlabs.js';
 import { extractThumbnail, probe, probeDuration, referenceDataUri } from './ffmpeg.js';
@@ -138,7 +138,7 @@ function previousSceneReference(sb, scene) {
  * changes for the story (action, pose, expression, framing). They're named so the scene text can
  * point at them ("Maya walks into the lab"). The previous shot, if sent, is for continuity only.
  */
-function referencePrompt(scenePrompt, style, refs) {
+function referencePrompt(scenePrompt, style, refs, guardrails) {
   const n = (r) => refs.indexOf(r) + 1;
   const design = refs.filter((r) => !r.previous);
   const previous = refs.find((r) => r.previous);
@@ -153,8 +153,10 @@ function referencePrompt(scenePrompt, style, refs) {
     previous &&
       `Reference ${n(previous)} is the previous shot of this video. Keep continuity with it: the same characters, clothing, ` +
       'props, lighting and state of the setting, and the same art style. But this is a new shot: frame and stage it as the ' +
-      'scene below describes rather than copying the previous one.',
+      'scene below describes rather than copying the previous one. Don\'t carry over people, arms or hands from it that ' +
+      'the scene below doesn\'t describe.',
     `Scene: ${scenePrompt}`,
+    guardrails && IMAGE_GUARDRAILS,
     style && `Style notes (only where the references don't already decide it): ${style}`,
   ]
     .filter(Boolean)
@@ -167,8 +169,20 @@ export async function imageReferenceCapacity(model) {
 }
 
 /**
+ * Added to every image prompt (unless the project turns it off): image models often add a second
+ * person, or a third hand, to scenes with one character and to close-ups of hands.
+ */
+const IMAGE_GUARDRAILS =
+  'People and hands: show only the people this scene describes, each of them once. A character described as alone ' +
+  'is the only person in the frame, with no one else\'s hands or arms in it. Every person has exactly two arms and two ' +
+  'hands with five fingers each, all clearly attached to them';
+
+/**
  * Generate an image for `scene` from `imagePrompt`, with the scene's and project's references and the
- * `previous` shot (for continuity). Resolves with { buffer, ext, usage, model }.
+ * `previous` shot (for continuity). If the project checks images, a vision model looks at each one and
+ * it's regenerated (telling the model what went wrong) until it passes or the retries run out; the
+ * attempt with the fewest problems is kept. Resolves with { buffer, ext, model, check }, where check is
+ * { ok, issues, people, hands, attempts }, { error } if the check itself failed, or null if it's off.
  */
 async function generateImageFor(sb, scene, imagePrompt, previous) {
   const { settings } = sb;
@@ -183,29 +197,64 @@ async function generateImageFor(sb, scene, imagePrompt, previous) {
     if (capacity) refs = refs.slice(0, capacity);
   }
 
-  const prompt = refs.length
-    ? referencePrompt(imagePrompt, settings.style_prompt?.trim(), refs)
-    : [imagePrompt, settings.style_prompt?.trim()].filter(Boolean).join('. ');
+  const guardrails = settings.image_guardrails !== false;
+  const style = settings.style_prompt?.trim();
+  const basePrompt = refs.length
+    ? referencePrompt(imagePrompt, style, refs, guardrails)
+    : // Last, so a model that cuts long prompts short (FLUX) drops it before the scene and the style.
+      [imagePrompt, style, guardrails && IMAGE_GUARDRAILS].filter(Boolean).join('. ');
   const references = await Promise.all(refs.map((r) => referenceDataUri(r.path, r.atSec)));
   const params = settings.image_params?.[model] || {};
   const generate = isGeminiModel(model) ? generateGeminiImage : generateImage;
-  const { buffer, ext, usage } = await generate({
-    prompt, model, aspectRatio: settings.aspect_ratio, references, referenceLabels: refs.map((r) => r.label), params,
-  });
-  recordUsage({ provider: isGeminiModel(model) ? 'gemini' : 'replicate', kind: 'image', model, scene_id: scene.scene_id, units: usage });
-  return { buffer, ext, model };
+  const checkModel = settings.image_check && hasGeminiKey() ? settings.image_check_model?.trim() : null;
+  const tries = checkModel ? 1 + Math.min(5, Math.max(0, Math.round(Number(settings.image_check_retries) || 0))) : 1;
+
+  let best = null;
+  let problems = [];
+  for (let attempt = 1; attempt <= tries; attempt++) {
+    const prompt = problems.length
+      ? `${basePrompt}\n\nAn earlier attempt at this image was rejected for: ${problems.join(' ')} Make sure this one doesn't have these problems.`
+      : basePrompt;
+    const { buffer, ext, usage } = await generate({
+      prompt, model, aspectRatio: settings.aspect_ratio, references, referenceLabels: refs.map((r) => r.label), params,
+    });
+    recordUsage({ provider: isGeminiModel(model) ? 'gemini' : 'replicate', kind: 'image', model, scene_id: scene.scene_id, units: usage });
+    if (!checkModel) return { buffer, ext, model, check: null };
+
+    let check;
+    try {
+      const { usage: checkUsage, ...result } = await checkImage({ image: bufferDataUri(buffer, ext), brief: imagePrompt, model: checkModel });
+      recordUsage({ provider: 'gemini', kind: 'image check', model: checkModel, scene_id: scene.scene_id, units: checkUsage });
+      check = { ...result, attempts: attempt };
+    } catch (err) {
+      // A check that can't run mustn't lose an image that's already paid for.
+      console.warn(`Image check failed: ${err.message}`);
+      return { buffer, ext, model, check: { error: err.message, attempts: attempt } };
+    }
+    if (!best || check.issues.length < best.check.issues.length) best = { buffer, ext, model, check };
+    if (check.ok) return best;
+    problems = check.issues;
+  }
+  return { ...best, check: { ...best.check, attempts: tries } };
 }
+
+const hasGeminiKey = () => Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY);
+const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+const bufferDataUri = (buffer, ext) => `data:${MIME[ext] || 'image/png'};base64,${buffer.toString('base64')}`;
+
+/** What's stored with a picture about its check: kept with its url, so a replaced picture's is ignored. */
+const checkRecord = (check, url) => (check ? { url, ...check } : null);
 
 export async function generateSceneImage(sceneId) {
   const sb = await readStoryboard();
   const scene = findScene(sb, sceneId);
   if (!scene.image_prompt.trim()) throw badRequest('This scene has no image prompt');
 
-  const { buffer, ext, model } = await generateImageFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene));
+  const { buffer, ext, model, check } = await generateImageFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene));
   const file = await saveMedia('images', scene.scene_id, ext, buffer);
   const media = { file, kind: 'image', type: 'image', prompt: scene.image_prompt.trim(), model };
   return commitGenerated(scene.scene_id, media, (s) => {
-    Object.assign(s, CLEAR_VIDEO, { image_url: mediaPathToUrl(file) });
+    Object.assign(s, CLEAR_VIDEO, { image_url: mediaPathToUrl(file), image_check: checkRecord(check, mediaPathToUrl(file)) });
     setSourceName(s, 'image', null);
   }, 'Generate image');
 }
@@ -291,13 +340,13 @@ export async function generateSceneShotImage(sceneId, shotId) {
 
   const before = pictureBefore(scene, shot.start_sec);
   const previous = before && { label: 'Previous shot (the picture just before this one)', ...before };
-  const { buffer, ext, model } = await generateImageFor(sb, scene, shot.image_prompt.trim(), previous);
+  const { buffer, ext, model, check } = await generateImageFor(sb, scene, shot.image_prompt.trim(), previous);
   const file = await saveMedia('images', scene.scene_id, ext, buffer);
   const media = { file, kind: 'image', type: 'image', prompt: shot.image_prompt.trim(), model };
   return commitGenerated(scene.scene_id, media, (s) => {
     // The shot may have been removed while it was generating; then the image just goes to the library.
     const target = (s.shots || []).find((x) => x.shot_id === shotId);
-    if (target) Object.assign(target, { image_url: mediaPathToUrl(file), source_name: null });
+    if (target) Object.assign(target, { image_url: mediaPathToUrl(file), source_name: null, image_check: checkRecord(check, mediaPathToUrl(file)) });
   }, 'Generate shot');
 }
 

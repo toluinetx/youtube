@@ -41,6 +41,43 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             onChange={(e) => onChange({ style_prompt: e.target.value })}
           />
         </Field>
+        <label className="flex items-start gap-2 text-xs text-zinc-300">
+          <input
+            type="checkbox"
+            className="mt-0.5 accent-amber-400"
+            checked={settings.image_guardrails !== false}
+            onChange={(e) => onChange({ image_guardrails: e.target.checked })}
+          />
+          <span>
+            People &amp; hands guardrails
+            <span className="block text-[11px] text-zinc-600">Tells the image model: only the people the scene describes, two hands each.</span>
+          </span>
+        </label>
+        <label className="flex items-start gap-2 text-xs text-zinc-300">
+          <input
+            type="checkbox"
+            className="mt-0.5 accent-amber-400"
+            checked={Boolean(settings.image_check)}
+            onChange={(e) => onChange({ image_check: e.target.checked })}
+          />
+          <span>
+            Check each image, and retry up to{' '}
+            <input
+              type="number"
+              min={0}
+              max={5}
+              className="field inline-block !w-12 !px-1.5 !py-0 text-center"
+              value={settings.image_check_retries}
+              disabled={!settings.image_check}
+              onChange={(e) => onChange({ image_check_retries: Math.min(5, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
+            />{' '}
+            times
+            <span className="block text-[11px] text-zinc-600">
+              A Gemini vision model looks for extra hands or people and a missing subject. Each retry costs another image.
+              {status && !status.gemini && ' Needs GEMINI_API_KEY in .env; skipped until then.'}
+            </span>
+          </span>
+        </label>
         <Field label="Camera motion for images (scenes can override it)">
           <select className="field" value={settings.motion} onChange={(e) => onChange({ motion: e.target.value })}>
             {MOTIONS.map(([id, label]) => (

@@ -20,6 +20,13 @@ export const DEFAULT_SETTINGS = {
   // Library image assets sent as references for every scene (characters, locations, art style).
   reference_asset_ids: [],
   style_prompt: 'cinematic lighting, highly detailed, 35mm photo',
+  // Add IMAGE_GUARDRAILS (generate.js) to every image prompt: only the people the scene describes, two hands each.
+  image_guardrails: true,
+  // Have a Gemini vision model look at each generated picture for extra hands, extra people or a missing
+  // subject, and regenerate it up to image_check_retries times if it finds one (needs GEMINI_API_KEY).
+  image_check: true,
+  image_check_model: 'gemini:gemini-flash-latest',
+  image_check_retries: 2,
   voice_id: 'JBFqnCBsd6RMkjVDRZzb', // ElevenLabs "George"
   tts_model: 'eleven_multilingual_v2',
   // Voice settings (stability, similarity_boost, style, use_speaker_boost, speed, seed). Unset = the voice's own.
