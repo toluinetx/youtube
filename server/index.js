@@ -63,6 +63,21 @@ function sanitizeAssetIds(value, field) {
   return [...new Set(value)].slice(0, 14);
 }
 
+const STYLE_REFERENCE_LIMIT = 6;
+const STYLE_CAPTION_MAX = 300;
+
+/** [{ asset_id, caption }]: one entry per image, captions trimmed to STYLE_CAPTION_MAX characters. */
+function sanitizeStyleReferences(value) {
+  if (!Array.isArray(value) || !value.every((r) => isPlainObject(r) && typeof r.asset_id === 'string')) {
+    throw badRequest('style_references must be a list of { asset_id, caption }');
+  }
+  const seen = new Set();
+  return value
+    .filter((r) => !seen.has(r.asset_id) && seen.add(r.asset_id))
+    .slice(0, STYLE_REFERENCE_LIMIT)
+    .map((r) => ({ asset_id: r.asset_id, caption: typeof r.caption === 'string' ? r.caption.slice(0, STYLE_CAPTION_MAX) : '' }));
+}
+
 function sanitizeScenePatch(body) {
   const patch = {};
   for (const f of SCENE_TEXT_FIELDS) if (typeof body[f] === 'string') patch[f] = body[f];
@@ -259,6 +274,7 @@ const OBJECT_SETTINGS = ['image_params', 'video_params', 'tts_params', 'sfx_para
 
 app.put('/api/settings', async (req, res) => {
   if (req.body.reference_asset_ids !== undefined) req.body.reference_asset_ids = sanitizeAssetIds(req.body.reference_asset_ids, 'reference_asset_ids');
+  if (req.body.style_references !== undefined) req.body.style_references = sanitizeStyleReferences(req.body.style_references);
   for (const key of OBJECT_SETTINGS) {
     if (req.body[key] !== undefined && !isPlainObject(req.body[key])) throw badRequest(`${key} must be an object`);
   }
@@ -395,7 +411,7 @@ app.post('/api/scenes/import-script', async (req, res) => {
 const IMPORT_SCENE_FIELDS = [
   ...SCENE_TEXT_FIELDS, 'video_prompt', 'motion', 'shake', 'title_text', 'reference_names', 'sfx_layers', 'shots', 'duration_sec', 'notes',
 ];
-const IMPORT_SETTINGS = Object.keys(DEFAULT_SETTINGS).filter((k) => !READONLY_SETTINGS.includes(k) && k !== 'reference_asset_ids');
+const IMPORT_SETTINGS = Object.keys(DEFAULT_SETTINGS).filter((k) => !READONLY_SETTINGS.includes(k) && k !== 'reference_asset_ids' && k !== 'style_references');
 const SETTING_CHOICES = {
   aspect_ratio: Object.keys(RESOLUTIONS), motion: MOTIONS, look: Object.keys(LOOKS), captions: CAPTION_MODES, caption_position: CAPTION_POSITIONS,
 };

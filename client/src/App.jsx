@@ -102,7 +102,7 @@ export default function App() {
   const library = useMemo(() => sb?.library ?? [], [sb]);
 
   // Where each media URL is used, on the reel or as a reference (for library badges):
-  // { count, scenes: [scene numbers], music, reference (project-wide) }.
+  // { count, scenes: [scene numbers], music, reference (project-wide), style }.
   const usage = useMemo(() => {
     const uses = {};
     const use = (url) => {
@@ -128,8 +128,12 @@ export default function App() {
       const u = use(urlOf.get(id));
       if (u) u.reference = true;
     }
+    for (const { asset_id } of sb?.settings.style_references || []) {
+      const u = use(urlOf.get(asset_id));
+      if (u) u.style = true;
+    }
     return uses;
-  }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids]);
+  }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids, sb?.settings.style_references]);
 
   /** Show a toast; `action` ({ label, onClick }) adds a button to it, e.g. Undo. */
   const notify = useCallback((message, tone = 'error', action = null) => {

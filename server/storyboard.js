@@ -19,6 +19,9 @@ export const DEFAULT_SETTINGS = {
   video_params: {},
   // Library image assets sent as references for every scene (characters, locations, art style).
   reference_asset_ids: [],
+  // Library images that show the look of the video, each with a caption saying what to take from it:
+  // [{ asset_id, caption }]. Sent with every image (and video clip) whose scene uses project references.
+  style_references: [],
   style_prompt: 'cinematic lighting, highly detailed, 35mm photo',
   // Add IMAGE_GUARDRAILS (generate.js) to every image prompt: only the people the scene describes, two hands each.
   image_guardrails: true,

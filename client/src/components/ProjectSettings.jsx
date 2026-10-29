@@ -41,6 +41,7 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             onChange={(e) => onChange({ style_prompt: e.target.value })}
           />
         </Field>
+        <StyleReferences settings={settings} onChange={onChange} library={library} onRequestSnapshot={onRequestSnapshot} onUploadFiles={onUploadFiles} />
         <label className="flex items-start gap-2 text-xs text-zinc-300">
           <input
             type="checkbox"
@@ -181,6 +182,37 @@ export default function ProjectSettings({ settings, onChange, status, library, o
       </Group>
 
       <p className="text-[11px] text-zinc-600">Background music is in the Music tab on the right.</p>
+    </div>
+  );
+}
+
+const STYLE_REFERENCE_LIMIT = 6;
+
+/**
+ * Images that show the video's look, each with a caption saying what to take from it. They're sent
+ * with every scene that has "+ project & style refs" ticked, for images and video clips.
+ */
+function StyleReferences({ settings, onChange, library, onRequestSnapshot, onUploadFiles }) {
+  const refs = settings.style_references || [];
+  const captions = Object.fromEntries(refs.map((r) => [r.asset_id, r.caption]));
+  return (
+    <div>
+      <span className="label">Style images (sent with every image and video)</span>
+      <ReferenceList
+        ids={refs.map((r) => r.asset_id)}
+        library={library}
+        onChange={(ids) => onChange({ style_references: ids.map((id) => ({ asset_id: id, caption: captions[id] || '' })) })}
+        captions={captions}
+        onCaptionChange={(id, caption) => onChange({ style_references: refs.map((r) => (r.asset_id === id ? { ...r, caption } : r)) })}
+        captionPlaceholder="What to take from it, e.g. ink linework and flat cel shading"
+        max={STYLE_REFERENCE_LIMIT}
+        onRequestSnapshot={onRequestSnapshot}
+        onUploadFiles={onUploadFiles}
+        emptyHint="Add images that show the look you want (drag from the library or drop files). The model copies their style, not what's in them."
+      />
+      <p className="mt-1 text-[11px] text-zinc-600">
+        A caption says what each image is for (palette, linework, lighting). Video clips that start from a scene image get the captions only.
+      </p>
     </div>
   );
 }

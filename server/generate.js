@@ -98,6 +98,24 @@ export function sceneReferences(sb, scene) {
   return [...new Set(ids)].map((id) => byId.get(id)).filter((a) => a?.type === 'image' && mediaUrlToPath(a.url));
 }
 
+/**
+ * The project's style images for a scene, with their captions: [{ asset, caption }]. Sent whenever
+ * the scene uses project references ("+ project refs"); a standalone reference sets
+ * `use_style_references` to get the style without the other references.
+ */
+export function styleReferences(sb, scene) {
+  if (!(scene.use_style_references ?? scene.use_global_references !== false)) return [];
+  const byId = new Map(sb.library.map((a) => [a.asset_id, a]));
+  return (sb.settings.style_references || [])
+    .map((r) => ({ asset: byId.get(r.asset_id), caption: r.caption?.trim() || '' }))
+    .filter((r) => r.asset?.type === 'image' && mediaUrlToPath(r.asset.url));
+}
+
+/** A style image as a reference for generateImageFor: labelled by its caption, marked `style`. */
+const styleRef = ({ asset, caption }) => ({
+  label: caption ? `style: ${caption}` : 'style reference', caption, path: mediaUrlToPath(asset.url), style: true,
+});
+
 const refLabel = (asset) => asset.name.replace(/\.[^.]+$/, '');
 
 /**
@@ -140,16 +158,26 @@ function previousSceneReference(sb, scene) {
  */
 function referencePrompt(scenePrompt, style, refs, guardrails) {
   const n = (r) => refs.indexOf(r) + 1;
-  const design = refs.filter((r) => !r.previous);
+  const design = refs.filter((r) => !r.previous && !r.style);
+  const styles = refs.filter((r) => r.style);
   const previous = refs.find((r) => r.previous);
+  const only = design.length === refs.length;
   return [
     `Reference images, in order: ${refs.map((r) => `${n(r)}) ${r.label}`).join(', ')}.`,
     design.length &&
-      `Treat ${previous ? `reference${design.length > 1 ? 's' : ''} ${design.map(n).join(', ')}` : 'the reference images'} as the exact design for this image. ` +
+      `Treat ${only ? 'the reference images' : `reference${design.length > 1 ? 's' : ''} ${design.map(n).join(', ')}`} as the exact design for this image. ` +
         'Every character must look exactly as in the references: same face, hair, body, clothing and colours. The setting must ' +
         'also be the same: same place, architecture, furniture, props, materials, lighting and art style. Change only what the ' +
         'scene below calls for, such as action, pose, facial expression, camera angle and framing. Where the scene text ' +
         'describes appearance differently from the references, follow the references.',
+    styles.length &&
+      (styles.length > 1
+        ? `References ${styles.map(n).join(', ')} show the art style of this video. Match their medium, linework, colour palette, ` +
+          'lighting, texture and rendering, but don\'t copy their characters, objects, setting or composition.' +
+          (styles.some((r) => r.caption) ? ` What to take from each: ${styles.filter((r) => r.caption).map((r) => `${n(r)}) ${r.caption}`).join('; ')}.` : '')
+        : `Reference ${n(styles[0])} shows the art style of this video. Match its medium, linework, colour palette, lighting, ` +
+          'texture and rendering, but don\'t copy its characters, objects, setting or composition.' +
+          (styles[0].caption ? ` Take from it: ${styles[0].caption}.` : '')),
     previous &&
       `Reference ${n(previous)} is the previous shot of this video. Keep continuity with it: the same characters, clothing, ` +
       'props, lighting and state of the setting, and the same art style. But this is a new shot: frame and stage it as the ' +
@@ -186,8 +214,14 @@ const IMAGE_GUARDRAILS =
  */
 async function generateImageFor(sb, scene, imagePrompt, previous) {
   const { settings } = sb;
-  // Scene references, then project ones, then the previous shot (dropped first if the model takes fewer).
-  let refs = sceneReferences(sb, scene).map((a) => ({ label: refLabel(a), path: mediaUrlToPath(a.url) }));
+  // Scene references, then project ones, then style images, then the previous shot (dropped first if
+  // the model takes fewer). An image that's both a reference and a style image is sent once, as style.
+  const styleImages = styleReferences(sb, scene);
+  const styleIds = new Set(styleImages.map((r) => r.asset.asset_id));
+  let refs = sceneReferences(sb, scene)
+    .filter((a) => !styleIds.has(a.asset_id))
+    .map((a) => ({ label: refLabel(a), path: mediaUrlToPath(a.url) }));
+  refs.push(...styleImages.map(styleRef));
   if (previous) refs.push({ ...previous, previous: true });
   const model = (refs.length ? settings.reference_model : settings.image_model)?.trim();
   if (!model) throw badRequest(`Pick ${refs.length ? 'a reference' : 'an image'} model in the Project panel (left)`);
@@ -253,7 +287,8 @@ const checkRecord = (check, url) => (check ? { url, ...check } : null);
  */
 export async function generateReferenceImage({ name, prompt, forEveryScene }) {
   const sb = await readStoryboard();
-  const standalone = { scene_id: 'reference', reference_asset_ids: [], use_global_references: false };
+  // Only the style images: a new character or place should be drawn in the video's style.
+  const standalone = { scene_id: 'reference', reference_asset_ids: [], use_global_references: false, use_style_references: true };
   const { buffer, ext, model, check } = await generateImageFor(sb, standalone, prompt, null);
   const file = await saveMedia('images', 'reference', ext, buffer);
   const url = mediaPathToUrl(file);
@@ -269,6 +304,11 @@ export async function generateReferenceImage({ name, prompt, forEveryScene }) {
     sb.library.push(asset);
     sb.settings.reference_asset_ids = swap(sb.settings.reference_asset_ids);
     for (const s of sb.scenes) s.reference_asset_ids = swap(s.reference_asset_ids);
+    // Style images keep their captions when the image is replaced.
+    const seen = new Set();
+    sb.settings.style_references = (sb.settings.style_references || [])
+      .map((r) => (older.some((a) => a.asset_id === r.asset_id) ? { ...r, asset_id: asset.asset_id } : r))
+      .filter((r) => !seen.has(r.asset_id) && seen.add(r.asset_id));
     if (forEveryScene && !sb.settings.reference_asset_ids.includes(asset.asset_id)) sb.settings.reference_asset_ids.push(asset.asset_id);
   }, { label: `Generate reference "${name}"` });
   return { asset, check };
@@ -413,7 +453,9 @@ export async function generateSceneSfxLayer(sceneId, layerId) {
 /**
  * Generate a video clip for the scene from its video prompt (or else its image prompt), plus the
  * project style. If the scene has an image, it becomes the clip's first frame. The clip replaces the
- * image as the scene's visual.
+ * image as the scene's visual. Style images: with a first frame (already made in the style) only their
+ * captions are sent, since a second image could be taken for the last frame; without one, the images
+ * themselves go as style references.
  */
 export async function generateSceneVideo(sceneId) {
   const sb = await readStoryboard();
@@ -425,11 +467,22 @@ export async function generateSceneVideo(sceneId) {
   if (!model) throw badRequest('Pick a video model in the Project panel (left)');
   if (!isGeminiModel(model)) throw badRequest('Video generation works with Gemini video models (e.g. Gemini Omni Flash). Pick one in the Project panel (left).');
 
-  const prompt = [scenePrompt, settings.style_prompt?.trim()].filter(Boolean).join('. ');
   const imagePath = mediaUrlToPath(scene.image_url);
   const image = imagePath ? await referenceDataUri(imagePath) : null;
+  const styleImages = styleReferences(sb, scene);
+  const captions = styleImages.map((r) => r.caption).filter(Boolean);
+  const references = image ? [] : await Promise.all(styleImages.map((r) => referenceDataUri(mediaUrlToPath(r.asset.url))));
+  const prompt = [
+    references.length &&
+      'Use the given images only as style references (medium, linework, colour palette, lighting, rendering). They are not ' +
+        'frames of the video: don\'t show them or copy their content.' +
+        (captions.length ? ` What to take from each: ${styleImages.map((r, i) => r.caption && `${i + 1}) ${r.caption}`).filter(Boolean).join('; ')}.` : ''),
+    scenePrompt,
+    settings.style_prompt?.trim(),
+    !references.length && captions.length && `Style: ${captions.join('; ')}`,
+  ].filter(Boolean).join('. ');
   const params = settings.video_params?.[model] || {};
-  const { buffer, usage } = await generateGeminiVideo({ prompt, model, aspectRatio: settings.aspect_ratio, image, params });
+  const { buffer, usage } = await generateGeminiVideo({ prompt, model, aspectRatio: settings.aspect_ratio, image, references, params });
 
   const file = await saveMedia('video', scene.scene_id, 'mp4', buffer);
   const info = await probe(file);

@@ -5,7 +5,7 @@ import { CLIPS_DIR, EXPORTS_DIR, mediaUrlToPath } from './paths.js';
 import { RESOLUTIONS, readStoryboard, sceneMotion, sceneTimeline } from './storyboard.js';
 import { concatClips, renderSceneClip } from './ffmpeg.js';
 import { captionWords, captionsAss, finishFilters } from './finish.js';
-import { GENERATORS, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, sceneReferences } from './generate.js';
+import { GENERATORS, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, sceneReferences, styleReferences } from './generate.js';
 import { costEstimator } from './estimate.js';
 import { isGeminiModel } from './gemini.js';
 import { accountBalances } from './usage.js';
@@ -161,7 +161,7 @@ async function missingItems(sb) {
   let previousHasPicture = false;
   for (const [i, scene] of sb.scenes.entries()) {
     const add = (fields) => items.push({ scene_id: scene.scene_id, scene: i + 1, ...fields });
-    const refs = sceneReferences(sb, scene).length;
+    const refs = sceneReferences(sb, scene).length + styleReferences(sb, scene).length;
     const hasPicture = Boolean(
       (await existingFile(scene.image_url)) || (await existingFile(scene.video_url)) || scene.image_prompt?.trim(),
     );

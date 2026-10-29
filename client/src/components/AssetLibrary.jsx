@@ -200,14 +200,15 @@ function dragProps(asset, onDragAsset) {
 /** Where an asset is used: "Scene 3", "Scenes 1, 4", "Scenes 1, 2 +3", "Music", "Reference". */
 function UsageBadge({ uses }) {
   if (!uses?.count) return null;
-  const { scenes, music, reference } = uses;
+  const { scenes, music, reference, style } = uses;
   const sceneLabel =
     scenes.length === 1 ? `Scene ${scenes[0]}` : scenes.length > 3 ? `Scenes ${scenes.slice(0, 2).join(', ')} +${scenes.length - 2}` : scenes.length ? `Scenes ${scenes.join(', ')}` : null;
-  const label = [sceneLabel, music && 'Music', reference && 'Reference'].filter(Boolean).join(' · ');
+  const label = [sceneLabel, music && 'Music', reference && 'Reference', style && 'Style'].filter(Boolean).join(' · ');
   const title = [
     scenes.length && `Used in scene${scenes.length > 1 ? 's' : ''} ${scenes.join(', ')}`,
     music && 'the music track',
     reference && 'a reference for every scene',
+    style && 'a style image',
   ].filter(Boolean).join(', and as ');
   return (
     <span className="truncate rounded bg-indigo-500/90 px-1 text-[9px] leading-4 font-semibold text-white" title={scenes.length ? title : `Used as ${title}`}>

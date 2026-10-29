@@ -169,7 +169,7 @@ async function estimatePayload(file) {
 
   // After the first picture of the video, the editor sends the picture before (and any project
   // references) as references, so the reference model makes every image but a first one without them.
-  const projectRefs = (s.reference_asset_ids || []).length;
+  const projectRefs = (s.reference_asset_ids || []).length + (s.style_references || []).length;
   let pictureBefore = mode === 'append' && existing.scenes.length > 0;
 
   const rows = scenes.map((scene, i) => {

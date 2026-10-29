@@ -160,6 +160,7 @@ function usagesOf(sb, asset) {
   }
   if (sb.settings.music_url === asset.url) uses.push({ slot: 'music' });
   if (sb.settings.reference_asset_ids?.includes(asset.asset_id)) uses.push({ slot: 'project_reference' });
+  if (sb.settings.style_references?.some((r) => r.asset_id === asset.asset_id)) uses.push({ slot: 'style_reference' });
   return uses;
 }
 
@@ -185,6 +186,8 @@ export function deleteAsset(assetId, force) {
       if (use.slot === 'music') Object.assign(sb.settings, CLEAR_MUSIC);
       else if (use.slot === 'project_reference') {
         sb.settings.reference_asset_ids = sb.settings.reference_asset_ids.filter((id) => id !== a.asset_id);
+      } else if (use.slot === 'style_reference') {
+        sb.settings.style_references = sb.settings.style_references.filter((r) => r.asset_id !== a.asset_id);
       } else if (use.slot === 'sfx_layer') {
         // The layer keeps its prompt, so it can be generated again.
         const layer = findSfxLayer(findScene(sb, use.scene_id), use.layer_id);

@@ -191,20 +191,22 @@ async function downloadVideo(uri) {
 }
 
 /**
- * Generate a clip with Gemini Omni. `image` (a data URI) becomes the first frame when given.
+ * Generate a clip with Gemini Omni. `image` (a data URI) becomes the first frame when given; without
+ * one, `references` (data URIs) are sent as references (e.g. for the style), never as frames.
  * Runs in the background and is polled until done. Resolves with { buffer, usage } (the MP4 bytes,
  * and the interaction's token counts when it reports them).
  */
-export async function generateGeminiVideo({ prompt, model, aspectRatio, image, params = {} }) {
+export async function generateGeminiVideo({ prompt, model, aspectRatio, image, references = [], params = {} }) {
   const id = bare(model);
   if (!isVideoModel(model)) throw Object.assign(new Error(`${id} isn't a video model. Pick one in the Project panel (left).`), { status: 400 });
 
   const text = isSet(params.duration_hint) ? `${prompt}. Duration: about ${params.duration_hint} seconds.` : prompt;
-  const input = [];
-  if (image) {
-    const { mimeType, data } = splitDataUri(image);
-    input.push({ type: 'image', data, mime_type: mimeType });
-  }
+  const images = image ? [image] : references;
+  const task = image ? 'image_to_video' : images.length ? 'reference_to_video' : 'text_to_video';
+  const input = images.map((uri) => {
+    const { mimeType, data } = splitDataUri(uri);
+    return { type: 'image', data, mime_type: mimeType };
+  });
   input.push({ type: 'text', text });
 
   let interaction = await call('interactions', {
@@ -212,7 +214,7 @@ export async function generateGeminiVideo({ prompt, model, aspectRatio, image, p
     input,
     // Omni makes landscape or portrait clips only; square projects crop the landscape one.
     response_format: { type: 'video', aspect_ratio: aspectRatio === '9:16' ? '9:16' : '16:9', ...pick(params, ['resolution']) },
-    generation_config: { video_config: { task: image ? 'image_to_video' : 'text_to_video' }, ...pick(params, ['seed']) },
+    generation_config: { video_config: { task }, ...pick(params, ['seed']) },
     background: true,
     store: true,
   });

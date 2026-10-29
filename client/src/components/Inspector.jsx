@@ -29,12 +29,15 @@ export default function Inspector({
   const names = scene.source_names || {};
   const libraryIds = new Set(library.map((a) => a.asset_id));
   const projectRefs = (settings.reference_asset_ids || []).filter((id) => libraryIds.has(id));
+  const styleRefs = (settings.style_references || []).map((r) => r.asset_id).filter((id) => libraryIds.has(id));
   const sceneRefs = scene.reference_asset_ids || [];
+  // On unless turned off (older scenes don't have the field): the project-wide references and style images.
+  const useProjectRefs = scene.use_global_references !== false;
   // The previous scene's picture is sent too (for continuity) unless turned off.
   const previousPicture = previousScene && (previousScene.video_thumb_url || previousScene.image_url);
   const usePrevious = scene.use_previous_scene !== false;
   const refCount =
-    new Set([...sceneRefs.filter((id) => libraryIds.has(id)), ...(scene.use_global_references ? projectRefs : [])]).size +
+    new Set([...sceneRefs.filter((id) => libraryIds.has(id)), ...(useProjectRefs ? [...projectRefs, ...styleRefs] : [])]).size +
     (usePrevious && previousPicture ? 1 : 0);
   const imageInLibrary = library.some((a) => a.url === scene.image_url);
   const [visualTab, setVisualTab] = useState(isVideo ? 'video' : 'image');
@@ -179,14 +182,21 @@ export default function Inspector({
                     + previous scene
                   </label>
                 )}
-                <label className="flex items-center gap-1.5 text-[11px] text-zinc-400" title="Also send the project-wide references (Project panel on the left)">
+                <label
+                  className="flex items-center gap-1.5 text-[11px] text-zinc-400"
+                  title={
+                    'Also send the Project panel\'s images (left): ' +
+                    `${projectRefs.length} reference${projectRefs.length === 1 ? '' : 's'} for every scene and ` +
+                    `${styleRefs.length} style image${styleRefs.length === 1 ? '' : 's'}. Untick for a scene that should look different.`
+                  }
+                >
                   <input
                     type="checkbox"
                     className="accent-indigo-500"
-                    checked={scene.use_global_references}
+                    checked={useProjectRefs}
                     onChange={(e) => onChange({ use_global_references: e.target.checked })}
                   />
-                  + project refs ({projectRefs.length})
+                  + project refs ({projectRefs.length}) &amp; style ({styleRefs.length})
                 </label>
               </div>
             </div>
