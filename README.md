@@ -57,6 +57,20 @@ prompts, ready for you to review and generate.
 The skill goes through the editor's API (`POST /api/scenes/import`), never by editing files, so the
 editor stays in sync and undo works.
 
+**Story development (`storyboard` skill).** Before any scenes exist, ask Claude for story ideas (*"use storyboard: zombie
+survival, 12 minutes"*). It works like a head writer, stopping for your choice at each step:
+1. Premises scored for click appeal.
+2. Title and thumbnail pairs, with a thumbnail image prompt.
+3. A story bible: protagonist, dependent, anchor objects, resource math, threat ladder, central mystery and twist.
+4. A retention map: a 30-second hook, open loops, escalating episodes, pattern interrupts every 45–90 s, and a peak
+   ending.
+5. The full script in the timeline template format, audited with
+   `node .claude/skills/storyboard/retention.mjs <file>` (hook timing, open-loop ledger, interrupt gaps, picture
+   holds, dead air).
+
+It then hands the script to `timeline-generation`. The psychology behind each rule is in
+[`.claude/skills/storyboard/playbook.md`](.claude/skills/storyboard/playbook.md).
+
 **Story-channel production.** The template's *Writing like a director* and *Presets* (e.g. **survival horror**) set
 up the whole pipeline in one go:
 - A **Cast & locations** list. Once you approve it and its estimated cost, Claude generates a character sheet per

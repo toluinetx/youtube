@@ -574,6 +574,11 @@ app.post('/api/generate-missing/plan', async (req, res) => res.json(await genera
 app.post('/api/generate-missing', (req, res) => res.status(202).json(startGenerateMissing({ kinds: req.body?.kinds, ids: req.body?.items })));
 
 app.post('/api/export', (_req, res) => res.status(202).json(startExport()));
+// The open project's last export, if it has one: { url, size_bytes, updated_at }, or null.
+app.get('/api/export', async (_req, res) => {
+  const stat = await fs.promises.stat(path.join(EXPORTS_DIR, 'final_output.mp4')).catch(() => null);
+  res.json(stat && { url: `/exports/final_output.mp4?t=${Math.round(stat.mtimeMs)}`, size_bytes: stat.size, updated_at: stat.mtime.toISOString() });
+});
 
 app.get('/api/job', (_req, res) => res.json(getJob()));
 
@@ -617,6 +622,14 @@ const serveOpenProject = (dirOf, options) => (req, res, next) => {
   staticHandlers.get(dir)(req, res, next);
 };
 app.use('/media', serveOpenProject(() => MEDIA_DIR, { maxAge: '1y', immutable: true }));
+// With ?download=1 the export is saved as "<video title>.mp4" instead of played in the browser.
+app.get('/exports/final_output.mp4', async (req, res, next) => {
+  if (req.query.download) {
+    const title = (await readStoryboard()).settings.title?.replace(/[\\/:*?"<>|\x00-\x1f]+/g, '').trim();
+    res.attachment(`${title || 'final_output'}.mp4`);
+  }
+  next();
+});
 app.use('/exports', serveOpenProject(() => EXPORTS_DIR));
 if (fs.existsSync(CLIENT_DIST)) {
   app.use(express.static(CLIENT_DIST));

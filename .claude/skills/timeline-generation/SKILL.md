@@ -25,6 +25,10 @@ The template's **Writing like a director** and **Presets** sections set the bar 
 
 ## 1. Get the scenes
 
+- If the user wants story ideas, a premise, packaging (title, thumbnail) or a high-retention script
+  rather than loading scenes they already have, that's the `storyboard` skill: it develops the story
+  and hands the finished scene list back here. Storyboards from it carry `[open L1: …]`,
+  `[close L1]` and `[interrupt: …]` tags in Notes: keep them as notes.
 - If the user has no scene list yet, point them to `.claude/skills/timeline-generation/template.md`
   (or paste the empty scene block and the key guidance) and stop until they send it.
 - If they give a **story, article or outline** instead of scenes and ask you to turn it into a

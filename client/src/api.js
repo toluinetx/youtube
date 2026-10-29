@@ -88,6 +88,7 @@ export const api = {
   generationPlan: (settings) => request('POST', '/api/generate-missing/plan', { settings }),
   generateMissing: (items) => request('POST', '/api/generate-missing', items && { items }),
   exportVideo: () => request('POST', '/api/export'),
+  latestExport: () => request('GET', '/api/export'),
   job: () => request('GET', '/api/job'),
   undo: () => request('POST', '/api/undo'),
   redo: () => request('POST', '/api/redo'),

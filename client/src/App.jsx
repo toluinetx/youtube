@@ -234,6 +234,8 @@ export default function App() {
     reload();
     api.status().then(setStatus).catch(() => {});
     api.job().then((j) => j.status !== 'idle' && setJob(j)).catch(() => {});
+    // The last export stays downloadable after a reload (the job that made it may be long gone).
+    api.latestExport().then((e) => e && setExportUrl((url) => url || e.url)).catch(() => {});
   }, [reload]);
 
   useEffect(() => {
