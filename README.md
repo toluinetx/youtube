@@ -83,8 +83,12 @@ and the scene sidebar warns you when that would happen.
    shows its settings (seed, steps, quality, stability, speed, …) with their defaults; only what you change
    is sent. Image settings are saved per model. The same pickers sit next to each Generate button in the scene
    sidebar; they change the setting for every scene.
-3. **Generate everything.** **Generate missing** creates every image, voiceover and SFX that has a prompt but
-   no file yet. If a voiceover runs longer than its scene, the scene is lengthened so the narration isn't cut off.
+3. **Generate everything.** **Generate missing** first opens a review dialog listing every image, shot, voiceover
+   and sound effect that has a prompt but no file yet, each with its model and estimated cost, plus a video clip for
+   each scene that asks for one (a video prompt, or "Generate video" in its notes; these start unticked). Untick what
+   you don't want, change the models, voice or style on the left (they're the project's settings), and click
+   **Generate**. Video clips are made last, so each starts from its scene's new image. If a voiceover runs longer than
+   its scene, the scene is lengthened so the narration isn't cut off.
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
    sidebar and click **Regenerate**. Only that asset is regenerated. Hover between two scenes on the Image track and click
    **+** to insert a blank scene there, or click the **+** box after the last scene. Drag a scene's right edge to change its length,
@@ -247,7 +251,8 @@ The library lives in the same file as a `library` array:
 | POST | `/api/scenes/from-asset` | new scene from an image/video asset: `{ "asset_id", "index"? }` |
 | PUT / DELETE | `/api/music` | set background music `{ "asset_id" }` / remove it |
 | DELETE | `/api/scene/:id/media/:slot` | remove a scene's image/video, voiceover or SFX |
-| POST | `/api/generate-missing` | background job |
+| POST | `/api/generate-missing/plan` | what Generate missing would make, with models and estimated costs: `{ "settings"? }` (unsaved changes to price with) |
+| POST | `/api/generate-missing` | background job: `{ "items": [plan item ids] }`, or `{ "kinds"? }` for every missing image/voiceover/sfx |
 | POST | `/api/export` | background job: FFmpeg render to `final_output.mp4` |
 | GET | `/api/job` | progress of the current background job |
 | GET | `/api/voices` | your ElevenLabs voices |

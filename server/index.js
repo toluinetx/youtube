@@ -18,7 +18,7 @@ import {
 } from './uploads.js';
 import { listImageModels, modelParams } from './replicate.js';
 import { geminiParams, isGeminiModel, listGeminiModels } from './gemini.js';
-import { getJob, startExport, startGenerateMissing } from './jobs.js';
+import { generationPlan, getJob, startExport, startGenerateMissing } from './jobs.js';
 import { listModels, listVoices } from './elevenlabs.js';
 import { readPreferences, setStarred } from './preferences.js';
 import { accountBalances, setPrice, usageReport } from './usage.js';
@@ -520,7 +520,10 @@ app.delete('/api/scene/:id/media/:slot', async (req, res) => {
   res.json(await clearSceneSlot(req.params.id, req.params.slot));
 });
 
-app.post('/api/generate-missing', (req, res) => res.status(202).json(startGenerateMissing(req.body?.kinds)));
+// What Generate missing would make and what it would cost, for the dialog that asks first.
+app.post('/api/generate-missing/plan', async (req, res) => res.json(await generationPlan(req.body?.settings)));
+
+app.post('/api/generate-missing', (req, res) => res.status(202).json(startGenerateMissing({ kinds: req.body?.kinds, ids: req.body?.items })));
 
 app.post('/api/export', (_req, res) => res.status(202).json(startExport()));
 

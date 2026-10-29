@@ -4,7 +4,7 @@ import {
   SquareDashedMousePointer, Trash2, X,
 } from 'lucide-react';
 import { CLIENT_ID, api, clientHeaders, currentProject, onHistory, onProjectChange } from './api.js';
-import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts } from './util.js';
+import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts, wantsVideo } from './util.js';
 import AssetLibrary from './components/AssetLibrary.jsx';
 import SnapshotModal from './components/SnapshotModal.jsx';
 import TopBar from './components/TopBar.jsx';
@@ -16,6 +16,7 @@ import LeftPanel from './components/LeftPanel.jsx';
 import PanelResizer from './components/PanelResizer.jsx';
 import { ModelCatalogProvider } from './components/ModelControls.jsx';
 import ScriptImport from './components/ScriptImport.jsx';
+import GenerateDialog from './components/GenerateDialog.jsx';
 import ContextMenu from './components/ContextMenu.jsx';
 
 const SAVE_DELAY_MS = 600;
@@ -80,6 +81,7 @@ export default function App() {
   const [exportUrl, setExportUrl] = useState(null);
   const [previewMode, setPreviewMode] = useState('live');
   const [showImport, setShowImport] = useState(false);
+  const [showGenerate, setShowGenerate] = useState(false);
   const [toast, setToast] = useState(null);
   const [uploading, setUploading] = useState([]);
   const [dragAsset, setDragAsset] = useState(null);
@@ -732,6 +734,13 @@ export default function App() {
       setJob(await fn());
     });
 
+  // From the Generate missing dialog: only the items ticked there.
+  const generatePicked = (ids) =>
+    run(async () => {
+      setJob(await api.generateMissing(ids));
+      setShowGenerate(false);
+    });
+
   useEffect(() => {
     if (job?.status !== 'running') return;
     const t = setInterval(async () => {
@@ -929,9 +938,10 @@ export default function App() {
         status={status}
         job={job}
         missing={countMissing(scenes)}
+        videos={scenes.filter(wantsVideo).length}
         exportUrl={exportUrl}
         onImport={() => setShowImport(true)}
-        onGenerateMissing={() => startJob(api.generateMissing)}
+        onGenerateMissing={() => setShowGenerate(true)}
         onExport={() => startJob(api.exportVideo)}
         onDismissJob={() => setJob(null)}
         history={history}
@@ -1114,6 +1124,16 @@ export default function App() {
           </div>
         </aside>
       </div>
+
+      {showGenerate && (
+        <GenerateDialog
+          settings={sb.settings}
+          onChangeSettings={patchSettings}
+          status={status}
+          onCancel={() => setShowGenerate(false)}
+          onGenerate={generatePicked}
+        />
+      )}
       </ModelCatalogProvider>
 
       {snapshotTarget && (

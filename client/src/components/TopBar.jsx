@@ -3,7 +3,7 @@ import { ChevronDown, Clapperboard, Download, FileText, Loader2, Redo2, Sparkles
 import { UsageButton } from './Usage.jsx';
 
 export default function TopBar({
-  title, status, job, missing, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
+  title, status, job, missing, videos, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
   onOpenProjects,
 }) {
   const running = job?.status === 'running';
@@ -58,8 +58,12 @@ export default function TopBar({
           <button
             className="btn-secondary"
             onClick={onGenerateMissing}
-            disabled={running || missing === 0}
-            title={missing ? `Generate ${missing} asset(s) that have a prompt but no file yet` : 'Every prompt already has generated media'}
+            disabled={running || (missing === 0 && !videos)}
+            title={
+              missing || videos
+                ? `Review and generate the ${missing} asset(s) that have a prompt but no file yet${videos ? `, plus ${videos} suggested video clip(s)` : ''}`
+                : 'Every prompt already has generated media'
+            }
           >
             <Sparkles className="size-4" /> Generate missing{missing ? ` (${missing})` : ''}
           </button>

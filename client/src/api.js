@@ -84,7 +84,9 @@ export const api = {
   modelInfo: (model) => request('GET', `/api/model-info?model=${encodeURIComponent(model)}`),
   setMusic: (assetId) => request('PUT', '/api/music', { asset_id: assetId }),
   removeMusic: () => request('DELETE', '/api/music'),
-  generateMissing: () => request('POST', '/api/generate-missing'),
+  // `settings`: unsaved changes to price the plan with. `items`: plan item ids to generate.
+  generationPlan: (settings) => request('POST', '/api/generate-missing/plan', { settings }),
+  generateMissing: (items) => request('POST', '/api/generate-missing', items && { items }),
   exportVideo: () => request('POST', '/api/export'),
   job: () => request('GET', '/api/job'),
   undo: () => request('POST', '/api/undo'),
