@@ -1,17 +1,38 @@
 let historyListener = null;
+let projectListener = null;
+
+/** Identifies this browser tab, so it can ignore change events it caused itself. */
+export const CLIENT_ID = crypto.randomUUID();
+
+/** The project this tab is showing (from the server's X-Project header). */
+let projectId = null;
+export const currentProject = () => projectId;
+
+/** Headers for every request: who is asking, and which project the change is meant for. */
+export const clientHeaders = () => ({ 'X-Client': CLIENT_ID, ...(projectId && { 'X-Project': projectId }) });
 
 /** Called with { undo, redo } (labels or null) whenever the server reports its undo history. */
 export function onHistory(fn) {
   historyListener = fn;
 }
 
-async function request(method, url, body, opts = {}) {
+/** Called with the new project id when the server has switched to another project. */
+export function onProjectChange(fn) {
+  projectListener = fn;
+}
+
+async function request(method, url, body, { headers, ...opts } = {}) {
   const res = await fetch(url, {
     method,
-    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    headers: { ...clientHeaders(), ...(body && { 'Content-Type': 'application/json' }), ...headers },
     body: body ? JSON.stringify(body) : undefined,
     ...opts,
   });
+  const project = res.headers.get('X-Project');
+  if (project) {
+    if (projectId && project !== projectId) projectListener?.(project);
+    else projectId = project;
+  }
   const history = res.headers.get('X-History');
   if (history && historyListener) historyListener(JSON.parse(decodeURIComponent(history)));
   const data = await res.json().catch(() => ({}));
@@ -31,6 +52,9 @@ const REGENERATE_ROUTE = { image: 'regenerate-image', voiceover: 'regenerate-aud
 
 export const api = {
   status: () => request('GET', '/api/status'),
+  projects: () => request('GET', '/api/projects'),
+  createProject: (title, open) => request('POST', '/api/projects', { title, open }),
+  openProject: (id) => request('POST', `/api/projects/${encodeURIComponent(id)}/open`),
   storyboard: () => request('GET', '/api/storyboard'),
   updateSettings: (patch) => request('PUT', '/api/settings', patch),
   updateScene: (id, patch, opts) => request('PUT', `/api/scene/${id}`, patch, opts),

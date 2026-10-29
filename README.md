@@ -13,7 +13,7 @@ wrong, and export a single MP4 with FFmpeg.
 └──────────────────────────────────────┬────────────────────────────────────────────────────┘
                                        │ REST
 ┌──────────────────────────────────────▼──── Express API (http://localhost:3001) ───────────┐
-│  project/storyboard.json   Replicate API   ElevenLabs API   FFmpeg (bundled via npm)      │
+│  projects/<id>/storyboard.json   Replicate API   ElevenLabs API   FFmpeg (bundled via npm)│
 └───────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -28,6 +28,34 @@ npm run dev                # API on :3001, editor on http://localhost:5173
 ```
 
 The top bar shows a green dot for each service that is configured. Restart `npm run dev` after editing `.env`.
+
+## Projects
+
+Each video is a **project**. Click the project title in the top bar to switch projects or start a new one.
+Every project has its own scenes, library, music, undo history and exports. The editor reloads
+when you switch, and every open tab follows. Switching waits until running generations, uploads and
+exports have finished.
+
+## Building a timeline with Claude Code (`timeline-generation` skill)
+
+If you use [Claude Code](https://claude.com/claude-code) in this repository, the `timeline-generation` skill
+turns a detailed scene list into scenes on the timeline, with exact timings and image, voiceover and sound
+prompts, ready for you to review and generate.
+
+1. Start the editor (`npm run dev`).
+2. Fill in [`.claude/skills/timeline-generation/template.md`](.claude/skills/timeline-generation/template.md).
+   It explains how to write image, voice and sound prompts that generate well. You can also ask Claude
+   for the template, or give it scenes in your own format.
+3. Ask Claude to use it, e.g. *"use timeline-generation with my-scenes.md"*. Claude checks the timings
+   (gaps, overlaps, voiceover that won't fit) and suggests prompt improvements. It then asks **which
+   project** (new or existing) and, if that project has scenes, whether to **add or replace** them. It
+   asks this every time.
+4. The scenes appear in the open editor straight away, with nothing generated yet. Review them, then
+   use **Generate missing** or each scene's Generate buttons. <kbd>Ctrl/⌘</kbd>+<kbd>Z</kbd> undoes the
+   whole import.
+
+The skill goes through the editor's API (`POST /api/scenes/import`), never by editing files, so the
+editor stays in sync and undo works.
 
 ## Workflow
 
@@ -50,9 +78,10 @@ The top bar shows a green dot for each service that is configured. Restart `npm 
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
    sidebar and click **Regenerate**. Only that asset is regenerated. Hover between two scenes on the Image track and click
    **+** to insert a blank scene there, or click the **+** box after the last scene. Drag a scene's right edge to change its length,
-   or drag the scene itself to move it (<kbd>Esc</kbd> cancels). <kbd>Shift</kbd>-click selects a range of scenes and
+   or drag the scene itself to move it (<kbd>Esc</kbd> cancels). Each scene has a **Notes** box for reminders
+   (footage to import, text to add). Notes are never sent to the generators and show as a marker on the timeline. <kbd>Shift</kbd>-click selects a range of scenes and
    <kbd>Ctrl/⌘</kbd>-click adds or removes one; dragging, duplicating or deleting then applies to all of them.
-5. **Export.** **Export video** renders `project/exports/final_output.mp4` and opens it in the
+5. **Export.** **Export video** renders `projects/<id>/exports/final_output.mp4` and opens it in the
    **Rendered MP4** tab. Each scene is cached as its own clip, so re-exporting after a small change only
    re-renders the scenes you touched.
 
@@ -121,13 +150,23 @@ needs them, then deleted.
 ## Project files
 
 ```
-project/
-  storyboard.json      ← the whole video: settings + scenes (safe to hand-edit; it's re-read on every request)
-  media/library/       your uploaded files (the Library)
-  media/images|voiceover|sfx/   generated assets
-  clips/               per-scene render cache
-  exports/final_output.mp4
+projects/
+  .active                  the project that's open
+  secrets-of-the-deep-ocean/
+    storyboard.json        ← the whole video: settings + scenes (re-read on every request)
+    media/library/         your uploaded files (the Library)
+    media/images|voiceover|sfx/   generated assets
+    clips/                 per-scene render cache
+    exports/final_output.mp4
+  my-next-video/
+    …
 ```
+
+Hand edits to `storyboard.json` are picked up, but the open editor only shows them after a reload, and
+undo history doesn't track them. Prefer the editor or the API.
+
+Upgrading from a version with a single `project/` folder: it's moved into `projects/` automatically on
+first start (so is a folder set with the old `PROJECT_DIR` setting). To keep projects elsewhere, set `PROJECTS_DIR` in `.env`.
 
 A scene in `storyboard.json`:
 
@@ -153,15 +192,18 @@ The library lives in the same file as a `library` array:
   "thumb_url": "/media/library/video/asset-….thumb.jpg", "duration_sec": 12.4, "has_audio": true }
 ```
 
-To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 
 ## API
 
 | Method | Path | |
 | --- | --- | --- |
-| GET | `/api/storyboard` | settings + all scenes |
+| GET | `/api/projects` | `{ open, projects: [{ id, title, scenes, duration_sec, aspect_ratio, updated_at, open }] }` |
+| POST | `/api/projects` | create a project: `{ "title", "open"? }` |
+| POST | `/api/projects/:id/open` | switch the editor to another project (409 while a job, upload or generation is running) |
+| GET | `/api/events` | server-sent events `{ type: "storyboard" \| "project", project, label, origin }` on every change |
+| GET | `/api/storyboard` | settings + all scenes of the open project |
 | PUT | `/api/settings` | update project settings |
-| PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references` |
+| PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references`, `notes` |
 | POST | `/api/scenes` | add a blank scene: at `index`, after `after_id`, or at the end |
 | POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
 | DELETE | `/api/scene/:id` | delete a scene (its media is deleted once no undo step needs it) |
@@ -169,6 +211,7 @@ To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 | POST | `/api/scenes/paste-prompts` | replace several scenes' prompts: `{ "ids": [2, 3], "prompts": { "image_prompt", "voiceover_text", "sfx_prompt" } }` |
 | POST | `/api/scenes/delete` | delete several scenes: `{ "ids": [2, 3] }` |
 | POST | `/api/scenes/reorder` | `{ "order": [3, 1, 2] }` |
+| POST | `/api/scenes/import` | exact-timing import: `{ "mode": "append" \| "replace", "scenes": [{ "duration_sec", "image_prompt"?, "voiceover_text"?, "sfx_prompt"?, "notes"? }], "settings"? }` (one undo step) |
 | POST | `/api/scenes/import-script` | `{ "script": "...", "mode": "append" \| "replace" }` |
 | POST | `/api/scene/:id/regenerate-image` | Replicate |
 | POST | `/api/scene/:id/regenerate-audio` | ElevenLabs text-to-speech |
@@ -189,6 +232,9 @@ To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 | GET | `/api/job` | progress of the current background job |
 | GET | `/api/voices` | your ElevenLabs voices |
 | POST | `/api/undo`, `/api/redo` | step through the history: `{ storyboard, label }`, or `{ storyboard: null }` if there's nothing to do. Every API response carries the next steps' labels in an `X-History` header |
+
+Every response also names the open project in `X-Project`. A change sent with an `X-Project` header for a
+project that is no longer open is refused with 409, so it can't land in the wrong project.
 
 ## Production build
 

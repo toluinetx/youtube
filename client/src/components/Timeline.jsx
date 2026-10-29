@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { AudioLines, Film, ImageIcon, Loader2, Music, Plus, Sparkles, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
+import { AudioLines, Film, ImageIcon, Loader2, Music, NotebookPen, Plus, Sparkles, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
 import { ASSET_MIME, assetFits, formatTime } from '../util.js';
 
 const MIN_PPS = 10;
@@ -446,6 +446,11 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
             #{index + 1}
             {scene.video_url && <Film className="size-3 text-sky-300" aria-label="Video clip" />}
             {scene.video_url && scene.video_has_audio && scene.video_volume > 0 && <Volume2 className="size-3 text-sky-300" aria-label="Clip has sound" />}
+            {scene.notes?.trim() && (
+              <span title={`Notes: ${scene.notes}`}>
+                <NotebookPen className="size-3 text-amber-300" aria-label="Has notes" />
+              </span>
+            )}
           </span>
           {width > 60 && <span className="text-white/70 tabular-nums">{scene.duration_sec.toFixed(1)}s</span>}
         </div>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Clapperboard, Download, FileText, Loader2, Redo2, Sparkles, TriangleAlert, Undo2, X } from 'lucide-react';
+import { ChevronDown, Clapperboard, Download, FileText, Loader2, Redo2, Sparkles, TriangleAlert, Undo2, X } from 'lucide-react';
 
 export default function TopBar({
   title, status, job, missing, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
+  onOpenProjects,
 }) {
   const running = job?.status === 'running';
   const [showWarnings, setShowWarnings] = useState(false);
@@ -10,10 +11,15 @@ export default function TopBar({
   return (
     <header className="relative shrink-0 border-b border-zinc-800 bg-zinc-900/80">
       <div className="flex h-12 items-center gap-4 px-4">
-        <div className="flex min-w-0 items-center gap-2">
+        <button
+          className="-mx-2 flex min-w-0 items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-800"
+          onClick={onOpenProjects}
+          title="Switch project or start a new one"
+        >
           <Clapperboard className="size-5 shrink-0 text-rose-500" />
           <h1 className="truncate text-sm font-semibold text-zinc-100">{title || 'Untitled video'}</h1>
-        </div>
+          <ChevronDown className="size-4 shrink-0 text-zinc-500" />
+        </button>
 
         {status && (
           <div className="hidden items-center gap-3 text-[11px] text-zinc-500 md:flex">

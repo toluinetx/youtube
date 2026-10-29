@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, ClipboardCopy, ClipboardPaste, Copy, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles,
+  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, Check, ClipboardCopy, ClipboardPaste, Clapperboard, Copy, FolderPlus, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles,
   SquareDashedMousePointer, Trash2, X,
 } from 'lucide-react';
-import { api, onHistory } from './api.js';
+import { CLIENT_ID, api, clientHeaders, currentProject, onHistory, onProjectChange } from './api.js';
 import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts } from './util.js';
 import AssetLibrary from './components/AssetLibrary.jsx';
 import SnapshotModal from './components/SnapshotModal.jsx';
@@ -161,7 +161,7 @@ export default function App() {
     const onUnload = () => {
       for (const [id, patch] of Object.entries(pending.current)) {
         const url = id === 'settings' ? '/api/settings' : `/api/scene/${id}`;
-        fetch(url, { method: 'PUT', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) });
+        fetch(url, { method: 'PUT', keepalive: true, headers: { ...clientHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(patch) });
       }
     };
     window.addEventListener('beforeunload', onUnload);
@@ -186,8 +186,29 @@ export default function App() {
   }, [reload]);
 
   useEffect(() => {
-    if (sb && selectedId == null && scenes.length) setSelectedId(scenes[0].scene_id);
+    if (!sb) return;
+    // Nothing selected, or the selected scene is gone (deleted, undone, changed elsewhere): select the first.
+    if (selectedId == null || !scenes.some((s) => s.scene_id === selectedId)) setSelectedId(scenes[0]?.scene_id ?? null);
   }, [sb, selectedId, scenes]);
+
+  // ---- Live updates -----------------------------------------------------------------------------
+  // Changes made elsewhere (another tab, the timeline-generation skill) arrive as server-sent events.
+  // When the server switches to another project, this tab reloads to show it.
+
+  useEffect(() => onProjectChange(() => window.location.reload()), []);
+
+  useEffect(() => {
+    const events = new EventSource('/api/events');
+    events.onmessage = (message) => {
+      const event = JSON.parse(message.data);
+      if (event.type === 'project' && currentProject() && event.project !== currentProject()) window.location.reload();
+      if (event.type === 'storyboard' && event.origin !== CLIENT_ID && event.project === currentProject()) {
+        reload();
+        if (event.label?.startsWith('Import')) notify(`Timeline updated: ${event.label}`, 'success');
+      }
+    };
+    return () => events.close();
+  }, [reload, notify]);
 
   // ---- Playback ---------------------------------------------------------------------------------
 
@@ -440,7 +461,6 @@ export default function App() {
       const result = await (direction === 'undo' ? api.undo() : api.redo());
       if (!result.storyboard) return;
       applyServer(result.storyboard);
-      if (!result.storyboard.scenes.some((s) => s.scene_id === selectedId)) setSelectedId(null);
       notify(`${direction === 'undo' ? 'Undid' : 'Redid'}: ${result.label}`, 'info');
     });
 
@@ -751,6 +771,49 @@ export default function App() {
   const onClipMenu = useCallback((e, sceneId, slot) => actions.current.clipMenu(e, sceneId, slot), []);
   const onResizeScene = useCallback((id, d) => patchScene(id, { duration_sec: d }), [patchScene]);
 
+  // ---- Projects ---------------------------------------------------------------------------------
+  // Switching saves pending edits, asks the server to open the other project, then reloads the page.
+
+  const switchProject = (id) =>
+    run(async () => {
+      await api.openProject(id);
+      window.location.reload();
+    });
+
+  const newProject = () => {
+    const title = window.prompt('Name of the new video project:');
+    if (!title?.trim()) return;
+    run(async () => {
+      await api.createProject(title.trim(), true);
+      window.location.reload();
+    });
+  };
+
+  const openProjectMenu = async (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    let projects = [];
+    try {
+      ({ projects } = await api.projects());
+    } catch (err) {
+      return notify(err.message);
+    }
+    setMenu({
+      x: rect.left,
+      y: rect.bottom + 4,
+      items: [
+        { heading: 'Projects' },
+        ...projects.map((p) => ({
+          label: p.title,
+          icon: p.open ? Check : Clapperboard,
+          shortcut: `${p.scenes} scene${p.scenes === 1 ? '' : 's'}`,
+          onClick: () => !p.open && switchProject(p.id),
+        })),
+        '-',
+        { label: 'New project…', icon: FolderPlus, onClick: newProject },
+      ],
+    });
+  };
+
   // ---- Render -----------------------------------------------------------------------------------
 
   if (!sb) {
@@ -782,6 +845,7 @@ export default function App() {
         onExport={() => startJob(api.exportVideo)}
         onDismissJob={() => setJob(null)}
         history={history}
+        onOpenProjects={openProjectMenu}
         undoShortcut={`${MOD_KEY}Z`}
         redoShortcut={MOD_KEY === '⌘' ? '⇧⌘Z' : 'Ctrl+Y'}
         onUndo={() => actions.current.undo()}
