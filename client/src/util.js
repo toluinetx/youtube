@@ -35,6 +35,9 @@ export function countMissing(scenes) {
   return n;
 }
 
+/** Whether a scene asks for a video clip and has none yet (as the server's Generate missing plan sees it). */
+export const wantsVideo = (s) => Boolean((s.video_prompt?.trim() || /generate (a )?video/i.test(s.notes || '')) && !s.video_url);
+
 /** A new, empty extra sound effect layer (the server keeps the id). */
 export const newSfxLayer = () => ({
   layer_id: `l_${Math.random().toString(36).slice(2, 10)}`,

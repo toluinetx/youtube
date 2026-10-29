@@ -288,6 +288,7 @@ retry. On any other error, show it and fix the payload rather than retrying blin
 ## 5. Report back
 
 Show the helper's summary (scene numbers, timings, what each scene has, notes) and remind the user:
-- nothing is generated yet: use **Generate missing** in the top bar, or each scene's Generate buttons
+- nothing is generated yet: **Generate missing** in the top bar opens a review dialog (tick items, pick models,
+  see costs; suggested video clips start unticked), or use each scene's Generate buttons
 - the editor updated live (no reload needed), and **Ctrl/Cmd+Z** in the editor undoes the import
 - any notes that need action (footage to import, music to add in the Library)

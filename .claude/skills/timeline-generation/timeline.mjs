@@ -92,17 +92,7 @@ async function importPayload(file) {
 }
 
 // ---- Cost estimate ---------------------------------------------------------------------------------
-// Prices come from the editor's own table (server/usage.js plus the user's prices in the Usage panel),
-// so an estimate and the Usage log agree. What each generation uses is worked out here:
-//   ElevenLabs voice: credits per character, by model (ElevenLabs model docs, Oct 2026).
-//   ElevenLabs sound: credits per second asked for (measured in this editor's usage log, Oct 2026).
-//   Gemini image: output tokens per image by size (ai.google.dev pricing); input ≈ prompt + references.
-//   Gemini Omni video: OMNI_TOKENS_PER_SECOND (720p), for the seconds asked for.
-const HALF_CREDIT_TTS = /turbo|flash/;
-const SFX_CREDITS_PER_SEC = 10;
-const IMAGE_INPUT_TOKENS = 1120; // per reference image sent to a Gemini model
-const imageOutputTokens = (model, params = {}) =>
-  /2\.5-flash-image/.test(model) ? 1290 : params.imageSize === '4K' ? 2000 : 1120;
+// Priced by the editor's own estimator (server/estimate.js), the same one its Generate dialog uses.
 
 async function loadPayload(file, usage) {
   if (!file) fail(`Usage: node timeline.mjs ${usage} <payload.json>`);
@@ -118,8 +108,7 @@ async function estimatePayload(file) {
   // Imported after .env is loaded, so PROJECTS_DIR is the editor's.
   const { PROJECTS_DIR } = await import('../../../server/paths.js');
   const { DEFAULT_SETTINGS } = await import('../../../server/storyboard.js');
-  const { prices } = await import('../../../server/usage.js');
-  const { OMNI_TOKENS_PER_SECOND } = await import('../../../server/gemini.js');
+  const { costEstimator } = await import('../../../server/estimate.js');
 
   // The target project's settings (read only), with the payload's changes on top.
   let existing = { settings: {}, scenes: [] };
@@ -131,61 +120,40 @@ async function estimatePayload(file) {
     }
   }
   const s = { ...DEFAULT_SETTINGS, ...existing.settings, ...changes };
-  const table = await prices();
-  const elevenlabs = table.elevenlabs?.per_1k_credits;
-
-  const unpriced = new Set();
-  const perM = (tokens, price) => (tokens * (price || 0)) / 1e6;
-  function imageCost(model, prompt, refs) {
-    const p = table[model];
-    if (!p) return unpriced.add(model), null;
-    if (model.startsWith('gemini:')) {
-      if (p.image_output == null) return unpriced.add(model), null;
-      const input = Math.ceil(prompt.length / 4) + refs * IMAGE_INPUT_TOKENS;
-      return perM(input, p.input) + perM(imageOutputTokens(model, s.image_params?.[model]), p.image_output);
-    }
-    return p.per_image ?? (unpriced.add(model), null);
-  }
-  const credits = (n) => (elevenlabs == null ? null : (n / 1000) * elevenlabs);
+  const cost = await costEstimator(s);
+  const { unpriced, elevenlabsRate: elevenlabs } = cost;
 
   // After the first picture of the video, the editor sends the picture before (and any project
   // references) as references, so the reference model makes every image but a first one without them.
   const projectRefs = (s.reference_asset_ids || []).length;
   let pictureBefore = mode === 'append' && existing.scenes.length > 0;
-  const ttsRate = HALF_CREDIT_TTS.test(s.tts_model) ? 0.5 : 1;
 
   const rows = scenes.map((scene, i) => {
     const row = { n: i + 1, image: 0, voice: 0, sfx: 0, credits: 0, pictures: 0, voices: 0, sounds: 0, unpriced: new Set(), video: null };
-    const add = (key, usd) => (usd == null ? row.unpriced.add(key) : (row[key] += usd));
+    const add = (key, { usd, credits = 0 }) => {
+      row.credits += credits;
+      if (usd == null) row.unpriced.add(key);
+      else row[key] += usd;
+    };
     for (const prompt of [scene.image_prompt, ...(scene.shots || []).map((sh) => sh.image_prompt)].filter((p) => p?.trim())) {
-      const refs = projectRefs + (pictureBefore ? 1 : 0);
-      const style = s.style_prompt ? `. ${s.style_prompt}` : '';
-      add('image', imageCost(refs ? s.reference_model : s.image_model, prompt + style, refs));
+      add('image', cost.image(prompt, projectRefs + (pictureBefore ? 1 : 0)));
       row.pictures++;
       pictureBefore = true;
     }
     if (scene.voiceover_text?.trim()) {
-      const c = scene.voiceover_text.trim().length * ttsRate;
-      row.credits += c;
+      add('voice', cost.voice(scene.voiceover_text));
       row.voices++;
-      add('voice', credits(c));
     }
     const lengths = [
       scene.sfx_prompt?.trim() && scene.duration_sec,
       ...(scene.sfx_layers || []).filter((l) => l.prompt?.trim()).map((l) => l.length_sec || scene.duration_sec - (l.start_sec || 0)),
     ].filter(Boolean);
     for (const sec of lengths) {
-      const c = Math.min(30, Math.max(0.5, sec)) * SFX_CREDITS_PER_SEC;
-      row.credits += c;
+      add('sfx', cost.sfx(sec));
       row.sounds++;
-      add('sfx', credits(c));
     }
-    // Video is never part of "Generate missing": priced separately, for scenes that ask for it.
-    if (scene.video_prompt?.trim() || /generate (a )?video/i.test(scene.notes || '')) {
-      const p = table[s.video_model];
-      const sec = s.video_params?.[s.video_model]?.duration_hint ?? Math.min(10, Math.max(3, scene.duration_sec));
-      row.video = p?.video_output != null ? { sec, usd: perM(sec * OMNI_TOKENS_PER_SECOND, p.video_output) } : (unpriced.add(s.video_model), { sec, usd: null });
-    }
+    // Video clips are off by default in "Generate missing": priced separately, for scenes that ask for one.
+    if (scene.video_prompt?.trim() || /generate (a )?video/i.test(scene.notes || '')) row.video = cost.video(scene.duration_sec);
     row.total = row.image + row.voice + row.sfx;
     return row;
   });
