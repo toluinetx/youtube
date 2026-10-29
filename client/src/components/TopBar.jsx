@@ -3,6 +3,9 @@ import { ChevronDown, Clapperboard, Download, FileText, Loader2, Redo2, Sparkles
 import { UsageButton } from './Usage.jsx';
 import { describeGeneration } from '../util.js';
 
+/** The export's URL that saves it as a file (named after the video's title) instead of playing it. */
+const downloadUrl = (url) => `${url}${url.includes('?') ? '&' : '?'}download=1`;
+
 export default function TopBar({
   title, status, job, missing, videos, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
   onOpenProjects,
@@ -70,8 +73,8 @@ export default function TopBar({
             <Sparkles className="size-4" /> Generate missing{missing ? ` (${missing})` : ''}
           </button>
           {exportUrl && (
-            <a className="btn-secondary" href={exportUrl} download="final_output.mp4" title="Download final_output.mp4">
-              <Download className="size-4" />
+            <a className="btn-secondary" href={downloadUrl(exportUrl)} download title="Download the last exported video">
+              <Download className="size-4" /> Download MP4
             </a>
           )}
           <button className="btn-primary" onClick={onExport} disabled={running}>
@@ -88,6 +91,11 @@ export default function TopBar({
             {job.kind === 'export' ? 'Export' : 'Generate'}:{' '}
             {job.status === 'error' ? job.error : job.status === 'done' ? (finished ? finished.text : 'finished') : job.message}
           </span>
+          {job.kind === 'export' && job.status === 'done' && exportUrl && (
+            <a className="flex items-center gap-1 font-medium text-emerald-300 hover:underline" href={downloadUrl(exportUrl)} download>
+              <Download className="size-3.5" /> Download MP4
+            </a>
+          )}
           {running && (
             <div className="h-1.5 max-w-sm flex-1 overflow-hidden rounded-full bg-zinc-800">
               <div className="h-full rounded-full bg-indigo-500 transition-[width] duration-300" style={{ width: `${Math.round(job.progress * 100)}%` }} />
