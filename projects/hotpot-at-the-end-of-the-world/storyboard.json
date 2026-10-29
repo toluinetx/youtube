@@ -10,12 +10,22 @@
     "video_params": {},
     "reference_asset_ids": [],
     "style_prompt": "anime style, detailed hand-drawn linework, cinematic lighting, warm amber interior light against cold blue-grey storm light, detailed backgrounds, moody color grading",
+    "image_guardrails": true,
+    "image_check": true,
+    "image_check_model": "gemini:gemini-flash-latest",
+    "image_check_retries": 2,
     "voice_id": "AeRdCCKzvd23BpJoofzx",
     "tts_model": "eleven_v4",
     "tts_params": {},
     "sfx_model": "eleven_text_to_sound_v2",
     "sfx_params": {},
     "motion": "kenburns",
+    "motion_amount": 12,
+    "look": "none",
+    "vignette": 0,
+    "grain": 0,
+    "captions": "off",
+    "caption_position": "bottom",
     "sfx_volume": 0.35,
     "music_url": null,
     "music_name": null,
@@ -27,64 +37,64 @@
     {
       "scene_id": 1,
       "image_prompt": "Wide establishing shot of a long armored passenger train speeding across a ruined wasteland at night, its windows glowing warm amber, a violent thunderstorm overhead with a lightning bolt splitting dark clouds, fires burning among collapsed buildings in the distance, heavy rain",
-      "voiceover_text": "[quietly] The world ended three winters ago. [pause] The train never stopped.",
+      "voiceover_text": "The world ended three winters ago. [pause] The train never stopped.",
       "sfx_prompt": "Heavy rain and wind, a long train roaring past on rails, distant fires crackling",
       "video_prompt": "",
       "duration_sec": 8,
       "image_url": "/media/images/scene-1-1793268147939-g2ni.jpg",
-      "voiceover_url": "/media/voiceover/scene-1-1793268150462-6s9y.mp3",
+      "voiceover_url": "/media/voiceover/scene-1-1793283845326-ybm2.mp3",
       "sfx_url": "/media/sfx/scene-1-1793268152931-y0bg.mp3",
-      "voiceover_duration_sec": 4.91,
+      "voiceover_duration_sec": 5.49,
       "voiceover_words": [
         {
           "text": "The",
-          "start": 0.16,
-          "end": 0.24
+          "start": 0,
+          "end": 0.16
         },
         {
           "text": "world",
-          "start": 0.32,
-          "end": 0.64
+          "start": 0.24,
+          "end": 0.56
         },
         {
           "text": "ended",
           "start": 0.72,
-          "end": 1.04
+          "end": 1.12
         },
         {
           "text": "three",
-          "start": 1.28,
-          "end": 1.52
+          "start": 1.36,
+          "end": 1.6
         },
         {
           "text": "winters",
-          "start": 1.6,
-          "end": 1.92
+          "start": 1.68,
+          "end": 2
         },
         {
           "text": "ago.",
-          "start": 2.12,
-          "end": 2.36
+          "start": 2.08,
+          "end": 2.51
         },
         {
           "text": "The",
-          "start": 3.44,
-          "end": 3.52
+          "start": 3.68,
+          "end": 3.76
         },
         {
           "text": "train",
-          "start": 3.6,
-          "end": 3.84
+          "start": 4,
+          "end": 4.24
         },
         {
           "text": "never",
-          "start": 3.92,
-          "end": 4.16
+          "start": 4.4,
+          "end": 4.64
         },
         {
           "text": "stopped.",
-          "start": 4.24,
-          "end": 4.88
+          "start": 4.72,
+          "end": 5.44
         }
       ],
       "sfx_duration_sec": 8.05,
@@ -113,6 +123,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "pan_right",
+      "shake": null,
+      "title_text": "",
       "notes": "Title card over the first 3 s if you want one (add it in the edit, not in the image)."
     },
     {
@@ -172,6 +184,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -200,6 +214,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -250,6 +266,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": "Optional: Generate video for real chopping motion."
     },
     {
@@ -290,6 +308,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -330,6 +350,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "pan_right",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -426,6 +448,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -466,6 +490,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -506,6 +532,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "pan_left",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -546,6 +574,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -586,6 +616,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": "Optional: Generate video for the ignition."
     },
     {
@@ -695,6 +727,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -794,6 +828,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "kenburns",
+      "shake": null,
+      "title_text": "",
       "notes": "Shot 2 plants the rifle for later."
     },
     {
@@ -822,6 +858,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": "Optional: Generate video. Closest to your reference image: add it as the Eli reference."
     },
     {
@@ -856,6 +894,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -896,6 +936,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -936,6 +978,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -987,6 +1031,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": "Generate video recommended: the entrance is the key action beat."
     },
     {
@@ -1038,6 +1084,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "none",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -1089,6 +1137,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -1129,6 +1179,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": "Optional: Generate video."
     },
     {
@@ -1157,6 +1209,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -1197,6 +1251,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "none",
+      "shake": null,
+      "title_text": "",
       "notes": "Generate video recommended for the shot."
     },
     {
@@ -1248,6 +1304,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": null,
+      "shake": null,
+      "title_text": "",
       "notes": "Generate video recommended for the fall."
     },
     {
@@ -1297,6 +1355,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_out",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -1348,6 +1408,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "kenburns",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -1392,6 +1454,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_in",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -1446,6 +1510,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "zoom_out",
+      "shake": null,
+      "title_text": "",
       "notes": ""
     },
     {
@@ -1486,6 +1552,8 @@
       "use_global_references": true,
       "use_previous_scene": true,
       "motion": "pan_right",
+      "shake": null,
+      "title_text": "",
       "notes": "Fade to black over the last 2 s; let the music swell here."
     }
   ],
@@ -3088,6 +3156,22 @@
         "kind": "video",
         "model": "gemini:gemini-omni-1.1-flash",
         "prompt": "The brute topples forward and slams onto the floor, the whole car shudders and the plates rattle"
+      }
+    },
+    {
+      "asset_id": "a_f1a90af6",
+      "name": "Scene 1 voiceover - The world ended three winters ago..mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-1-1793283845326-ybm2.mp3",
+      "thumb_url": null,
+      "duration_sec": 5.49,
+      "has_audio": true,
+      "size_bytes": 88232,
+      "added_at": "2026-10-29T14:24:05.640Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v4 · AeRdCCKzvd23BpJoofzx",
+        "prompt": "The world ended three winters ago. [pause] The train never stopped."
       }
     }
   ]
