@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import {
-  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Copy, Film, ImageIcon, Loader2, RefreshCw, Sparkles, Trash2, TriangleAlert, Upload, Wand2, X,
+  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Copy, Film, ImageIcon, Loader2, NotebookPen, RefreshCw, Sparkles, Trash2, TriangleAlert, Upload,
+  Wand2, X,
 } from 'lucide-react';
 import { ACCEPT, formatTime } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
@@ -292,6 +293,17 @@ export default function Inspector({
           Adding a voiceover lengthens the scene if the narration doesn't fit. A video shorter than the scene holds its last frame.
         </p>
       </div>
+
+      <Section icon={NotebookPen} color="text-zinc-400" title="Notes" hint="Not used for generation">
+        <textarea
+          rows={2}
+          className="field resize-y"
+          value={scene.notes || ''}
+          placeholder="e.g. import the drone clip here, or a reminder for the edit"
+          onChange={(e) => onChange({ notes: e.target.value })}
+          aria-label="Scene notes"
+        />
+      </Section>
     </div>
   );
 }

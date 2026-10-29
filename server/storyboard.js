@@ -1,5 +1,7 @@
 import fs from 'node:fs/promises';
-import { PROJECT_DIR, STORYBOARD_PATH } from './paths.js';
+import { PROJECT_DIR, PROJECT_ID, STORYBOARD_PATH } from './paths.js';
+import { collect, recordChange, takeRedo, takeUndo } from './history.js';
+import { broadcast } from './events.js';
 
 export const DEFAULT_SETTINGS = {
   title: 'Untitled video',
@@ -27,7 +29,6 @@ export const DEFAULT_SETTINGS = {
 export const READONLY_SETTINGS = ['music_url', 'music_name', 'music_duration_sec'];
 
 export const SCENE_TEXT_FIELDS = ['image_prompt', 'voiceover_text', 'sfx_prompt'];
-export const MEDIA_URL_FIELDS = ['image_url', 'video_url', 'video_thumb_url', 'voiceover_url', 'sfx_url'];
 
 export const RESOLUTIONS = {
   '16:9': { width: 1920, height: 1080 },
@@ -59,6 +60,8 @@ export function newScene(id, fields = {}) {
     // Library image assets used as references when generating this scene's image
     reference_asset_ids: [],
     use_global_references: true, // also send the project-wide references
+    // Free-form notes for the editor (e.g. "import the drone clip here"); never sent to a generator.
+    notes: '',
     ...fields,
   };
 }
@@ -67,8 +70,10 @@ export function nextSceneId(storyboard) {
   return storyboard.scenes.reduce((max, s) => Math.max(max, Number(s.scene_id) || 0), 0) + 1;
 }
 
+export const SEED_TITLE = 'Secrets of the Deep Ocean';
+
 const SEED = {
-  settings: { ...DEFAULT_SETTINGS, title: 'Secrets of the Deep Ocean' },
+  settings: { ...DEFAULT_SETTINGS, title: SEED_TITLE },
   scenes: [
     newScene(1, {
       image_prompt: 'A lone research submarine descending into a dark blue ocean, shafts of sunlight fading above',
@@ -127,20 +132,48 @@ async function writeStoryboard(sb) {
 // Serialize read-modify-write cycles so concurrent requests never clobber each other.
 let chain = Promise.resolve();
 
-/**
- * Re-reads storyboard.json (so hand edits are picked up), lets `mutate` change it, then writes it back.
- * Resolves with whatever `mutate` returns, or the storyboard if it returns nothing.
- */
-export function updateStoryboard(mutate) {
-  const run = chain.then(async () => {
-    const sb = await readStoryboard();
-    const result = await mutate(sb);
-    await writeStoryboard(sb);
-    return result === undefined ? sb : result;
-  });
+export function serialized(fn) {
+  const run = chain.then(fn);
   chain = run.catch(() => {});
   return run;
 }
+
+/**
+ * Re-reads storyboard.json (so hand edits are picked up), lets `mutate` change it, then writes it back.
+ * Resolves with whatever `mutate` returns, or the storyboard if it returns nothing.
+ * The change becomes one undo step named `label`; consecutive changes with the same `key` are merged.
+ */
+export function updateStoryboard(mutate, history) {
+  return serialized(async () => {
+    const sb = await readStoryboard();
+    const before = JSON.stringify(sb);
+    const result = await mutate(sb);
+    const after = JSON.stringify(sb);
+    if (after !== before) {
+      await writeStoryboard(sb);
+      await recordChange(before, after, history);
+      broadcast({ type: 'storyboard', project: PROJECT_ID, label: history?.label ?? 'Edit' });
+    }
+    return result === undefined ? sb : result;
+  });
+}
+
+/** Step back (or forward) through the history. Resolves with { storyboard, label }, or null if there's nothing to do. */
+function travel(take) {
+  return serialized(async () => {
+    const current = JSON.stringify(await readStoryboard());
+    const entry = take(current);
+    if (!entry) return null;
+    const sb = normalize(JSON.parse(entry.json));
+    await writeStoryboard(sb);
+    await collect(current, entry.json);
+    broadcast({ type: 'storyboard', project: PROJECT_ID, label: entry.label });
+    return { storyboard: sb, label: entry.label };
+  });
+}
+
+export const undo = () => travel(takeUndo);
+export const redo = () => travel(takeRedo);
 
 export function findScene(sb, id) {
   const scene = sb.scenes.find((s) => String(s.scene_id) === String(id));

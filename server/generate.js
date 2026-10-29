@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { MEDIA_DIR, mediaPathToUrl, mediaUrlToPath } from './paths.js';
-import { MEDIA_URL_FIELDS, findScene, readStoryboard, updateStoryboard } from './storyboard.js';
+import { findScene, readStoryboard, updateStoryboard } from './storyboard.js';
 import { generateImage, referenceCapacity } from './replicate.js';
 import { soundEffect, textToSpeech } from './elevenlabs.js';
 import { probeDuration, referenceDataUri } from './ffmpeg.js';
@@ -22,15 +22,6 @@ export function mediaFilePath(kind, prefix, ext) {
   return path.join(MEDIA_DIR, kind, `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${ext}`);
 }
 
-/** Delete a scene-owned media file. Library files are shared and only deleted from the library. */
-export async function removeMedia(url) {
-  if (!url || url.startsWith('/media/library/')) return;
-  const file = mediaUrlToPath(url);
-  if (file) await fs.rm(file, { force: true });
-}
-
-export const sceneMediaUrls = (scene) => MEDIA_URL_FIELDS.map((f) => scene[f]).filter(Boolean);
-
 /** The visual slot holds either an image or a video; setting one clears the other. */
 export const CLEAR_VIDEO = { video_url: null, video_thumb_url: null, video_duration_sec: null, video_has_audio: false, video_start_sec: 0 };
 export const CLEAR_IMAGE = { image_url: null };
@@ -42,21 +33,15 @@ export function fitToVoiceover(scene) {
 }
 
 /**
- * Apply `mutate` to a scene and delete any media files it no longer references.
- * Resolves with the updated scene.
+ * Apply `mutate` to a scene as one undo step named `label`. Media files it no longer references are
+ * deleted once no undo step needs them. Resolves with the updated scene.
  */
-export async function commitScene(sceneId, mutate) {
-  let orphaned = [];
-  const scene = await updateStoryboard((sb) => {
+export function commitScene(sceneId, mutate, label) {
+  return updateStoryboard((sb) => {
     const s = findScene(sb, sceneId);
-    const before = sceneMediaUrls(s);
     mutate(s);
-    const after = new Set(sceneMediaUrls(s));
-    orphaned = before.filter((u) => !after.has(u));
     return s;
-  });
-  await Promise.all(orphaned.map(removeMedia));
-  return scene;
+  }, { label });
 }
 
 function setSourceName(scene, slot, name) {
@@ -106,7 +91,7 @@ export async function generateSceneImage(sceneId) {
   return commitScene(scene.scene_id, (s) => {
     Object.assign(s, CLEAR_VIDEO, { image_url: mediaPathToUrl(file) });
     setSourceName(s, 'image', null);
-  });
+  }, 'Generate image');
 }
 
 export async function generateSceneVoiceover(sceneId) {
@@ -121,7 +106,7 @@ export async function generateSceneVoiceover(sceneId) {
     Object.assign(s, { voiceover_url: mediaPathToUrl(file), voiceover_duration_sec: duration });
     setSourceName(s, 'voiceover', null);
     fitToVoiceover(s);
-  });
+  }, 'Generate voiceover');
 }
 
 export async function generateSceneSfx(sceneId) {
@@ -135,7 +120,7 @@ export async function generateSceneSfx(sceneId) {
   return commitScene(scene.scene_id, (s) => {
     Object.assign(s, { sfx_url: mediaPathToUrl(file), sfx_duration_sec: duration });
     setSourceName(s, 'sfx', null);
-  });
+  }, 'Generate sound effect');
 }
 
 export { setSourceName };
