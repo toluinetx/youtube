@@ -134,17 +134,45 @@ app.post('/api/scenes', async (req, res) => {
   res.status(201).json(scene);
 });
 
+/** A new scene with the same prompts and duration as `src` (media isn't copied). */
+function copyOf(sb, src) {
+  return newScene(nextSceneId(sb), { ...Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, src[f]])), duration_sec: src.duration_sec });
+}
+
+/** The scenes named by `ids`, in timeline order. */
+function scenesById(sb, ids) {
+  if (!Array.isArray(ids) || !ids.length) throw badRequest('ids must list at least one scene_id');
+  ids.forEach((id) => findScene(sb, id));
+  const wanted = new Set(ids.map(String));
+  return sb.scenes.filter((s) => wanted.has(String(s.scene_id)));
+}
+
+const scenesLabel = (verb, n) => `${verb} ${n === 1 ? 'scene' : `${n} scenes`}`;
+
 app.post('/api/scene/:id/duplicate', async (req, res) => {
   const scene = await updateStoryboard((sb) => {
     const src = findScene(sb, req.params.id);
-    const copy = newScene(nextSceneId(sb), {
-      ...Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, src[f]])),
-      duration_sec: src.duration_sec,
-    });
+    const copy = copyOf(sb, src);
     sb.scenes.splice(sb.scenes.indexOf(src) + 1, 0, copy);
     return copy;
   }, { label: 'Duplicate scene' });
   res.status(201).json(scene);
+});
+
+// Copies of several scenes, placed together (in timeline order) after the last of them. Responds with the copies.
+app.post('/api/scenes/duplicate', async (req, res) => {
+  const copies = await updateStoryboard((sb) => {
+    const sources = scenesById(sb, req.body.ids);
+    const at = sb.scenes.indexOf(sources.at(-1)) + 1;
+    const made = [];
+    for (const src of sources) {
+      const copy = copyOf(sb, src);
+      sb.scenes.splice(at + made.length, 0, copy);
+      made.push(copy);
+    }
+    return made;
+  }, { label: scenesLabel('Duplicate', req.body.ids?.length) });
+  res.status(201).json(copies);
 });
 
 // The scene's media files are deleted once no undo step needs them.
@@ -153,6 +181,14 @@ app.delete('/api/scene/:id', async (req, res) => {
     const s = findScene(sb, req.params.id);
     sb.scenes.splice(sb.scenes.indexOf(s), 1);
   }, { label: 'Delete scene' });
+  res.json({ ok: true });
+});
+
+app.post('/api/scenes/delete', async (req, res) => {
+  await updateStoryboard((sb) => {
+    const doomed = new Set(scenesById(sb, req.body.ids));
+    sb.scenes = sb.scenes.filter((s) => !doomed.has(s));
+  }, { label: scenesLabel('Delete', req.body.ids?.length) });
   res.json({ ok: true });
 });
 

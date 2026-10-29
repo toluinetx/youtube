@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, Copy, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles, Trash2, X,
+  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, Copy, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles,
+  SquareDashedMousePointer, Trash2, X,
 } from 'lucide-react';
 import { api, onHistory } from './api.js';
 import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts } from './util.js';
@@ -29,7 +30,11 @@ export default function App() {
   const [sb, setSb] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [status, setStatus] = useState(null);
+  // selectedId is the scene shown in the sidebar; selection holds every selected scene (shift / ⌘-click).
+  // A selection that doesn't include selectedId is stale and means just selectedId.
   const [selectedId, setSelectedId] = useState(null);
+  const [selection, setSelection] = useState([]);
+  const anchorId = useRef(null); // where a shift-click range starts
   const [sidebarTab, setSidebarTab] = useState('scene');
   const [time, setTime] = useState(0);
   const [seekToken, setSeekToken] = useState(0);
@@ -53,6 +58,10 @@ export default function App() {
   const total = scenes.reduce((sum, s) => sum + (Number(s.duration_sec) || 0), 0);
   const selectedIndex = scenes.findIndex((s) => s.scene_id === selectedId);
   const selected = scenes[selectedIndex];
+  const selectedIds = useMemo(() => {
+    const ids = selection.includes(selectedId) ? selection : [selectedId];
+    return scenes.filter((s) => ids.includes(s.scene_id)).map((s) => s.scene_id);
+  }, [scenes, selection, selectedId]);
   const library = useMemo(() => sb?.library ?? [], [sb]);
 
   // How many times each media URL is used, on the reel or as a reference (for library badges).
@@ -188,9 +197,11 @@ export default function App() {
     [total],
   );
 
-  const selectScene = useCallback(
-    (id, { seekTo = true } = {}) => {
+  /** Show scene `id` in the sidebar and the preview, keeping `ids` selected. */
+  const focusScene = useCallback(
+    (id, ids, { seekTo = true } = {}) => {
       setSelectedId(id);
+      setSelection(ids);
       setSidebarTab('scene');
       setPreviewMode('live');
       const i = scenes.findIndex((s) => s.scene_id === id);
@@ -199,8 +210,37 @@ export default function App() {
     [scenes, starts, seek],
   );
 
+  /** Select just this scene. */
+  const selectScene = useCallback(
+    (id, opts) => {
+      anchorId.current = id;
+      focusScene(id, [id], opts);
+    },
+    [focusScene],
+  );
+
   // Latest scene actions for the keyboard shortcuts and context menus, which are bound once.
   const actions = useRef({});
+
+  /** A click on a timeline clip: shift extends the selection from the anchor, ⌘/Ctrl toggles one scene. */
+  actions.current.clickScene = (id, { range, toggle } = {}) => {
+    const ids = scenes.map((s) => s.scene_id);
+    if (range) {
+      const a = ids.indexOf(anchorId.current ?? selectedId);
+      const b = ids.indexOf(id);
+      if (a >= 0 && b >= 0) return focusScene(id, ids.slice(Math.min(a, b), Math.max(a, b) + 1));
+    } else if (toggle) {
+      if (!selectedIds.includes(id)) {
+        anchorId.current = id;
+        return focusScene(id, [...selectedIds, id]);
+      }
+      const rest = selectedIds.filter((x) => x !== id);
+      if (!rest.length) return; // keep at least one scene selected
+      return focusScene(id === selectedId ? rest.at(-1) : selectedId, rest, { seekTo: false });
+    }
+    selectScene(id);
+  };
+  const clickScene = useCallback((id, mods) => actions.current.clickScene(id, mods), []);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -214,13 +254,25 @@ export default function App() {
       }
       if ((e.ctrlKey || e.metaKey) && key === 'd') {
         e.preventDefault();
-        if (selectedId != null) actions.current.duplicateScene(selectedId);
+        if (selectedIds.length) actions.current.duplicateScenes(selectedIds);
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && key === 'a') {
+        e.preventDefault();
+        if (scenes.length) focusScene(selectedId ?? scenes[0].scene_id, scenes.map((s) => s.scene_id), { seekTo: false });
         return;
       }
       if (e.ctrlKey || e.metaKey) return;
       if (e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault();
-        if (selectedId != null) actions.current.deleteScene(selectedId);
+        if (selectedIds.length) actions.current.deleteScenes(selectedIds);
+      } else if (e.key === 'Escape' && selectedIds.length > 1) {
+        selectScene(selectedId, { seekTo: false });
+      } else if (e.shiftKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        // Grow / shrink the selection from the anchor.
+        e.preventDefault();
+        const next = scenes[selectedIndex + (e.key === 'ArrowRight' ? 1 : -1)];
+        if (next) actions.current.clickScene(next.scene_id, { range: true });
       } else if (e.code === 'Space') {
         e.preventDefault();
         setPreviewMode('live');
@@ -234,7 +286,7 @@ export default function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [scenes, starts, time, selectScene, selectedId]);
+  }, [scenes, starts, time, selectScene, focusScene, selectedId, selectedIds, selectedIndex]);
 
   // ---- Scene operations -------------------------------------------------------------------------
 
@@ -305,23 +357,33 @@ export default function App() {
       selectScene(scene.scene_id, { seekTo: false });
     });
 
-  const duplicateScene = (id) =>
+  /** Duplicate scenes (as one undo step); the copies become the selection. */
+  const duplicateScenes = (ids) =>
     run(async () => {
-      const scene = await api.duplicateScene(id);
+      const copies = (await api.duplicateScenes(ids)).map((s) => s.scene_id);
       await reload();
-      selectScene(scene.scene_id, { seekTo: false });
+      anchorId.current = copies[0];
+      focusScene(copies[0], copies, { seekTo: false });
     });
+  const duplicateScene = (id) => duplicateScenes([id]);
 
-  const deleteScene = (id) => {
-    const i = scenes.findIndex((s) => s.scene_id === id);
+  /** Delete scenes (as one undo step), then select the scene after them (or before, at the end). */
+  const deleteScenes = (ids) => {
+    const indexes = ids.map((id) => scenes.findIndex((s) => s.scene_id === id)).filter((i) => i >= 0);
+    if (!indexes.length) return;
+    const last = Math.max(...indexes);
+    const neighbour = scenes.slice(last + 1).find((s) => !ids.includes(s.scene_id)) ?? scenes.slice(0, last).findLast((s) => !ids.includes(s.scene_id));
     run(async () => {
-      await api.deleteScene(id);
-      const neighbour = scenes[i + 1] ?? scenes[i - 1];
+      await api.deleteScenes(ids);
       setSelectedId(neighbour?.scene_id ?? null);
       await reload();
-      notify(`Deleted scene ${i + 1}`, 'info', { label: 'Undo', onClick: () => actions.current.undo() });
+      notify(ids.length === 1 ? `Deleted scene ${indexes[0] + 1}` : `Deleted ${ids.length} scenes`, 'info', {
+        label: 'Undo',
+        onClick: () => actions.current.undo(),
+      });
     });
   };
+  const deleteScene = (id) => deleteScenes([id]);
 
   const moveScene = (id, dir) =>
     run(async () => {
@@ -345,8 +407,8 @@ export default function App() {
       notify(`${direction === 'undo' ? 'Undid' : 'Redid'}: ${result.label}`, 'info');
     });
 
-  actions.current.duplicateScene = duplicateScene;
-  actions.current.deleteScene = deleteScene;
+  actions.current.duplicateScenes = duplicateScenes;
+  actions.current.deleteScenes = deleteScenes;
   actions.current.undo = () => travel('undo');
   actions.current.redo = () => travel('redo');
 
@@ -613,7 +675,20 @@ export default function App() {
     ];
   };
 
+  const groupMenuItems = (ids, sceneId) => [
+    { heading: `${ids.length} scenes selected` },
+    { label: `Duplicate ${ids.length} scenes`, icon: Copy, shortcut: `${MOD_KEY}D`, onClick: () => duplicateScenes(ids) },
+    { label: 'Select only this scene', icon: SquareDashedMousePointer, onClick: () => selectScene(sceneId, { seekTo: false }) },
+    '-',
+    { label: `Delete ${ids.length} scenes`, icon: Trash2, danger: true, shortcut: 'Del', onClick: () => deleteScenes(ids) },
+  ];
+
   actions.current.clipMenu = (e, sceneId, slot) => {
+    // Right-clicking inside a multi-selection acts on all of it; anywhere else selects just that scene.
+    if (selectedIds.length > 1 && selectedIds.includes(sceneId)) {
+      setSelectedId(sceneId);
+      return openMenu(e, groupMenuItems(selectedIds, sceneId));
+    }
     selectScene(sceneId, { seekTo: false });
     openMenu(e, clipMenuItems(sceneId, slot));
   };
@@ -700,8 +775,8 @@ export default function App() {
             time={time}
             playing={playing}
             seek={seek}
-            selectedId={selectedId}
-            onSelect={selectScene}
+            selectedIds={selectedIds}
+            onSelect={clickScene}
             onResize={onResizeScene}
             onAdd={() => addScene()}
             onDropFiles={dropFiles}
@@ -732,6 +807,20 @@ export default function App() {
             ))}
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto">
+            {sidebarTab === 'scene' && selectedIds.length > 1 && (
+              <div className="flex items-center gap-1 border-b border-zinc-800 bg-indigo-500/10 px-4 py-2 text-xs text-indigo-200">
+                <span className="mr-auto font-medium">{selectedIds.length} scenes selected</span>
+                <button className="btn-ghost px-2 py-1 text-xs" onClick={() => duplicateScenes(selectedIds)} title={`Duplicate (${MOD_KEY}D)`}>
+                  <Copy className="size-3.5" /> Duplicate
+                </button>
+                <button className="btn-ghost px-2 py-1 text-xs hover:!text-red-400" onClick={() => deleteScenes(selectedIds)} title="Delete (Del)">
+                  <Trash2 className="size-3.5" /> Delete
+                </button>
+                <button className="icon-btn size-6" onClick={() => selectScene(selectedId, { seekTo: false })} title="Clear selection (Esc)" aria-label="Clear selection">
+                  <X className="size-3.5" />
+                </button>
+              </div>
+            )}
             {sidebarTab === 'project' ? (
               <ProjectSettings
                 settings={sb.settings}

@@ -49,7 +49,8 @@ The top bar shows a green dot for each service that is configured. Restart `npm 
    no file yet. If a voiceover runs longer than its scene, the scene is lengthened so the narration isn't cut off.
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
    sidebar and click **Regenerate**. Only that asset is regenerated. Drag a scene's right edge to change its length,
-   or drag the scene itself to move it (<kbd>Esc</kbd> cancels).
+   or drag the scene itself to move it (<kbd>Esc</kbd> cancels). <kbd>Shift</kbd>-click selects a range of scenes and
+   <kbd>Ctrl/⌘</kbd>-click adds or removes one; dragging, duplicating or deleting then applies to all of them.
 5. **Export.** **Export video** renders `project/exports/final_output.mp4` and opens it in the
    **Rendered MP4** tab. Each scene is cached as its own clip, so re-exporting after a small change only
    re-renders the scenes you touched.
@@ -106,7 +107,8 @@ Give image generation reference pictures so a character, location or style stays
 - References are sent as JPEGs scaled to at most 1024px.
 
 Keyboard: <kbd>Space</kbd> play/pause · <kbd>←</kbd>/<kbd>→</kbd> previous/next scene · <kbd>Delete</kbd> delete scene ·
-<kbd>Ctrl/⌘</kbd>+<kbd>D</kbd> duplicate scene · <kbd>Ctrl/⌘</kbd>+<kbd>Z</kbd> undo · <kbd>Ctrl</kbd>+<kbd>Y</kbd> or
+<kbd>Ctrl/⌘</kbd>+<kbd>D</kbd> duplicate scene · <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> extend the selection ·
+<kbd>Ctrl/⌘</kbd>+<kbd>A</kbd> select all scenes · <kbd>Esc</kbd> clear the selection · <kbd>Ctrl/⌘</kbd>+<kbd>Z</kbd> undo · <kbd>Ctrl</kbd>+<kbd>Y</kbd> or
 <kbd>⇧⌘</kbd>+<kbd>Z</kbd> redo. Right-click a clip, the music row or a library item for more actions.
 
 **Undo / redo** covers every change to the project: edits, deletes, generations, library changes and script
@@ -161,6 +163,8 @@ To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 | POST | `/api/scenes` | add a scene (`after_id` optional) |
 | POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
 | DELETE | `/api/scene/:id` | delete a scene (its media is deleted once no undo step needs it) |
+| POST | `/api/scenes/duplicate` | copy several scenes' prompts: `{ "ids": [2, 3] }`; the copies go after the last one |
+| POST | `/api/scenes/delete` | delete several scenes: `{ "ids": [2, 3] }` |
 | POST | `/api/scenes/reorder` | `{ "order": [3, 1, 2] }` |
 | POST | `/api/scenes/import-script` | `{ "script": "...", "mode": "append" \| "replace" }` |
 | POST | `/api/scene/:id/regenerate-image` | Replicate |
