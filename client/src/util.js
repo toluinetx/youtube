@@ -27,8 +27,94 @@ export const ASSETS = [
 
 export function countMissing(scenes) {
   let n = 0;
-  for (const s of scenes) for (const a of ASSETS) if (s[a.prompt]?.trim() && !a.has(s)) n++;
+  for (const s of scenes) {
+    for (const a of ASSETS) if (s[a.prompt]?.trim() && !a.has(s)) n++;
+    for (const l of s.sfx_layers || []) if (l.prompt?.trim() && !l.url) n++;
+    for (const shot of s.shots || []) if (shot.image_prompt?.trim() && !shot.image_url) n++;
+  }
   return n;
+}
+
+/** A new, empty extra sound effect layer (the server keeps the id). */
+export const newSfxLayer = () => ({
+  layer_id: `l_${Math.random().toString(36).slice(2, 10)}`,
+  prompt: '',
+  url: null,
+  duration_sec: null,
+  volume: 1,
+  start_sec: 0,
+  length_sec: null,
+  cue: null,
+  source_name: null,
+});
+
+/** At most this many pictures per scene: its own image plus extra shots (keep in sync with the server). */
+export const MAX_SHOTS = 4;
+
+/** A new extra shot of a scene, starting at `startSec` (the server keeps the id). */
+export const newShot = (startSec) => ({
+  shot_id: `s_${Math.random().toString(36).slice(2, 10)}`,
+  image_prompt: '',
+  image_url: null,
+  motion: null,
+  start_sec: startSec,
+  cue: null,
+  source_name: null,
+});
+
+/**
+ * The scene's pictures in the order they're shown: [{ shot (null = the scene's own), start, end }].
+ * Extra shots without a picture, or starting outside the scene, are skipped. Keep in sync with
+ * sceneTimeline in server/storyboard.js.
+ */
+export function sceneTimeline(scene) {
+  const extra = (scene.shots || [])
+    .filter((s) => s.image_url && s.start_sec > 0 && s.start_sec < scene.duration_sec)
+    .sort((a, b) => a.start_sec - b.start_sec);
+  const starts = [0, ...extra.map((s) => s.start_sec)];
+  return [null, ...extra].map((shot, k) => ({ shot, start: starts[k], end: starts[k + 1] ?? scene.duration_sec }));
+}
+
+// Syncing sound effects and shots to words of the narration. Keep in sync with cueTime in server/storyboard.js.
+const WORDS_PER_SEC_SPOKEN = 2.5;
+const PAUSE_TAG_SEC = 0.7;
+const normalizeWord = (w) => w.toLowerCase().replace(/[^\p{L}\p{N}']+/gu, '');
+const spokenWords = (text) => text.replace(/\[[^\]\n]{1,60}\]/g, ' ').split(/\s+/).map(normalizeWord).filter(Boolean);
+
+function findCue(words, cue) {
+  const target = spokenWords(cue);
+  if (!target.length) return -1;
+  for (let i = 0; i + target.length <= words.length; i++) if (target.every((t, k) => words[i + k] === t)) return i;
+  return -1;
+}
+
+/**
+ * When a cue (words of the narration) is spoken, in seconds into the scene, and whether that's exact
+ * (from the generated voiceover's word timings) or estimated from the text. Null if it isn't said.
+ */
+export function cueTime(scene, cue) {
+  if (!cue?.trim()) return null;
+  const timed = scene.voiceover_url && scene.voiceover_words?.length ? scene.voiceover_words : null;
+  if (timed) {
+    const i = findCue(timed.map((w) => normalizeWord(w.text)), cue);
+    return i === -1 ? null : { sec: timed[i].start, exact: true };
+  }
+  const text = scene.voiceover_text || '';
+  const i = findCue(spokenWords(text), cue);
+  if (i === -1) return null;
+  let count = 0;
+  let pauses = 0;
+  for (const token of text.split(/\s+/).filter(Boolean)) {
+    if (token.startsWith('[')) {
+      if (/pause|sigh|laugh|chuckle|gasp|exhale|inhale|breath|hesitat/i.test(token)) pauses++;
+      continue;
+    }
+    if (normalizeWord(token)) {
+      if (count === i) break;
+      count++;
+    }
+  }
+  return { sec: Math.round((i / WORDS_PER_SEC_SPOKEN + pauses * PAUSE_TAG_SEC) * 10) / 10, exact: false };
 }
 
 // Keep in sync with EXTENSIONS in server/uploads.js
@@ -55,6 +141,46 @@ export function assetFits(asset, slot) {
 export const ASSET_MIME = 'application/x-reel-asset';
 
 export const ASPECT = { '16:9': 16 / 9, '9:16': 9 / 16, '1:1': 1 };
+
+/** Camera motion for still images (keep in sync with MOTIONS in server/storyboard.js). */
+export const MOTIONS = [
+  ['kenburns', 'Ken Burns (zoom in / out, alternating)'],
+  ['none', 'Still'],
+  ['zoom_in', 'Slow zoom in'],
+  ['zoom_out', 'Slow zoom out'],
+  ['pan_right', 'Pan left → right'],
+  ['pan_left', 'Pan right → left'],
+  ['pan_down', 'Pan top → bottom'],
+  ['pan_up', 'Pan bottom → top'],
+];
+export const motionLabel = (id) => MOTIONS.find(([m]) => m === id)?.[1] ?? id;
+
+// Keep in sync with server/ffmpeg.js.
+const KENBURNS_ZOOM = 0.12;
+const PAN_ZOOM = 0.15;
+
+/** The motion a scene's image gets: its own, else the project's, with Ken Burns resolved to a zoom direction. */
+export function sceneMotion(scene, settings, index) {
+  const motion = scene.motion || settings.motion || 'none';
+  if (motion === 'kenburns') return index % 2 === 0 ? 'zoom_in' : 'zoom_out';
+  return motion;
+}
+
+/** CSS transform for `motion` at `progress` (0–1 through the scene), matching the exported video. */
+export function motionTransform(motion, progress) {
+  // Panning: zoomed in by PAN_ZOOM, sliding from one edge of the image to the other.
+  const edge = (PAN_ZOOM / 2) * 100;
+  const pan = (axis, from) => `translate${axis}(${from * edge * (1 - 2 * progress)}%) scale(${1 + PAN_ZOOM})`;
+  switch (motion) {
+    case 'zoom_in': return `scale(${1 + KENBURNS_ZOOM * progress})`;
+    case 'zoom_out': return `scale(${1 + KENBURNS_ZOOM * (1 - progress)})`;
+    case 'pan_right': return pan('X', 1);
+    case 'pan_left': return pan('X', -1);
+    case 'pan_down': return pan('Y', 1);
+    case 'pan_up': return pan('Y', -1);
+    default: return 'none';
+  }
+}
 
 /** ElevenLabs audio tags in voiceover text, e.g. [whispers]. Only these voice models perform them; others read them aloud. */
 export const AUDIO_TAG = /\[[^\]\n]{1,60}\]/g;

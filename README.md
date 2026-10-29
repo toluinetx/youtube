@@ -1,7 +1,7 @@
 # AI Video Editor
 
 A local web app for building YouTube videos out of scenes. Each scene has a visual (an image generated
-with Replicate / FLUX, or your own image or video clip), a voiceover (ElevenLabs text-to-speech or your
+with Replicate or the Gemini API, a Gemini Omni video clip, or your own image or video clip), a voiceover (ElevenLabs text-to-speech or your
 own recording) and an optional sound effect (ElevenLabs or your own file). Add background music for the
 whole video, edit everything on a timeline, regenerate or replace just the pieces that look or sound
 wrong, and export a single MP4 with FFmpeg.
@@ -23,7 +23,7 @@ Requires Node.js 22+. FFmpeg ships with the npm dependencies, so you don't need 
 
 ```bash
 npm install
-cp .env.example .env       # then paste your REPLICATE_API_TOKEN and ELEVENLABS_API_KEY
+cp .env.example .env       # then paste your REPLICATE_API_TOKEN and ELEVENLABS_API_KEY (GEMINI_API_KEY optional)
 npm run dev                # API on :3001, editor on http://localhost:5173
 ```
 
@@ -59,7 +59,7 @@ editor stays in sync and undo works.
 
 **Audio tags.** The template includes ElevenLabs' audio tags (`[whispers]`, `[sighs]`, `[excited]`, `[pause]`, …)
 and the rules Claude follows to place them when it writes narration from a story. Tags are performed only by the
-**Eleven v4**, **v4 Turbo** and **v3** voice models (Project tab → Voice model). Other models read them out loud,
+**Eleven v4**, **v4 Turbo** and **v3** voice models (Project panel on the left → Voice model). Other models read them out loud,
 and the scene sidebar warns you when that would happen.
 
 ## Workflow
@@ -77,18 +77,33 @@ and the scene sidebar warns you when that would happen.
    ```
 
 2. **Set the look.** On the **Project** tab, pick the format (16:9 or 9:16 Shorts), image model, a style
-   prompt that is appended to every image prompt, the voice and the camera motion.
+   prompt that is appended to every image prompt, the voice and the camera motion. Every model and voice
+   picker is searchable: star the ones you use (stars are shared by all projects) and type
+   `owner/model` (Replicate) or `gemini:model` to use one that isn't listed. The ⚙ button next to a model
+   shows its settings (seed, steps, quality, stability, speed, …) with their defaults; only what you change
+   is sent. Image settings are saved per model. The same pickers sit next to each Generate button in the scene
+   sidebar; they change the setting for every scene.
 3. **Generate everything.** **Generate missing** creates every image, voiceover and SFX that has a prompt but
    no file yet. If a voiceover runs longer than its scene, the scene is lengthened so the narration isn't cut off.
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
    sidebar and click **Regenerate**. Only that asset is regenerated. Hover between two scenes on the Image track and click
    **+** to insert a blank scene there, or click the **+** box after the last scene. Drag a scene's right edge to change its length,
    or drag the scene itself to move it (<kbd>Esc</kbd> cancels). Each scene has a **Notes** box for reminders
-   (footage to import, text to add). Notes are never sent to the generators and show as a marker on the timeline. <kbd>Shift</kbd>-click selects a range of scenes and
+   (footage to import, text to add). A scene's **Visual** has two tabs: **Image** (references, prompt,
+   and the camera motion: still, zoom in / out, or a pan in any direction, overriding the project's) and **Video**
+   (a clip from Gemini Omni using the video prompt, or the image prompt if that's empty, starting from the scene's
+   image if it has one). Every generated image, clip, voiceover and sound effect is also added to the library, so
+   earlier takes stay available (and usable as references). Notes are never sent to the generators and show as a marker on the timeline. <kbd>Shift</kbd>-click selects a range of scenes and
    <kbd>Ctrl/⌘</kbd>-click adds or removes one; dragging, duplicating or deleting then applies to all of them.
 5. **Export.** **Export video** renders `projects/<id>/exports/final_output.mp4` and opens it in the
    **Rendered MP4** tab. Each scene is cached as its own clip, so re-exporting after a small change only
    re-renders the scenes you touched.
+
+**Spending.** The **$** button at the top right shows this month's API spending (all projects). Click it for every
+generation the editor has run, by project and period, with the usage each provider reported: Gemini tokens,
+ElevenLabs credits, Replicate run time. Costs are that usage times an editable price table. Gemini and fixed-price
+Replicate models are filled in from the providers' price lists; set the rest yourself. The log is
+`projects/.usage.jsonl`.
 
 ## Library: your own media
 
@@ -124,7 +139,7 @@ The **Library** sidebar on the left holds every file you upload, grouped into **
 
 Give image generation reference pictures so a character, location or style stays the same from scene to scene.
 
-- **For every scene:** Project tab → *References for every scene*. Put your main character or setting here.
+- **For every scene:** Project panel (left) → *References for every scene*. Put your main character or setting here.
 - **For one scene:** the *References* box in the scene sidebar. The "+ project refs" checkbox controls whether
   the project-wide ones are sent too.
 - **Adding references:** drag an image from the library onto a References box, use **Add**, or drop a file from your

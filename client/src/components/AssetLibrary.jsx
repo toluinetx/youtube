@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  Camera, ChevronDown, ChevronRight, Film, ImageIcon, Library, Loader2, Music, PanelLeftClose, Pause, Pencil, Play, Plus, Search, Trash2, Upload,
+  Camera, ChevronDown, ChevronRight, Film, ImageIcon, Loader2, Music, Pause, Pencil, Play, Plus, Search, Trash2, Upload,
   Volume2,
 } from 'lucide-react';
 import { ACCEPT, ASSET_MIME, formatTime } from '../util.js';
@@ -18,7 +18,7 @@ const hasFiles = (e) => [...e.dataTransfer.types].includes('Files');
  * assets reach the reel when dragged onto the timeline (or via the explicit + / music buttons).
  */
 export default function AssetLibrary({
-  library, usage, uploading, collapsed, onToggle, onUploadFiles, onDelete, onRename, onSnapshot, onAddAsScene, onSetMusic, onDragAsset, onAssetMenu,
+  library, usage, uploading, onUploadFiles, onDelete, onRename, onSnapshot, onAddAsScene, onSetMusic, onDragAsset, onAssetMenu,
 }) {
   const [query, setQuery] = useState('');
   const [closed, setClosed] = useState({});
@@ -70,38 +70,18 @@ export default function AssetLibrary({
     />
   );
 
-  if (collapsed) {
-    return (
-      <aside className="relative flex w-11 shrink-0 flex-col items-center gap-2 border-r border-zinc-800 bg-zinc-900/40 py-2" {...dropHandlers}>
-        <button className="icon-btn" title="Show library" onClick={onToggle}>
-          <Library className="size-4" />
-        </button>
-        <span className="text-[10px] text-zinc-500 tabular-nums">{library.length}</span>
-        {uploading.length > 0 && <Loader2 className="size-4 animate-spin text-zinc-400" />}
-        {dropping && <div className="pointer-events-none absolute inset-0 border-2 border-dashed border-indigo-400 bg-indigo-500/15" />}
-        {pickFiles}
-      </aside>
-    );
-  }
-
   const q = query.trim().toLowerCase();
   const visible = [...library].reverse().filter((a) => !q || a.name.toLowerCase().includes(q));
 
   return (
-    <aside className="relative flex w-64 shrink-0 flex-col border-r border-zinc-800 bg-zinc-900/40" {...dropHandlers}>
+    <div className="relative flex min-h-0 flex-1 flex-col" {...dropHandlers}>
       <div className="flex shrink-0 items-center justify-between gap-1 border-b border-zinc-800 px-3 py-2">
-        <h2 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-100">
-          <Library className="size-4 text-zinc-400" /> Library
-          <span className="text-xs font-normal text-zinc-500">{library.length}</span>
-        </h2>
-        <div className="flex items-center">
-          <button className="btn-secondary px-2 py-1 text-xs" onClick={() => fileInput.current.click()} title="Add files to the library">
-            <Upload className="size-3.5" /> Upload
-          </button>
-          <button className="icon-btn" title="Hide library" onClick={onToggle}>
-            <PanelLeftClose className="size-4" />
-          </button>
-        </div>
+        <p className="text-xs text-zinc-500">
+          {library.length} file{library.length === 1 ? '' : 's'}
+        </p>
+        <button className="btn-secondary px-2 py-1 text-xs" onClick={() => fileInput.current.click()} title="Add files to the library">
+          <Upload className="size-3.5" /> Upload
+        </button>
       </div>
 
       {library.length > 6 && (
@@ -156,7 +136,7 @@ export default function AssetLibrary({
                         <SoundRow
                           key={a.asset_id}
                           asset={a}
-                          uses={usage[a.url] || 0}
+                          uses={usage[a.url]}
                           playing={playingId === a.asset_id}
                           onTogglePlay={() => togglePlay(a)}
                           onSetMusic={() => onSetMusic(a)}
@@ -173,7 +153,7 @@ export default function AssetLibrary({
                         <Tile
                           key={a.asset_id}
                           asset={a}
-                          uses={usage[a.url] || 0}
+                          uses={usage[a.url]}
                           onAdd={() => onAddAsScene(a)}
                           onRename={() => onRename(a)}
                           onSnapshot={() => onSnapshot(a)}
@@ -201,7 +181,7 @@ export default function AssetLibrary({
         </div>
       )}
       {pickFiles}
-    </aside>
+    </div>
   );
 }
 
@@ -217,11 +197,21 @@ function dragProps(asset, onDragAsset) {
   };
 }
 
+/** Where an asset is used: "Scene 3", "Scenes 1, 4", "Scenes 1, 2 +3", "Music", "Reference". */
 function UsageBadge({ uses }) {
-  if (!uses) return null;
+  if (!uses?.count) return null;
+  const { scenes, music, reference } = uses;
+  const sceneLabel =
+    scenes.length === 1 ? `Scene ${scenes[0]}` : scenes.length > 3 ? `Scenes ${scenes.slice(0, 2).join(', ')} +${scenes.length - 2}` : scenes.length ? `Scenes ${scenes.join(', ')}` : null;
+  const label = [sceneLabel, music && 'Music', reference && 'Reference'].filter(Boolean).join(' · ');
+  const title = [
+    scenes.length && `Used in scene${scenes.length > 1 ? 's' : ''} ${scenes.join(', ')}`,
+    music && 'the music track',
+    reference && 'a reference for every scene',
+  ].filter(Boolean).join(', and as ');
   return (
-    <span className="rounded bg-indigo-500/90 px-1 text-[9px] leading-4 font-semibold text-white" title={`Used in ${uses} place${uses > 1 ? 's' : ''}`}>
-      {uses > 1 ? `×${uses}` : 'in use'}
+    <span className="truncate rounded bg-indigo-500/90 px-1 text-[9px] leading-4 font-semibold text-white" title={scenes.length ? title : `Used as ${title}`}>
+      {label}
     </span>
   );
 }
@@ -237,7 +227,7 @@ function Tile({ asset, uses, onAdd, onRename, onSnapshot, onDelete, onDragAsset,
             <Film className="size-5 text-zinc-600" />
           </div>
         )}
-        <div className="absolute top-1 left-1 flex gap-1">
+        <div className="pointer-events-none absolute top-1 right-1 left-1 flex gap-1">
           <UsageBadge uses={uses} />
         </div>
         {asset.type === 'video' && (

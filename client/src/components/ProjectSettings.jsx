@@ -1,65 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Loader2, Music, Pause, Play, Upload, X } from 'lucide-react';
+import { Loader2, Music, Upload, X } from 'lucide-react';
 import { api } from '../api.js';
-import { ACCEPT, formatTime } from '../util.js';
+import { ACCEPT, MOTIONS, formatTime } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
+import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
 
-const IMAGE_MODELS = [
-  ['black-forest-labs/flux-schnell', 'FLUX.1 schnell (fast, cheap)'],
-  ['black-forest-labs/flux-dev', 'FLUX.1 dev'],
-  ['black-forest-labs/flux-1.1-pro', 'FLUX 1.1 pro'],
-  ['black-forest-labs/flux-1.1-pro-ultra', 'FLUX 1.1 pro ultra'],
-];
-
-// Models that accept reference images (field names are detected from each model's schema).
-const REFERENCE_MODELS = [
-  ['google/nano-banana', 'Nano Banana (Gemini 2.5 Flash Image)'],
-  ['google/nano-banana-pro', 'Nano Banana Pro (up to 14 refs)'],
-  ['bytedance/seedream-4', 'Seedream 4'],
-  ['black-forest-labs/flux-2-pro', 'FLUX.2 pro (up to 8 refs)'],
-  ['black-forest-labs/flux-kontext-pro', 'FLUX Kontext pro (1 ref)'],
-];
-
-const TTS_MODELS = [
-  ['eleven_v4', 'Eleven v4 (recommended, audio tags)'],
-  ['eleven_v4_turbo', 'Eleven v4 Turbo (faster, audio tags)'],
-  ['eleven_v3', 'Eleven v3 (audio tags)'],
-  ['eleven_multilingual_v2', 'Multilingual v2 (no audio tags)'],
-  ['eleven_turbo_v2_5', 'Turbo v2.5'],
-  ['eleven_flash_v2_5', 'Flash v2.5 (fastest, cheapest)'],
-];
-
-export default function ProjectSettings({
-  settings, onChange, status, musicBusy, onUploadMusic, onRemoveMusic, library, onRequestSnapshot, onUploadFiles,
-}) {
-  const [voices, setVoices] = useState(null);
-  const [voiceError, setVoiceError] = useState(null);
-  const [previewing, setPreviewing] = useState(false);
-  const audio = useRef(null);
-  const customModel = !IMAGE_MODELS.some(([id]) => id === settings.image_model);
-
-  useEffect(() => {
-    if (!status?.elevenlabs) return;
-    api.voices().then(setVoices).catch((e) => setVoiceError(e.message));
-  }, [status?.elevenlabs]);
-
-  const voice = voices?.find((v) => v.voice_id === settings.voice_id);
-
-  const togglePreview = () => {
-    if (!voice?.preview_url) return;
-    if (previewing) {
-      audio.current?.pause();
-      setPreviewing(false);
-      return;
-    }
-    audio.current = new Audio(voice.preview_url);
-    audio.current.onended = () => setPreviewing(false);
-    audio.current.play();
-    setPreviewing(true);
-  };
-
-  useEffect(() => () => audio.current?.pause(), []);
-
+export default function ProjectSettings({ settings, onChange, status, library, onRequestSnapshot, onUploadFiles }) {
   return (
     <div className="space-y-5 px-4 py-4">
       <Field label="Video title">
@@ -84,27 +30,8 @@ export default function ProjectSettings({
       </div>
       <p className="-mt-3 text-[11px] text-zinc-600">Changing the format only affects images generated afterwards; existing ones get center-cropped.</p>
 
-      <Group title="Images" subtitle="Replicate" ok={status?.replicate}>
-        <Field label="Model (scenes without references)">
-          <select
-            className="field"
-            value={customModel ? 'custom' : settings.image_model}
-            onChange={(e) => onChange({ image_model: e.target.value === 'custom' ? '' : e.target.value })}
-          >
-            {IMAGE_MODELS.map(([id, name]) => (
-              <option key={id} value={id}>{name}</option>
-            ))}
-            <option value="custom">Custom model…</option>
-          </select>
-          {customModel && (
-            <input
-              className="field mt-2 font-mono text-xs"
-              placeholder="owner/model or owner/model:version"
-              value={settings.image_model}
-              onChange={(e) => onChange({ image_model: e.target.value.trim() })}
-            />
-          )}
-        </Field>
+      <Group title="Images" subtitle="Replicate · Gemini" ok={status?.replicate || status?.gemini}>
+        <ImageModelControl settings={settings} onChange={onChange} />
         <Field label="Style (appended to every image prompt)">
           <textarea
             rows={2}
@@ -114,10 +41,11 @@ export default function ProjectSettings({
             onChange={(e) => onChange({ style_prompt: e.target.value })}
           />
         </Field>
-        <Field label="Camera motion">
+        <Field label="Camera motion for images (scenes can override it)">
           <select className="field" value={settings.motion} onChange={(e) => onChange({ motion: e.target.value })}>
-            <option value="kenburns">Slow zoom (Ken Burns)</option>
-            <option value="none">Static</option>
+            {MOTIONS.map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
           </select>
         </Field>
       </Group>
@@ -131,45 +59,22 @@ export default function ProjectSettings({
         onUploadFiles={onUploadFiles}
       />
 
-      <Group title="Voice & sound" subtitle="ElevenLabs" ok={status?.elevenlabs}>
-        <Field label="Voice">
-          {voices ? (
-            <div className="flex gap-2">
-              <select className="field" value={settings.voice_id} onChange={(e) => onChange({ voice_id: e.target.value })}>
-                {!voice && <option value={settings.voice_id}>{settings.voice_id}</option>}
-                {voices.map((v) => (
-                  <option key={v.voice_id} value={v.voice_id}>
-                    {v.name}{v.description ? ` (${v.description})` : ''}
-                  </option>
-                ))}
-              </select>
-              <button className="icon-btn shrink-0 border border-zinc-800" title="Preview voice" disabled={!voice?.preview_url} onClick={togglePreview}>
-                {previewing ? <Pause className="size-4" /> : <Play className="size-4" />}
-              </button>
-            </div>
-          ) : (
-            <>
-              <input
-                className="field font-mono text-xs"
-                value={settings.voice_id}
-                onChange={(e) => onChange({ voice_id: e.target.value.trim() })}
-                placeholder="ElevenLabs voice ID"
-              />
-              <p className="mt-1 text-[11px] text-zinc-600">
-                {voiceError ? `Couldn't load voices: ${voiceError}` : status?.elevenlabs ? 'Loading voices…' : 'Add ELEVENLABS_API_KEY to pick from your voices.'}
-              </p>
-            </>
-          )}
-        </Field>
-        <Field label="Speech model">
-          <select className="field" value={settings.tts_model} onChange={(e) => onChange({ tts_model: e.target.value })}>
-            {TTS_MODELS.map(([id, name]) => (
-              <option key={id} value={id}>{name}</option>
-            ))}
-            {!TTS_MODELS.some(([id]) => id === settings.tts_model) && <option value={settings.tts_model}>{settings.tts_model}</option>}
-          </select>
-        </Field>
-        <Field label={`Sound effect volume: ${Math.round(settings.sfx_volume * 100)}%`}>
+      <Group title="Video" subtitle="Gemini API" ok={status?.gemini}>
+        <VideoModelControl settings={settings} onChange={onChange} label="Model for Generate video" />
+        <p className="text-[11px] text-zinc-600">
+          Each scene gets a Generate video button. Clips take a minute or more and replace the scene's image.
+          {status && !status.gemini && ' Add GEMINI_API_KEY to .env and restart to use it.'}
+        </p>
+      </Group>
+
+      <Group title="Voice" subtitle="ElevenLabs" ok={status?.elevenlabs}>
+        <VoiceModelControl settings={settings} onChange={onChange} />
+        <VoiceControl settings={settings} onChange={onChange} />
+      </Group>
+
+      <Group title="Sound effects" subtitle="ElevenLabs" ok={status?.elevenlabs}>
+        <SfxModelControl settings={settings} onChange={onChange} label="Model" />
+        <Field label={`Volume in the mix: ${Math.round(settings.sfx_volume * 100)}%`}>
           <input
             type="range"
             min={0}
@@ -182,7 +87,7 @@ export default function ProjectSettings({
         </Field>
       </Group>
 
-      <MusicSettings settings={settings} onChange={onChange} busy={musicBusy} onUpload={onUploadMusic} onRemove={onRemoveMusic} />
+      <p className="text-[11px] text-zinc-600">Background music is in the Music tab on the right.</p>
     </div>
   );
 }
@@ -210,7 +115,8 @@ function Group({ title, subtitle, ok, children }) {
   );
 }
 
-function MusicSettings({ settings, onChange, busy, onUpload, onRemove }) {
+/** The video's background music: upload, volume, ducking. Shown in the Music tab. */
+export function MusicSettings({ settings, onChange, busy, onUpload, onRemove }) {
   const input = useRef(null);
   return (
     <section className="space-y-3 rounded-lg border border-zinc-800 p-3">
@@ -283,7 +189,6 @@ function MusicSettings({ settings, onChange, busy, onUpload, onRemove }) {
 function ReferenceSettings({ settings, onChange, status, library, onRequestSnapshot, onUploadFiles }) {
   const [capacity, setCapacity] = useState(undefined);
   const model = settings.reference_model;
-  const custom = !REFERENCE_MODELS.some(([id]) => id === model);
 
   useEffect(() => {
     setCapacity(undefined);
@@ -323,27 +228,10 @@ function ReferenceSettings({ settings, onChange, status, library, onRequestSnaps
         Each scene can add its own references too. Reference names are included in the prompt, so rename them in the library (e.g. "Maya")
         and write "Maya walks into the lab".
       </p>
-      <Field label="Model when references are used">
-        <select
-          className="field"
-          value={custom ? 'custom' : model}
-          onChange={(e) => onChange({ reference_model: e.target.value === 'custom' ? '' : e.target.value })}
-        >
-          {REFERENCE_MODELS.map(([id, name]) => (
-            <option key={id} value={id}>{name}</option>
-          ))}
-          <option value="custom">Custom model…</option>
-        </select>
-        {custom && (
-          <input
-            className="field mt-2 font-mono text-xs"
-            placeholder="owner/model or owner/model:version"
-            value={model}
-            onChange={(e) => onChange({ reference_model: e.target.value.trim() })}
-          />
-        )}
+      <div>
+        <ImageModelControl settings={settings} onChange={onChange} refs />
         {capacityText && <p className={`mt-1 text-[11px] ${capacity === 0 || capacity === 'error' ? 'text-amber-400' : 'text-zinc-500'}`}>{capacityText}</p>}
-      </Field>
+      </div>
     </section>
   );
 }

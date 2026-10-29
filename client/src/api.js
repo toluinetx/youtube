@@ -69,9 +69,14 @@ export const api = {
   regenerate: (id, kind) => request('POST', `/api/scene/${id}/${REGENERATE_ROUTE[kind]}`),
   clearSceneSlot: (id, slot) => request('DELETE', `/api/scene/${id}/media/${slot}`),
   // Library: uploads land here; nothing is put on the reel until used explicitly.
+  library: () => request('GET', '/api/library'),
   uploadToLibrary: (file) => upload('/api/library', file),
   deleteAsset: (assetId, force) => request('DELETE', `/api/library/${assetId}${force ? '?force=1' : ''}`),
-  useAsset: (sceneId, assetId, slot) => request('POST', `/api/scene/${sceneId}/use-asset`, { asset_id: assetId, slot }),
+  // `into`: { layerId } for an extra sound effect, { shotId } for an extra shot.
+  useAsset: (sceneId, assetId, slot, into = {}) =>
+    request('POST', `/api/scene/${sceneId}/use-asset`, { asset_id: assetId, slot, layer_id: into.layerId, shot_id: into.shotId }),
+  generateShot: (sceneId, shotId) => request('POST', `/api/scene/${sceneId}/shots/${shotId}/generate`),
+  generateSfxLayer: (sceneId, layerId) => request('POST', `/api/scene/${sceneId}/sfx-layers/${layerId}/generate`),
   sceneFromAsset: (assetId, index) => request('POST', '/api/scenes/from-asset', { asset_id: assetId, index }),
   renameAsset: (assetId, name) => request('PATCH', `/api/library/${assetId}`, { name }),
   snapshot: (assetId, timeSec) => request('POST', `/api/library/${assetId}/snapshot`, { time_sec: timeSec }),
@@ -85,4 +90,14 @@ export const api = {
   undo: () => request('POST', '/api/undo'),
   redo: () => request('POST', '/api/redo'),
   voices: () => request('GET', '/api/voices'),
+  elevenlabsModels: () => request('GET', '/api/elevenlabs-models'),
+  imageModels: () => request('GET', '/api/image-models'),
+  geminiModels: () => request('GET', '/api/gemini-models'),
+  generateVideo: (id) => request('POST', `/api/scene/${id}/generate-video`),
+  modelParams: (model) => request('GET', `/api/model-params?model=${encodeURIComponent(model)}`),
+  usage: () => request('GET', '/api/usage'),
+  usageAccounts: () => request('GET', '/api/usage/accounts'),
+  setPrice: (key, price) => request('PUT', '/api/usage/prices', { key, price }),
+  preferences: () => request('GET', '/api/preferences'),
+  setStarred: (list, id, starred) => request('PUT', '/api/preferences/starred', { list, id, starred }),
 };

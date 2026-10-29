@@ -1,0 +1,339 @@
+{
+  "settings": {
+    "title": "System Failure",
+    "aspect_ratio": "16:9",
+    "fps": 30,
+    "image_model": "gemini:gemini-3.1-flash-lite-image",
+    "reference_model": "gemini:gemini-3.1-flash-image",
+    "image_params": {},
+    "video_model": "gemini:gemini-omni-1.1-flash",
+    "video_params": {},
+    "reference_asset_ids": [
+      "a_16b2cc0e"
+    ],
+    "style_prompt": "anime style, cinematic lighting, detailed backgrounds, moody color grading",
+    "voice_id": "AeRdCCKzvd23BpJoofzx",
+    "tts_model": "eleven_v4",
+    "tts_params": {},
+    "sfx_model": "eleven_text_to_sound_v2",
+    "sfx_params": {},
+    "motion": "kenburns",
+    "sfx_volume": 0.35,
+    "music_url": null,
+    "music_name": null,
+    "music_duration_sec": null,
+    "music_volume": 0.15,
+    "music_ducking": true
+  },
+  "scenes": [
+    {
+      "scene_id": 1,
+      "image_prompt": "Medium shot of an anime man with dark hair sitting at a booth table inside a moving train, using chopsticks to eat steaming hotpot. Out the armored window, a ruined post-apocalyptic landscape moves past in the dark. Cozy warm interior vs cold exterior.",
+      "voiceover_text": "Somewhere past the dead cities, Eli eats in silence. Warm broth, a quiet car… and nothing but ruins outside the window.",
+      "sfx_prompt": "Soft sizzle of broth, chopsticks clinking against bowl.",
+      "video_prompt": "",
+      "duration_sec": 9.8,
+      "image_url": "/media/images/scene-1-1793259679551-k4df.jpg",
+      "voiceover_url": "/media/voiceover/scene-1-1793259715577-54es.mp3",
+      "sfx_url": "/media/sfx/scene-1-1793259729992-dw5s.mp3",
+      "voiceover_duration_sec": 9.25,
+      "voiceover_words": null,
+      "sfx_duration_sec": 10.03,
+      "sfx_layers": [],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_16b2cc0e"
+      ],
+      "use_global_references": false,
+      "use_previous_scene": true,
+      "motion": "pan_right",
+      "notes": "Script scene 3 (0:20–0:30): Peaceful Hotpot Dinner. Action: Eli eating hotpot while looking out the window at ruined scenery."
+    },
+    {
+      "scene_id": 3,
+      "image_prompt": "Eli caught off guard by the sound at the back of the train",
+      "voiceover_text": "Suddenly he heard a loud bang at the back of the train.",
+      "sfx_prompt": "sound of moving train, and a loud bang in the middle of the clip",
+      "video_prompt": "",
+      "duration_sec": 5,
+      "image_url": "/media/images/scene-3-1793260019512-ukur.jpg",
+      "voiceover_url": "/media/voiceover/scene-3-1793260059554-73ew.mp3",
+      "sfx_url": "/media/sfx/scene-3-1793260107694-bdcw.mp3",
+      "voiceover_duration_sec": 3.32,
+      "voiceover_words": null,
+      "sfx_duration_sec": 5.04,
+      "sfx_layers": [],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_e229d95b"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "notes": ""
+    },
+    {
+      "scene_id": 2,
+      "image_prompt": "Interior train car shot as overhead warm lights flicker violently, buzz, and switch to intense pulsing red emergency lights. Shadows stretch dramatically across aluminum walls, handheld camera shake.",
+      "voiceover_text": "Then the lights die. [pause] Red. [whispers] Something on this train has just gone very wrong.",
+      "sfx_prompt": "High-pitched digital chime, low electrical hum drop.",
+      "video_prompt": "",
+      "duration_sec": 10,
+      "image_url": "/media/images/scene-2-1793259749423-toli.jpg",
+      "voiceover_url": "/media/voiceover/scene-2-1793259755364-gfc3.mp3",
+      "sfx_url": "/media/sfx/scene-2-1793259759185-zum6.mp3",
+      "voiceover_duration_sec": 8.36,
+      "voiceover_words": null,
+      "sfx_duration_sec": 10.03,
+      "sfx_layers": [],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_16b2cc0e"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "notes": "ACT II: System Failure. Script scene 4 (0:30–0:40): Emergency Blackout. Action: Overhead lights flicker violently and turn red. The flicker, red switch and camera shake need a clip: use Generate video in the Video tab."
+    },
+    {
+      "scene_id": 4,
+      "image_prompt": "",
+      "voiceover_text": "",
+      "sfx_prompt": "",
+      "video_prompt": "",
+      "duration_sec": 5,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": "/media/sfx/scene-1-1793259729992-dw5s.mp3",
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": 10.03,
+      "sfx_layers": [],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {
+        "sfx": "Scene 1 sfx - Soft sizzle of broth, chopsticks clinking.mp3"
+      },
+      "reference_asset_ids": [],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "notes": ""
+    }
+  ],
+  "library": [
+    {
+      "asset_id": "a_16b2cc0e",
+      "name": "Eli in the train car.jpg",
+      "type": "image",
+      "url": "/media/library/image/asset-1793259197229-kj5p.jpg",
+      "thumb_url": "/media/library/image/asset-1793259197229-kj5p.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 659251,
+      "added_at": "2026-10-29T07:33:17.272Z"
+    },
+    {
+      "asset_id": "a_e229d95b",
+      "name": "Scene 1 image - Medium shot of an anime man.jpg",
+      "type": "image",
+      "url": "/media/images/scene-1-1793259679551-k4df.jpg",
+      "thumb_url": "/media/images/scene-1-1793259679551-k4df.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 598715,
+      "added_at": "2026-10-29T07:41:19.552Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-lite-image",
+        "prompt": "Medium shot of an anime man with dark hair sitting at a booth table inside a moving train, using chopsticks to eat steaming hotpot. Out the armored window, a ruined post-apocalyptic landscape moves past in the dark. Cozy warm interior vs cold exterior."
+      }
+    },
+    {
+      "asset_id": "a_33c6807e",
+      "name": "Scene 1 voiceover - Somewhere past the dead cities, Eli.mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-1-1793259715577-54es.mp3",
+      "thumb_url": null,
+      "duration_sec": 9.25,
+      "has_audio": true,
+      "size_bytes": 148418,
+      "added_at": "2026-10-29T07:41:55.616Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v3 · N2lVS1w4EtoT3dr4eOWO",
+        "prompt": "Somewhere past the dead cities, Eli eats in silence. Warm broth, a quiet car… and nothing but ruins outside the window."
+      }
+    },
+    {
+      "asset_id": "a_4e90bc80",
+      "name": "Scene 1 sfx - Soft sizzle of broth, chopsticks clinking.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-1-1793259729992-dw5s.mp3",
+      "thumb_url": null,
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 160957,
+      "added_at": "2026-10-29T07:42:10.027Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "Soft sizzle of broth, chopsticks clinking against bowl."
+      }
+    },
+    {
+      "asset_id": "a_e190ae7e",
+      "name": "Scene 2 image - Interior train car shot as overhead.jpg",
+      "type": "image",
+      "url": "/media/images/scene-2-1793259749423-toli.jpg",
+      "thumb_url": "/media/images/scene-2-1793259749423-toli.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 655168,
+      "added_at": "2026-10-29T07:42:29.424Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-lite-image",
+        "prompt": "Interior train car shot as overhead warm lights flicker violently, buzz, and switch to intense pulsing red emergency lights. Shadows stretch dramatically across aluminum walls, handheld camera shake."
+      }
+    },
+    {
+      "asset_id": "a_89b96521",
+      "name": "Scene 2 voiceover - Then the lights die. Red. Something.mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-2-1793259755364-gfc3.mp3",
+      "thumb_url": null,
+      "duration_sec": 8.36,
+      "has_audio": true,
+      "size_bytes": 134207,
+      "added_at": "2026-10-29T07:42:35.398Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v3 · N2lVS1w4EtoT3dr4eOWO",
+        "prompt": "Then the lights die. [pause] Red. [whispers] Something on this train has just gone very wrong."
+      }
+    },
+    {
+      "asset_id": "a_a72e4102",
+      "name": "Scene 2 sfx - High-pitched digital chime, low electrical hum.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-2-1793259759185-zum6.mp3",
+      "thumb_url": null,
+      "duration_sec": 10.03,
+      "has_audio": true,
+      "size_bytes": 160957,
+      "added_at": "2026-10-29T07:42:39.220Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "High-pitched digital chime, low electrical hum drop."
+      }
+    },
+    {
+      "asset_id": "a_efc66d63",
+      "name": "Scene 2 image - Eli caught off guard by the.jpg",
+      "type": "image",
+      "url": "/media/images/scene-3-1793259984452-sr2o.jpg",
+      "thumb_url": "/media/images/scene-3-1793259984452-sr2o.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 640372,
+      "added_at": "2026-10-29T07:46:24.453Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-lite-image",
+        "prompt": "Eli caught off guard by the sound at the back of the train"
+      }
+    },
+    {
+      "asset_id": "a_1835da37",
+      "name": "Scene 2 image - Eli caught off guard by the.jpg",
+      "type": "image",
+      "url": "/media/images/scene-3-1793260019512-ukur.jpg",
+      "thumb_url": "/media/images/scene-3-1793260019512-ukur.jpg",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 583192,
+      "added_at": "2026-10-29T07:46:59.515Z",
+      "generated": {
+        "kind": "image",
+        "model": "gemini:gemini-3.1-flash-lite-image",
+        "prompt": "Eli caught off guard by the sound at the back of the train"
+      }
+    },
+    {
+      "asset_id": "a_03f0e09f",
+      "name": "Scene 2 voiceover - Suddenly he heard a loud bang.mp3",
+      "type": "audio",
+      "url": "/media/voiceover/scene-3-1793260059554-73ew.mp3",
+      "thumb_url": null,
+      "duration_sec": 3.32,
+      "has_audio": true,
+      "size_bytes": 53541,
+      "added_at": "2026-10-29T07:47:39.594Z",
+      "generated": {
+        "kind": "voiceover",
+        "model": "eleven_v3 · N2lVS1w4EtoT3dr4eOWO",
+        "prompt": "Suddenly he heard a loud bang at the back of the train."
+      }
+    },
+    {
+      "asset_id": "a_ef0d854c",
+      "name": "Scene 2 sfx - loud bang at the back of.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-3-1793260060271-2iwu.mp3",
+      "thumb_url": null,
+      "duration_sec": 5.04,
+      "has_audio": true,
+      "size_bytes": 81127,
+      "added_at": "2026-10-29T07:47:40.307Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "loud bang at the back of the moving train."
+      }
+    },
+    {
+      "asset_id": "a_f919b215",
+      "name": "Scene 2 sfx - sound of moving train, and a.mp3",
+      "type": "audio",
+      "url": "/media/sfx/scene-3-1793260107694-bdcw.mp3",
+      "thumb_url": null,
+      "duration_sec": 5.04,
+      "has_audio": true,
+      "size_bytes": 81127,
+      "added_at": "2026-10-29T07:48:27.728Z",
+      "generated": {
+        "kind": "sfx",
+        "model": "eleven_text_to_sound_v2",
+        "prompt": "sound of moving train, and a loud bang in the middle of the clip"
+      }
+    }
+  ]
+}

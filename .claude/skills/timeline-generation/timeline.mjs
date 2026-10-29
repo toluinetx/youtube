@@ -4,6 +4,7 @@
 //   node timeline.mjs projects                 list projects (JSON)
 //   node timeline.mjs voices                   list ElevenLabs voices (JSON; needs ELEVENLABS_API_KEY)
 //   node timeline.mjs import <payload.json>    create/open the project, import the scenes, print a summary
+//   node timeline.mjs estimate <payload.json>  estimated cost of generating the payload's scenes (works offline)
 //
 // payload.json:
 //   {
@@ -48,14 +49,7 @@ function fail(message) {
 const fmt = (sec) => `${Math.floor(sec / 60)}:${(sec % 60).toFixed(1).padStart(4, '0')}`;
 
 async function importPayload(file) {
-  if (!file) fail('Usage: node timeline.mjs import <payload.json>');
-  let payload;
-  try {
-    payload = JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch (err) {
-    fail(`Could not read ${file}: ${err.message}`);
-  }
-  const { project = {}, mode, settings, scenes } = payload;
+  const { project = {}, mode, settings, scenes } = await loadPayload(file, 'import');
 
   let id = project.id;
   if (project.new) {
@@ -78,8 +72,18 @@ async function importPayload(file) {
   if (settings && Object.keys(settings).length) console.log(`Project settings updated: ${Object.keys(settings).join(', ')}`);
   console.log('');
   for (const [i, s] of added.entries()) {
-    const flags = [s.image_prompt && 'image', s.voiceover_text && 'voice', s.sfx_prompt && 'sfx'].filter(Boolean).join(' + ') || 'empty';
+    const layers = s.sfx_layers || [];
+    const sounds = (s.sfx_prompt ? 1 : 0) + layers.length;
+    const flags = [s.image_prompt && 'image', s.voiceover_text && 'voice', sounds && (sounds > 1 ? `${sounds} sfx` : 'sfx')].filter(Boolean).join(' + ') || 'empty';
     console.log(`  Scene ${offset + i + 1}  ${fmt(t)}–${fmt(t + s.duration_sec)}  (${s.duration_sec}s)  ${flags}${s.notes ? `  · note: ${s.notes}` : ''}`);
+    // Shots and event sounds with their timing (synced ones are re-timed exactly when the voiceover is generated).
+    for (const sh of s.shots || []) {
+      console.log(`      shot: ${sh.image_prompt.slice(0, 50)}  · ${sh.cue ? `at "${sh.cue}" (~${sh.start_sec}s)` : `from ${sh.start_sec}s`}`);
+    }
+    for (const l of layers) {
+      const when = l.cue ? `at "${l.cue}" (~${l.start_sec}s)` : `from ${l.start_sec}s`;
+      console.log(`      sfx: ${l.prompt.slice(0, 50)}  · ${when} · ${l.length_sec ? `${l.length_sec}s` : 'to scene end'}`);
+    }
     t += s.duration_sec;
   }
   const total = sb.scenes.reduce((sum, s) => sum + s.duration_sec, 0);
@@ -87,8 +91,131 @@ async function importPayload(file) {
   console.log('Ctrl/Cmd+Z in the editor undoes the whole import.');
 }
 
+// ---- Cost estimate ---------------------------------------------------------------------------------
+// Prices come from the editor's own table (server/usage.js plus the user's prices in the Usage panel),
+// so an estimate and the Usage log agree. What each generation uses is worked out here:
+//   ElevenLabs voice: credits per character, by model (ElevenLabs model docs, Oct 2026).
+//   ElevenLabs sound: credits per second asked for (measured in this editor's usage log, Oct 2026).
+//   Gemini image: output tokens per image by size (ai.google.dev pricing); input ≈ prompt + references.
+//   Gemini Omni video: OMNI_TOKENS_PER_SECOND (720p), for the seconds asked for.
+const HALF_CREDIT_TTS = /turbo|flash/;
+const SFX_CREDITS_PER_SEC = 10;
+const IMAGE_INPUT_TOKENS = 1120; // per reference image sent to a Gemini model
+const imageOutputTokens = (model, params = {}) =>
+  /2\.5-flash-image/.test(model) ? 1290 : params.imageSize === '4K' ? 2000 : 1120;
+
+async function loadPayload(file, usage) {
+  if (!file) fail(`Usage: node timeline.mjs ${usage} <payload.json>`);
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch (err) {
+    fail(`Could not read ${file}: ${err.message}`);
+  }
+}
+
+async function estimatePayload(file) {
+  const { project = {}, mode = 'append', settings: changes = {}, scenes = [] } = await loadPayload(file, 'estimate');
+  // Imported after .env is loaded, so PROJECTS_DIR is the editor's.
+  const { PROJECTS_DIR } = await import('../../../server/paths.js');
+  const { DEFAULT_SETTINGS } = await import('../../../server/storyboard.js');
+  const { prices } = await import('../../../server/usage.js');
+  const { OMNI_TOKENS_PER_SECOND } = await import('../../../server/gemini.js');
+
+  // The target project's settings (read only), with the payload's changes on top.
+  let existing = { settings: {}, scenes: [] };
+  if (project.id) {
+    try {
+      existing = JSON.parse(fs.readFileSync(path.join(PROJECTS_DIR, project.id, 'storyboard.json'), 'utf8'));
+    } catch (err) {
+      fail(`Could not read project "${project.id}": ${err.message}`);
+    }
+  }
+  const s = { ...DEFAULT_SETTINGS, ...existing.settings, ...changes };
+  const table = await prices();
+  const elevenlabs = table.elevenlabs?.per_1k_credits;
+
+  const unpriced = new Set();
+  const perM = (tokens, price) => (tokens * (price || 0)) / 1e6;
+  function imageCost(model, prompt, refs) {
+    const p = table[model];
+    if (!p) return unpriced.add(model), null;
+    if (model.startsWith('gemini:')) {
+      if (p.image_output == null) return unpriced.add(model), null;
+      const input = Math.ceil(prompt.length / 4) + refs * IMAGE_INPUT_TOKENS;
+      return perM(input, p.input) + perM(imageOutputTokens(model, s.image_params?.[model]), p.image_output);
+    }
+    return p.per_image ?? (unpriced.add(model), null);
+  }
+  const credits = (n) => (elevenlabs == null ? null : (n / 1000) * elevenlabs);
+
+  // After the first picture of the video, the editor sends the picture before (and any project
+  // references) as references, so the reference model makes every image but a first one without them.
+  const projectRefs = (s.reference_asset_ids || []).length;
+  let pictureBefore = mode === 'append' && existing.scenes.length > 0;
+  const ttsRate = HALF_CREDIT_TTS.test(s.tts_model) ? 0.5 : 1;
+
+  const rows = scenes.map((scene, i) => {
+    const row = { n: i + 1, image: 0, voice: 0, sfx: 0, credits: 0, pictures: 0, voices: 0, sounds: 0, unpriced: new Set(), video: null };
+    const add = (key, usd) => (usd == null ? row.unpriced.add(key) : (row[key] += usd));
+    for (const prompt of [scene.image_prompt, ...(scene.shots || []).map((sh) => sh.image_prompt)].filter((p) => p?.trim())) {
+      const refs = projectRefs + (pictureBefore ? 1 : 0);
+      const style = s.style_prompt ? `. ${s.style_prompt}` : '';
+      add('image', imageCost(refs ? s.reference_model : s.image_model, prompt + style, refs));
+      row.pictures++;
+      pictureBefore = true;
+    }
+    if (scene.voiceover_text?.trim()) {
+      const c = scene.voiceover_text.trim().length * ttsRate;
+      row.credits += c;
+      row.voices++;
+      add('voice', credits(c));
+    }
+    const lengths = [
+      scene.sfx_prompt?.trim() && scene.duration_sec,
+      ...(scene.sfx_layers || []).filter((l) => l.prompt?.trim()).map((l) => l.length_sec || scene.duration_sec - (l.start_sec || 0)),
+    ].filter(Boolean);
+    for (const sec of lengths) {
+      const c = Math.min(30, Math.max(0.5, sec)) * SFX_CREDITS_PER_SEC;
+      row.credits += c;
+      row.sounds++;
+      add('sfx', credits(c));
+    }
+    // Video is never part of "Generate missing": priced separately, for scenes that ask for it.
+    if (scene.video_prompt?.trim() || /generate (a )?video/i.test(scene.notes || '')) {
+      const p = table[s.video_model];
+      const sec = s.video_params?.[s.video_model]?.duration_hint ?? Math.min(10, Math.max(3, scene.duration_sec));
+      row.video = p?.video_output != null ? { sec, usd: perM(sec * OMNI_TOKENS_PER_SECOND, p.video_output) } : (unpriced.add(s.video_model), { sec, usd: null });
+    }
+    row.total = row.image + row.voice + row.sfx;
+    return row;
+  });
+
+  const usd = (n) => (n < 0.995 ? `$${n.toFixed(3)}` : `$${n.toFixed(2)}`);
+  const sum = (key) => rows.reduce((t, r) => t + r[key], 0);
+  console.log(`Estimated cost of generating ${scenes.length} scene(s) once (USD):`);
+  console.log(`  image: ${projectRefs ? '' : `${s.image_model} (first picture), then `}${s.reference_model} · voice: ${s.tts_model} · sound: ${s.sfx_model}\n`);
+  for (const r of rows) {
+    const cost = (key) => (!r.unpriced.has(key) ? usd(r[key]) : r[key] ? `${usd(r[key])} + unpriced` : 'no price');
+    const parts = [
+      r.pictures && `${r.pictures} picture${r.pictures > 1 ? 's' : ''} ${cost('image')}`,
+      r.voices && `voice ${cost('voice')}`,
+      r.sounds && `${r.sounds} sound${r.sounds > 1 ? 's' : ''} ${cost('sfx')}`,
+      r.video && `optional video ~${r.video.sec}s ${r.video.usd == null ? 'no price' : usd(r.video.usd)}`,
+    ].filter(Boolean);
+    console.log(`  Scene ${r.n}  ${usd(r.total)}${r.unpriced.size ? '+' : ''}  ${parts.join(' · ') || 'nothing to generate'}`);
+  }
+  const total = sum('total');
+  const videos = rows.filter((r) => r.video?.usd != null);
+  console.log(`\n  Images ${usd(sum('image'))} · Voice ${usd(sum('voice'))} · Sound ${usd(sum('sfx'))}`);
+  console.log(`  TOTAL ${usd(total)}${unpriced.size ? '+' : ''} for "Generate missing" (${Math.round(sum('credits')).toLocaleString('en-US')} ElevenLabs credits)`);
+  if (videos.length) console.log(`  + ${usd(videos.reduce((t, r) => t + r.video.usd, 0))} if the ${videos.length} suggested video clip(s) are generated`);
+  if (unpriced.size) console.log(`\n  No price for: ${[...unpriced].join(', ')}. Those items aren't included (marked +). Set a price in the editor's Usage panel.`);
+  console.log(`\n  Regenerating an item costs the same again. ElevenLabs is at its pay-as-you-go rate (${elevenlabs == null ? 'no price set' : `$${elevenlabs}/1k credits`}); on a subscription it uses the plan's credits instead.`);
+}
+
 const [command, arg] = process.argv.slice(2);
 if (command === 'projects') console.log(JSON.stringify(await call('GET', '/api/projects'), null, 2));
 else if (command === 'voices') console.log(JSON.stringify(await call('GET', '/api/voices'), null, 2));
 else if (command === 'import') await importPayload(arg);
-else fail('Commands: projects | voices | import <payload.json>');
+else if (command === 'estimate') await estimatePayload(arg);
+else fail('Commands: projects | voices | import <payload.json> | estimate <payload.json>');

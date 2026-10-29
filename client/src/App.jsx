@@ -11,7 +11,10 @@ import TopBar from './components/TopBar.jsx';
 import Preview from './components/Preview.jsx';
 import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
-import ProjectSettings from './components/ProjectSettings.jsx';
+import ProjectSettings, { MusicSettings } from './components/ProjectSettings.jsx';
+import LeftPanel from './components/LeftPanel.jsx';
+import PanelResizer from './components/PanelResizer.jsx';
+import { ModelCatalogProvider } from './components/ModelControls.jsx';
 import ScriptImport from './components/ScriptImport.jsx';
 import ContextMenu from './components/ContextMenu.jsx';
 
@@ -22,6 +25,31 @@ const SLOT_PROMPT = { image: 'image_prompt', voiceover: 'voiceover_text', sfx: '
 const SLOT_ICON = { image: ImageIcon, voiceover: AudioLines, sfx: Sparkles };
 const PROMPT_FIELDS = ['image_prompt', 'voiceover_text', 'sfx_prompt'];
 // Fields the server owns after a generate/upload/remove; everything else may have unsaved local edits.
+const LEFT_PANEL = { initial: 320, min: 220, max: 640 };
+const RIGHT_PANEL = { initial: 380, min: 300, max: 720 };
+
+/** A width in pixels kept in localStorage under `key`. */
+function useStoredWidth(key, initial) {
+  const [width, setWidth] = useState(() => Number(localStorage.getItem(key)) || initial);
+  useEffect(() => localStorage.setItem(key, String(width)), [key, width]);
+  return [width, setWidth];
+}
+
+/**
+ * A scene's sound effect layers or shots after a media action: the server's, unless this tab still has
+ * edits to them waiting to be saved; then those, with the media the server now has (and, for items
+ * synced to a word, the server's timing, which follows the new voiceover).
+ */
+function withServerMedia(local = [], server = [], localPending, idKey, mediaKeys) {
+  if (!localPending) return server;
+  const byId = new Map(server.map((x) => [x[idKey], x]));
+  return local.map((x) => {
+    const s = byId.get(x[idKey]);
+    if (!s) return x;
+    return { ...x, ...Object.fromEntries(mediaKeys.map((k) => [k, s[k]])), ...(x.cue && s.cue === x.cue && { start_sec: s.start_sec }) };
+  });
+}
+
 const MEDIA_FIELDS = [
   'image_url', 'voiceover_url', 'sfx_url', 'voiceover_duration_sec', 'sfx_duration_sec',
   'video_url', 'video_thumb_url', 'video_duration_sec', 'video_has_audio', 'video_start_sec', 'source_names',
@@ -37,7 +65,12 @@ export default function App() {
   const [selection, setSelection] = useState([]);
   const anchorId = useRef(null); // where a shift-click range starts
   const [copiedPrompts, setCopiedPrompts] = useState(null); // { image_prompt, voiceover_text, sfx_prompt, from }
-  const [sidebarTab, setSidebarTab] = useState('scene');
+  // Right: the selected scene's Visual / Voice / SFX, or the Music. Left: the library or the project settings.
+  const [sidebarTab, setSidebarTab] = useState('visual');
+  const [leftTab, setLeftTab] = useState(() => localStorage.getItem('leftTab') || 'library');
+  // Side panel widths in pixels (dragged by their inner edges), remembered between visits.
+  const [leftWidth, setLeftWidth] = useStoredWidth('leftWidth', LEFT_PANEL.initial);
+  const [rightWidth, setRightWidth] = useStoredWidth('rightWidth', RIGHT_PANEL.initial);
   const [time, setTime] = useState(0);
   const [seekToken, setSeekToken] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -66,18 +99,34 @@ export default function App() {
   }, [scenes, selection, selectedId]);
   const library = useMemo(() => sb?.library ?? [], [sb]);
 
-  // How many times each media URL is used, on the reel or as a reference (for library badges).
+  // Where each media URL is used, on the reel or as a reference (for library badges):
+  // { count, scenes: [scene numbers], music, reference (project-wide) }.
   const usage = useMemo(() => {
-    const counts = {};
-    const add = (url) => url && (counts[url] = (counts[url] || 0) + 1);
+    const uses = {};
+    const use = (url) => {
+      if (!url) return null;
+      const u = (uses[url] ??= { count: 0, scenes: [], music: false, reference: false });
+      u.count++;
+      return u;
+    };
     const urlOf = new Map(library.map((a) => [a.asset_id, a.url]));
-    for (const s of scenes) {
-      [s.image_url, s.video_url, s.voiceover_url, s.sfx_url].forEach(add);
-      (s.reference_asset_ids || []).forEach((id) => add(urlOf.get(id)));
+    scenes.forEach((s, i) => {
+      const urls = [
+        s.image_url, s.video_url, s.voiceover_url, s.sfx_url, ...(s.sfx_layers || []).map((l) => l.url), ...(s.shots || []).map((x) => x.image_url),
+        ...(s.reference_asset_ids || []).map((id) => urlOf.get(id)),
+      ];
+      for (const url of urls) {
+        const u = use(url);
+        if (u && u.scenes.at(-1) !== i + 1) u.scenes.push(i + 1);
+      }
+    });
+    const music = use(sb?.settings.music_url);
+    if (music) music.music = true;
+    for (const id of sb?.settings.reference_asset_ids || []) {
+      const u = use(urlOf.get(id));
+      if (u) u.reference = true;
     }
-    add(sb?.settings.music_url);
-    (sb?.settings.reference_asset_ids || []).forEach((id) => add(urlOf.get(id)));
-    return counts;
+    return uses;
   }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids]);
 
   /** Show a toast; `action` ({ label, onClick }) adds a button to it, e.g. Undo. */
@@ -225,7 +274,7 @@ export default function App() {
     (id, ids, { seekTo = true } = {}) => {
       setSelectedId(id);
       setSelection(ids);
-      setSidebarTab('scene');
+      setSidebarTab((t) => (t === 'music' ? 'visual' : t));
       setPreviewMode('live');
       const i = scenes.findIndex((s) => s.scene_id === id);
       if (seekTo && i >= 0) seek(starts[i] + 0.001);
@@ -334,9 +383,19 @@ export default function App() {
         setSb((prev) => ({
           ...prev,
           scenes: prev.scenes.map((s) =>
-            s.scene_id === id ? { ...s, ...media, duration_sec: pending.current[id]?.duration_sec ?? scene.duration_sec } : s,
+            s.scene_id === id
+              ? {
+                ...s,
+                ...media,
+                sfx_layers: withServerMedia(s.sfx_layers, scene.sfx_layers, Boolean(pending.current[id]?.sfx_layers), 'layer_id', ['url', 'duration_sec', 'source_name']),
+                shots: withServerMedia(s.shots, scene.shots, Boolean(pending.current[id]?.shots), 'shot_id', ['image_url', 'source_name']),
+                duration_sec: pending.current[id]?.duration_sec ?? scene.duration_sec,
+              }
+              : s,
           ),
         }));
+        // Generated files are added to the library too.
+        api.library().then((lib) => setSb((prev) => ({ ...prev, library: lib }))).catch(() => {});
       } catch (err) {
         setErrors((e) => ({ ...e, [key]: err.message }));
       } finally {
@@ -352,6 +411,25 @@ export default function App() {
     regenerate(scene.scene_id, kind);
   };
   const clearSlot = (id, slot) => mediaAction(id, slot, () => api.clearSceneSlot(id, slot));
+  // Extra sound effect layers are busy under "sfx:<layer id>".
+  const generateSfxLayer = (sceneId, layerId) => mediaAction(sceneId, `sfx:${layerId}`, () => api.generateSfxLayer(sceneId, layerId));
+  const uploadSfxLayer = (sceneId, layerId, file) =>
+    mediaAction(sceneId, `sfx:${layerId}`, async () => {
+      const asset = await uploadOne(file);
+      return api.useAsset(sceneId, asset.asset_id, 'sfx', { layerId });
+    });
+  // Extra shots are busy under "shot:<shot id>".
+  const generateShot = (sceneId, shotId) => mediaAction(sceneId, `shot:${shotId}`, () => api.generateShot(sceneId, shotId));
+  const uploadShot = (sceneId, shotId, file) =>
+    mediaAction(sceneId, `shot:${shotId}`, async () => {
+      const asset = await uploadOne(file);
+      return api.useAsset(sceneId, asset.asset_id, 'image', { shotId });
+    });
+  // A generated clip goes in the scene's visual slot, so it shows as busy there.
+  const generateVideo = (scene) => {
+    if (scene.video_url && !window.confirm('Generating a video replaces the current clip for this scene. Continue?')) return;
+    mediaAction(scene.scene_id, 'image', () => api.generateVideo(scene.scene_id));
+  };
 
   const musicAction = async (action) => {
     setBusy((b) => ({ ...b, music: true }));
@@ -366,6 +444,18 @@ export default function App() {
     }
   };
   const removeMusic = () => musicAction(api.removeMusic);
+
+  const showLeftTab = (tab) => {
+    setLeftTab(tab);
+    localStorage.setItem('leftTab', tab);
+  };
+  const openProjectSettings = () => {
+    showLeftTab('project');
+    if (libraryCollapsed) {
+      localStorage.setItem('libraryCollapsed', '0');
+      setLibraryCollapsed(false);
+    }
+  };
 
   const flushAll = useCallback(() => Promise.all(Object.keys(pending.current).map(flush)), [flush]);
 
@@ -543,7 +633,7 @@ export default function App() {
   };
 
   const deleteAsset = (asset) => {
-    const uses = usage[asset.url] || 0;
+    const uses = usage[asset.url]?.count || 0;
     const message = uses
       ? `"${asset.name}" is used in ${uses} place${uses > 1 ? 's' : ''} (on the reel or as a reference). Delete it and remove it from those places?`
       : `Delete "${asset.name}" from the library?`;
@@ -709,7 +799,7 @@ export default function App() {
   };
 
   const musicMenuItems = () => [
-    { label: 'Music settings', icon: Settings2, onClick: () => setSidebarTab('project') },
+    { label: 'Music settings', icon: Settings2, onClick: () => setSidebarTab('music') },
     { label: 'Remove music', icon: X, danger: true, disabled: !sb.settings.music_url || Boolean(busy.music), onClick: removeMusic },
   ];
 
@@ -852,24 +942,47 @@ export default function App() {
         onRedo={() => actions.current.redo()}
       />
 
+      <ModelCatalogProvider status={status} onError={notify}>
       <div className="flex min-h-0 flex-1">
-        <AssetLibrary
-          library={library}
-          usage={usage}
-          uploading={uploading}
+        <LeftPanel
+          tab={leftTab}
+          onTab={showLeftTab}
           collapsed={libraryCollapsed}
           onToggle={() => {
             localStorage.setItem('libraryCollapsed', libraryCollapsed ? '0' : '1');
             setLibraryCollapsed(!libraryCollapsed);
           }}
+          width={leftWidth}
+          onResize={setLeftWidth}
+          resize={LEFT_PANEL}
+          libraryCount={library.length}
+          uploading={uploading}
           onUploadFiles={uploadFiles}
-          onDelete={deleteAsset}
-          onRename={renameAsset}
-          onSnapshot={(asset) => requestSnapshot(asset)}
-          onAddAsScene={(asset) => addAssetAsScene(asset)}
-          onSetMusic={setMusicAsset}
-          onDragAsset={setDragAsset}
-          onAssetMenu={(e, asset) => openMenu(e, assetMenuItems(asset))}
+          library={
+            <AssetLibrary
+              library={library}
+              usage={usage}
+              uploading={uploading}
+              onUploadFiles={uploadFiles}
+              onDelete={deleteAsset}
+              onRename={renameAsset}
+              onSnapshot={(asset) => requestSnapshot(asset)}
+              onAddAsScene={(asset) => addAssetAsScene(asset)}
+              onSetMusic={setMusicAsset}
+              onDragAsset={setDragAsset}
+              onAssetMenu={(e, asset) => openMenu(e, assetMenuItems(asset))}
+            />
+          }
+          project={
+            <ProjectSettings
+              settings={sb.settings}
+              onChange={patchSettings}
+              status={status}
+              library={library}
+              onRequestSnapshot={(asset) => requestSnapshot(asset, 'reference for every scene')}
+              onUploadFiles={uploadFiles}
+            />
+          }
         />
         <main className="flex min-w-0 flex-1 flex-col">
           <Preview
@@ -902,7 +1015,7 @@ export default function App() {
             onDropAsset={dropAsset}
             dragAsset={dragAsset}
             settings={sb.settings}
-            onSelectMusic={() => setSidebarTab('project')}
+            onSelectMusic={() => setSidebarTab('music')}
             onClipMenu={onClipMenu}
             onReorder={reorderScenes}
             onInsert={insertSceneAt}
@@ -911,23 +1024,28 @@ export default function App() {
           />
         </main>
 
-        <aside className="flex w-95 shrink-0 flex-col border-l border-zinc-800 bg-zinc-900/40">
-          <div className="flex shrink-0 gap-1 border-b border-zinc-800 p-1.5">
+        <aside className="relative flex shrink-0 flex-col border-l border-zinc-800 bg-zinc-900/40" style={{ width: rightWidth }}>
+          <PanelResizer edge="left" width={rightWidth} onResize={setRightWidth} {...RIGHT_PANEL} />
+          <div className="flex shrink-0 gap-1 border-b border-zinc-800 p-1.5" role="tablist">
             {[
-              ['scene', selected ? `Scene ${selectedIndex + 1}` : 'Scene'],
-              ['project', 'Project'],
-            ].map(([key, label]) => (
+              ['visual', 'Visual', ImageIcon, 'text-image'],
+              ['voice', 'Voice', AudioLines, 'text-voice'],
+              ['sfx', 'SFX', Sparkles, 'text-sfx'],
+              ['music', 'Music', Music, 'text-fuchsia-400'],
+            ].map(([key, label, Icon, color]) => (
               <button
                 key={key}
+                role="tab"
+                aria-selected={sidebarTab === key}
                 onClick={() => setSidebarTab(key)}
-                className={`btn flex-1 ${sidebarTab === key ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:text-zinc-200'}`}
+                className={`btn flex-1 px-2 ${sidebarTab === key ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:text-zinc-200'}`}
               >
-                {label}
+                <Icon className={`size-3.5 ${sidebarTab === key ? color : ''}`} /> {label}
               </button>
             ))}
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto">
-            {sidebarTab === 'scene' && selectedIds.length > 1 && (
+            {sidebarTab !== 'music' && selectedIds.length > 1 && (
               <div className="flex items-center gap-1 border-b border-zinc-800 bg-indigo-500/10 px-4 py-2 text-xs text-indigo-200">
                 <span className="mr-auto font-medium">{selectedIds.length} scenes selected</span>
                 <button className="btn-ghost px-2 py-1 text-xs" onClick={() => duplicateScenes(selectedIds)} title={`Duplicate (${MOD_KEY}D)`}>
@@ -941,22 +1059,23 @@ export default function App() {
                 </button>
               </div>
             )}
-            {sidebarTab === 'project' ? (
-              <ProjectSettings
-                settings={sb.settings}
-                onChange={patchSettings}
-                status={status}
-                musicBusy={Boolean(busy.music)}
-                onUploadMusic={uploadAndSetMusic}
-                onRemoveMusic={removeMusic}
-                library={library}
-                onRequestSnapshot={(asset) => requestSnapshot(asset, 'reference for every scene')}
-                onUploadFiles={uploadFiles}
-              />
+            {sidebarTab === 'music' ? (
+              <div className="px-4 py-4">
+                <MusicSettings
+                  settings={sb.settings}
+                  onChange={patchSettings}
+                  busy={Boolean(busy.music)}
+                  onUpload={uploadAndSetMusic}
+                  onRemove={removeMusic}
+                />
+                <p className="mt-3 text-[11px] text-zinc-600">One track for the whole video. You can also drop a sound from the library onto the Music row of the timeline.</p>
+              </div>
             ) : selected ? (
               <Inspector
                 key={selected.scene_id}
                 scene={selected}
+                tab={sidebarTab}
+                previousScene={scenes[selectedIndex - 1]}
                 index={selectedIndex}
                 count={scenes.length}
                 start={starts[selectedIndex]}
@@ -967,9 +1086,15 @@ export default function App() {
                 onRequestSnapshot={(asset) => requestSnapshot(asset, `reference for scene ${selectedIndex + 1}`)}
                 onUploadFiles={uploadFiles}
                 onSaveToLibrary={() => saveSceneToLibrary(selected.scene_id)}
-                onOpenProject={() => setSidebarTab('project')}
+                onOpenProject={openProjectSettings}
                 onChange={(patch) => patchScene(selected.scene_id, patch)}
                 onRegenerate={(kind) => regenerate(selected.scene_id, kind)}
+                onGenerateVideo={() => generateVideo(selected)}
+                onChangeSettings={patchSettings}
+                onGenerateSfxLayer={(layerId) => generateSfxLayer(selected.scene_id, layerId)}
+                onUploadSfxLayer={(layerId, file) => uploadSfxLayer(selected.scene_id, layerId, file)}
+                onGenerateShot={(shotId) => generateShot(selected.scene_id, shotId)}
+                onUploadShot={(shotId, file) => uploadShot(selected.scene_id, shotId, file)}
                 onUpload={(slot, file) => uploadAndUse(selected.scene_id, slot, file)}
                 onClear={(slot) => clearSlot(selected.scene_id, slot)}
                 onDelete={() => deleteScene(selected.scene_id)}
@@ -989,6 +1114,7 @@ export default function App() {
           </div>
         </aside>
       </div>
+      </ModelCatalogProvider>
 
       {snapshotTarget && (
         <SnapshotModal asset={snapshotTarget.asset} purpose={snapshotTarget.purpose} onCancel={cancelSnapshot} onCapture={captureSnapshot} />

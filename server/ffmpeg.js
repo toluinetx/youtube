@@ -9,6 +9,24 @@ export const FFMPEG = process.env.FFMPEG_PATH || ffmpegStatic;
 export const FFPROBE = process.env.FFPROBE_PATH || ffprobeStatic.path;
 
 const KENBURNS_ZOOM = 0.12;
+// Pans need some zoom so there's room to move; keep both in sync with client/src/util.js.
+const PAN_ZOOM = 0.15;
+
+/** zoompan expressions for a motion (see MOTIONS in storyboard.js), or null for a still image. */
+function zoompan(motion, frames) {
+  const t = `on/${frames}`;
+  const center = { x: 'iw/2-(iw/zoom/2)', y: 'ih/2-(ih/zoom/2)' };
+  const pan = { z: String(1 + PAN_ZOOM), ...center };
+  switch (motion) {
+    case 'zoom_in': return { z: `1+${KENBURNS_ZOOM}*${t}`, ...center };
+    case 'zoom_out': return { z: `${1 + KENBURNS_ZOOM}-${KENBURNS_ZOOM}*${t}`, ...center };
+    case 'pan_right': return { ...pan, x: `(iw-iw/zoom)*${t}` };
+    case 'pan_left': return { ...pan, x: `(iw-iw/zoom)*(1-${t})` };
+    case 'pan_down': return { ...pan, y: `(ih-ih/zoom)*${t}` };
+    case 'pan_up': return { ...pan, y: `(ih-ih/zoom)*(1-${t})` };
+    default: return null;
+  }
+}
 
 function run(bin, args, { onStderr } = {}) {
   return new Promise((resolve, reject) => {
@@ -61,14 +79,14 @@ export async function extractFrame(videoPath, outPath, atSec = 0) {
 }
 
 /**
- * An image as a JPEG data URI no larger than 1024px on its longest side, for sending to Replicate
- * as a reference (data URIs are recommended only under 1MB).
+ * An image (or, with `atSec`, that frame of a video) as a JPEG data URI no larger than 1024px on its
+ * longest side, for sending to Replicate as a reference (data URIs are recommended only under 1MB).
  */
-export async function referenceDataUri(imagePath) {
+export async function referenceDataUri(imagePath, atSec) {
   const tmp = path.join(os.tmpdir(), `ref-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`);
   try {
     await run(FFMPEG, [
-      '-y', '-hide_banner', '-v', 'error', '-i', imagePath, '-frames:v', '1',
+      '-y', '-hide_banner', '-v', 'error', ...(atSec != null ? ['-ss', String(atSec)] : []), '-i', imagePath, '-frames:v', '1',
       '-vf', "scale='min(1024,iw)':'min(1024,ih)':force_original_aspect_ratio=decrease,format=yuvj420p",
       '-q:v', '3', tmp,
     ]);
@@ -88,41 +106,55 @@ const AFORMAT = 'aformat=sample_rates=44100:channel_layouts=stereo';
 /**
  * Render one scene to an mp4, padded/trimmed to exactly `duration` seconds. The visual is a video clip
  * (starting at `videoStart`, last frame held if it runs short), a still image (optionally with a slow
- * Ken Burns zoom) or black. The clip's own audio, voiceover and SFX are mixed together.
- * Every clip uses identical codec settings so they concat losslessly.
+ * zoom or pan, see `motion`) or black. `shots` are more images that take over at their `start`
+ * (seconds), each with its own `motion`; each lasts until the next. The clip's own audio (only while
+ * it's on screen), voiceover and SFX are mixed together. Every clip uses identical codec settings so
+ * they concat losslessly.
  */
 export async function renderSceneClip({
   videoPath, videoStart = 0, videoAudio = false, videoVolume = 1, imagePath, voPath, sfxPath,
-  duration, width, height, fps, motion, zoomIn, sfxVolume, outPath, onProgress,
+  duration, width, height, fps, motion, shots = [], sfxVolume, sfxLayers = [], outPath, onProgress,
 }) {
   const args = ['-y', '-hide_banner'];
   const frames = Math.max(1, Math.round(duration * fps));
   const cover = `scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}`;
 
-  let video;
-  if (videoPath) {
-    args.push('-ss', String(videoStart), '-i', videoPath);
-    video = `[0:v]${cover},fps=${fps},setsar=1,format=yuv420p,tpad=stop_mode=clone:stop_duration=${duration}[v]`;
-  } else if (imagePath) {
-    args.push('-loop', '1', '-framerate', String(fps), '-t', String(duration), '-i', imagePath);
-    if (motion === 'kenburns') {
-      // Upscale first so zoompan's integer cropping doesn't jitter.
-      const z = zoomIn ? `1+${KENBURNS_ZOOM}*on/${frames}` : `${1 + KENBURNS_ZOOM}-${KENBURNS_ZOOM}*on/${frames}`;
-      video =
-        `[0:v]scale=${width * 2}:${height * 2}:force_original_aspect_ratio=increase,crop=${width * 2}:${height * 2},` +
-        `zoompan=z='${z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=${width}x${height}:fps=${fps},` +
-        `setsar=1,format=yuv420p[v]`;
-    } else {
-      video = `[0:v]${cover},fps=${fps},setsar=1,format=yuv420p[v]`;
+  // The pictures in order, cut on whole frames so the parts add up to exactly `frames`.
+  const later = shots.filter((s) => s.start > 0 && s.start < duration).sort((a, b) => a.start - b.start);
+  const pictures = [{ videoPath, imagePath, motion, start: 0 }, ...later.map((s) => ({ imagePath: s.imagePath, motion: s.motion, start: s.start }))];
+  const bounds = [...pictures.map((p) => Math.round(p.start * fps)), frames];
+  const segments = pictures
+    .map((p, k) => ({ ...p, frames: bounds[k + 1] - bounds[k] }))
+    .filter((p) => p.frames > 0);
+
+  const filters = segments.map((seg, k) => {
+    const d = seg.frames / fps;
+    const end = `trim=end_frame=${seg.frames},setpts=PTS-STARTPTS[v${k}]`;
+    if (seg.videoPath) {
+      args.push('-ss', String(videoStart), '-i', seg.videoPath);
+      return `[${k}:v]${cover},fps=${fps},setsar=1,format=yuv420p,tpad=stop_mode=clone:stop_duration=${d},${end}`;
     }
-  } else {
-    args.push('-f', 'lavfi', '-i', `color=c=black:s=${width}x${height}:r=${fps}:d=${duration}`);
-    video = '[0:v]setsar=1,format=yuv420p[v]';
-  }
+    if (seg.imagePath) {
+      args.push('-loop', '1', '-framerate', String(fps), '-t', String(d), '-i', seg.imagePath);
+      const move = zoompan(seg.motion, seg.frames);
+      // Upscale first so zoompan's integer cropping doesn't jitter.
+      return move
+        ? `[${k}:v]scale=${width * 2}:${height * 2}:force_original_aspect_ratio=increase,crop=${width * 2}:${height * 2},` +
+            `zoompan=z='${move.z}':x='${move.x}':y='${move.y}':d=1:s=${width}x${height}:fps=${fps},setsar=1,format=yuv420p,${end}`
+        : `[${k}:v]${cover},fps=${fps},setsar=1,format=yuv420p,${end}`;
+    }
+    args.push('-f', 'lavfi', '-i', `color=c=black:s=${width}x${height}:r=${fps}:d=${d}`);
+    return `[${k}:v]setsar=1,format=yuv420p,${end}`;
+  });
+  const video =
+    segments.length > 1
+      ? `${filters.join(';')};${segments.map((_, k) => `[v${k}]`).join('')}concat=n=${segments.length}:v=1:a=0[v]`
+      : filters[0].replace(/\[v0\]$/, '[v]');
 
   const audio = [];
-  let next = 1;
-  if (videoPath && videoAudio && videoVolume > 0) audio.push(`[0:a]${AFORMAT},volume=${videoVolume}`);
+  let next = segments.length;
+  // A video's own sound plays only while it's on screen.
+  if (videoPath && videoAudio && videoVolume > 0) audio.push(`[0:a]${AFORMAT},volume=${videoVolume},atrim=0:${segments[0].frames / fps}`);
   if (voPath) {
     args.push('-i', voPath);
     audio.push(`[${next++}:a]${AFORMAT}`);
@@ -131,6 +163,14 @@ export async function renderSceneClip({
     args.push('-i', sfxPath);
     const fadeStart = Math.max(0, duration - 0.4);
     audio.push(`[${next++}:a]${AFORMAT},volume=${sfxVolume},afade=t=out:st=${fadeStart}:d=0.4`);
+  }
+  // Extra sound effect layers, each delayed to its start and faded out with the scene.
+  for (const layer of sfxLayers) {
+    if (layer.start >= duration) continue;
+    args.push('-i', layer.path);
+    const ms = Math.round(layer.start * 1000);
+    const fadeStart = Math.max(0, duration - 0.4);
+    audio.push(`[${next++}:a]${AFORMAT},volume=${sfxVolume * layer.volume}${ms ? `,adelay=${ms}:all=1` : ''},afade=t=out:st=${fadeStart}:d=0.4`);
   }
   if (!audio.length) {
     args.push('-f', 'lavfi', '-t', String(duration), '-i', 'anullsrc=r=44100:cl=stereo');

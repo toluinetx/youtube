@@ -1,12 +1,13 @@
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 import { mediaPathToUrl, mediaUrlToPath } from './paths.js';
-import { findScene, newScene, nextSceneId, readStoryboard, updateStoryboard } from './storyboard.js';
+import { findScene, newScene, nextSceneId, readStoryboard, syncCues, updateStoryboard } from './storyboard.js';
 import { extractFrame, extractThumbnail, probe } from './ffmpeg.js';
-import { CLEAR_IMAGE, CLEAR_VIDEO, badRequest, commitScene, fitToVoiceover, mediaFilePath, setSourceName } from './generate.js';
+import {
+  CLEAR_IMAGE, CLEAR_VIDEO, assetRecord, badRequest, commitScene, findShot, findSfxLayer, fitToVoiceover, mediaFilePath, setSourceName,
+} from './generate.js';
 
 export const EXTENSIONS = {
   image: ['png', 'jpg', 'jpeg', 'webp', 'bmp'],
@@ -64,18 +65,7 @@ async function registerAsset({ file, name, type, info, size, extra }) {
     await extractThumbnail(file, thumb, Math.min(0.5, (info.duration || 0) / 2)).catch(() => {});
     if (fs.existsSync(thumb)) thumbUrl = mediaPathToUrl(thumb);
   }
-  const asset = {
-    asset_id: `a_${crypto.randomBytes(4).toString('hex')}`,
-    name,
-    type,
-    url: mediaPathToUrl(file),
-    thumb_url: thumbUrl,
-    duration_sec: type === 'image' ? null : info.duration,
-    has_audio: Boolean(info.hasAudio),
-    size_bytes: size ?? (await fsp.stat(file)).size,
-    added_at: new Date().toISOString(),
-    ...extra,
-  };
+  const asset = await assetRecord({ file, name, type, info, thumbUrl, size, extra });
   await updateStoryboard((sb) => {
     sb.library.push(asset);
   }, { label: `Add "${name}" to the library` });
@@ -143,6 +133,8 @@ export function renameAsset(assetId, name) {
         const url = slot === 'image' ? s.image_url || s.video_url : s[`${slot}_url`];
         if (url === asset.url) s.source_names[slot] = clean;
       }
+      for (const l of s.sfx_layers || []) if (l.url === asset.url) l.source_name = clean;
+      for (const shot of s.shots || []) if (shot.image_url === asset.url) shot.source_name = clean;
     }
     if (sb.settings.music_url === asset.url) sb.settings.music_name = clean;
     return asset;
@@ -162,6 +154,8 @@ function usagesOf(sb, asset) {
     if (s.image_url === asset.url || s.video_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'image' });
     if (s.voiceover_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'voiceover' });
     if (s.sfx_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'sfx' });
+    for (const l of s.sfx_layers || []) if (l.url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'sfx_layer', layer_id: l.layer_id });
+    for (const shot of s.shots || []) if (shot.image_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'shot', shot_id: shot.shot_id });
     if (s.reference_asset_ids?.includes(asset.asset_id)) uses.push({ scene_id: s.scene_id, slot: 'reference' });
   }
   if (sb.settings.music_url === asset.url) uses.push({ slot: 'music' });
@@ -171,7 +165,7 @@ function usagesOf(sb, asset) {
 
 const CLEAR_SLOT = {
   image: { ...CLEAR_IMAGE, ...CLEAR_VIDEO },
-  voiceover: { voiceover_url: null, voiceover_duration_sec: null },
+  voiceover: { voiceover_url: null, voiceover_duration_sec: null, voiceover_words: null },
   sfx: { sfx_url: null, sfx_duration_sec: null },
 };
 const CLEAR_MUSIC = { music_url: null, music_name: null, music_duration_sec: null };
@@ -191,6 +185,13 @@ export function deleteAsset(assetId, force) {
       if (use.slot === 'music') Object.assign(sb.settings, CLEAR_MUSIC);
       else if (use.slot === 'project_reference') {
         sb.settings.reference_asset_ids = sb.settings.reference_asset_ids.filter((id) => id !== a.asset_id);
+      } else if (use.slot === 'sfx_layer') {
+        // The layer keeps its prompt, so it can be generated again.
+        const layer = findSfxLayer(findScene(sb, use.scene_id), use.layer_id);
+        Object.assign(layer, { url: null, duration_sec: null, source_name: null });
+      } else if (use.slot === 'shot') {
+        // The shot keeps its prompt and timing, so it can be generated again.
+        Object.assign(findShot(findScene(sb, use.scene_id), use.shot_id), { image_url: null, source_name: null });
       } else if (use.slot === 'reference') {
         const scene = findScene(sb, use.scene_id);
         scene.reference_asset_ids = scene.reference_asset_ids.filter((id) => id !== a.asset_id);
@@ -230,21 +231,43 @@ function visualPatch(asset) {
   };
 }
 
-/** Put a library asset into one slot of a scene (image | voiceover | sfx). Resolves with the scene. */
-export async function useAssetInScene(sceneId, assetId, slot) {
+/**
+ * Put a library asset into one slot of a scene (image | voiceover | sfx). With `layerId`, a sound goes
+ * into that extra sound effect layer instead of the main one; with `shotId`, an image becomes that
+ * extra shot's picture. Resolves with the scene.
+ */
+export async function useAssetInScene(sceneId, assetId, slot, { layerId, shotId } = {}) {
   let asset;
   await updateStoryboard((sb) => {
     asset = findAsset(sb, assetId);
     checkSlot(asset, slot);
-    findScene(sb, sceneId);
+    const scene = findScene(sb, sceneId);
+    if (layerId) findSfxLayer(scene, layerId);
+    if (shotId) {
+      findShot(scene, shotId);
+      if (asset.type !== 'image') throw badRequest(`"${asset.name}" is a ${asset.type}; a shot needs an image`);
+    }
   });
   return commitScene(sceneId, (s) => {
+    if (layerId) {
+      Object.assign(findSfxLayer(s, layerId), { url: asset.url, duration_sec: asset.duration_sec, source_name: asset.name });
+      return;
+    }
+    if (shotId) {
+      Object.assign(findShot(s, shotId), { image_url: asset.url, source_name: asset.name });
+      return;
+    }
     if (slot === 'image') {
       Object.assign(s, visualPatch(asset));
       if (asset.type === 'video' && asset.duration_sec) s.duration_sec = roundDuration(asset.duration_sec);
     } else {
       s[`${slot}_url`] = asset.url;
       s[`${slot}_duration_sec`] = asset.duration_sec;
+      // An imported recording has no word timings: synced sounds go back to estimated times.
+      if (slot === 'voiceover') {
+        s.voiceover_words = null;
+        syncCues(s);
+      }
     }
     fitToVoiceover(s); // never cut narration off; a short clip holds its last frame instead
     setSourceName(s, slot, asset.name);
@@ -290,5 +313,6 @@ export function clearSceneSlot(sceneId, slot) {
   return commitScene(sceneId, (s) => {
     Object.assign(s, CLEAR_SLOT[slot]);
     setSourceName(s, slot, null);
+    if (slot === 'voiceover') syncCues(s);
   }, `Remove ${{ image: 'image', voiceover: 'voiceover', sfx: 'sound effect' }[slot]}`);
 }

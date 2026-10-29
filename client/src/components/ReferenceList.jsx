@@ -1,16 +1,17 @@
 import { useRef, useState } from 'react';
-import { Film, Plus, X } from 'lucide-react';
+import { Film, Library, Search, X } from 'lucide-react';
 import { ASSET_MIME } from '../util.js';
 
 const hasType = (e, type) => [...e.dataTransfer.types].includes(type);
 
 /**
  * Reference images for image generation: thumbnails in the order they're sent, a drop zone for
- * library items or files, and an "Add" picker. Videos become a snapshot (the user picks the frame).
+ * library items or files, and a searchable library picker. Videos become a snapshot (the user picks the frame).
  */
 export default function ReferenceList({ ids, library, onChange, onRequestSnapshot, onUploadFiles, emptyHint }) {
   const [over, setOver] = useState(false);
   const [picking, setPicking] = useState(false);
+  const [query, setQuery] = useState('');
   const [message, setMessage] = useState(null);
   // Snapshots and uploads finish later; always add to the latest list, not the one from when they started.
   const latest = useRef(ids);
@@ -57,7 +58,12 @@ export default function ReferenceList({ ids, library, onChange, onRequestSnapsho
     },
   };
 
-  const candidates = [...library].reverse().filter((a) => (a.type === 'image' || a.type === 'video') && !ids.includes(a.asset_id));
+  const q = query.trim().toLowerCase();
+  // Newest first; images (incl. generated ones) before videos, which need a frame picked.
+  const candidates = [...library]
+    .reverse()
+    .filter((a) => (a.type === 'image' || a.type === 'video') && !ids.includes(a.asset_id) && (!q || a.name.toLowerCase().includes(q)))
+    .sort((a, b) => (a.type === 'image' ? 0 : 1) - (b.type === 'image' ? 0 : 1));
 
   return (
     <div {...dropHandlers}>
@@ -86,14 +92,29 @@ export default function ReferenceList({ ids, library, onChange, onRequestSnapsho
           }`}
           onClick={() => setPicking(!picking)}
           aria-expanded={picking}
+          title="Choose reference images from the library"
         >
-          <Plus className="size-4" /> Add
+          <Library className="size-4" /> Library
         </button>
         {refs.length === 0 && !picking && <p className="flex-1 self-center text-[11px] leading-snug text-zinc-600">{emptyHint}</p>}
       </div>
 
       {picking && (
         <div className="mt-2 rounded-md border border-zinc-800 bg-zinc-950/60 p-2">
+          <div className="mb-2 flex items-center gap-2">
+            <div className="flex flex-1 items-center gap-1.5 rounded border border-zinc-800 bg-zinc-900 px-2">
+              <Search className="size-3 shrink-0 text-zinc-500" />
+              <input
+                autoFocus
+                className="w-full bg-transparent py-1 text-xs text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
+                placeholder="Search the library…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Escape' && setPicking(false)}
+              />
+            </div>
+            <button className="text-[11px] text-zinc-400 hover:text-zinc-100" onClick={() => setPicking(false)}>Done</button>
+          </div>
           {candidates.length ? (
             <div className="grid max-h-48 grid-cols-4 gap-1.5 overflow-y-auto">
               {candidates.map((a) => (
@@ -101,8 +122,9 @@ export default function ReferenceList({ ids, library, onChange, onRequestSnapsho
                   key={a.asset_id}
                   className="group relative text-left"
                   title={a.type === 'video' ? `${a.name}: pick a frame` : a.name}
+                  // Images are added and the picker stays open to add more; videos open the frame picker.
                   onClick={() => {
-                    setPicking(false);
+                    if (a.type === 'video') setPicking(false);
                     addAsset(a);
                   }}
                 >
@@ -113,7 +135,9 @@ export default function ReferenceList({ ids, library, onChange, onRequestSnapsho
               ))}
             </div>
           ) : (
-            <p className="text-[11px] text-zinc-500">Upload images or videos to the library first.</p>
+            <p className="text-[11px] text-zinc-500">
+              {q ? 'Nothing in the library matches.' : 'The library has no other images or videos yet. Generated and uploaded images land there.'}
+            </p>
           )}
         </div>
       )}

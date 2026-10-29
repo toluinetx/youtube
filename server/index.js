@@ -4,20 +4,24 @@ import path from 'node:path';
 import express from 'express';
 import { CLIENT_DIST, EXPORTS_DIR, MEDIA_DIR, PROJECT_ID } from './paths.js';
 import {
-  DEFAULT_SETTINGS, READONLY_SETTINGS, RESOLUTIONS, SCENE_TEXT_FIELDS, findScene, newScene, nextSceneId, readStoryboard, redo, undo,
+  DEFAULT_SETTINGS, MAX_SHOTS, MOTIONS, READONLY_SETTINGS, RESOLUTIONS, SCENE_TEXT_FIELDS, SFX_LAYER_EDITABLE, SHOT_EDITABLE, findScene,
+  newShot, newSfxLayer, syncCues, newScene, nextSceneId, readStoryboard, redo, undo,
   updateStoryboard,
 } from './storyboard.js';
 import { historyState } from './history.js';
 import { requestContext, subscribe } from './events.js';
 import { createProject, initProjects, listProjects, openProject, trackBusy } from './projects.js';
-import { GENERATORS } from './generate.js';
+import { GENERATORS, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, imageReferenceCapacity } from './generate.js';
 import {
   addToLibrary, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
   snapshotAsset, useAssetInScene,
 } from './uploads.js';
-import { referenceCapacity } from './replicate.js';
+import { listImageModels, modelParams } from './replicate.js';
+import { geminiParams, isGeminiModel, listGeminiModels } from './gemini.js';
 import { getJob, startExport, startGenerateMissing } from './jobs.js';
-import { listVoices } from './elevenlabs.js';
+import { listModels, listVoices } from './elevenlabs.js';
+import { readPreferences, setStarred } from './preferences.js';
+import { accountBalances, setPrice, usageReport } from './usage.js';
 import { FFMPEG } from './ffmpeg.js';
 
 const PORT = Number(process.env.PORT) || 3001;
@@ -71,13 +75,100 @@ function sanitizeScenePatch(body) {
   }
   if (body.reference_asset_ids !== undefined) patch.reference_asset_ids = sanitizeAssetIds(body.reference_asset_ids, 'reference_asset_ids');
   if (body.use_global_references !== undefined) patch.use_global_references = Boolean(body.use_global_references);
+  if (body.use_previous_scene !== undefined) patch.use_previous_scene = Boolean(body.use_previous_scene);
   if (body.notes !== undefined) patch.notes = String(body.notes).slice(0, 2000);
+  if (typeof body.video_prompt === 'string') patch.video_prompt = body.video_prompt;
+  if (body.sfx_layers !== undefined) patch.sfx_layers = sanitizeSfxLayers(body.sfx_layers);
+  if (body.shots !== undefined) patch.shots = sanitizeShots(body.shots);
+  if (body.motion !== undefined) {
+    if (body.motion !== null && !MOTIONS.includes(body.motion)) throw badRequest(`motion must be null or one of ${MOTIONS.join(', ')}`);
+    patch.motion = body.motion;
+  }
   if (body.video_volume !== undefined) {
     const v = Number(body.video_volume);
     if (!Number.isFinite(v) || v < 0 || v > 2) throw badRequest('video_volume must be between 0 and 2');
     patch.video_volume = v;
   }
   return patch;
+}
+
+const LAYER_ID = /^l_[\w-]{1,24}$/;
+
+/**
+ * Sound effect layers as sent by the client: only the editable fields are taken (see
+ * applyScenePatch), and new layers without an id get one.
+ */
+function sanitizeSfxLayers(value) {
+  if (!Array.isArray(value)) throw badRequest('sfx_layers must be a list');
+  if (value.length > 12) throw badRequest('At most 12 extra sound effects per scene');
+  return value.map((l, i) => {
+    if (!l || typeof l !== 'object') throw badRequest(`sfx_layers[${i}] must be an object`);
+    const layer = newSfxLayer(LAYER_ID.test(l.layer_id) ? { layer_id: l.layer_id } : {});
+    if (l.prompt !== undefined) layer.prompt = String(l.prompt).slice(0, 2000);
+    if (l.volume !== undefined) {
+      const v = Number(l.volume);
+      if (!Number.isFinite(v) || v < 0 || v > 2) throw badRequest(`sfx_layers[${i}].volume must be between 0 and 2`);
+      layer.volume = v;
+    }
+    if (l.start_sec !== undefined) {
+      const t = Number(l.start_sec);
+      if (!Number.isFinite(t) || t < 0 || t > 600) throw badRequest(`sfx_layers[${i}].start_sec must be between 0 and 600`);
+      layer.start_sec = Math.round(t * 100) / 100;
+    }
+    if (l.length_sec !== undefined && l.length_sec !== null && l.length_sec !== '') {
+      const d = Number(l.length_sec);
+      if (!Number.isFinite(d) || d < 0.5 || d > 30) throw badRequest(`sfx_layers[${i}].length_sec must be between 0.5 and 30`);
+      layer.length_sec = Math.round(d * 10) / 10;
+    }
+    if (typeof l.cue === 'string' && l.cue.trim()) layer.cue = l.cue.trim().slice(0, 200);
+    return layer;
+  });
+}
+
+const SHOT_ID = /^s_[\w-]{1,24}$/;
+
+/** Shots as sent by the client: only the editable fields are taken (see applyScenePatch). */
+function sanitizeShots(value) {
+  if (!Array.isArray(value)) throw badRequest('shots must be a list');
+  if (value.length > MAX_SHOTS - 1) throw badRequest(`At most ${MAX_SHOTS} pictures per scene (the scene's own and ${MAX_SHOTS - 1} shots)`);
+  return value.map((s, i) => {
+    if (!s || typeof s !== 'object') throw badRequest(`shots[${i}] must be an object`);
+    const shot = newShot(SHOT_ID.test(s.shot_id) ? { shot_id: s.shot_id } : {});
+    if (s.image_prompt !== undefined) shot.image_prompt = String(s.image_prompt).slice(0, 4000);
+    if (s.motion !== undefined && s.motion !== null) {
+      if (!MOTIONS.includes(s.motion)) throw badRequest(`shots[${i}].motion must be null or one of ${MOTIONS.join(', ')}`);
+      shot.motion = s.motion;
+    }
+    if (s.start_sec !== undefined) {
+      const t = Number(s.start_sec);
+      if (!Number.isFinite(t) || t < 0 || t > 600) throw badRequest(`shots[${i}].start_sec must be between 0 and 600`);
+      shot.start_sec = Math.round(t * 100) / 100;
+    }
+    if (typeof s.cue === 'string' && s.cue.trim()) shot.cue = s.cue.trim().slice(0, 200);
+    return shot;
+  });
+}
+
+/** Merge items by id: the client's list and editable fields, the server's media for items it has. */
+function mergeById(current = [], incoming, idKey, editable) {
+  const byId = new Map(current.map((x) => [x[idKey], x]));
+  return incoming.map((x) => {
+    const existing = byId.get(x[idKey]);
+    return existing ? { ...existing, ...Object.fromEntries(editable.map((k) => [k, x[k]])) } : x;
+  });
+}
+
+/**
+ * Apply a sanitized patch to a scene. Sound effect layers and shots are merged by id: the client
+ * decides which exist, their order and their editable fields, but their audio or picture is kept from
+ * the server so an edit sent while it was generating can't wipe the result.
+ */
+function applyScenePatch(scene, { sfx_layers, shots, ...patch }) {
+  Object.assign(scene, patch);
+  if (sfx_layers) scene.sfx_layers = mergeById(scene.sfx_layers, sfx_layers, 'layer_id', SFX_LAYER_EDITABLE);
+  if (shots) scene.shots = mergeById(scene.shots, shots, 'shot_id', SHOT_EDITABLE);
+  // Sounds synced to words follow the narration (exact once the voiceover is generated).
+  return syncCues(scene);
 }
 
 const EDIT_LABELS = {
@@ -88,8 +179,13 @@ const EDIT_LABELS = {
   video_start_sec: 'Trim video',
   video_volume: 'Change clip volume',
   notes: 'Edit notes',
+  video_prompt: 'Edit video prompt',
+  motion: 'Change motion',
+  sfx_layers: 'Edit sound effects',
+  shots: 'Edit shots',
   reference_asset_ids: 'Change references',
   use_global_references: 'Change references',
+  use_previous_scene: 'Change references',
 };
 
 /** Undo label + merge key for a scene edit: successive edits of the same fields of one scene merge. */
@@ -148,8 +244,17 @@ app.get('/api/events', subscribe);
 
 app.get('/api/storyboard', async (_req, res) => res.json(await readStoryboard()));
 
+const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const OBJECT_SETTINGS = ['image_params', 'video_params', 'tts_params', 'sfx_params'];
+
 app.put('/api/settings', async (req, res) => {
   if (req.body.reference_asset_ids !== undefined) req.body.reference_asset_ids = sanitizeAssetIds(req.body.reference_asset_ids, 'reference_asset_ids');
+  for (const key of OBJECT_SETTINGS) {
+    if (req.body[key] !== undefined && !isPlainObject(req.body[key])) throw badRequest(`${key} must be an object`);
+  }
+  for (const key of ['image_params', 'video_params']) {
+    if (req.body[key] && !Object.values(req.body[key]).every(isPlainObject)) throw badRequest(`${key} must map model ids to objects`);
+  }
   const sb = await updateStoryboard((sb) => {
     for (const key of Object.keys(DEFAULT_SETTINGS)) {
       if (req.body[key] !== undefined && !READONLY_SETTINGS.includes(key)) sb.settings[key] = req.body[key];
@@ -160,12 +265,12 @@ app.put('/api/settings', async (req, res) => {
 
 app.put('/api/scene/:id', async (req, res) => {
   const patch = sanitizeScenePatch(req.body);
-  res.json(await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch)));
+  res.json(await updateStoryboard((sb) => applyScenePatch(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch)));
 });
 
 app.post('/api/scenes', async (req, res) => {
   const scene = await updateStoryboard((sb) => {
-    const s = newScene(nextSceneId(sb), sanitizeScenePatch(req.body));
+    const s = syncCues(newScene(nextSceneId(sb), sanitizeScenePatch(req.body)));
     let at = sb.scenes.length;
     if (Number.isInteger(req.body.index)) at = Math.max(0, Math.min(req.body.index, sb.scenes.length));
     else {
@@ -184,6 +289,10 @@ function copyOf(sb, src) {
     ...Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, src[f]])),
     duration_sec: src.duration_sec,
     notes: src.notes,
+    video_prompt: src.video_prompt,
+    motion: src.motion,
+    sfx_layers: (src.sfx_layers || []).map((l) => newSfxLayer({ prompt: l.prompt, volume: l.volume, start_sec: l.start_sec, length_sec: l.length_sec, cue: l.cue })),
+    shots: (src.shots || []).map((s) => newShot({ image_prompt: s.image_prompt, motion: s.motion, start_sec: s.start_sec, cue: s.cue })),
   });
 }
 
@@ -271,9 +380,9 @@ app.post('/api/scenes/import-script', async (req, res) => {
   res.json(sb);
 });
 
-const IMPORT_SCENE_FIELDS = [...SCENE_TEXT_FIELDS, 'duration_sec', 'notes'];
+const IMPORT_SCENE_FIELDS = [...SCENE_TEXT_FIELDS, 'video_prompt', 'motion', 'sfx_layers', 'shots', 'duration_sec', 'notes'];
 const IMPORT_SETTINGS = Object.keys(DEFAULT_SETTINGS).filter((k) => !READONLY_SETTINGS.includes(k) && k !== 'reference_asset_ids');
-const SETTING_CHOICES = { aspect_ratio: Object.keys(RESOLUTIONS), motion: ['kenburns', 'none'] };
+const SETTING_CHOICES = { aspect_ratio: Object.keys(RESOLUTIONS), motion: MOTIONS };
 
 /** Check an imported settings object; throws a 400 naming the problem. */
 function sanitizeImportSettings(settings = {}) {
@@ -290,7 +399,10 @@ function sanitizeImportSettings(settings = {}) {
 
 /**
  * Exact-timing import (used by the timeline-generation skill):
- * { mode: 'append' | 'replace', scenes: [{ duration_sec, image_prompt, voiceover_text, sfx_prompt, notes }], settings? }.
+ * { mode: 'append' | 'replace', scenes: [{ duration_sec, image_prompt, voiceover_text, sfx_prompt, sfx_layers, video_prompt, motion, notes }], settings? }.
+ * sfx_layers: extra sound effects playing at the same time, [{ prompt, volume?, start_sec?, length_sec?, cue? }];
+ * shots: more pictures after the scene's own, [{ image_prompt, start_sec?, cue?, motion? }].
+ * A cue (words from voiceover_text) sets start_sec to when they're spoken.
  * Scenes are added with no media, ready to generate. One undo step.
  */
 app.post('/api/scenes/import', async (req, res) => {
@@ -304,7 +416,7 @@ app.post('/api/scenes/import', async (req, res) => {
     const unknown = Object.keys(scene).filter((k) => !IMPORT_SCENE_FIELDS.includes(k));
     if (unknown.length) throw badRequest(`${where}: unknown field(s) ${unknown.join(', ')}. Allowed: ${IMPORT_SCENE_FIELDS.join(', ')}`);
     if (scene.duration_sec === undefined) throw badRequest(`${where}: duration_sec is required`);
-    for (const f of [...SCENE_TEXT_FIELDS, 'notes']) {
+    for (const f of [...SCENE_TEXT_FIELDS, 'video_prompt', 'notes']) {
       if (scene[f] !== undefined && typeof scene[f] !== 'string') throw badRequest(`${where}: ${f} must be text`);
     }
     try {
@@ -317,7 +429,7 @@ app.post('/api/scenes/import', async (req, res) => {
   const sb = await updateStoryboard((sb) => {
     if (mode === 'replace') sb.scenes = [];
     Object.assign(sb.settings, settings);
-    for (const patch of patches) sb.scenes.push(newScene(nextSceneId(sb), patch));
+    for (const patch of patches) sb.scenes.push(syncCues(newScene(nextSceneId(sb), patch)));
   }, { label: `Import ${patches.length} scene${patches.length === 1 ? '' : 's'}` });
   res.json(sb);
 });
@@ -335,10 +447,19 @@ for (const [route, kind] of Object.entries(routes)) {
   app.post(`/api/scene/:id/${route}`, async (req, res) => {
     // Optionally save edited prompt text in the same request.
     const patch = sanitizeScenePatch(req.body || {});
-    if (Object.keys(patch).length) await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch));
+    if (Object.keys(patch).length) await updateStoryboard((sb) => applyScenePatch(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch));
     res.json(await GENERATORS[kind].fn(req.params.id));
   });
 }
+
+// Generate the picture of one of a scene's extra shots.
+app.post('/api/scene/:id/shots/:shotId/generate', async (req, res) => res.json(await generateSceneShotImage(req.params.id, req.params.shotId)));
+
+// Generate one of a scene's extra sound effect layers.
+app.post('/api/scene/:id/sfx-layers/:layerId/generate', async (req, res) => res.json(await generateSceneSfxLayer(req.params.id, req.params.layerId)));
+
+// Video from the scene's image prompt (and its image as the first frame, if it has one).
+app.post('/api/scene/:id/generate-video', async (req, res) => res.json(await generateSceneVideo(req.params.id)));
 
 // ---- Library ----------------------------------------------------------------------------------
 // Uploads go into the library only. Files are sent as the raw request body with the original name
@@ -360,7 +481,19 @@ app.post('/api/scene/:id/save-to-library', async (req, res) => res.status(201).j
 
 // How many reference images a Replicate model accepts (0 = none, null = no stated limit).
 app.get('/api/model-info', async (req, res) => {
-  res.json({ model: req.query.model, reference_capacity: await referenceCapacity(String(req.query.model || '')) });
+  res.json({ model: req.query.model, reference_capacity: await imageReferenceCapacity(String(req.query.model || '')) });
+});
+
+// Models to choose from (Replicate collections, Gemini API), and the settings a model offers.
+app.get('/api/image-models', async (_req, res) => res.json(await listImageModels()));
+
+app.get('/api/gemini-models', async (_req, res) => res.json(await listGeminiModels()));
+
+app.get('/api/model-params', async (req, res) => {
+  const model = String(req.query.model || '');
+  if (isGeminiModel(model)) return res.json({ model, params: geminiParams(model) });
+  if (!model.includes('/')) throw badRequest('model must look like owner/name or gemini:model');
+  res.json({ model, params: await modelParams(model) });
 });
 
 app.delete('/api/library/:assetId', async (req, res) => {
@@ -368,7 +501,10 @@ app.delete('/api/library/:assetId', async (req, res) => {
 });
 
 app.post('/api/scene/:id/use-asset', async (req, res) => {
-  res.json(await useAssetInScene(req.params.id, String(req.body.asset_id), String(req.body.slot)));
+  res.json(await useAssetInScene(req.params.id, String(req.body.asset_id), String(req.body.slot), {
+    layerId: req.body.layer_id && String(req.body.layer_id),
+    shotId: req.body.shot_id && String(req.body.shot_id),
+  }));
 });
 
 app.post('/api/scenes/from-asset', async (req, res) => {
@@ -392,10 +528,30 @@ app.get('/api/job', (_req, res) => res.json(getJob()));
 
 app.get('/api/voices', async (_req, res) => res.json(await listVoices()));
 
+app.get('/api/elevenlabs-models', async (_req, res) => res.json(await listModels()));
+
+// Starred voices and models (shared by every project).
+app.get('/api/preferences', async (_req, res) => res.json(await readPreferences()));
+
+// Every paid API call (all projects) with its cost, and the prices used to work it out.
+app.get('/api/usage', async (_req, res) => res.json(await usageReport()));
+
+app.get('/api/usage/accounts', async (_req, res) => res.json(await accountBalances()));
+
+app.put('/api/usage/prices', async (req, res) => {
+  await setPrice(req.body.key, req.body.price);
+  res.json(await usageReport());
+});
+
+app.put('/api/preferences/starred', async (req, res) => {
+  res.json(await setStarred(req.body.list, req.body.id, Boolean(req.body.starred)));
+});
+
 app.get('/api/status', (_req, res) => {
   res.json({
     replicate: Boolean(process.env.REPLICATE_API_TOKEN),
     elevenlabs: Boolean(process.env.ELEVENLABS_API_KEY),
+    gemini: Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY),
     ffmpeg: Boolean(FFMPEG && fs.existsSync(FFMPEG)),
   });
 });

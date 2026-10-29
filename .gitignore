@@ -9,5 +9,8 @@ projects/*/exports/
 projects/*/*.tmp
 projects/*/.trash.json
 projects/.active
+projects/.preferences.json
+projects/.usage.jsonl
+projects/.prices.json
 # Pre-projects layout (moved into projects/ on first start)
 project/

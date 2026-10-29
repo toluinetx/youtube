@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, Clapperboard, Download, FileText, Loader2, Redo2, Sparkles, TriangleAlert, Undo2, X } from 'lucide-react';
+import { UsageButton } from './Usage.jsx';
 
 export default function TopBar({
   title, status, job, missing, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
@@ -25,6 +26,7 @@ export default function TopBar({
           <div className="hidden items-center gap-3 text-[11px] text-zinc-500 md:flex">
             <KeyStatus ok={status.replicate} label="Replicate" />
             <KeyStatus ok={status.elevenlabs} label="ElevenLabs" />
+            <KeyStatus ok={status.gemini} label="Gemini" />
             <KeyStatus ok={status.ffmpeg} label="FFmpeg" />
           </div>
         )}
@@ -70,6 +72,7 @@ export default function TopBar({
             {running && job.kind === 'export' ? <Loader2 className="size-4 animate-spin" /> : <Clapperboard className="size-4" />}
             Export video
           </button>
+          <UsageButton />
         </div>
       </div>
 

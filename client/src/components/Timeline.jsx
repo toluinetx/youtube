@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { AudioLines, Film, ImageIcon, Loader2, Music, NotebookPen, Plus, Sparkles, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
-import { ASSET_MIME, assetFits, formatTime } from '../util.js';
+import { ASSET_MIME, assetFits, formatTime, sceneTimeline } from '../util.js';
 
 const MIN_PPS = 10;
 const MAX_PPS = 200;
@@ -434,13 +434,27 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
 
   if (track === 'image') {
     const thumb = scene.video_thumb_url || scene.image_url;
+    // Each shot's picture over the stretch of the scene it's on screen.
+    const parts = sceneTimeline(scene);
     return (
       <div className={`${base} bg-zinc-800`} style={style} onPointerDown={select} onContextMenu={menu} title={names.image || scene.image_prompt} {...drop}>
-        {thumb ? (
-          <div className="absolute inset-0 bg-left" style={{ backgroundImage: `url("${thumb}")`, backgroundSize: 'auto 100%', backgroundRepeat: 'repeat-x' }} />
-        ) : (
-          <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(255_255_255/0.03)_6px_12px)]" />
-        )}
+        {parts.map(({ shot, start, end }) => {
+          const picture = shot ? shot.image_url : thumb;
+          return (
+            <div
+              key={shot?.shot_id ?? 'main'}
+              className={`absolute inset-y-0 bg-left ${shot ? 'border-l-2 border-black/70' : ''}`}
+              style={{
+                left: start * pps,
+                width: (end - start) * pps,
+                ...(picture && { backgroundImage: `url("${picture}")`, backgroundSize: 'auto 100%', backgroundRepeat: 'repeat-x' }),
+              }}
+              title={shot ? `Shot from ${start.toFixed(1)}s: ${shot.image_prompt}` : undefined}
+            >
+              {!picture && <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(255_255_255/0.03)_6px_12px)]" />}
+            </div>
+          );
+        })}
         <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent px-1.5 pt-3 pb-0.5 text-[10px] text-white">
           <span className="flex items-center gap-1 font-semibold">
             #{index + 1}
@@ -477,6 +491,14 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
         </div>
       )}
       {overflow && <div className="absolute inset-y-0 right-0 w-1.5 bg-red-500" title="Voiceover is longer than the scene and will be cut off" />}
+      {!isVoice && scene.sfx_layers?.length > 0 && (
+        <span
+          className="absolute top-0.5 right-0.5 z-[1] rounded bg-black/70 px-1 text-[9px] leading-3.5 font-semibold text-amber-200"
+          title={`${scene.sfx_layers.length} more sound effect${scene.sfx_layers.length > 1 ? 's' : ''} play at the same time`}
+        >
+          +{scene.sfx_layers.length}
+        </span>
+      )}
       <div className={`relative truncate px-1.5 text-[10px] leading-8 ${url ? 'text-zinc-200' : 'text-zinc-600'}`}>
         {url ? sourceName || text : text?.trim() ? 'not generated' : ''}
       </div>

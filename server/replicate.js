@@ -67,11 +67,72 @@ export async function referenceCapacity(model) {
   return field ? field.max : 0;
 }
 
-function buildInput(schema, { prompt, aspectRatio, references }) {
+/** Inputs the editor fills in itself (prompt, format, references), so they aren't offered as settings. */
+function isManagedInput(schema, name) {
+  if (name === 'prompt' || name === 'aspect_ratio') return true;
+  if (name === referenceField(schema)?.name) return true;
+  const p = schema.properties[name];
+  // Other image / file inputs (masks, control images, …) need a file, not a setting.
+  return p.format === 'uri' || (p.type === 'array' && p.items?.format === 'uri');
+}
+
+/**
+ * The settings a model offers (everything but the inputs the editor fills in), in the model's own
+ * order: [{ name, type, title, description, default, minimum, maximum, enum }].
+ */
+export async function modelParams(model) {
+  const schema = await inputSchema(model);
+  return Object.entries(schema.properties)
+    // Only the first image is used, so asking for more would just cost more.
+    .filter(([name]) => !isManagedInput(schema, name) && name !== 'num_outputs')
+    .sort(([, a], [, b]) => (a['x-order'] ?? 999) - (b['x-order'] ?? 999))
+    .map(([name, p]) => ({
+      name,
+      type: p.enum ? 'enum' : p.type || 'string',
+      title: p.title || name,
+      description: p.description || '',
+      // The editor asks for PNG unless told otherwise, whatever the model's own default is.
+      default: name === 'output_format' && p.enum?.includes('png') ? 'png' : p.default,
+      minimum: p.minimum,
+      maximum: p.maximum,
+      enum: p.enum,
+    }));
+}
+
+// Curated models are listed first; Replicate's collections add the rest.
+const COLLECTIONS = ['text-to-image', 'image-editing'];
+const COLLECTION_TTL_MS = 60 * 60_000;
+let collectionCache = null;
+
+/** Image models from Replicate's collections: [{ id, description, run_count, collections }], most used first. */
+export async function listImageModels() {
+  if (collectionCache && Date.now() - collectionCache.at < COLLECTION_TTL_MS) return collectionCache.models;
+  const byId = new Map();
+  const results = await Promise.allSettled(
+    COLLECTIONS.map(async (slug) => {
+      const data = await readJson(await fetch(`${API}/collections/${slug}`, { headers: { Authorization: `Bearer ${token()}` } }));
+      for (const m of data.models || []) {
+        const id = `${m.owner}/${m.name}`;
+        const entry = byId.get(id) || { id, description: m.description || '', run_count: m.run_count || 0, collections: [] };
+        entry.collections.push(slug);
+        byId.set(id, entry);
+      }
+    }),
+  );
+  if (!byId.size) {
+    const failure = results.find((r) => r.status === 'rejected');
+    throw failure ? failure.reason : new Error('Replicate returned no image models');
+  }
+  const models = [...byId.values()].sort((a, b) => b.run_count - a.run_count);
+  collectionCache = { at: Date.now(), models };
+  return models;
+}
+
+function buildInput(schema, { prompt, aspectRatio, references, params }) {
   const props = schema?.properties;
   if (!props) {
     // Schema unavailable: fall back to the common FLUX/Gemini input names.
-    const input = { prompt, aspect_ratio: aspectRatio, output_format: 'png' };
+    const input = { output_format: 'png', ...params, prompt, aspect_ratio: aspectRatio };
     if (references.length) input.image_input = references;
     return input;
   }
@@ -84,8 +145,12 @@ function buildInput(schema, { prompt, aspectRatio, references }) {
 
   if (references.length) {
     const field = referenceField(schema);
-    if (!field) throw Object.assign(new Error("This model doesn't accept reference images. Choose a reference model in the Project tab."), { status: 400 });
+    if (!field) throw Object.assign(new Error("This model doesn't accept reference images. Choose a reference model in the Project panel (left)."), { status: 400 });
     input[field.name] = field.multi ? references.slice(0, field.max ?? references.length) : references[0];
+  }
+  // The user's settings for this model (gear in the Project panel (left)). Unset ones keep the model's defaults.
+  for (const [name, value] of Object.entries(params)) {
+    if (props[name] && !isManagedInput(schema, name) && value !== null && value !== '') input[name] = value;
   }
   return input;
 }
@@ -94,8 +159,10 @@ function buildInput(schema, { prompt, aspectRatio, references }) {
  * Run a text-to-image model and return the image bytes.
  * `model` is "owner/name" (official models, e.g. black-forest-labs/flux-schnell) or "owner/name:version".
  * `references` are image URLs or data URIs used to keep characters / places consistent.
+ * `params` are extra model inputs chosen by the user (e.g. { seed: 42, num_inference_steps: 4 }).
+ * Resolves with { buffer, ext, usage }.
  */
-export async function generateImage({ prompt, model, aspectRatio, references = [] }) {
+export async function generateImage({ prompt, model, aspectRatio, references = [], params = {} }) {
   const headers = { Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' };
   let schema = null;
   try {
@@ -104,7 +171,7 @@ export async function generateImage({ prompt, model, aspectRatio, references = [
     if (err.status === 400) throw err;
     console.warn(`Using default inputs for ${model}: ${err.message}`);
   }
-  const input = buildInput(schema, { prompt, aspectRatio, references });
+  const input = buildInput(schema, { prompt, aspectRatio, references, params });
 
   const [name, version] = model.split(':');
   const url = version ? `${API}/predictions` : `${API}/models/${name}/predictions`;
@@ -130,5 +197,7 @@ export async function generateImage({ prompt, model, aspectRatio, references = [
   const imgRes = await fetch(outputUrl, outputUrl.startsWith(API) ? { headers } : undefined);
   if (!imgRes.ok) throw new Error(`Could not download generated image (${imgRes.status})`);
   const ext = (outputUrl.split('?')[0].match(/\.(png|jpe?g|webp)$/i)?.[1] || 'png').toLowerCase();
-  return { buffer: Buffer.from(await imgRes.arrayBuffer()), ext };
+  // Replicate reports run time but no price; see server/usage.js.
+  const usage = { images: 1, predict_time: prediction.metrics?.predict_time ?? null, prediction_id: prediction.id };
+  return { buffer: Buffer.from(await imgRes.arrayBuffer()), ext, usage };
 }

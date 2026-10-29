@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Captions, Film, ImageOff, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
-import { formatTime, sceneIndexAt } from '../util.js';
+import { formatTime, motionTransform, sceneIndexAt, sceneMotion, sceneTimeline } from '../util.js';
 
-const KENBURNS_ZOOM = 0.12; // keep in sync with server/ffmpeg.js
 const RESYNC_THRESHOLD_SEC = 0.25;
 
 /**
- * Live preview: shows the current scene's video clip or image (with the same Ken Burns motion as the
+ * Live preview: shows the current scene's video clip or image (with the same zoom / pan motion as the
  * export) and plays its voiceover, SFX and the background music in sync with a wall-clock playhead.
  */
 export default function Preview({
@@ -14,6 +13,8 @@ export default function Preview({
 }) {
   const voRef = useRef(null);
   const sfxRef = useRef(null);
+  // One <audio> per extra sound effect layer of the current scene, by layer id.
+  const layerRefs = useRef(new Map());
   const videoRef = useRef(null);
   const musicRef = useRef(null);
   const timeRef = useRef(time);
@@ -69,6 +70,12 @@ export default function Preview({
         holdLastFrame: true,
       },
       { el: musicRef.current, url: settings.music_url, at: musicLen ? time % musicLen : time, volume: Number(settings.music_volume) || 0 },
+      ...(scene?.sfx_layers || []).map((l) => ({
+        el: layerRefs.current.get(l.layer_id),
+        url: l.url,
+        at: local - (Number(l.start_sec) || 0),
+        volume: (Number(settings.sfx_volume) || 0) * (Number.isFinite(Number(l.volume)) ? Number(l.volume) : 1),
+      })),
     ];
     for (const { el, url, at, volume, holdLastFrame } of media) {
       if (!el) continue;
@@ -87,11 +94,13 @@ export default function Preview({
       }
       el.volume = Math.max(0, Math.min(1, volume || 0));
       const ended = Number.isFinite(el.duration) && at >= el.duration;
+      // A sound effect layer that starts later in the scene waits at its beginning.
+      const early = at < 0;
       // A video that runs out freezes on its last frame, like in the export.
-      const target = ended && holdLastFrame ? Math.max(0, el.duration - 0.05) : at;
-      if (!active || ended) {
+      const target = ended && holdLastFrame ? Math.max(0, el.duration - 0.05) : Math.max(0, at);
+      if (!active || ended || early) {
         if (!el.paused) el.pause();
-        if (reseek && (!ended || holdLastFrame)) el.currentTime = target;
+        if ((reseek || early) && (!ended || holdLastFrame) && el.currentTime !== target) el.currentTime = target;
         continue;
       }
       if (reseek || Math.abs(el.currentTime - target) > RESYNC_THRESHOLD_SEC) el.currentTime = target;
@@ -101,13 +110,21 @@ export default function Preview({
 
   // Warm the browser cache so scene changes don't flash.
   useEffect(() => {
-    for (const s of scenes) if (s.image_url && !s.video_url) new Image().src = s.image_url;
+    for (const s of scenes) {
+      if (s.image_url && !s.video_url) new Image().src = s.image_url;
+      for (const shot of s.shots || []) if (shot.image_url) new Image().src = shot.image_url;
+    }
   }, [scenes]);
 
   const ratio = settings.aspect_ratio.replace(':', ' / ');
   const [rw, rh] = settings.aspect_ratio.split(':').map(Number);
-  const zoomIn = idx % 2 === 0;
-  const scale = settings.motion === 'kenburns' ? (zoomIn ? 1 + KENBURNS_ZOOM * progress : 1 + KENBURNS_ZOOM * (1 - progress)) : 1;
+  // The picture on screen now: the scene's own, or the extra shot that has cut in, each with its own motion.
+  const parts = scene ? sceneTimeline(scene) : [];
+  const k = Math.max(0, parts.findLastIndex((p) => p.start <= local));
+  const part = parts[k];
+  const shot = part?.shot;
+  const partProgress = part ? Math.min(1, Math.max(0, (local - part.start) / Math.max(0.01, part.end - part.start))) : progress;
+  const transform = scene ? motionTransform(sceneMotion(shot || scene, settings, idx + k), partProgress) : 'none';
 
   const jump = (dir) => {
     const target = dir < 0 && local > 0.75 ? idx : Math.max(0, Math.min(scenes.length - 1, idx + dir));
@@ -131,6 +148,14 @@ export default function Preview({
                   Export the video to watch the final render here.
                 </div>
               )
+            ) : shot ? (
+              <img
+                src={shot.image_url}
+                alt={shot.image_prompt}
+                draggable={false}
+                className="h-full w-full object-cover will-change-transform"
+                style={{ transform }}
+              />
             ) : scene?.video_url ? (
               // src is managed by the sync effect so a new clip always gets seeked to the right spot.
               <video ref={videoRef} playsInline preload="auto" className="h-full w-full bg-black object-cover" />
@@ -140,7 +165,7 @@ export default function Preview({
                 alt={scene.image_prompt}
                 draggable={false}
                 className="h-full w-full object-cover will-change-transform"
-                style={{ transform: `scale(${scale})` }}
+                style={{ transform }}
               />
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-zinc-900 to-zinc-800 p-8 text-center">
@@ -225,6 +250,13 @@ export default function Preview({
 
       <audio ref={voRef} preload="auto" />
       <audio ref={sfxRef} preload="auto" />
+      {(scene?.sfx_layers || []).map((l) => (
+        <audio
+          key={l.layer_id}
+          ref={(el) => (el ? layerRefs.current.set(l.layer_id, el) : layerRefs.current.delete(l.layer_id))}
+          preload="auto"
+        />
+      ))}
       <audio ref={musicRef} preload="auto" />
     </section>
   );
