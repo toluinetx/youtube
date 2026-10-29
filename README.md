@@ -1,0 +1,181 @@
+# AI Video Editor
+
+A local web app for building YouTube videos out of scenes. Each scene has a visual (an image generated
+with Replicate / FLUX, or your own image or video clip), a voiceover (ElevenLabs text-to-speech or your
+own recording) and an optional sound effect (ElevenLabs or your own file). Add background music for the
+whole video, edit everything on a timeline, regenerate or replace just the pieces that look or sound
+wrong, and export a single MP4 with FFmpeg.
+
+```
+┌───────────────────────────── Browser (http://localhost:5173) ─────────────────────────────┐
+│  Preview player (live / rendered)            │  Inspector: prompts, voiceover, SFX,      │
+│  Timeline: Image · Voice · SFX tracks        │  [Generate / Regenerate] buttons, project │
+└──────────────────────────────────────┬────────────────────────────────────────────────────┘
+                                       │ REST
+┌──────────────────────────────────────▼──── Express API (http://localhost:3001) ───────────┐
+│  project/storyboard.json   Replicate API   ElevenLabs API   FFmpeg (bundled via npm)      │
+└───────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+## Setup
+
+Requires Node.js 22+. FFmpeg ships with the npm dependencies, so you don't need to install it.
+
+```bash
+npm install
+cp .env.example .env       # then paste your REPLICATE_API_TOKEN and ELEVENLABS_API_KEY
+npm run dev                # API on :3001, editor on http://localhost:5173
+```
+
+The top bar shows a green dot for each service that is configured. Restart `npm run dev` after editing `.env`.
+
+## Workflow
+
+1. **Write the script.** Click **Import script** and paste your narration. Each paragraph becomes a scene.
+   You can add image and sound prompts inline:
+
+   ```
+   Below two hundred meters, sunlight disappears.
+   [image: a submarine descending into dark blue water]
+   [sfx: deep underwater ambience, muffled bubbles]
+
+   Here, nearly ninety percent of creatures make their own light.
+   [image: glowing jellyfish in pitch black water]
+   ```
+
+2. **Set the look.** On the **Project** tab, pick the format (16:9 or 9:16 Shorts), image model, a style
+   prompt that is appended to every image prompt, the voice and the camera motion.
+3. **Generate everything.** **Generate missing** creates every image, voiceover and SFX that has a prompt but
+   no file yet. If a voiceover runs longer than its scene, the scene is lengthened so the narration isn't cut off.
+4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
+   sidebar and click **Regenerate**. Only that asset is regenerated. Drag a scene's right edge to change its length.
+5. **Export.** **Export video** renders `project/exports/final_output.mp4` and opens it in the
+   **Rendered MP4** tab. Each scene is cached as its own clip, so re-exporting after a small change only
+   re-renders the scenes you touched.
+
+## Library: your own media
+
+The **Library** sidebar on the left holds every file you upload, grouped into **Videos**, **Images** and
+**Sounds**. Uploading only adds files to the library; nothing goes on the reel until you put it there.
+
+- **Add files:** click **Upload** in the library, or drag files from your computer onto it. Files dropped on an
+  empty part of the timeline also just go to the library.
+- **Use them:** drag an item from the library onto the timeline:
+
+  | Drop onto | Result |
+  | --- | --- |
+  | Between scenes (an image or video) | A new scene is inserted there; a "New scene" marker shows where |
+  | A scene's Image clip | Replaces that scene's image or video |
+  | A scene's Voice / SFX clip | Uses the sound (or a video's soundtrack) as voiceover / sound effect |
+  | The Music row | Sets the background music |
+
+  The clip under the pointer turns white if the item fits there and red if it doesn't. Without dragging,
+  you can use **+** on an image or video to add it to the end, or the music-note button on a sound.
+  The **Upload** buttons in the scene sidebar upload into the library and use the file in that slot.
+- **Manage:** badges show which items are in use (×2 = used twice). Click ▶ to preview sounds. Deleting an
+  item that's in use asks first and removes it from the reel too. Replacing or removing media on a scene
+  never deletes the library file.
+- Formats: images png, jpg, webp, bmp; video mp4, mov, webm, mkv, m4v, avi; audio mp3, wav, m4a, aac, ogg, flac, opus.
+- A scene's visual is an image **or** a video: adding one replaces the other.
+- Video clips: the scene length is set to the clip length (or longer if the voiceover needs it). Use **Start at** to
+  trim the beginning and **Clip audio** to set or mute the clip's own sound. If the scene is longer than the clip,
+  the last frame is held. Clips are scaled and center-cropped to the project format.
+- Background music loops if it's shorter than the video, fades in and out, and (by default) is automatically
+  lowered while the voiceover plays. That ducking is applied in the export only, not in the live preview.
+
+## Reference images (consistent characters and places)
+
+Give image generation reference pictures so a character, location or style stays the same from scene to scene.
+
+- **For every scene:** Project tab → *References for every scene*. Put your main character or setting here.
+- **For one scene:** the *References* box in the scene sidebar. The "+ project refs" checkbox controls whether
+  the project-wide ones are sent too.
+- **Adding references:** drag an image from the library onto a References box, use **Add**, or drop a file from your
+  computer (it goes into the library first). Dropping a **video** opens a frame picker: pause on the frame you want
+  and click *Use this frame*. The snapshot is saved to the library at full resolution and used as the reference.
+  You can also snapshot any video from the library (camera button on its tile), and **Save to library** a generated
+  scene image to reuse a character you like.
+- **Naming:** reference names go into the prompt ("Reference images, in order: 1) Maya, 2) Lab"), so rename them in
+  the library (pencil button) and write prompts like "Maya walks into the lab".
+- **Model:** scenes with references are generated with the *Model when references are used* (default
+  `google/nano-banana`; also Nano Banana Pro, Seedream 4, FLUX.2 pro, FLUX Kontext pro, or any custom Replicate model).
+  The app reads each model's input schema to find its image-input field (`image_input`, `input_images`,
+  `input_image`, …) and how many images it accepts; extra references are skipped (scene ones are sent first).
+  Scenes without references keep using the regular image model.
+- References are sent as JPEGs scaled to at most 1024px.
+
+Keyboard: <kbd>Space</kbd> play/pause · <kbd>←</kbd>/<kbd>→</kbd> previous/next scene.
+
+## Project files
+
+```
+project/
+  storyboard.json      ← the whole video: settings + scenes (safe to hand-edit; it's re-read on every request)
+  media/library/       your uploaded files (the Library)
+  media/images|voiceover|sfx/   generated assets
+  clips/               per-scene render cache
+  exports/final_output.mp4
+```
+
+A scene in `storyboard.json`:
+
+```json
+{
+  "scene_id": 1,
+  "image_prompt": "A lone research submarine descending into a dark blue ocean",
+  "voiceover_text": "Below two hundred meters, sunlight disappears.",
+  "sfx_prompt": "deep underwater ambience, muffled bubbles",
+  "duration_sec": 7,
+  "image_url": "/media/images/scene-1-1761700000000.png",
+  "voiceover_url": "/media/voiceover/scene-1-1761700000000.mp3",
+  "sfx_url": "/media/sfx/scene-1-1761700000000.mp3",
+  "voiceover_duration_sec": 4.8,
+  "sfx_duration_sec": 7
+}
+```
+
+The library lives in the same file as a `library` array:
+
+```json
+{ "asset_id": "a_1f2e3d4c", "name": "drone shot.mp4", "type": "video", "url": "/media/library/video/asset-….mp4",
+  "thumb_url": "/media/library/video/asset-….thumb.jpg", "duration_sec": 12.4, "has_audio": true }
+```
+
+To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
+
+## API
+
+| Method | Path | |
+| --- | --- | --- |
+| GET | `/api/storyboard` | settings + all scenes |
+| PUT | `/api/settings` | update project settings |
+| PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references` |
+| POST | `/api/scenes` | add a scene (`after_id` optional) |
+| POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
+| DELETE | `/api/scene/:id` | delete a scene and its media |
+| POST | `/api/scenes/reorder` | `{ "order": [3, 1, 2] }` |
+| POST | `/api/scenes/import-script` | `{ "script": "...", "mode": "append" \| "replace" }` |
+| POST | `/api/scene/:id/regenerate-image` | Replicate |
+| POST | `/api/scene/:id/regenerate-audio` | ElevenLabs text-to-speech |
+| POST | `/api/scene/:id/regenerate-sfx` | ElevenLabs sound effects |
+| GET | `/api/library` | all library assets |
+| POST | `/api/library` | upload a file into the library (raw body, original name in `X-Filename`) |
+| DELETE | `/api/library/:assetId` | delete an asset; 409 if in use (on the reel or as a reference) unless `?force=1` |
+| PATCH | `/api/library/:assetId` | rename: `{ "name" }` |
+| POST | `/api/library/:assetId/snapshot` | save a video frame as a new image asset: `{ "time_sec" }` |
+| POST | `/api/scene/:id/save-to-library` | copy a scene's generated image into the library |
+| GET | `/api/model-info?model=owner/name` | how many reference images a Replicate model accepts |
+| POST | `/api/scene/:id/use-asset` | `{ "asset_id", "slot": "image" | "voiceover" | "sfx" }` |
+| POST | `/api/scenes/from-asset` | new scene from an image/video asset: `{ "asset_id", "index"? }` |
+| PUT / DELETE | `/api/music` | set background music `{ "asset_id" }` / remove it |
+| DELETE | `/api/scene/:id/media/:slot` | remove a scene's image/video, voiceover or SFX |
+| POST | `/api/generate-missing` | background job |
+| POST | `/api/export` | background job: FFmpeg render to `final_output.mp4` |
+| GET | `/api/job` | progress of the current background job |
+| GET | `/api/voices` | your ElevenLabs voices |
+
+## Production build
+
+```bash
+npm run build && npm start   # serves the built UI and API together on http://localhost:3001
+```

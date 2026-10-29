@@ -1,0 +1,655 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { api } from './api.js';
+import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts } from './util.js';
+import AssetLibrary from './components/AssetLibrary.jsx';
+import SnapshotModal from './components/SnapshotModal.jsx';
+import TopBar from './components/TopBar.jsx';
+import Preview from './components/Preview.jsx';
+import Timeline from './components/Timeline.jsx';
+import Inspector from './components/Inspector.jsx';
+import ProjectSettings from './components/ProjectSettings.jsx';
+import ScriptImport from './components/ScriptImport.jsx';
+
+const SAVE_DELAY_MS = 600;
+// Fields the server owns after a generate/upload/remove; everything else may have unsaved local edits.
+const MEDIA_FIELDS = [
+  'image_url', 'voiceover_url', 'sfx_url', 'voiceover_duration_sec', 'sfx_duration_sec',
+  'video_url', 'video_thumb_url', 'video_duration_sec', 'video_has_audio', 'video_start_sec', 'source_names',
+];
+
+export default function App() {
+  const [sb, setSb] = useState(null);
+  const [loadError, setLoadError] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+  const [sidebarTab, setSidebarTab] = useState('scene');
+  const [time, setTime] = useState(0);
+  const [seekToken, setSeekToken] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [busy, setBusy] = useState({});
+  const [errors, setErrors] = useState({});
+  const [job, setJob] = useState(null);
+  const [exportUrl, setExportUrl] = useState(null);
+  const [previewMode, setPreviewMode] = useState('live');
+  const [showImport, setShowImport] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [uploading, setUploading] = useState([]);
+  const [dragAsset, setDragAsset] = useState(null);
+  const [snapshotTarget, setSnapshotTarget] = useState(null); // { asset, purpose, resolve }
+  const [libraryCollapsed, setLibraryCollapsed] = useState(() => localStorage.getItem('libraryCollapsed') === '1');
+
+  const scenes = useMemo(() => sb?.scenes ?? [], [sb]);
+  const starts = useMemo(() => sceneStarts(scenes), [scenes]);
+  const total = scenes.reduce((sum, s) => sum + (Number(s.duration_sec) || 0), 0);
+  const selectedIndex = scenes.findIndex((s) => s.scene_id === selectedId);
+  const selected = scenes[selectedIndex];
+  const library = useMemo(() => sb?.library ?? [], [sb]);
+
+  // How many times each media URL is used, on the reel or as a reference (for library badges).
+  const usage = useMemo(() => {
+    const counts = {};
+    const add = (url) => url && (counts[url] = (counts[url] || 0) + 1);
+    const urlOf = new Map(library.map((a) => [a.asset_id, a.url]));
+    for (const s of scenes) {
+      [s.image_url, s.video_url, s.voiceover_url, s.sfx_url].forEach(add);
+      (s.reference_asset_ids || []).forEach((id) => add(urlOf.get(id)));
+    }
+    add(sb?.settings.music_url);
+    (sb?.settings.reference_asset_ids || []).forEach((id) => add(urlOf.get(id)));
+    return counts;
+  }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids]);
+
+  const notify = useCallback((message, tone = 'error') => {
+    setToast({ message, tone, id: Date.now() });
+  }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), toast.tone === 'error' ? 7000 : 3500);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  // ---- Debounced saving -------------------------------------------------------------------------
+  // Local edits apply instantly; the network write is batched per scene. Unsaved/in-flight edits are
+  // re-applied on top of anything the server sends back so typing is never clobbered.
+
+  const pending = useRef({});
+  const inflight = useRef({});
+  const timers = useRef({});
+
+  const overlayLocal = useCallback(
+    (scene) => ({ ...scene, ...inflight.current[scene.scene_id], ...pending.current[scene.scene_id] }),
+    [],
+  );
+
+  const applyServer = useCallback(
+    (data) => setSb({ ...data, scenes: data.scenes.map(overlayLocal), settings: { ...data.settings, ...pending.current.settings } }),
+    [overlayLocal],
+  );
+
+  const flush = useCallback(
+    async (id) => {
+      clearTimeout(timers.current[id]);
+      const patch = pending.current[id];
+      if (!patch) return;
+      delete pending.current[id];
+      inflight.current[id] = { ...inflight.current[id], ...patch };
+      try {
+        if (id === 'settings') await api.updateSettings(patch);
+        else await api.updateScene(id, patch);
+      } catch (err) {
+        notify(`Save failed: ${err.message}`);
+      } finally {
+        if (inflight.current[id]) {
+          for (const k of Object.keys(patch)) if (inflight.current[id][k] === patch[k]) delete inflight.current[id][k];
+        }
+      }
+    },
+    [notify],
+  );
+
+  const queueSave = useCallback(
+    (id, patch) => {
+      pending.current[id] = { ...pending.current[id], ...patch };
+      clearTimeout(timers.current[id]);
+      timers.current[id] = setTimeout(() => flush(id), SAVE_DELAY_MS);
+    },
+    [flush],
+  );
+
+  const patchScene = useCallback(
+    (id, patch) => {
+      setSb((prev) => ({ ...prev, scenes: prev.scenes.map((s) => (s.scene_id === id ? { ...s, ...patch } : s)) }));
+      queueSave(id, patch);
+    },
+    [queueSave],
+  );
+
+  const patchSettings = useCallback(
+    (patch) => {
+      setSb((prev) => ({ ...prev, settings: { ...prev.settings, ...patch } }));
+      queueSave('settings', patch);
+    },
+    [queueSave],
+  );
+
+  useEffect(() => {
+    const onUnload = () => {
+      for (const [id, patch] of Object.entries(pending.current)) {
+        const url = id === 'settings' ? '/api/settings' : `/api/scene/${id}`;
+        fetch(url, { method: 'PUT', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) });
+      }
+    };
+    window.addEventListener('beforeunload', onUnload);
+    return () => window.removeEventListener('beforeunload', onUnload);
+  }, []);
+
+  // ---- Loading ----------------------------------------------------------------------------------
+
+  const reload = useCallback(async () => {
+    try {
+      applyServer(await api.storyboard());
+      setLoadError(null);
+    } catch (err) {
+      setLoadError(err.message);
+    }
+  }, [applyServer]);
+
+  useEffect(() => {
+    reload();
+    api.status().then(setStatus).catch(() => {});
+    api.job().then((j) => j.status !== 'idle' && setJob(j)).catch(() => {});
+  }, [reload]);
+
+  useEffect(() => {
+    if (sb && selectedId == null && scenes.length) setSelectedId(scenes[0].scene_id);
+  }, [sb, selectedId, scenes]);
+
+  // ---- Playback ---------------------------------------------------------------------------------
+
+  const seek = useCallback(
+    (t) => {
+      setTime(Math.max(0, Math.min(t, total)));
+      setSeekToken((n) => n + 1);
+    },
+    [total],
+  );
+
+  const selectScene = useCallback(
+    (id, { seekTo = true } = {}) => {
+      setSelectedId(id);
+      setSidebarTab('scene');
+      setPreviewMode('live');
+      const i = scenes.findIndex((s) => s.scene_id === id);
+      if (seekTo && i >= 0) seek(starts[i] + 0.001);
+    },
+    [scenes, starts, seek],
+  );
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (isTyping(e) || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        setPreviewMode('live');
+        setPlaying((p) => !p);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        const cur = sceneIndexAt(starts, scenes, time);
+        const next = Math.max(0, Math.min(scenes.length - 1, cur + (e.key === 'ArrowRight' ? 1 : -1)));
+        if (scenes[next]) selectScene(scenes[next].scene_id);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [scenes, starts, time, selectScene]);
+
+  // ---- Scene operations -------------------------------------------------------------------------
+
+  /** Run a generate/upload/remove for one slot of a scene, tracking busy state and errors per slot. */
+  const mediaAction = useCallback(
+    async (id, slot, action) => {
+      const key = `${id}:${slot}`;
+      setBusy((b) => ({ ...b, [key]: true }));
+      setErrors(({ [key]: _, ...rest }) => rest);
+      try {
+        await flush(id);
+        const scene = await action();
+        const media = Object.fromEntries(MEDIA_FIELDS.map((f) => [f, scene[f]]));
+        setSb((prev) => ({
+          ...prev,
+          scenes: prev.scenes.map((s) =>
+            s.scene_id === id ? { ...s, ...media, duration_sec: pending.current[id]?.duration_sec ?? scene.duration_sec } : s,
+          ),
+        }));
+      } catch (err) {
+        setErrors((e) => ({ ...e, [key]: err.message }));
+      } finally {
+        setBusy(({ [key]: _, ...rest }) => rest);
+      }
+    },
+    [flush],
+  );
+
+  const regenerate = (id, kind) => mediaAction(id, kind, () => api.regenerate(id, kind));
+  const clearSlot = (id, slot) => mediaAction(id, slot, () => api.clearSceneSlot(id, slot));
+
+  const musicAction = async (action) => {
+    setBusy((b) => ({ ...b, music: true }));
+    try {
+      await flush('settings');
+      const settings = await action();
+      setSb((prev) => ({ ...prev, settings: { ...settings, ...pending.current.settings } }));
+    } catch (err) {
+      notify(err.message);
+    } finally {
+      setBusy(({ music: _, ...rest }) => rest);
+    }
+  };
+  const removeMusic = () => musicAction(api.removeMusic);
+
+  const flushAll = useCallback(() => Promise.all(Object.keys(pending.current).map(flush)), [flush]);
+
+  const run = useCallback(
+    async (fn) => {
+      try {
+        await flushAll();
+        await fn();
+      } catch (err) {
+        notify(err.message);
+      }
+    },
+    [flushAll, notify],
+  );
+
+  const addScene = () =>
+    run(async () => {
+      const scene = await api.addScene({ after_id: selectedId });
+      await reload();
+      selectScene(scene.scene_id, { seekTo: false });
+    });
+
+  const duplicateScene = (id) =>
+    run(async () => {
+      const scene = await api.duplicateScene(id);
+      await reload();
+      selectScene(scene.scene_id, { seekTo: false });
+    });
+
+  const deleteScene = (id) => {
+    const i = scenes.findIndex((s) => s.scene_id === id);
+    if (!window.confirm(`Delete scene ${i + 1} and its generated media?`)) return;
+    run(async () => {
+      await api.deleteScene(id);
+      const neighbour = scenes[i + 1] ?? scenes[i - 1];
+      setSelectedId(neighbour?.scene_id ?? null);
+      await reload();
+    });
+  };
+
+  const moveScene = (id, dir) =>
+    run(async () => {
+      const order = scenes.map((s) => s.scene_id);
+      const i = order.indexOf(id);
+      const j = i + dir;
+      if (j < 0 || j >= order.length) return;
+      [order[i], order[j]] = [order[j], order[i]];
+      applyServer(await api.reorder(order));
+    });
+
+  // ---- Library ----------------------------------------------------------------------------------
+  // Uploads only ever go into the library. Assets reach the reel when the user drags them onto the
+  // timeline or uses an explicit button.
+
+  const addToLibraryState = (asset) => setSb((prev) => ({ ...prev, library: [...prev.library, asset] }));
+
+  const uploadOne = async (file) => {
+    const asset = await api.uploadToLibrary(file);
+    addToLibraryState(asset);
+    return asset;
+  };
+
+  /** Upload files into the library. Resolves with the assets that were added. */
+  const uploadFiles = async (files) => {
+    const entries = [...files].map((file, i) => ({ id: `${Date.now()}-${i}`, name: file.name, file }));
+    setUploading((u) => [...u, ...entries.map(({ id, name }) => ({ id, name }))]);
+    const created = [];
+    const failed = [];
+    for (const entry of entries) {
+      try {
+        created.push(await uploadOne(entry.file));
+      } catch (err) {
+        failed.push(err.message);
+      } finally {
+        setUploading((u) => u.filter((x) => x.id !== entry.id));
+      }
+    }
+    if (failed.length) notify(failed.join(' · '));
+    else if (created.length) notify(`Added ${created.length} file${created.length === 1 ? '' : 's'} to the library`, 'success');
+    return created;
+  };
+
+  const misfitMessage = (asset, slot) => {
+    if (slot === 'image') return `"${asset.name}" is a sound. Drop it on a Voice, SFX or Music track.`;
+    if (asset.type === 'image') return `"${asset.name}" is an image. Drop it on the Image track or between scenes.`;
+    return `"${asset.name}" has no sound.`;
+  };
+
+  const placeAsset = (sceneId, slot, asset) => {
+    if (!assetFits(asset, slot)) return notify(misfitMessage(asset, slot));
+    selectScene(sceneId, { seekTo: false });
+    return mediaAction(sceneId, slot, () => api.useAsset(sceneId, asset.asset_id, slot));
+  };
+
+  const addAssetAsScene = (asset, index) => {
+    if (!assetFits(asset, 'image')) return notify(misfitMessage(asset, 'image'));
+    return run(async () => {
+      const scene = await api.sceneFromAsset(asset.asset_id, index);
+      await reload();
+      selectScene(scene.scene_id, { seekTo: false });
+    });
+  };
+
+  const setMusicAsset = (asset) => {
+    if (!assetFits(asset, 'music')) return notify(misfitMessage(asset, 'music'));
+    return musicAction(() => api.setMusic(asset.asset_id));
+  };
+
+  const deleteAsset = (asset) => {
+    const uses = usage[asset.url] || 0;
+    const message = uses
+      ? `"${asset.name}" is used in ${uses} place${uses > 1 ? 's' : ''} (on the reel or as a reference). Delete it and remove it from those places?`
+      : `Delete "${asset.name}" from the library?`;
+    if (!window.confirm(message)) return;
+    run(async () => {
+      await api.deleteAsset(asset.asset_id, uses > 0);
+      await reload();
+    });
+  };
+
+  const renameAsset = async (asset) => {
+    const name = window.prompt('Rename. References are named in the prompt, so a character name like "Maya" works well.', asset.name);
+    if (!name?.trim() || name.trim() === asset.name) return;
+    run(async () => {
+      await api.renameAsset(asset.asset_id, name.trim());
+      await reload();
+    });
+  };
+
+  /** Ask the user to pick a frame of a video; resolves with the new library image, or null if cancelled. */
+  const requestSnapshot = (asset, purpose) => new Promise((resolve) => setSnapshotTarget({ asset, purpose, resolve }));
+
+  const captureSnapshot = async (timeSec) => {
+    const { asset, resolve } = snapshotTarget;
+    try {
+      const image = await api.snapshot(asset.asset_id, timeSec);
+      addToLibraryState(image);
+      notify(`Snapshot saved to the library: ${image.name}`, 'success');
+      resolve(image);
+    } catch (err) {
+      notify(err.message);
+      resolve(null);
+    } finally {
+      setSnapshotTarget(null);
+    }
+  };
+
+  const cancelSnapshot = () => {
+    snapshotTarget?.resolve(null);
+    setSnapshotTarget(null);
+  };
+
+  const saveSceneToLibrary = (sceneId) =>
+    run(async () => {
+      const asset = await api.saveSceneToLibrary(sceneId);
+      if (!library.some((a) => a.asset_id === asset.asset_id)) addToLibraryState(asset);
+      notify(`Saved to the library as "${asset.name}"`, 'success');
+    });
+
+  /** Sidebar "Upload" buttons: the file goes into the library and is then used in that slot. */
+  const uploadAndUse = (sceneId, slot, file) =>
+    mediaAction(sceneId, slot, async () => {
+      const asset = await uploadOne(file);
+      return api.useAsset(sceneId, asset.asset_id, slot);
+    });
+  const uploadAndSetMusic = (file) =>
+    musicAction(async () => {
+      const asset = await uploadOne(file);
+      return api.setMusic(asset.asset_id);
+    });
+
+  /** A library asset dropped on the timeline: onto a clip, onto Music, or between scenes (new scene at `index`). */
+  const dropAsset = (assetId, target, index) => {
+    const asset = library.find((a) => a.asset_id === assetId);
+    if (!asset) return;
+    if (target?.track === 'music') setMusicAsset(asset);
+    else if (target?.sceneId != null) placeAsset(target.sceneId, target.track, asset);
+    else addAssetAsScene(asset, index);
+  };
+
+  /** Files from the computer dropped on the timeline go to the library; onto a specific clip they're also used there. */
+  const dropFiles = async (files, target) => {
+    const created = await uploadFiles(files);
+    const asset = created[0];
+    if (!asset || !target) return;
+    if (target.track === 'music') setMusicAsset(asset);
+    else if (target.sceneId != null) placeAsset(target.sceneId, target.track, asset);
+  };
+
+  const importScript = (script, mode) => {
+    if (mode === 'replace' && scenes.length && !window.confirm('Replace all scenes? Their generated media will be deleted.')) return;
+    return run(async () => {
+      const data = await api.importScript(script, mode);
+      applyServer(data);
+      setShowImport(false);
+      if (mode === 'replace') setSelectedId(data.scenes[0]?.scene_id ?? null);
+      seek(0);
+      notify(`Script imported: ${data.scenes.length} scenes`, 'success');
+    });
+  };
+
+  // ---- Background jobs (export / generate all) --------------------------------------------------
+
+  const startJob = (fn) =>
+    run(async () => {
+      setJob(await fn());
+    });
+
+  useEffect(() => {
+    if (job?.status !== 'running') return;
+    const t = setInterval(async () => {
+      try {
+        const j = await api.job();
+        setJob(j);
+        if (j.kind === 'generate') await reload();
+        if (j.status === 'done' && j.kind === 'export') {
+          setExportUrl(j.result.url);
+          setPreviewMode('rendered');
+          setPlaying(false);
+          notify('Export finished: final_output.mp4', 'success');
+        }
+        if (j.status === 'done' && j.kind === 'generate') {
+          notify(`Generated ${j.result.generated} asset(s)${j.result.failed ? `, ${j.result.failed} failed` : ''}`, j.result.failed ? 'error' : 'success');
+        }
+      } catch {
+        // Server restarting; keep polling.
+      }
+    }, 800);
+    return () => clearInterval(t);
+  }, [job?.status, job?.id, reload, notify]);
+
+  // ---- Render -----------------------------------------------------------------------------------
+
+  if (!sb) {
+    return (
+      <div className="flex h-full items-center justify-center text-sm text-zinc-500">
+        {loadError ? (
+          <div className="text-center">
+            <p className="text-red-400">Could not reach the backend: {loadError}</p>
+            <p className="mt-1">Is the API running? Start everything with <code className="text-zinc-300">npm run dev</code>.</p>
+            <button className="btn-secondary mt-4" onClick={reload}>Retry</button>
+          </div>
+        ) : (
+          'Loading storyboard…'
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-full flex-col">
+      <TopBar
+        title={sb.settings.title}
+        status={status}
+        job={job}
+        missing={countMissing(scenes)}
+        exportUrl={exportUrl}
+        onImport={() => setShowImport(true)}
+        onGenerateMissing={() => startJob(api.generateMissing)}
+        onExport={() => startJob(api.exportVideo)}
+        onDismissJob={() => setJob(null)}
+      />
+
+      <div className="flex min-h-0 flex-1">
+        <AssetLibrary
+          library={library}
+          usage={usage}
+          uploading={uploading}
+          collapsed={libraryCollapsed}
+          onToggle={() => {
+            localStorage.setItem('libraryCollapsed', libraryCollapsed ? '0' : '1');
+            setLibraryCollapsed(!libraryCollapsed);
+          }}
+          onUploadFiles={uploadFiles}
+          onDelete={deleteAsset}
+          onRename={renameAsset}
+          onSnapshot={(asset) => requestSnapshot(asset)}
+          onAddAsScene={(asset) => addAssetAsScene(asset)}
+          onSetMusic={setMusicAsset}
+          onDragAsset={setDragAsset}
+        />
+        <main className="flex min-w-0 flex-1 flex-col">
+          <Preview
+            scenes={scenes}
+            starts={starts}
+            total={total}
+            time={time}
+            seekToken={seekToken}
+            setTime={setTime}
+            seek={seek}
+            playing={playing}
+            setPlaying={setPlaying}
+            settings={sb.settings}
+            mode={previewMode}
+            setMode={setPreviewMode}
+            exportUrl={exportUrl}
+          />
+          <Timeline
+            scenes={scenes}
+            starts={starts}
+            total={total}
+            time={time}
+            playing={playing}
+            seek={seek}
+            selectedId={selectedId}
+            onSelect={selectScene}
+            onResize={(id, d) => patchScene(id, { duration_sec: d })}
+            onAdd={addScene}
+            onDropFiles={dropFiles}
+            onDropAsset={dropAsset}
+            dragAsset={dragAsset}
+            settings={sb.settings}
+            onSelectMusic={() => setSidebarTab('project')}
+            busy={busy}
+          />
+        </main>
+
+        <aside className="flex w-95 shrink-0 flex-col border-l border-zinc-800 bg-zinc-900/40">
+          <div className="flex shrink-0 gap-1 border-b border-zinc-800 p-1.5">
+            {[
+              ['scene', selected ? `Scene ${selectedIndex + 1}` : 'Scene'],
+              ['project', 'Project'],
+            ].map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setSidebarTab(key)}
+                className={`btn flex-1 ${sidebarTab === key ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-500 hover:text-zinc-200'}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {sidebarTab === 'project' ? (
+              <ProjectSettings
+                settings={sb.settings}
+                onChange={patchSettings}
+                status={status}
+                musicBusy={Boolean(busy.music)}
+                onUploadMusic={uploadAndSetMusic}
+                onRemoveMusic={removeMusic}
+                library={library}
+                onRequestSnapshot={(asset) => requestSnapshot(asset, 'reference for every scene')}
+                onUploadFiles={uploadFiles}
+              />
+            ) : selected ? (
+              <Inspector
+                key={selected.scene_id}
+                scene={selected}
+                index={selectedIndex}
+                count={scenes.length}
+                start={starts[selectedIndex]}
+                settings={sb.settings}
+                library={library}
+                busy={busy}
+                errors={errors}
+                onRequestSnapshot={(asset) => requestSnapshot(asset, `reference for scene ${selectedIndex + 1}`)}
+                onUploadFiles={uploadFiles}
+                onSaveToLibrary={() => saveSceneToLibrary(selected.scene_id)}
+                onOpenProject={() => setSidebarTab('project')}
+                onChange={(patch) => patchScene(selected.scene_id, patch)}
+                onRegenerate={(kind) => regenerate(selected.scene_id, kind)}
+                onUpload={(slot, file) => uploadAndUse(selected.scene_id, slot, file)}
+                onClear={(slot) => clearSlot(selected.scene_id, slot)}
+                onDelete={() => deleteScene(selected.scene_id)}
+                onDuplicate={() => duplicateScene(selected.scene_id)}
+                onMove={(dir) => moveScene(selected.scene_id, dir)}
+              />
+            ) : (
+              <div className="p-6 text-center text-sm text-zinc-500">
+                <p>No scenes yet.</p>
+                <div className="mt-4 flex justify-center gap-2">
+                  <button className="btn-secondary" onClick={addScene}>Add a scene</button>
+                  <button className="btn-primary" onClick={() => setShowImport(true)}>Import a script</button>
+                </div>
+                <p className="mt-4 text-xs text-zinc-600">Or drag images and videos from the library onto the timeline.</p>
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
+
+      {snapshotTarget && (
+        <SnapshotModal asset={snapshotTarget.asset} purpose={snapshotTarget.purpose} onCancel={cancelSnapshot} onCapture={captureSnapshot} />
+      )}
+
+      {showImport && <ScriptImport hasScenes={scenes.length > 0} onClose={() => setShowImport(false)} onImport={importScript} />}
+
+      {toast && (
+        <div
+          key={toast.id}
+          role="status"
+          className={`fixed bottom-4 left-1/2 z-50 max-w-lg -translate-x-1/2 rounded-lg border px-4 py-2.5 text-sm shadow-2xl ${
+            {
+              error: 'border-red-500/40 bg-red-950 text-red-200',
+              success: 'border-emerald-500/40 bg-emerald-950 text-emerald-200',
+              info: 'border-zinc-700 bg-zinc-900 text-zinc-200',
+            }[toast.tone]
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
+    </div>
+  );
+}

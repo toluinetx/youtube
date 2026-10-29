@@ -1,0 +1,9 @@
+node_modules/
+client/dist/
+.env
+
+# Generated media (the storyboard itself is worth committing)
+project/media/
+project/clips/
+project/exports/
+project/*.tmp
