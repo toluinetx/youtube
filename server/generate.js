@@ -245,6 +245,35 @@ const bufferDataUri = (buffer, ext) => `data:${MIME[ext] || 'image/png'};base64,
 /** What's stored with a picture about its check: kept with its url, so a replaced picture's is ignored. */
 const checkRecord = (check, url) => (check ? { url, ...check } : null);
 
+/**
+ * Generate a reference image (a character sheet or a location's master shot) into the library as
+ * `name`, made without other references. Images already named `name` are renamed "(earlier)" and
+ * replaced by the new one wherever they're used as a reference. With `forEveryScene`, it's also added
+ * to the project-wide references. Resolves with { asset, check }.
+ */
+export async function generateReferenceImage({ name, prompt, forEveryScene }) {
+  const sb = await readStoryboard();
+  const standalone = { scene_id: 'reference', reference_asset_ids: [], use_global_references: false };
+  const { buffer, ext, model, check } = await generateImageFor(sb, standalone, prompt, null);
+  const file = await saveMedia('images', 'reference', ext, buffer);
+  const url = mediaPathToUrl(file);
+  const asset = await assetRecord({
+    file, type: 'image', name: `${name}${path.extname(file)}`,
+    extra: { generated: { kind: 'reference', model, prompt }, ...(check && { image_check: checkRecord(check, url) }) },
+  });
+  const key = (n) => n.replace(/\.[a-z0-9]{2,4}$/i, '').trim().toLowerCase();
+  await updateStoryboard((sb) => {
+    const older = sb.library.filter((a) => a.type === 'image' && key(a.name) === key(name));
+    const swap = (ids = []) => [...new Set(ids.map((id) => (older.some((a) => a.asset_id === id) ? asset.asset_id : id)))];
+    for (const a of older) a.name = `${a.name.slice(0, a.name.length - path.extname(a.name).length)} (earlier)${path.extname(a.name)}`;
+    sb.library.push(asset);
+    sb.settings.reference_asset_ids = swap(sb.settings.reference_asset_ids);
+    for (const s of sb.scenes) s.reference_asset_ids = swap(s.reference_asset_ids);
+    if (forEveryScene && !sb.settings.reference_asset_ids.includes(asset.asset_id)) sb.settings.reference_asset_ids.push(asset.asset_id);
+  }, { label: `Generate reference "${name}"` });
+  return { asset, check };
+}
+
 export async function generateSceneImage(sceneId) {
   const sb = await readStoryboard();
   const scene = findScene(sb, sceneId);

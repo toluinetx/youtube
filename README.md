@@ -57,6 +57,15 @@ prompts, ready for you to review and generate.
 The skill goes through the editor's API (`POST /api/scenes/import`), never by editing files, so the
 editor stays in sync and undo works.
 
+**Story-channel production.** The template's *Writing like a director* and *Presets* (e.g. **survival horror**) set
+up the whole pipeline in one go:
+- A **Cast & locations** list. Once you approve it and its estimated cost, Claude generates a character sheet per
+  character and an empty master plate per key place (`timeline.mjs references`). They go into the library as
+  references, so faces, clothes and room layouts stay the same in every scene.
+- A **three-layer sound plan**: a drone as the music bed, room tone per scene, and precise event sounds timed to words.
+- **Micro-motion** video prompts.
+- **Finishing**: grade, vignette, grain, captions, on-screen titles and shake.
+
 **Audio tags.** The template includes ElevenLabs' audio tags (`[whispers]`, `[sighs]`, `[excited]`, `[pause]`, …)
 and the rules Claude follows to place them when it writes narration from a story. Tags are performed only by the
 **Eleven v4**, **v4 Turbo** and **v3** voice models (Project panel on the left → Voice model). Other models read them out loud,
@@ -107,6 +116,17 @@ and the scene sidebar warns you when that would happen.
 5. **Export.** **Export video** renders `projects/<id>/exports/final_output.mp4` and opens it in the
    **Rendered MP4** tab. Each scene is cached as its own clip, so re-exporting after a small change only
    re-renders the scenes you touched.
+
+   **Finishing** (Project tab → Finishing) is applied to every scene on export:
+   - a **colour grade**: cold bunker, teal & orange, bleach bypass, warm film or noir;
+   - a **vignette** and **film grain**;
+   - burned-in **captions** from the voiceover, either word by word with the spoken word highlighted, or subtitle lines,
+     timed from the generated narration.
+
+   Each scene can also have an **on-screen title** (e.g. "DAY 12", shown big for its first 3 seconds) and **camera
+   shake** (light or heavy) for tense moments, in its sidebar under Finishing. **How far it moves** (Project tab → Images)
+   sets how far zooms and pans travel: 4–6% is a slow cinematic push. The live preview approximates the grade and
+   vignette and shows titles. Captions use the bundled Inter font (`server/fonts`, SIL Open Font License).
 
 **Spending.** The **$** button at the top right shows this month's API spending (all projects). Click it for every
 generation the editor has run, by project and period, with the usage each provider reported: Gemini tokens,
@@ -232,7 +252,7 @@ The library lives in the same file as a `library` array:
 | GET | `/api/events` | server-sent events `{ type: "storyboard" \| "project", project, label, origin }` on every change |
 | GET | `/api/storyboard` | settings + all scenes of the open project |
 | PUT | `/api/settings` | update project settings |
-| PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references`, `notes` |
+| PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references`, `shake`, `title_text`, `notes` |
 | POST | `/api/scenes` | add a blank scene: at `index`, after `after_id`, or at the end |
 | POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
 | DELETE | `/api/scene/:id` | delete a scene (its media is deleted once no undo step needs it) |
@@ -240,7 +260,8 @@ The library lives in the same file as a `library` array:
 | POST | `/api/scenes/paste-prompts` | replace several scenes' prompts: `{ "ids": [2, 3], "prompts": { "image_prompt", "voiceover_text", "sfx_prompt" } }` |
 | POST | `/api/scenes/delete` | delete several scenes: `{ "ids": [2, 3] }` |
 | POST | `/api/scenes/reorder` | `{ "order": [3, 1, 2] }` |
-| POST | `/api/scenes/import` | exact-timing import: `{ "mode": "append" \| "replace", "scenes": [{ "duration_sec", "image_prompt"?, "voiceover_text"?, "sfx_prompt"?, "notes"? }], "settings"? }` (one undo step) |
+| POST | `/api/scenes/import` | exact-timing import: `{ "mode": "append" \| "replace", "scenes": [{ "duration_sec", "image_prompt"?, "voiceover_text"?, "sfx_prompt"?, "reference_names"?, "title_text"?, "shake"?, "notes"? }], "settings"? }` (one undo step) |
+| POST | `/api/references/generate` | generate a reference image into the library: `{ "name", "prompt", "for_every_scene"? }` (replaces a same-named one as the reference) |
 | POST | `/api/scenes/import-script` | `{ "script": "...", "mode": "append" \| "replace" }` |
 | POST | `/api/scene/:id/regenerate-image` | Replicate |
 | POST | `/api/scene/:id/regenerate-audio` | ElevenLabs text-to-speech |

@@ -34,6 +34,16 @@ export const DEFAULT_SETTINGS = {
   sfx_model: 'eleven_text_to_sound_v2',
   sfx_params: {}, // prompt_influence, loop, auto_duration
   motion: 'kenburns', // camera motion for images, one of MOTIONS (scenes can override it)
+  // How far zooms and pans move over a shot, in percent of the frame (5 = a slow cinematic push).
+  motion_amount: 12,
+  // Finishing on export (see server/finish.js): a colour grade, darker edges and film grain (0–1).
+  look: 'none',
+  vignette: 0,
+  grain: 0,
+  // Burned-in captions from the voiceover: 'off', 'words' (a few words at a time, the spoken one
+  // highlighted) or 'lines' (subtitle lines); at the 'bottom' or 'center' of the frame.
+  captions: 'off',
+  caption_position: 'bottom',
   sfx_volume: 0.35,
   // Background music for the whole video (imported file, looped and faded)
   music_url: null,
@@ -220,6 +230,9 @@ export function newScene(id, fields = {}) {
     // Also send the previous scene's picture (a video's last shown frame), for continuity between shots.
     use_previous_scene: true,
     motion: null, // camera motion for the image (one of MOTIONS); null = the project's
+    shake: null, // camera shake on export for tense moments: null, 'light' or 'heavy'
+    // Big on-screen text shown for the first seconds of the scene on export (e.g. "DAY 12").
+    title_text: '',
     // Free-form notes for the editor (e.g. "import the drone clip here"); never sent to a generator.
     notes: '',
     ...fields,
