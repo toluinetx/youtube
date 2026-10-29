@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, Copy, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles,
+  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, ClipboardCopy, ClipboardPaste, Copy, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles,
   SquareDashedMousePointer, Trash2, X,
 } from 'lucide-react';
 import { api, onHistory } from './api.js';
@@ -20,6 +20,7 @@ const MOD_KEY = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘' : 'Ctrl+';
 const SLOT_LABEL = { image: 'image', voiceover: 'voiceover', sfx: 'sound effect' };
 const SLOT_PROMPT = { image: 'image_prompt', voiceover: 'voiceover_text', sfx: 'sfx_prompt' };
 const SLOT_ICON = { image: ImageIcon, voiceover: AudioLines, sfx: Sparkles };
+const PROMPT_FIELDS = ['image_prompt', 'voiceover_text', 'sfx_prompt'];
 // Fields the server owns after a generate/upload/remove; everything else may have unsaved local edits.
 const MEDIA_FIELDS = [
   'image_url', 'voiceover_url', 'sfx_url', 'voiceover_duration_sec', 'sfx_duration_sec',
@@ -35,6 +36,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [selection, setSelection] = useState([]);
   const anchorId = useRef(null); // where a shift-click range starts
+  const [copiedPrompts, setCopiedPrompts] = useState(null); // { image_prompt, voiceover_text, sfx_prompt, from }
   const [sidebarTab, setSidebarTab] = useState('scene');
   const [time, setTime] = useState(0);
   const [seekToken, setSeekToken] = useState(0);
@@ -257,6 +259,14 @@ export default function App() {
         if (selectedIds.length) actions.current.duplicateScenes(selectedIds);
         return;
       }
+      // Copy / paste prompts, unless the user is copying text they selected on the page.
+      if ((e.ctrlKey || e.metaKey) && (key === 'c' || key === 'v') && !window.getSelection()?.toString()) {
+        if (key === 'c' && selectedId != null) actions.current.copyPrompts(selectedId);
+        else if (key === 'v' && selectedIds.length) actions.current.pastePrompts(selectedIds);
+        else return;
+        e.preventDefault();
+        return;
+      }
       if ((e.ctrlKey || e.metaKey) && key === 'a') {
         e.preventDefault();
         if (scenes.length) focusScene(selectedId ?? scenes[0].scene_id, scenes.map((s) => s.scene_id), { seekTo: false });
@@ -385,6 +395,25 @@ export default function App() {
   };
   const deleteScene = (id) => deleteScenes([id]);
 
+  /** Remember a scene's three prompts so they can be pasted onto other scenes. */
+  const copyPrompts = (id) => {
+    const i = scenes.findIndex((s) => s.scene_id === id);
+    if (i < 0) return;
+    setCopiedPrompts({ ...Object.fromEntries(PROMPT_FIELDS.map((f) => [f, scenes[i][f]])), from: i + 1 });
+    notify(`Copied the prompts of scene ${i + 1}`, 'info');
+  };
+
+  /** Replace the prompts of scenes `ids` with the copied ones (one undo step). */
+  const pastePrompts = (ids) => {
+    if (!copiedPrompts) return notify('Copy a scene\'s prompts first (right-click a scene, or Ctrl/⌘+C)', 'info');
+    const prompts = Object.fromEntries(PROMPT_FIELDS.map((f) => [f, copiedPrompts[f]]));
+    run(async () => {
+      applyServer(await api.pastePrompts(ids, prompts));
+      const where = ids.length === 1 ? `scene ${scenes.findIndex((s) => s.scene_id === ids[0]) + 1}` : `${ids.length} scenes`;
+      notify(`Pasted the prompts of scene ${copiedPrompts.from} into ${where}`, 'info', { label: 'Undo', onClick: () => actions.current.undo() });
+    });
+  };
+
   const moveScene = (id, dir) =>
     run(async () => {
       const order = scenes.map((s) => s.scene_id);
@@ -409,6 +438,8 @@ export default function App() {
 
   actions.current.duplicateScenes = duplicateScenes;
   actions.current.deleteScenes = deleteScenes;
+  actions.current.copyPrompts = copyPrompts;
+  actions.current.pastePrompts = pastePrompts;
   actions.current.undo = () => travel('undo');
   actions.current.redo = () => travel('redo');
 
@@ -637,6 +668,9 @@ export default function App() {
         : []),
       { label: `Remove ${label}`, icon: X, disabled: !has || slotBusy, onClick: () => clearSlot(sceneId, slot) },
       '-',
+      { label: 'Copy prompts', icon: ClipboardCopy, shortcut: `${MOD_KEY}C`, onClick: () => copyPrompts(sceneId) },
+      pasteItem([sceneId]),
+      '-',
       { label: 'Insert scene after', icon: Plus, onClick: () => addScene(sceneId) },
       { label: 'Duplicate scene', icon: Copy, shortcut: `${MOD_KEY}D`, onClick: () => duplicateScene(sceneId) },
       { label: 'Move earlier', icon: ArrowLeft, disabled: i === 0, onClick: () => moveScene(sceneId, -1) },
@@ -675,8 +709,21 @@ export default function App() {
     ];
   };
 
+  const pasteItem = (ids) => ({
+    label: copiedPrompts
+      ? `Paste prompts of scene ${copiedPrompts.from}${ids.length > 1 ? ` into ${ids.length} scenes` : ''}`
+      : 'Paste prompts',
+    icon: ClipboardPaste,
+    shortcut: `${MOD_KEY}V`,
+    disabled: !copiedPrompts,
+    onClick: () => pastePrompts(ids),
+  });
+
   const groupMenuItems = (ids, sceneId) => [
     { heading: `${ids.length} scenes selected` },
+    { label: 'Copy prompts of this scene', icon: ClipboardCopy, shortcut: `${MOD_KEY}C`, onClick: () => copyPrompts(sceneId) },
+    pasteItem(ids),
+    '-',
     { label: `Duplicate ${ids.length} scenes`, icon: Copy, shortcut: `${MOD_KEY}D`, onClick: () => duplicateScenes(ids) },
     { label: 'Select only this scene', icon: SquareDashedMousePointer, onClick: () => selectScene(sceneId, { seekTo: false }) },
     '-',

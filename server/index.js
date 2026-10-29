@@ -184,6 +184,15 @@ app.delete('/api/scene/:id', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Replace the prompts of several scenes: { ids, prompts: { image_prompt, voiceover_text, sfx_prompt } }.
+app.post('/api/scenes/paste-prompts', async (req, res) => {
+  const prompts = Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, String(req.body.prompts?.[f] ?? '')]));
+  const sb = await updateStoryboard((sb) => {
+    for (const s of scenesById(sb, req.body.ids)) Object.assign(s, prompts);
+  }, { label: `Paste prompts into ${req.body.ids?.length === 1 ? 'scene' : `${req.body.ids?.length} scenes`}` });
+  res.json(sb);
+});
+
 app.post('/api/scenes/delete', async (req, res) => {
   await updateStoryboard((sb) => {
     const doomed = new Set(scenesById(sb, req.body.ids));

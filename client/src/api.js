@@ -38,6 +38,7 @@ export const api = {
   duplicateScene: (id) => request('POST', `/api/scene/${id}/duplicate`),
   deleteScene: (id) => request('DELETE', `/api/scene/${id}`),
   deleteScenes: (ids) => request('POST', '/api/scenes/delete', { ids }),
+  pastePrompts: (ids, prompts) => request('POST', '/api/scenes/paste-prompts', { ids, prompts }),
   duplicateScenes: (ids) => request('POST', '/api/scenes/duplicate', { ids }),
   reorder: (order) => request('POST', '/api/scenes/reorder', { order }),
   importScript: (script, mode) => request('POST', '/api/scenes/import-script', { script, mode }),

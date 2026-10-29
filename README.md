@@ -108,7 +108,8 @@ Give image generation reference pictures so a character, location or style stays
 
 Keyboard: <kbd>Space</kbd> play/pause · <kbd>←</kbd>/<kbd>→</kbd> previous/next scene · <kbd>Delete</kbd> delete scene ·
 <kbd>Ctrl/⌘</kbd>+<kbd>D</kbd> duplicate scene · <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> extend the selection ·
-<kbd>Ctrl/⌘</kbd>+<kbd>A</kbd> select all scenes · <kbd>Esc</kbd> clear the selection · <kbd>Ctrl/⌘</kbd>+<kbd>Z</kbd> undo · <kbd>Ctrl</kbd>+<kbd>Y</kbd> or
+<kbd>Ctrl/⌘</kbd>+<kbd>A</kbd> select all scenes · <kbd>Ctrl/⌘</kbd>+<kbd>C</kbd> / <kbd>V</kbd> copy a scene's prompts /
+paste them over the selected scenes' prompts · <kbd>Esc</kbd> clear the selection · <kbd>Ctrl/⌘</kbd>+<kbd>Z</kbd> undo · <kbd>Ctrl</kbd>+<kbd>Y</kbd> or
 <kbd>⇧⌘</kbd>+<kbd>Z</kbd> redo. Right-click a clip, the music row or a library item for more actions.
 
 **Undo / redo** covers every change to the project: edits, deletes, generations, library changes and script
@@ -164,6 +165,7 @@ To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 | POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
 | DELETE | `/api/scene/:id` | delete a scene (its media is deleted once no undo step needs it) |
 | POST | `/api/scenes/duplicate` | copy several scenes' prompts: `{ "ids": [2, 3] }`; the copies go after the last one |
+| POST | `/api/scenes/paste-prompts` | replace several scenes' prompts: `{ "ids": [2, 3], "prompts": { "image_prompt", "voiceover_text", "sfx_prompt" } }` |
 | POST | `/api/scenes/delete` | delete several scenes: `{ "ids": [2, 3] }` |
 | POST | `/api/scenes/reorder` | `{ "order": [3, 1, 2] }` |
 | POST | `/api/scenes/import-script` | `{ "script": "...", "mode": "append" \| "replace" }` |
