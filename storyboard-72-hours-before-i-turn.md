@@ -34,13 +34,13 @@
 | 3:13 | HOUR 2: jammed interstate, the dead turn to the engine; +38 miles, gas math fails | External threat | open L5 (gas) | Title, screech, Shake | Panic |
 | 4:04 | HOUR 9: siphoning the school bus, two-click code, the dead behind glass, wound tears | Resource + the first reversal (~30%) | close L3, L5 | Static burst, glass video, Shake (heavy) | Terror → relief |
 | 5:28 | HOUR 19: 101.2 °F, Tylenol 16, Eli's water, "Do zombies remember people?", rewound tape, a light | Body + the dependent | open L6, L7 | Rewind whirr | Tender → uneasy |
-| 6:34 | HOUR 24: Walt's shotgun, "When your eyes go grey…", the barn, 15 gallons, two clicks taught | Group | open L8 (will Walt shoot?) | Title, tapping on glass | Threat → relief |
-| 7:41 | HOUR 38 MIDPOINT: the radio, no cure, the bitten are shot at the perimeter. New plan | The truth changes | close L4, open L9 | Static cuts to silence | Despair |
-| 8:35 | HOUR 50: the words go (aphasia), Walt's cut hand, the hunger, the cuffs, Eli doesn't ask | Mind + moral | open/close L10 | Heartbeat swell, ratchet | Horror |
-| 9:50 | HOUR 61 LOWEST POINT: seizure, blackout, blood, the gun on her. "It's yours." | Lowest point (~76%) | close L2 | Blackout silence, Shake (heavy) | Despair |
-| 11:02 | HOUR 66: the last tape for Eli; the dead gathered at the gate's generator | Calm before the climax | open L11 | Title, video | Dread |
-| 11:33 | HOUR 70 CLIMAX: 10 minutes, the field, "I know, Mom. I heard the tapes." | Climax + twist | close L7, L1, L8, L9, L11 | Klaxon, silence, Title TYLENOL: 3 | Peak |
-| 13:23 | HOUR 72: "Patient is…", silence. HOUR 79: her tape, the walkie, two clicks | Peak-end, sequel hook | close L6 (deliberately ambiguous) | Silence, static, clicks | Haunting |
+| 6:34 | HOUR 24: a farmhouse; the turned farmer has locked himself in. The barn, 15 gallons, Eli's two-click game | External + foreshadowing | open/close L8 (will he get out?) | Title, thudding door, Shake | Dread → relief |
+| 7:40 | HOUR 38 MIDPOINT: the radio, no cure, the bitten are shot at the perimeter. New plan | The truth changes | close L4, open L9 | Static cuts to silence | Despair |
+| 8:35 | HOUR 50: the words go (aphasia); Eli's scraped knee wakes the hunger; she cuffs herself to the wheel and gives Eli the key | Mind + moral | open/close L10, open L12 (will she hurt Eli?) | Heartbeat swell, ratchet | Horror |
+| 9:53 | HOUR 61 LOWEST POINT: seizure, blackout, blood, the back seat empty; Eli outside, doors locked. It's her own blood | Lowest point (~76%) | close L2 | Blackout silence, Shake (heavy) | Despair |
+| 11:05 | HOUR 66: the last tape for Eli; the dead gathered at the gate's generator | Calm before the climax | open L11 | Title, video | Dread |
+| 11:36 | HOUR 70 CLIMAX: 10 minutes, the field, "I know, Mom. I heard the tapes." Eli walks in alone with the only key | Climax + twist | close L7, L1, L9, L12, L11 | Klaxon, silence, Title TYLENOL: 3 | Peak |
+| 13:27 | HOUR 72: "Patient is…", silence. HOUR 79: her tape, the walkie, two clicks | Peak-end, sequel hook | close L6 (deliberately ambiguous) | Silence, static, clicks | Haunting |
 
 ---
 
@@ -60,9 +60,9 @@
 - **Voice model:** Eleven v4
 - **Voice settings:** stability 0 (Creative; use 0.5 if it drifts) · style 0.3 · speed 0.95
 - **Narrator voice:** a tired, low female voice in her mid-thirties (pick one from your ElevenLabs
-  library). Walt's and Eli's few lines use `[low, gravelly old man voice]` and `[childlike tone]`.
+  library). Eli's few lines use `[childlike tone]`.
 - **Music:** low sub-bass drone under the whole video. A sparse, warm piano motif for the Eli
-  moments (0:42, 5:56, 7:34, 10:54), dropped out completely at 12:15 for the twist.
+  moments (0:42, 5:56, 7:25, 10:49), dropped out completely at 12:18 for the twist.
 
 ---
 
@@ -76,9 +76,6 @@
 - **Eli:** an 8-year-old boy, small for his age, curly light-brown hair, big brown eyes, a gap in his
   front teeth, an oversized red rain jacket over a green dinosaur T-shirt, a yellow toy walkie-talkie
   on a lanyard around his neck
-- **Walt** *(only where named)*: a 71-year-old man, tall and thin, weathered pale skin, short white
-  stubble beard, deep-set grey eyes, faded olive-green canvas barn coat, plain brown cap, work gloves,
-  carrying an old double-barrel shotgun
 
 ### Locations
 - **Corolla interior:** the inside of a 2009 silver sedan seen from the back seat, worn grey cloth
@@ -86,8 +83,8 @@
   seat, crumpled fast-food wrappers on the floor
 - **Gas station:** a small rural two-pump gas station on an empty two-lane road at dusk, peeling white
   paint, a dark shop window, a yellow school bus abandoned beside the pumps
-- **Walt's barn:** an old wooden barn interior, stacked hay bales, a single hanging oil lantern, a
-  workbench with hand tools and an old shortwave radio, thin slats of light through gaps in the plank walls
+- **Farm barn:** an old wooden barn interior, stacked hay bales, a single hanging oil lantern, a
+  workbench with hand tools, thin slats of light through gaps in the plank walls
 - **Fort Calder gate:** a military perimeter at dawn, a double chain-link fence topped with razor wire,
   tall floodlight poles, a sandbagged vehicle gate with a small scanner booth and a diesel generator,
   a wide field of dead grass in the foreground
@@ -467,129 +464,130 @@
 - **References:** Corolla interior
 
 ### Scene 55 · 6:27–6:34
-- **Image:** View through the windshield at night: far across a dark field, a single warm light in a farmhouse window
-- **Video:** The distant farmhouse window light glows steadily while thin mist drifts across the dark field; locked-off camera. No cuts, no new objects.
-- **Voice:** Then a light came on, across the field. [whispers] Someone was awake.
+- **Image:** View through the windshield at night: far across a dark field, a farmhouse porch light glowing warm, thin mist over the field
+- **Video:** The distant porch light glows steadily while thin mist drifts across the dark field; locked-off camera. No cuts, no new objects.
+- **Voice:** Then a porch light came on across the field. [whispers] Something over there was moving.
 - **SFX:** Silence, wind across the field
-- **SFX 2 (at "light", 1s):** a distant screen door creaking open
+- **SFX 2 (at "light", 1s):** a faint electrical click far away
 - **References:** Corolla interior
 
 ### Scene 56 · 6:34–6:41
-- **Image:** Early grey morning, the two dark muzzles of a double-barrel shotgun pressed against the driver's side window glass, Nora waking inside, a man's shape out of focus behind the gun
-- **Voice:** Hour twenty-four. I woke up to two steel circles against my window.
-- **SFX:** Morning birdsong, wind
-- **SFX 2 (at "steel", 1s):** metal tapping twice on window glass
-- **References:** Corolla interior, Walt
+- **Image:** Grey morning, the silver sedan parked in front of an old white farmhouse, the porch light still on, the front door shut, no people
+- **Voice:** Hour twenty-four. A farmhouse. Porch light still on. Front door shut.
+- **SFX:** Morning birdsong, wind, a loose screen door tapping
 - **Title:** HOUR 24
-- **Shake:** light
 
 ### Scene 57 · 6:41–6:48
-- **Image:** Walt standing outside the car in morning mist, aiming the shotgun at the driver's window, eyes on the bandaged arm, a farmhouse behind him
-- **Voice:** Walt Pruitt. Seventy-one. He looked at my arm before he looked at me.
-- **SFX:** Morning birdsong, wind, a dog barking far away
-- **References:** Walt
-- **Notes:** [open L8: will Walt shoot her?]
+- **Image:** Close-up of the farmhouse front door, its frosted glass panel smeared from inside with dark handprints, a tall blurred shape behind the glass
+- **Voice:** Behind the glass, a shape in a barn coat. Walking into the door. Again. And again.
+- **SFX:** Wind, birdsong stopping
+- **SFX 2 (at "Walking", 3s):** a slow, repeated thud against a wooden door
+- **Shake:** light
+- **Notes:** [open L8: will the thing in the farmhouse get out?]
 
-### Scene 58 · 6:48–6:55
-- **Image:** Close-up of Walt's weathered face under the brown cap, hard grey eyes, morning mist
-- **Voice:** [low, gravelly old man voice] My wife got bit in March. I know the smell.
-- **SFX:** Wind, birdsong
-- **References:** Walt
+### Scene 58 · 6:48–6:56
+- **Image:** Close-up of a heavy brass deadbolt and a key left in the lock on the inside of the frosted glass, the shape pressing behind it
+- **Voice:** He'd locked himself in. From the inside. [pause] I think he knew what he was turning into.
+- **SFX:** Slow thudding on the door, wind
+- **Notes:** Setup: mirrors Nora cuffing herself to the fence at the gate.
 
-### Scene 59 · 6:55–7:03
-- **Image:** Nora in the driver's seat with both hands raised, whispering through the glass, Eli asleep in the back seat out of focus behind her
-- **Voice:** I didn't lie to him. [whispers] Please. Not in front of my son.
-- **SFX:** Car interior, muffled birdsong outside
-- **References:** Corolla interior
+### Scene 59 · 6:56–7:03
+- **Image:** Nora and Eli (two people) stepping into an old barn through its open doors, slats of morning light across the hay
+- **Voice:** The barn was open. [pause] Eli found the gas cans before I did.
+- **SFX:** Barn room tone, wind through the plank walls, the distant thudding
+- **References:** Farm barn
 
-### Scene 60 · 7:03–7:11
-- **Image:** Walt lowering the shotgun slightly, looking past Nora at Eli asleep in the back seat, morning mist
-- **Voice:** [low, gravelly old man voice] When your eyes go grey, I do what has to be done. [pause] Barn's warm.
-- **SFX:** Wind, birdsong
-- **References:** Walt
-- **Notes:** Setup: "when your eyes go grey" (pays off at the gate).
-
-### Scene 61 · 7:11–7:19
-- **Image:** Inside the barn: Eli asleep on hay bales under a wool blanket in lantern light, Nora alone sitting on the far side of the barn, watching him
-- **Video:** Eli sleeps still, the lantern flame flickers, dust motes drift through the slats of light; very slow push in. No cuts, no new objects.
-- **Voice:** So Eli slept in the hay. I slept across the barn. Where Walt could see me.
-- **SFX:** Barn room tone, wind through the plank walls, the lantern hissing
-- **References:** Walt's barn
-
-### Scene 62 · 7:19–7:26
-- **Image:** Close-up of three red metal jerry cans standing against the barn wall in lantern light
-- **Voice:** He had three jerry cans of gas. Fifteen gallons. Enough to get us there.
+### Scene 60 · 7:03–7:10
+- **Image:** Close-up of three red metal jerry cans standing against the barn wall, morning light through the slats
+- **Voice:** Three cans. Fifteen gallons. Enough to get us all the way there.
 - **SFX:** Barn room tone, a can scraping on wood
-- **References:** Walt's barn
+- **References:** Farm barn
 - **Title:** +15 GALLONS
 
-### Scene 63 · 7:26–7:34
-- **Image:** Walt sitting on an upturned bucket by the barn door, the shotgun across his knees, watching the camera, lantern light
-- **Voice:** He'd give us the gas, and drive us. On one condition. [pause] The gun came too.
-- **SFX:** Barn room tone, wind, rain starting on the roof
-- **References:** Walt's barn, Walt
+### Scene 61 · 7:10–7:18
+- **Image:** Inside the barn: Eli asleep on hay bales under a wool blanket in lantern light, Nora alone sitting on the far side of the barn, watching him
+- **Video:** Eli sleeps still, the lantern flame flickers, dust motes drift through the slats of light; very slow push in. No cuts, no new objects.
+- **Voice:** I parked the car inside. We slept in the hay. [pause] Me on the far side.
+- **SFX:** Barn room tone, wind through the plank walls, the lantern hissing
+- **References:** Farm barn
 
-### Scene 64 · 7:34–7:41
-- **Image:** Eli showing Walt how the yellow walkie-talkie works, Walt bending down beside him, almost smiling, two people, lantern light
-- **Voice:** By noon Eli had taught him the two clicks. [pause] Walt pretended he wasn't charmed.
-- **SFX:** Barn room tone, rain on the roof, a low warm piano note
+### Scene 62 · 7:18–7:25
+- **Image:** Through a gap between the barn's planks: the farmhouse across the yard, its porch light on, the front door shut
+- **Voice:** From the house, the thudding never stopped. Every few seconds. All day.
+- **SFX:** Barn room tone, wind
+- **SFX 2 (at "thudding", 3s):** a slow, repeated thud against a wooden door, far away
+- **References:** Farm barn
+
+### Scene 63 · 7:25–7:33
+- **Image:** Eli sitting cross-legged on a hay bale, pressing the button of his yellow walkie-talkie and grinning, lantern light
+- **Voice:** Eli made up a game. Two clicks from across the barn. [pause] I had to answer every time.
+- **SFX:** Barn room tone, a low warm piano note
 - **SFX 2 (at "clicks", 1s):** two walkie-talkie clicks
-- **References:** Walt's barn, Walt
+- **References:** Farm barn
 - **Notes:** Relief before the midpoint drop.
 
-### Scene 65 · 7:41–7:48
-- **Image:** The barn at night, an old shortwave radio glowing on the workbench, Walt and Nora (two people) leaning over it, lantern light
-- **Voice:** Hour thirty-eight. Walt's radio picked up Fort Calder. A soldier, reading a statement.
-- **SFX:** Rain on the barn roof, shortwave radio hiss and crackle
-- **References:** Walt's barn, Walt
+### Scene 64 · 7:33–7:40
+- **Image:** Eli eating peaches straight from a can with his fingers, syrup on his chin, lantern light
+- **Voice:** He ate three cans of peaches. [pause] I wasn't hungry. Not for peaches.
+- **SFX:** Barn room tone, a spoon on a tin can
+- **References:** Farm barn
+- **Notes:** Warmth with dread underneath (the hunger is coming).
+
+### Scene 65 · 7:40–7:47
+- **Image:** The silver sedan parked inside the dark barn, its dashboard radio glowing through the windshield, Nora alone in the driver's seat
+- **Voice:** Hour thirty-eight. The car radio found Fort Calder. A soldier, reading a statement.
+- **SFX:** Rain on the barn roof, car radio hiss and crackle
+- **References:** Farm barn, Corolla interior
 - **Title:** HOUR 38
 
-### Scene 66 · 7:48–7:56
-- **Image:** Close-up of the shortwave radio's speaker grille and glowing dial in the dark barn
-- **Video:** The radio dial glows and flickers, the needle trembles slightly, dust floats in the lantern light; locked-off camera. No cuts, no new objects.
+### Scene 66 · 7:47–7:55
+- **Image:** Close-up of a car radio glowing amber in a dark dashboard
+- **Video:** The radio display glows and flickers, dust floats through its light; locked-off camera. No cuts, no new objects.
 - **Voice:** [flatly] There is no treatment. [pause] Anyone bitten will be shot at the perimeter.
 - **SFX:** Radio hiss, rain on the roof
 - **SFX 2 (at "shot", 1s):** the radio static cutting out to dead silence
-- **References:** Walt's barn
+- **References:** Corolla interior
 - **Notes:** [close L4] [interrupt: radio static cuts to silence] Midpoint reversal (~56%).
 
-### Scene 67 · 7:56–8:03
-- **Image:** Close-up of Nora alone, her face lit from below by the lantern, completely still
+### Scene 67 · 7:55–8:02
+- **Image:** Close-up of Nora alone in the dark car, her face lit from below by the radio's glow, completely still
 - **Voice:** [long pause] So that was it. There was never a cure.
 - **SFX:** Silence, then rain slowly returning on the roof
-- **References:** Walt's barn
+- **References:** Corolla interior
 
-### Scene 68 · 8:03–8:11
+### Scene 68 · 8:02–8:10
 - **Image:** Nora sitting on the barn floor, her back against a hay bale, looking across the barn at Eli asleep, lantern light
 - **Voice:** I'd driven a hundred and sixty miles toward a bullet. [pause] So I changed the plan.
 - **SFX:** Barn room tone, rain on the roof
-- **References:** Walt's barn
+- **References:** Farm barn
 
-### Scene 69 · 8:11–8:19
+### Scene 69 · 8:10–8:18
 - **Image:** Close-up of Nora's two hands holding the dictaphone close to her mouth in the dark barn, the red record light glowing
-- **Voice:** [whispers] New plan. Eli goes in. I don't. [pause] Walt takes him through the gate.
+- **Voice:** [whispers] New plan. Eli goes in. I don't. [pause] He walks through that gate alone.
 - **SFX:** Barn room tone, rain, a dictaphone motor whirring
-- **References:** Walt's barn
+- **References:** Farm barn
 
-### Scene 70 · 8:19–8:28
+### Scene 70 · 8:18–8:27
 - **Image:** Eli asleep on the hay hugging the yellow walkie-talkie, warm lantern light on his face
 - **Voice:** Now I had thirty-two hours to make an eight-year-old walk away from his mother. [pause] Without telling him why.
 - **SFX:** Barn room tone, rain, a low warm piano note
 - **Shot 2 (at "Without"):** Close-up of Nora's face across the barn, watching him, eyes wet
-- **References:** Walt's barn
+- **References:** Farm barn
 - **Notes:** [open L9: how will she get Eli to go in without her?]
 
-### Scene 71 · 8:28–8:35
-- **Image:** Walt by the barn door in the rain-dark, the shotgun in the crook of his arm, dragging his bucket closer to the door
-- **Voice:** Walt didn't say anything. He just moved his chair closer to the door.
-- **SFX:** Rain, a bucket scraping on the floorboards
-- **References:** Walt's barn, Walt
+### Scene 71 · 8:27–8:35
+- **Image:** Through a gap between the barn's planks at night: the farmhouse's dark front door under the porch light, rain falling
+- **Voice:** Across the yard, the farmer kept walking into his door. It held. [pause] I understood him now.
+- **SFX:** Rain, wind
+- **SFX 2 (at "walking", 3s):** a slow thud against a wooden door, far away
+- **References:** Farm barn
+- **Notes:** [close L8]
 
 ### Scene 72 · 8:35–8:43
-- **Image:** Inside the silver sedan from the back seat in grey daylight: Walt driving, Nora in the passenger seat with her bandaged arm, a flat country road ahead
-- **Voice:** Hour fifty. Walt drove. I sat on my hands so Eli wouldn't see them shake.
+- **Image:** Inside the silver sedan from the back seat in grey daylight: Nora alone in front, driving, her bandaged arm on the wheel, a flat country road ahead
+- **Voice:** Hour fifty. I drove with both hands on the wheel so Eli wouldn't see them shake.
 - **SFX:** Car on a country road, road noise, wipers
-- **References:** Corolla interior, Walt
+- **References:** Corolla interior
 - **Title:** HOUR 50
 
 ### Scene 73 · 8:43–8:50
@@ -599,69 +597,70 @@
 - **References:** Corolla interior
 
 ### Scene 74 · 8:50–8:58
-- **Image:** Close-up of Nora's hand on her knee, the fingernails grey and cracking
+- **Image:** Close-up of Nora's hand on the steering wheel, the fingernails grey and cracking
 - **Voice:** I've said that word a thousand times. [pause] Aphasia. It took me an hour to find it.
 - **SFX:** Car interior, road noise
 - **References:** Corolla interior
 
-### Scene 75 · 8:58–9:05
-- **Image:** Close-up of Walt's right hand on the steering wheel, a fresh cut across his knuckles beading red
-- **Voice:** Walt cut his hand on barbed wire, getting the gas. Just a scratch.
-- **SFX:** Car interior, road noise
-- **References:** Corolla interior, Walt
+### Scene 75 · 8:58–9:06
+- **Image:** Eli sitting on a gravel road shoulder, his scraped knee beading red, Nora kneeling in front of him with gauze, two people, grey daylight
+- **Voice:** Eli tripped on the gravel. Scraped his knee. [pause] I'm a nurse. I cleaned it.
+- **SFX:** Wind over an empty road, gravel crunching
+- **SFX 2 (at "tripped", 1s):** a small body hitting gravel, a child's yelp
 
-### Scene 76 · 9:05–9:13
-- **Image:** Extreme close-up of Nora's eyes turned sideways toward the driver, pupils wide, one iris clouding grey
-- **Video:** Nora's eyes stay fixed sideways, her pupils widen slowly, a tremor in her lower eyelid; very slow push in. No cuts, no new objects.
-- **Voice:** [slowly] And I could smell it. From across the car. [pause] Something in me… woke up.
-- **SFX:** Car interior, road noise falling away
+### Scene 76 · 9:06–9:14
+- **Image:** Extreme close-up of Nora's eyes, pupils wide, one iris clouding grey, staring down
+- **Video:** Nora's eyes stay fixed downward, her pupils widen slowly, a tremor in her lower eyelid; very slow push in. No cuts, no new objects.
+- **Voice:** [slowly] And I could smell it. My son's blood. [pause] Something in me… woke up.
+- **SFX:** Wind falling away
 - **SFX 2 (at "woke", 2s):** a low sub-bass swell and a heavy heartbeat
-- **References:** Corolla interior
 - **Shake:** light
 - **Notes:** [open L10: what woke up in her?]
 
-### Scene 77 · 9:13–9:21
-- **Image:** Night, Nora alone in the passenger seat, her left wrist handcuffed to the car door handle, the steel cuff gleaming in moonlight
-- **Voice:** That night I gave Walt the cop's handcuffs. [pause] Cuffed to the door. Key in his pocket.
+### Scene 77 · 9:14–9:22
+- **Image:** Night, Nora alone in the driver's seat, her left wrist handcuffed to the steering wheel, the steel cuff gleaming in moonlight
+- **Voice:** That night I cuffed myself to the steering wheel. [pause] And I gave Eli the key.
 - **SFX:** Car interior at night, crickets
-- **SFX 2 (at "Cuffed", 1s):** a handcuff ratchet clicking shut
+- **SFX 2 (at "cuffed", 1s):** a handcuff ratchet clicking shut
 - **References:** Corolla interior
-- **Notes:** [close L10] It was the hunger, and she answers it with the cuffs.
+- **Notes:** [close L10] It was the hunger, and she answers it with the cuffs. [open L12: will she hurt Eli?]
 
-### Scene 78 · 9:21–9:28
-- **Image:** Eli in the back seat in the dark, eyes open, looking at the handcuff on his mother's wrist
-- **Voice:** Eli saw the cuffs. [pause] I said it was a game. Like a sleepover.
+### Scene 78 · 9:22–9:31
+- **Image:** Close-up of Eli's small hand closing around a tiny handcuff key in the moonlight
+- **Voice:** If I act strange, you get out and lock the doors. [pause] And you never give me that key.
 - **SFX:** Car interior at night, crickets
+- **Shot 2 (at "never"):** Close-up of Nora's face in moonlight, her grey-veined temple, looking straight at her son
 - **References:** Corolla interior
+- **Notes:** Setup: the rules Eli follows at Hour 61; the key pays off at the gate.
 
-### Scene 79 · 9:28–9:36
+### Scene 79 · 9:31–9:39
 - **Image:** Close-up of Eli's face in shadow, calm, nodding slowly
-- **Voice:** He just said okay. [pause] Not one question. I should have noticed that.
+- **Voice:** He just said okay. [pause] Not one question about the cuffs. I should have noticed that.
 - **SFX:** Car interior at night, crickets
 - **References:** Corolla interior
 - **Notes:** Setup for the twist.
 
-### Scene 80 · 9:36–9:44
+### Scene 80 · 9:39–9:47
 - **Image:** Close-up of the dictaphone's tape window on the dashboard in early morning light
 - **Voice:** In the morning, the tape was rewound again. [pause] Third time. I stopped logging it.
 - **SFX:** Car interior at dawn, birds
 - **SFX 2 (at "rewound", 2s):** a fast cassette tape rewinding whirr, then a click
 - **References:** Corolla interior
 
-### Scene 81 · 9:44–9:50
+### Scene 81 · 9:47–9:53
 - **Image:** Close-up of the white pill bottle nearly empty in Nora's grey-nailed palm
 - **Voice:** Nine Tylenol left. Fever, one-oh-two.
 - **SFX:** Car interior, pills rattling
 - **References:** Corolla interior
 - **Title:** TYLENOL: 9
 
-### Scene 82 · 9:50–9:57
+### Scene 82 · 9:53–10:00
 - **Image:** Wide shot of the silver sedan parked off a highway ramp at night, a faint white glow of floodlights on the far horizon
 - **Voice:** Hour sixty-one. Forty miles out. We could see the floodlights from the road.
 - **SFX:** Wind, a distant generator hum, crickets
 - **Title:** HOUR 61
 
-### Scene 83 · 9:57–10:03
+### Scene 83 · 10:00–10:06
 - **Image:** Extreme close-up of Nora's eye rolling back, the red dashboard glow on her skin
 - **Voice:** Then the seizure.
 - **SFX:** A sudden high ringing, then silence
@@ -669,77 +668,78 @@
 - **Shake:** heavy
 - **Notes:** [interrupt: hard cut to silence, the blackout]
 
-### Scene 84 · 10:03–10:08
+### Scene 84 · 10:06–10:11
 - **Image:** Almost total darkness, a faint red dashboard glow out of focus, the shape of a steering wheel
-- **SFX:** A muffled heartbeat, distant screaming as if heard underwater
+- **SFX:** A muffled heartbeat, a child screaming as if heard underwater
 - **References:** Corolla interior
 - **Notes:** Planned 5 s blackout, no narration.
 
-### Scene 85 · 10:08–10:15
+### Scene 85 · 10:11–10:18
 - **Image:** Nora's left hand held up into the red dashboard light, her fingertips smeared with fresh blood, her face blurred behind it, Nora alone in the frame
-- **Voice:** I woke up with blood on my mouth. [pause] Eli was screaming.
+- **Voice:** I woke up with blood on my mouth. [pause] The back seat was empty.
 - **SFX:** Car interior at night, her ragged breathing
-- **SFX 2 (at "screaming", 2s):** a child screaming, muffled through car glass
+- **SFX 2 (at "empty", 1s):** a low sub-bass hit
 - **References:** Corolla interior
 - **Notes:** The cold-open image again: we've caught up.
 
-### Scene 86 · 10:15–10:22
-- **Image:** View through the windshield at night: Walt standing outside in the headlight glow, holding Eli behind him with one arm, the shotgun aimed at the windshield
-- **Voice:** Walt had him outside the car. Behind him. The shotgun was on me.
-- **SFX:** Car interior, muffled crying outside
-- **References:** Corolla interior, Walt
-
-### Scene 87 · 10:22–10:30
-- **Image:** Nora alone in the rearview mirror, wiping her mouth with the back of her hand, staring at the blood
-- **Voice:** [panicking] Whose blood. Whose blood. I checked Eli with my eyes. Every inch.
-- **SFX:** Car interior, her fast breathing, crying outside
+### Scene 86 · 10:18–10:25
+- **Image:** View through the windshield at night: Eli alone standing in the field twenty metres away in the glow of the dashboard light, clutching his walkie-talkie, crying
+- **Voice:** Eli was out in the field. Doors locked. Just like I taught him.
+- **SFX:** Car interior, wind, muffled crying outside
+- **SFX 2 (at "locked", 1s):** a car door lock clunking
 - **References:** Corolla interior
 
-### Scene 88 · 10:30–10:38
-- **Image:** Close-up of Walt's face lit by the car's dome light through the glass, grim and steady
-- **Voice:** [low, gravelly old man voice] It's yours. You bit your tongue. [pause] Hasn't been anybody's yet.
-- **SFX:** Wind, crickets, the engine ticking
-- **References:** Walt
+### Scene 87 · 10:25–10:33
+- **Image:** Nora alone in the rearview mirror, wiping her mouth with the back of her cuffed hand, staring at the blood
+- **Voice:** [panicking] Whose blood. Whose blood. I pulled at the cuff until my wrist bled.
+- **SFX:** Car interior, her fast breathing, the cuff chain rattling against the wheel
+- **References:** Corolla interior
+
+### Scene 88 · 10:33–10:41
+- **Image:** Close-up of Nora alone touching her lips with two fingers, eyes closing, dashboard glow
+- **Voice:** Then I felt my tongue. [pause] It was mine. I'd bitten it in the seizure. [sigh of relief]
+- **SFX:** Car interior, wind
+- **References:** Corolla interior
 - **Notes:** [close L2]
 
-### Scene 89 · 10:38–10:46
-- **Image:** Close-up of Nora alone pressing her forehead to the steering wheel, shoulders shaking
-- **Voice:** [crying] I told him. Forty more miles. Get him to the gate. Then you do it.
+### Scene 89 · 10:41–10:49
+- **Image:** Close-up of Nora alone pressing her forehead to the steering wheel, her cuffed wrist beside her face, shoulders shaking
+- **Voice:** [crying] But he'd watched me. Whatever I did for those four minutes… he saw it.
 - **SFX:** Car interior, wind, crying
 - **References:** Corolla interior
 - **Notes:** Lowest point (~76%).
 
-### Scene 90 · 10:46–10:54
-- **Image:** Eli pressed into Walt's coat at night, crying, looking at his mother through the windshield, headlight glow
-- **Voice:** And Eli watched me say it. [pause] Through the glass.
-- **SFX:** Wind, muffled crying, a low warm piano note
-- **References:** Walt
+### Scene 90 · 10:49–10:57
+- **Image:** Eli alone in the dark field holding the yellow walkie-talkie to his mouth, his face wet, faint glow from the car
+- **Voice:** Then my walkie clicked. Twice. [pause] I'm here. I'm okay.
+- **SFX:** Wind through grass, a low warm piano note
+- **SFX 2 (at "clicked", 1s):** two walkie-talkie clicks
 
-### Scene 91 · 10:54–11:02
-- **Image:** Walt opening the back door of the silver sedan for Eli, the shotgun still in his other hand, night, headlight glow
-- **Voice:** Walt didn't lower the gun. But he put Eli back in the car. And he drove.
-- **SFX:** Car door opening and closing, engine starting
-- **References:** Walt
+### Scene 91 · 10:57–11:05
+- **Image:** Eli outside the car and Nora inside (two people), his small hand and her grey hand pressed against the same window glass from either side, night
+- **Voice:** He wouldn't get back in the car for an hour. [pause] He was right not to.
+- **SFX:** Wind, crickets, his quiet breathing on the glass
+- **References:** Corolla interior
 
-### Scene 92 · 11:02–11:09
+### Scene 92 · 11:05–11:12
 - **Image:** Blue pre-dawn light, the silver sedan seen from behind on an empty road, a floodlit fence line glowing far ahead
 - **Voice:** Hour sixty-six. I recorded the last tape I could still say all the words on.
 - **SFX:** Car on an empty road, a distant generator hum
 - **Title:** HOUR 66
 
-### Scene 93 · 11:09–11:17
+### Scene 93 · 11:12–11:20
 - **Image:** Close-up of Nora's grey-nailed hand slipping the black dictaphone into the pocket of a small red rain jacket, blue pre-dawn light
 - **Voice:** It was for Eli. For later. [pause] I put it in his jacket pocket while he slept.
 - **SFX:** Car interior, road noise, rain jacket rustling
 - **References:** Corolla interior
 
-### Scene 94 · 11:17–11:25
+### Scene 94 · 11:20–11:28
 - **Image:** Close-up of Nora's grey hand holding Eli's small sleeping hand on the back seat
 - **Voice:** I still didn't know what I'd say at the gate. [pause] I had four hours to find it.
 - **SFX:** Car interior, road noise, Eli's slow breathing
 - **References:** Corolla interior
 
-### Scene 95 · 11:25–11:33
+### Scene 95 · 11:28–11:36
 - **Image:** Wide shot from a low rise at dawn: the Fort Calder gate glowing under floodlights, a diesel generator beside the booth, a crowd of grey figures gathered along the outside of the fence
 - **Video:** The grey figures sway slowly along the fence line, floodlight haze drifts, the generator exhaust puffs; very slow push in. No cuts, no new objects.
 - **Voice:** But the gate's generator was loud. [pause] And the dead had been listening to it all night.
@@ -747,7 +747,7 @@
 - **References:** Fort Calder gate
 - **Notes:** [open L11: can they get through the dead to the gate?]
 
-### Scene 96 · 11:33–11:39
+### Scene 96 · 11:36–11:42
 - **Image:** The gate's floodlights snapping to full brightness in the dawn haze, the steel gate starting to slide open
 - **Voice:** Six A.M. The gate opened. Ten minutes.
 - **SFX:** Generator drone, wind
@@ -756,38 +756,38 @@
 - **Title:** HOUR 70 · 6:00 AM
 - **Shake:** light
 
-### Scene 97 · 11:39–11:46
+### Scene 97 · 11:42–11:49
 - **Image:** The silver sedan bouncing across the field of dead grass toward the gate, grey figures turning toward it on both sides, dawn
-- **Voice:** Walt floored it across the field. The dead turned with us, like a tide.
+- **Voice:** I floored it across the field. The dead turned with us, like a tide.
 - **SFX:** Engine straining, dry grass rushing under the car, groans
 - **References:** Fort Calder gate
 
-### Scene 98 · 11:46–11:52
+### Scene 98 · 11:49–11:55
 - **Image:** The silver sedan stopped a few metres from the sandbagged gate, soldiers in silhouette behind the fence with rifles raised, floodlights
-- **Voice:** Forty feet from the gate, Walt stopped. [pause] Eight minutes.
+- **Voice:** Forty feet from the gate, I stopped. [pause] Eight minutes.
 - **SFX:** Generator drone, an engine idling, shouting far off
 - **References:** Fort Calder gate
 - **Title:** 8 MIN
 
-### Scene 99 · 11:52–12:00
-- **Image:** Inside the car at dawn: Nora turned around in the passenger seat, face to face with Eli in the back seat, two people, floodlight through the windows
+### Scene 99 · 11:55–12:03
+- **Image:** Inside the car at dawn: Nora turned around in the driver's seat, face to face with Eli in the back seat, two people, floodlight through the windows
 - **Voice:** I turned around. This was it. The thing I'd been trying to say for two days.
 - **SFX:** Car interior, the generator drone muffled
 - **References:** Corolla interior
 
-### Scene 100 · 12:00–12:07
+### Scene 100 · 12:03–12:10
 - **Image:** Close-up of Eli's tear-streaked face, his small hand gripping his mother's sleeve
 - **Voice:** [childlike tone] [crying] I'm not going without you, Mom.
 - **SFX:** Car interior, the generator drone muffled
 - **References:** Corolla interior
 
-### Scene 101 · 12:07–12:15
+### Scene 101 · 12:10–12:18
 - **Image:** Close-up of Nora's face, her eyes now grey, trying to smile for him
 - **Voice:** I opened my mouth to lie to him one more time. [pause] And he said it first.
 - **SFX:** Car interior, the drone fading away
 - **References:** Corolla interior
 
-### Scene 102 · 12:15–12:24
+### Scene 102 · 12:18–12:27
 - **Image:** Extreme close-up of Eli, suddenly calm, eyes red, looking straight at his mother
 - **Video:** Eli holds still, looking straight ahead, a single tear runs down his cheek, floodlight flickers on his face; locked-off camera. No cuts, no new objects.
 - **Voice:** [childlike tone] [softly] I know, Mom. I heard the tapes. Every night. [pause] I rewound them so you wouldn't know.
@@ -796,57 +796,57 @@
 - **References:** Corolla interior
 - **Notes:** [close L7] [close L1] [interrupt: music and sound drop out for the twist] She doesn't have to tell him anything.
 
-### Scene 103 · 12:24–12:32
+### Scene 103 · 12:27–12:35
 - **Image:** Eli holding up the white pill bottle in his small hand, three tablets rattling inside
 - **Voice:** [childlike tone] You've got three Tylenol left. You can't go in. [pause] I counted.
 - **SFX:** Silence, pills rattling once
 - **References:** Corolla interior
 - **Title:** TYLENOL: 3
 
-### Scene 104 · 12:32–12:40
+### Scene 104 · 12:35–12:43
 - **Image:** Close-up of Nora's face crumpling, a single tear, grey veins at her temple
 - **Voice:** The water. The cuffs. No questions. [pause] He'd been taking care of me since hour nineteen.
 - **SFX:** Silence, a single soft piano note
 - **References:** Corolla interior
 - **Notes:** The twist recontextualises the setups: the water, the cuffs, no questions, the count.
 
-### Scene 105 · 12:40–12:47
-- **Image:** Walt at the open back door holding his gloved hand out to Eli, the shotgun slung on his back, floodlights behind him
-- **Voice:** [low, gravelly old man voice] Come on, son. Your mom's got a job to do.
-- **SFX:** Generator drone returning, groans getting closer
-- **References:** Fort Calder gate, Walt
-- **Notes:** [close L8] Walt never fires.
+### Scene 105 · 12:43–12:50
+- **Image:** Nora's grey hand pushing the back door open from inside, pointing toward the floodlit gate, dawn
+- **Voice:** [softly] Walk to the soldiers. Don't run. [pause] Two clicks when you're inside.
+- **SFX:** Car door opening, generator drone returning, groans getting closer
+- **References:** Fort Calder gate
 
-### Scene 106 · 12:47–12:55
-- **Image:** Walt and Eli (two people) walking toward the open gate hand in hand, Eli looking back over his shoulder, the yellow walkie on his chest, dawn
+### Scene 106 · 12:50–12:58
+- **Image:** Eli alone walking toward the open gate across the dead grass, looking back over his shoulder, the yellow walkie on his chest, soldiers waiting at the gate, dawn
 - **Voice:** Eli walked. He looked back four times. [pause] I counted.
-- **SFX:** Generator drone, footsteps on dry grass, soldiers shouting
-- **References:** Fort Calder gate, Walt
+- **SFX:** Generator drone, small footsteps on dry grass, soldiers shouting
+- **References:** Fort Calder gate
 - **Notes:** [close L9]
 
-### Scene 107 · 12:55–13:02
+### Scene 107 · 12:58–13:06
 - **Image:** Close-up of Nora's grey left wrist as a steel handcuff snaps around a chain-link fence post, dawn light
-- **Voice:** I cuffed myself to the fence, fifty yards from the gate. Where I couldn't follow.
+- **Voice:** I cuffed myself to the fence. Like the farmer. [pause] Where I couldn't follow.
 - **SFX:** Wind, the generator drone, groans
 - **SFX 2 (at "cuffed", 1s):** a handcuff ratchet clicking shut
 - **References:** Fort Calder gate
+- **Notes:** Pays off the farmer who locked himself in (Hour 24).
 
-### Scene 108 · 13:02–13:08
-- **Image:** Low angle in tall dead grass, a small key tumbling through the air toward the ground, dawn light
-- **Voice:** And threw the key into the field.
-- **SFX:** Wind through dry grass
-- **SFX 2 (at "threw", 1s):** a small metal key landing in grass
+### Scene 108 · 13:06–13:12
+- **Image:** Close-up of Eli's small hand at the gate, a tiny handcuff key lying in his open palm, floodlights behind
+- **Voice:** And the only key was in Eli's pocket. [pause] Inside.
+- **SFX:** Generator drone, soldiers' voices muffled
 - **References:** Fort Calder gate
+- **Notes:** [close L12] She never hurt him, and now she can't.
 
-### Scene 109 · 13:08–13:15
-- **Image:** Wide shot of the steel gate sliding shut with Walt and Eli inside, grey figures streaming along the fence toward the gate, dawn
+### Scene 109 · 13:12–13:19
+- **Image:** Wide shot of the steel gate sliding shut with Eli inside, grey figures streaming along the fence toward the gate, dawn
 - **Voice:** The gate closed at six-ten. The dead came for the sound. Not for me.
 - **SFX:** The generator drone, many groans
 - **SFX 2 (at "closed", 2s):** a heavy steel gate slamming shut
 - **References:** Fort Calder gate
 - **Notes:** [close L11]
 
-### Scene 110 · 13:15–13:23
+### Scene 110 · 13:19–13:27
 - **Image:** Nora alone sitting against the fence post, cuffed, holding her yellow walkie-talkie, dawn light, grey shapes passing far behind her out of focus
 - **Video:** Nora sits still, her thumb resting on the walkie button, dead grass sways, the low sun flares slowly; locked-off camera. No cuts, no new objects.
 - **Voice:** Two clicks. [pause] Every thirty seconds. Until the sun came up.
@@ -854,7 +854,7 @@
 - **SFX 2 (at "clicks", 1s):** two walkie-talkie clicks
 - **References:** Fort Calder gate
 
-### Scene 111 · 13:23–13:30
+### Scene 111 · 13:27–13:34
 - **Image:** Close-up of a grey hand resting in the dead grass beside the black dictaphone, its red record light glowing, golden morning light
 - **Voice:** [tired] Hour seventy-two. Patient is… [long pause]
 - **SFX:** Wind through dry grass, the generator far away
@@ -862,30 +862,30 @@
 - **Title:** HOUR 72
 - **Notes:** [interrupt: her voice stops mid-sentence] Planned silence.
 
-### Scene 112 · 13:30–13:35
+### Scene 112 · 13:34–13:39
 - **Image:** Extreme close-up of the dictaphone's red record light glowing in shadow, the tape still turning behind its little window
 - **SFX:** A dictaphone motor whirring, wind
 - **Notes:** Planned silence after her last words.
 
-### Scene 113 · 13:35–13:43
+### Scene 113 · 13:39–13:47
 - **Image:** Inside a canvas army tent, Eli alone sitting on a cot, holding the black dictaphone to his ear, soft morning light through the canvas
 - **Voice:** [softly] This one's for you, Eli. You were braver than me. [pause] You always were.
 - **SFX:** Tent canvas flapping, distant camp sounds, faint tape hiss
 - **Title:** HOUR 79
 - **Notes:** Nora's Hour 66 tape, played back in the camp.
 
-### Scene 114 · 13:43–13:50
+### Scene 114 · 13:47–13:54
 - **Image:** Close-up of the yellow toy walkie-talkie lying on a cot pillow, its small light dark, soft morning light
 - **Voice:** [whispers] Mom to Eli. Over.
 - **SFX:** Tent canvas flapping, faint tape hiss ending with a click
 
-### Scene 115 · 13:50–13:54.5
+### Scene 115 · 13:54–13:58.5
 - **Image:** Extreme close-up of the yellow walkie-talkie's small light blinking on
 - **SFX:** Silence, then a walkie-talkie static hiss rising
 - **SFX 2 (from 2s, 1s):** two crisp walkie-talkie clicks
 - **Notes:** [close L6] Deliberately ambiguous: does she remember? [interrupt: static, then two clicks]
 
-### Scene 116 · 13:54.5–13:58
+### Scene 116 · 13:58.5–14:02
 - **Image:** Extreme close-up of Eli's eyes opening, looking at the walkie-talkie
 - **SFX:** Silence
 - **Notes:** Cut to black on the last frame. No outro.
