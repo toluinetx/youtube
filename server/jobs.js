@@ -6,6 +6,8 @@ import { RESOLUTIONS, readStoryboard, sceneMotion, sceneTimeline } from './story
 import { concatClips, renderSceneClip } from './ffmpeg.js';
 import { GENERATORS, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, sceneReferences } from './generate.js';
 import { costEstimator } from './estimate.js';
+import { isGeminiModel } from './gemini.js';
+import { accountBalances } from './usage.js';
 
 /**
  * One long-running background job at a time (export or bulk generation).
@@ -210,7 +212,56 @@ export async function generationPlan(settings) {
             : cost.video(sec);
     return { ...item, ...estimate };
   });
-  return { items, unpriced: [...cost.unpriced], elevenlabs_rate: cost.elevenlabsRate };
+  // ElevenLabs is the only provider whose API reports what's left (null when it can't be read).
+  const balances = await accountBalances().catch(() => null);
+  const elevenlabsRemaining = balances?.elevenlabs?.ok ? balances.elevenlabs.remaining ?? null : null;
+  return { items, unpriced: [...cost.unpriced], elevenlabs_rate: cost.elevenlabsRate, elevenlabs_remaining: elevenlabsRemaining };
+}
+
+// ---- Errors while generating ----------------------------------------------------------------------
+// Provider errors read "<Provider> <HTTP status>: <message>" (elevenlabs.js, replicate.js, gemini.js).
+// An account that can't pay fails every request after it, so "Generate missing" stops using that
+// provider (and carries on with the others) instead of failing the rest of a long list one by one.
+
+const PROVIDER_ERROR = /^(ElevenLabs|Replicate|Gemini) (\d{3})\b/;
+const NO_CREDIT = /quota|credit|billing|insufficient|payment|exceeds your/i;
+const RETRY_DELAYS_MS = [5000, 20000];
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * 'credits' (the account is out of credits or over its quota), 'account' (the API key was refused),
+ * 'retry' (may pass on another try), or null. Both of the first two stop that provider.
+ */
+function classify(err, lastTry) {
+  const status = Number(err.message.match(PROVIDER_ERROR)?.[2]);
+  if (status === 402 || ((status === 401 || status === 403) && NO_CREDIT.test(err.message))) return 'credits';
+  if (status === 401) return 'account';
+  // 429 is also a plain rate limit, so it's only taken as "out of quota" once retrying hasn't helped.
+  if (status === 429) return lastTry && NO_CREDIT.test(err.message) ? 'credits' : 'retry';
+  if (status >= 500 || /fetch failed|ECONNRESET|ETIMEDOUT|socket hang up/i.test(err.message)) return 'retry';
+  return null;
+}
+
+/** Which account an item is paid from. */
+function providerOf(item, settings) {
+  if (item.kind === 'voiceover' || item.kind === 'sfx') return 'ElevenLabs';
+  if (item.kind === 'video') return 'Gemini';
+  return isGeminiModel(item.refs ? settings.reference_model : settings.image_model) ? 'Gemini' : 'Replicate';
+}
+
+/** Run an item, retrying errors that may pass (rate limits, server errors). Throws with `err.kind`. */
+async function runWithRetry(item, onRetry) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await item.run();
+    } catch (err) {
+      const lastTry = attempt === RETRY_DELAYS_MS.length;
+      err.kind = classify(err, lastTry);
+      if (err.kind !== 'retry' || lastTry) throw err;
+      onRetry(err, RETRY_DELAYS_MS[attempt]);
+      await sleep(RETRY_DELAYS_MS[attempt]);
+    }
+  }
 }
 
 /**
@@ -223,22 +274,47 @@ export function startGenerateMissing({ kinds, ids } = {}) {
     throw Object.assign(new Error('items must be a list of plan item ids'), { status: 400 });
   }
   return start('generate', async (report, current) => {
-    const all = await missingItems(await readStoryboard());
+    const sb = await readStoryboard();
+    const all = await missingItems(sb);
     const picked = ids ? new Set(ids) : null;
     const todo = all.filter((item) => (picked ? picked.has(item.id) : !item.optional && kinds.includes(item.kind)));
-    if (!todo.length) return { generated: 0 };
+    if (!todo.length) return { generated: 0, total: 0 };
 
     let generated = 0;
-    for (const [n, { scene, label, run }] of todo.entries()) {
-      report(n / todo.length, `Scene ${scene}: generating ${label.toLowerCase()} (${n + 1}/${todo.length})…`);
+    let failed = 0;
+    // Providers that ran out of credits: name → { scene, label, skipped }.
+    const stopped = new Map();
+    for (const [n, item] of todo.entries()) {
+      const { scene, label } = item;
+      const provider = providerOf(item, sb.settings);
+      if (stopped.has(provider)) {
+        stopped.get(provider).skipped++;
+        continue;
+      }
+      const step = `Scene ${scene}: generating ${label.toLowerCase()} (${n + 1}/${todo.length})`;
+      report(n / todo.length, `${step}…`);
       try {
-        await run();
+        await runWithRetry(item, (err, ms) => report(n / todo.length, `${step}: ${err.message.slice(0, 80)}. Retrying in ${ms / 1000} s…`));
         generated++;
       } catch (err) {
-        current.warnings.push(`Scene ${scene} ${label.toLowerCase()}: ${err.message}`);
-        if (err.status === 400) throw err; // missing API key: no point continuing
+        if (err.status === 400) throw err; // missing API key or a bad setting: no point continuing
+        failed++;
+        const name = err.message.match(PROVIDER_ERROR)?.[1] || provider;
+        if ((err.kind === 'credits' || err.kind === 'account') && !stopped.has(name)) {
+          stopped.set(name, { scene, label, skipped: 0, reason: err.kind });
+          const what = err.kind === 'credits' ? 'is out of credits or over its quota' : 'refused the API key';
+          const fix = err.kind === 'credits' ? 'Top up' : 'Check the key in .env (then restart)';
+          current.warnings.push(
+            `${name} ${what} (scene ${scene} ${label.toLowerCase()}): ${err.message}. ` +
+              `Nothing more was sent to ${name}. ${fix}, then use Generate missing again to make the rest.`,
+          );
+        } else {
+          current.warnings.push(`Scene ${scene} ${label.toLowerCase()}: ${err.message}`);
+        }
       }
     }
-    return { generated, failed: todo.length - generated };
+    const outOfCredits = [...stopped].map(([provider, s]) => ({ provider, ...s }));
+    const skipped = outOfCredits.reduce((t, s) => t + s.skipped, 0);
+    return { generated, failed, skipped, total: todo.length, out_of_credits: outOfCredits };
   });
 }

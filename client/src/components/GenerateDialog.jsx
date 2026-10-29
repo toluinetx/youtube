@@ -218,6 +218,12 @@ export default function GenerateDialog({ settings, onChangeSettings, status, onC
             {unpriced.length > 0 && (
               <span className="block text-amber-400">No price for {unpriced.map(modelName).join(', ')}. Set one in the Usage panel.</span>
             )}
+            {plan?.elevenlabs_remaining != null && credits > plan.elevenlabs_remaining && (
+              <span className="block text-amber-400">
+                You have {plan.elevenlabs_remaining.toLocaleString()} ElevenLabs credits left. Voice and sound stop when they run out (the rest
+                still generates); top up, then Generate missing again to finish.
+              </span>
+            )}
           </p>
           <div className="flex gap-2">
             <button className="btn-ghost" onClick={onCancel} disabled={busy}>Cancel</button>

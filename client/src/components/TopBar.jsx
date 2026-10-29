@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, Clapperboard, Download, FileText, Loader2, Redo2, Sparkles, TriangleAlert, Undo2, X } from 'lucide-react';
 import { UsageButton } from './Usage.jsx';
+import { describeGeneration } from '../util.js';
 
 export default function TopBar({
   title, status, job, missing, videos, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
@@ -8,6 +9,7 @@ export default function TopBar({
 }) {
   const running = job?.status === 'running';
   const [showWarnings, setShowWarnings] = useState(false);
+  const finished = job?.kind === 'generate' && job.status === 'done' && job.result ? describeGeneration(job.result) : null;
 
   return (
     <header className="relative shrink-0 border-b border-zinc-800 bg-zinc-900/80">
@@ -82,9 +84,9 @@ export default function TopBar({
 
       {job && job.status !== 'idle' && (
         <div className="flex items-center gap-3 border-t border-zinc-800 px-4 py-1.5 text-xs">
-          <span className={job.status === 'error' ? 'text-red-400' : job.status === 'done' ? 'text-emerald-400' : 'text-zinc-300'}>
+          <span className={job.status === 'error' ? 'text-red-400' : job.status === 'done' ? (finished?.ok === false ? 'text-amber-400' : 'text-emerald-400') : 'text-zinc-300'}>
             {job.kind === 'export' ? 'Export' : 'Generate'}:{' '}
-            {job.status === 'error' ? job.error : job.status === 'done' ? 'finished' : job.message}
+            {job.status === 'error' ? job.error : job.status === 'done' ? (finished ? finished.text : 'finished') : job.message}
           </span>
           {running && (
             <div className="h-1.5 max-w-sm flex-1 overflow-hidden rounded-full bg-zinc-800">

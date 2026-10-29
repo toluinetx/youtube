@@ -193,3 +193,19 @@ export function isTyping(e) {
   const el = e.target;
   return el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName);
 }
+
+/**
+ * One line about a finished "Generate missing" job, and whether it fell short: "Generated 12 of 30.
+ * ElevenLabs ran out of credits at scene 8 (14 items skipped)."
+ */
+export function describeGeneration(result = {}) {
+  const { generated = 0, failed = 0, total = generated + failed, out_of_credits: outOfCredits = [] } = result;
+  const parts = [total && generated < total ? `Generated ${generated} of ${total}.` : `Generated ${generated} asset(s).`];
+  for (const s of outOfCredits) {
+    parts.push(`${s.provider} ${s.reason === 'account' ? 'refused the API key' : 'ran out of credits'} at scene ${s.scene}${s.skipped ? ` (${s.skipped} more item${s.skipped > 1 ? 's' : ''} skipped)` : ''}.`);
+  }
+  const otherFailures = failed - outOfCredits.length;
+  if (otherFailures > 0) parts.push(`${otherFailures} failed (see warnings).`);
+  if (outOfCredits.length) parts.push(`${outOfCredits.some((s) => s.reason !== 'account') ? 'Top up' : 'Fix the key'}, then Generate missing again to finish.`);
+  return { text: parts.join(' '), ok: generated === total, outOfCredits: outOfCredits.length > 0 };
+}

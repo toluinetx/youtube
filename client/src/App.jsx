@@ -4,7 +4,7 @@ import {
   SquareDashedMousePointer, Trash2, X,
 } from 'lucide-react';
 import { CLIENT_ID, api, clientHeaders, currentProject, onHistory, onProjectChange } from './api.js';
-import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts, wantsVideo } from './util.js';
+import { assetFits, countMissing, describeGeneration, isTyping, sceneIndexAt, sceneStarts, wantsVideo } from './util.js';
 import AssetLibrary from './components/AssetLibrary.jsx';
 import SnapshotModal from './components/SnapshotModal.jsx';
 import TopBar from './components/TopBar.jsx';
@@ -755,7 +755,8 @@ export default function App() {
           notify('Export finished: final_output.mp4', 'success');
         }
         if (j.status === 'done' && j.kind === 'generate') {
-          notify(`Generated ${j.result.generated} asset(s)${j.result.failed ? `, ${j.result.failed} failed` : ''}`, j.result.failed ? 'error' : 'success');
+          const summary = describeGeneration(j.result);
+          notify(summary.text, summary.ok ? 'success' : 'error', summary.outOfCredits ? { label: 'Generate missing', onClick: () => setShowGenerate(true) } : null);
         }
       } catch {
         // Server restarting; keep polling.
