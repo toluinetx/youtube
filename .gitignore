@@ -2,8 +2,12 @@ node_modules/
 client/dist/
 .env
 
-# Generated media (the storyboard itself is worth committing)
-project/media/
-project/clips/
-project/exports/
-project/*.tmp
+# Generated media (each project's storyboard.json is worth committing)
+projects/*/media/
+projects/*/clips/
+projects/*/exports/
+projects/*/*.tmp
+projects/*/.trash.json
+projects/.active
+# Pre-projects layout (moved into projects/ on first start)
+project/

@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { api } from './api.js';
+import {
+  ArrowLeft, ArrowRight, AudioLines, BookmarkPlus, Camera, Check, ClipboardCopy, ClipboardPaste, Clapperboard, Copy, FolderPlus, ImageIcon, Music, Pencil, Plus, RefreshCw, Settings2, Sparkles,
+  SquareDashedMousePointer, Trash2, X,
+} from 'lucide-react';
+import { CLIENT_ID, api, clientHeaders, currentProject, onHistory, onProjectChange } from './api.js';
 import { assetFits, countMissing, isTyping, sceneIndexAt, sceneStarts } from './util.js';
 import AssetLibrary from './components/AssetLibrary.jsx';
 import SnapshotModal from './components/SnapshotModal.jsx';
@@ -9,8 +13,14 @@ import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
 import ProjectSettings from './components/ProjectSettings.jsx';
 import ScriptImport from './components/ScriptImport.jsx';
+import ContextMenu from './components/ContextMenu.jsx';
 
 const SAVE_DELAY_MS = 600;
+const MOD_KEY = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘' : 'Ctrl+';
+const SLOT_LABEL = { image: 'image', voiceover: 'voiceover', sfx: 'sound effect' };
+const SLOT_PROMPT = { image: 'image_prompt', voiceover: 'voiceover_text', sfx: 'sfx_prompt' };
+const SLOT_ICON = { image: ImageIcon, voiceover: AudioLines, sfx: Sparkles };
+const PROMPT_FIELDS = ['image_prompt', 'voiceover_text', 'sfx_prompt'];
 // Fields the server owns after a generate/upload/remove; everything else may have unsaved local edits.
 const MEDIA_FIELDS = [
   'image_url', 'voiceover_url', 'sfx_url', 'voiceover_duration_sec', 'sfx_duration_sec',
@@ -21,7 +31,12 @@ export default function App() {
   const [sb, setSb] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [status, setStatus] = useState(null);
+  // selectedId is the scene shown in the sidebar; selection holds every selected scene (shift / ⌘-click).
+  // A selection that doesn't include selectedId is stale and means just selectedId.
   const [selectedId, setSelectedId] = useState(null);
+  const [selection, setSelection] = useState([]);
+  const anchorId = useRef(null); // where a shift-click range starts
+  const [copiedPrompts, setCopiedPrompts] = useState(null); // { image_prompt, voiceover_text, sfx_prompt, from }
   const [sidebarTab, setSidebarTab] = useState('scene');
   const [time, setTime] = useState(0);
   const [seekToken, setSeekToken] = useState(0);
@@ -36,6 +51,8 @@ export default function App() {
   const [uploading, setUploading] = useState([]);
   const [dragAsset, setDragAsset] = useState(null);
   const [snapshotTarget, setSnapshotTarget] = useState(null); // { asset, purpose, resolve }
+  const [menu, setMenu] = useState(null); // { x, y, items }
+  const [history, setHistory] = useState({ undo: null, redo: null }); // labels of the next undo / redo step
   const [libraryCollapsed, setLibraryCollapsed] = useState(() => localStorage.getItem('libraryCollapsed') === '1');
 
   const scenes = useMemo(() => sb?.scenes ?? [], [sb]);
@@ -43,6 +60,10 @@ export default function App() {
   const total = scenes.reduce((sum, s) => sum + (Number(s.duration_sec) || 0), 0);
   const selectedIndex = scenes.findIndex((s) => s.scene_id === selectedId);
   const selected = scenes[selectedIndex];
+  const selectedIds = useMemo(() => {
+    const ids = selection.includes(selectedId) ? selection : [selectedId];
+    return scenes.filter((s) => ids.includes(s.scene_id)).map((s) => s.scene_id);
+  }, [scenes, selection, selectedId]);
   const library = useMemo(() => sb?.library ?? [], [sb]);
 
   // How many times each media URL is used, on the reel or as a reference (for library badges).
@@ -59,9 +80,12 @@ export default function App() {
     return counts;
   }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids]);
 
-  const notify = useCallback((message, tone = 'error') => {
-    setToast({ message, tone, id: Date.now() });
+  /** Show a toast; `action` ({ label, onClick }) adds a button to it, e.g. Undo. */
+  const notify = useCallback((message, tone = 'error', action = null) => {
+    setToast({ message, tone, action, id: Date.now() });
   }, []);
+
+  useEffect(() => onHistory(setHistory), []);
 
   useEffect(() => {
     if (!toast) return;
@@ -137,7 +161,7 @@ export default function App() {
     const onUnload = () => {
       for (const [id, patch] of Object.entries(pending.current)) {
         const url = id === 'settings' ? '/api/settings' : `/api/scene/${id}`;
-        fetch(url, { method: 'PUT', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) });
+        fetch(url, { method: 'PUT', keepalive: true, headers: { ...clientHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(patch) });
       }
     };
     window.addEventListener('beforeunload', onUnload);
@@ -162,8 +186,29 @@ export default function App() {
   }, [reload]);
 
   useEffect(() => {
-    if (sb && selectedId == null && scenes.length) setSelectedId(scenes[0].scene_id);
+    if (!sb) return;
+    // Nothing selected, or the selected scene is gone (deleted, undone, changed elsewhere): select the first.
+    if (selectedId == null || !scenes.some((s) => s.scene_id === selectedId)) setSelectedId(scenes[0]?.scene_id ?? null);
   }, [sb, selectedId, scenes]);
+
+  // ---- Live updates -----------------------------------------------------------------------------
+  // Changes made elsewhere (another tab, the timeline-generation skill) arrive as server-sent events.
+  // When the server switches to another project, this tab reloads to show it.
+
+  useEffect(() => onProjectChange(() => window.location.reload()), []);
+
+  useEffect(() => {
+    const events = new EventSource('/api/events');
+    events.onmessage = (message) => {
+      const event = JSON.parse(message.data);
+      if (event.type === 'project' && currentProject() && event.project !== currentProject()) window.location.reload();
+      if (event.type === 'storyboard' && event.origin !== CLIENT_ID && event.project === currentProject()) {
+        reload();
+        if (event.label?.startsWith('Import')) notify(`Timeline updated: ${event.label}`, 'success');
+      }
+    };
+    return () => events.close();
+  }, [reload, notify]);
 
   // ---- Playback ---------------------------------------------------------------------------------
 
@@ -175,9 +220,11 @@ export default function App() {
     [total],
   );
 
-  const selectScene = useCallback(
-    (id, { seekTo = true } = {}) => {
+  /** Show scene `id` in the sidebar and the preview, keeping `ids` selected. */
+  const focusScene = useCallback(
+    (id, ids, { seekTo = true } = {}) => {
       setSelectedId(id);
+      setSelection(ids);
       setSidebarTab('scene');
       setPreviewMode('live');
       const i = scenes.findIndex((s) => s.scene_id === id);
@@ -186,10 +233,78 @@ export default function App() {
     [scenes, starts, seek],
   );
 
+  /** Select just this scene. */
+  const selectScene = useCallback(
+    (id, opts) => {
+      anchorId.current = id;
+      focusScene(id, [id], opts);
+    },
+    [focusScene],
+  );
+
+  // Latest scene actions for the keyboard shortcuts and context menus, which are bound once.
+  const actions = useRef({});
+
+  /** A click on a timeline clip: shift extends the selection from the anchor, ⌘/Ctrl toggles one scene. */
+  actions.current.clickScene = (id, { range, toggle } = {}) => {
+    const ids = scenes.map((s) => s.scene_id);
+    if (range) {
+      const a = ids.indexOf(anchorId.current ?? selectedId);
+      const b = ids.indexOf(id);
+      if (a >= 0 && b >= 0) return focusScene(id, ids.slice(Math.min(a, b), Math.max(a, b) + 1));
+    } else if (toggle) {
+      if (!selectedIds.includes(id)) {
+        anchorId.current = id;
+        return focusScene(id, [...selectedIds, id]);
+      }
+      const rest = selectedIds.filter((x) => x !== id);
+      if (!rest.length) return; // keep at least one scene selected
+      return focusScene(id === selectedId ? rest.at(-1) : selectedId, rest, { seekTo: false });
+    }
+    selectScene(id);
+  };
+  const clickScene = useCallback((id, mods) => actions.current.clickScene(id, mods), []);
+
   useEffect(() => {
     const onKey = (e) => {
-      if (isTyping(e) || e.ctrlKey || e.metaKey || e.altKey) return;
-      if (e.code === 'Space') {
+      if (isTyping(e) || e.altKey) return;
+      const key = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && (key === 'z' || key === 'y')) {
+        e.preventDefault();
+        if (key === 'y' || e.shiftKey) actions.current.redo();
+        else actions.current.undo();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && key === 'd') {
+        e.preventDefault();
+        if (selectedIds.length) actions.current.duplicateScenes(selectedIds);
+        return;
+      }
+      // Copy / paste prompts, unless the user is copying text they selected on the page.
+      if ((e.ctrlKey || e.metaKey) && (key === 'c' || key === 'v') && !window.getSelection()?.toString()) {
+        if (key === 'c' && selectedId != null) actions.current.copyPrompts(selectedId);
+        else if (key === 'v' && selectedIds.length) actions.current.pastePrompts(selectedIds);
+        else return;
+        e.preventDefault();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && key === 'a') {
+        e.preventDefault();
+        if (scenes.length) focusScene(selectedId ?? scenes[0].scene_id, scenes.map((s) => s.scene_id), { seekTo: false });
+        return;
+      }
+      if (e.ctrlKey || e.metaKey) return;
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault();
+        if (selectedIds.length) actions.current.deleteScenes(selectedIds);
+      } else if (e.key === 'Escape' && selectedIds.length > 1) {
+        selectScene(selectedId, { seekTo: false });
+      } else if (e.shiftKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        // Grow / shrink the selection from the anchor.
+        e.preventDefault();
+        const next = scenes[selectedIndex + (e.key === 'ArrowRight' ? 1 : -1)];
+        if (next) actions.current.clickScene(next.scene_id, { range: true });
+      } else if (e.code === 'Space') {
         e.preventDefault();
         setPreviewMode('live');
         setPlaying((p) => !p);
@@ -202,7 +317,7 @@ export default function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [scenes, starts, time, selectScene]);
+  }, [scenes, starts, time, selectScene, focusScene, selectedId, selectedIds, selectedIndex]);
 
   // ---- Scene operations -------------------------------------------------------------------------
 
@@ -232,6 +347,10 @@ export default function App() {
   );
 
   const regenerate = (id, kind) => mediaAction(id, kind, () => api.regenerate(id, kind));
+  const regenerateWithConfirm = (scene, kind) => {
+    if (kind === 'image' && scene.video_url && !window.confirm('Generating an image replaces the imported video for this scene. Continue?')) return;
+    regenerate(scene.scene_id, kind);
+  };
   const clearSlot = (id, slot) => mediaAction(id, slot, () => api.clearSceneSlot(id, slot));
 
   const musicAction = async (action) => {
@@ -262,28 +381,65 @@ export default function App() {
     [flushAll, notify],
   );
 
-  const addScene = () =>
+  const addScene = (afterId = selectedId) =>
     run(async () => {
-      const scene = await api.addScene({ after_id: selectedId });
+      const scene = await api.addScene({ after_id: afterId });
       await reload();
       selectScene(scene.scene_id, { seekTo: false });
     });
 
-  const duplicateScene = (id) =>
+  /** The timeline's + buttons: a blank scene at `index` (0 = first), shown in the sidebar and preview. */
+  const insertSceneAt = (index) =>
     run(async () => {
-      const scene = await api.duplicateScene(id);
+      const scene = await api.addScene({ index });
       await reload();
-      selectScene(scene.scene_id, { seekTo: false });
+      selectScene(scene.scene_id);
     });
 
-  const deleteScene = (id) => {
-    const i = scenes.findIndex((s) => s.scene_id === id);
-    if (!window.confirm(`Delete scene ${i + 1} and its generated media?`)) return;
+  /** Duplicate scenes (as one undo step); the copies become the selection. */
+  const duplicateScenes = (ids) =>
     run(async () => {
-      await api.deleteScene(id);
-      const neighbour = scenes[i + 1] ?? scenes[i - 1];
+      const copies = (await api.duplicateScenes(ids)).map((s) => s.scene_id);
+      await reload();
+      anchorId.current = copies[0];
+      focusScene(copies[0], copies, { seekTo: false });
+    });
+  const duplicateScene = (id) => duplicateScenes([id]);
+
+  /** Delete scenes (as one undo step), then select the scene after them (or before, at the end). */
+  const deleteScenes = (ids) => {
+    const indexes = ids.map((id) => scenes.findIndex((s) => s.scene_id === id)).filter((i) => i >= 0);
+    if (!indexes.length) return;
+    const last = Math.max(...indexes);
+    const neighbour = scenes.slice(last + 1).find((s) => !ids.includes(s.scene_id)) ?? scenes.slice(0, last).findLast((s) => !ids.includes(s.scene_id));
+    run(async () => {
+      await api.deleteScenes(ids);
       setSelectedId(neighbour?.scene_id ?? null);
       await reload();
+      notify(ids.length === 1 ? `Deleted scene ${indexes[0] + 1}` : `Deleted ${ids.length} scenes`, 'info', {
+        label: 'Undo',
+        onClick: () => actions.current.undo(),
+      });
+    });
+  };
+  const deleteScene = (id) => deleteScenes([id]);
+
+  /** Remember a scene's three prompts so they can be pasted onto other scenes. */
+  const copyPrompts = (id) => {
+    const i = scenes.findIndex((s) => s.scene_id === id);
+    if (i < 0) return;
+    setCopiedPrompts({ ...Object.fromEntries(PROMPT_FIELDS.map((f) => [f, scenes[i][f]])), from: i + 1 });
+    notify(`Copied the prompts of scene ${i + 1}`, 'info');
+  };
+
+  /** Replace the prompts of scenes `ids` with the copied ones (one undo step). */
+  const pastePrompts = (ids) => {
+    if (!copiedPrompts) return notify('Copy a scene\'s prompts first (right-click a scene, or Ctrl/⌘+C)', 'info');
+    const prompts = Object.fromEntries(PROMPT_FIELDS.map((f) => [f, copiedPrompts[f]]));
+    run(async () => {
+      applyServer(await api.pastePrompts(ids, prompts));
+      const where = ids.length === 1 ? `scene ${scenes.findIndex((s) => s.scene_id === ids[0]) + 1}` : `${ids.length} scenes`;
+      notify(`Pasted the prompts of scene ${copiedPrompts.from} into ${where}`, 'info', { label: 'Undo', onClick: () => actions.current.undo() });
     });
   };
 
@@ -296,6 +452,37 @@ export default function App() {
       [order[i], order[j]] = [order[j], order[i]];
       applyServer(await api.reorder(order));
     });
+
+  // ---- Undo / redo ------------------------------------------------------------------------------
+  // The server keeps the history; unsaved edits are saved first so they become the step that's undone.
+
+  const travel = (direction) =>
+    run(async () => {
+      const result = await (direction === 'undo' ? api.undo() : api.redo());
+      if (!result.storyboard) return;
+      applyServer(result.storyboard);
+      notify(`${direction === 'undo' ? 'Undid' : 'Redid'}: ${result.label}`, 'info');
+    });
+
+  actions.current.duplicateScenes = duplicateScenes;
+  actions.current.deleteScenes = deleteScenes;
+  actions.current.copyPrompts = copyPrompts;
+  actions.current.pastePrompts = pastePrompts;
+  actions.current.undo = () => travel('undo');
+  actions.current.redo = () => travel('redo');
+
+  /** Drag-to-reorder on the timeline: apply the new order locally right away, then save it. */
+  const reorderScenes = (order) => {
+    setSb((prev) => ({ ...prev, scenes: order.map((id) => prev.scenes.find((s) => s.scene_id === id)) }));
+    run(async () => {
+      try {
+        applyServer(await api.reorder(order));
+      } catch (err) {
+        await reload();
+        throw err;
+      }
+    });
+  };
 
   // ---- Library ----------------------------------------------------------------------------------
   // Uploads only ever go into the library. Assets reach the reel when the user drags them onto the
@@ -437,7 +624,7 @@ export default function App() {
   };
 
   const importScript = (script, mode) => {
-    if (mode === 'replace' && scenes.length && !window.confirm('Replace all scenes? Their generated media will be deleted.')) return;
+    if (mode === 'replace' && scenes.length && !window.confirm('Replace all scenes with the imported script? You can undo this.')) return;
     return run(async () => {
       const data = await api.importScript(script, mode);
       applyServer(data);
@@ -478,6 +665,155 @@ export default function App() {
     return () => clearInterval(t);
   }, [job?.status, job?.id, reload, notify]);
 
+  // ---- Context menus ----------------------------------------------------------------------------
+
+  const openMenu = (e, items) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setMenu({ x: e.clientX, y: e.clientY, items });
+  };
+  const closeMenu = useCallback(() => setMenu(null), []);
+
+  const clipMenuItems = (sceneId, slot) => {
+    const i = scenes.findIndex((s) => s.scene_id === sceneId);
+    const scene = scenes[i];
+    if (!scene) return [];
+    const has = slot === 'image' ? Boolean(scene.image_url || scene.video_url) : Boolean(scene[`${slot}_url`]);
+    const canGenerate = Boolean(scene[SLOT_PROMPT[slot]]?.trim());
+    const slotBusy = Boolean(busy[`${sceneId}:${slot}`]);
+    const label = slot === 'image' && scene.video_url ? 'video' : SLOT_LABEL[slot];
+    const imageInLibrary = library.some((a) => a.url === scene.image_url);
+    return [
+      { heading: `Scene ${i + 1}` },
+      {
+        label: `${has && !scene.video_url ? 'Regenerate' : 'Generate'} ${SLOT_LABEL[slot]}`,
+        icon: has ? RefreshCw : SLOT_ICON[slot],
+        disabled: !canGenerate || slotBusy,
+        onClick: () => regenerateWithConfirm(scene, slot),
+      },
+      ...(slot === 'image' && scene.image_url && !imageInLibrary
+        ? [{ label: 'Save image to library', icon: BookmarkPlus, onClick: () => saveSceneToLibrary(sceneId) }]
+        : []),
+      { label: `Remove ${label}`, icon: X, disabled: !has || slotBusy, onClick: () => clearSlot(sceneId, slot) },
+      '-',
+      { label: 'Copy prompts', icon: ClipboardCopy, shortcut: `${MOD_KEY}C`, onClick: () => copyPrompts(sceneId) },
+      pasteItem([sceneId]),
+      '-',
+      { label: 'Insert scene after', icon: Plus, onClick: () => addScene(sceneId) },
+      { label: 'Duplicate scene', icon: Copy, shortcut: `${MOD_KEY}D`, onClick: () => duplicateScene(sceneId) },
+      { label: 'Move earlier', icon: ArrowLeft, disabled: i === 0, onClick: () => moveScene(sceneId, -1) },
+      { label: 'Move later', icon: ArrowRight, disabled: i === scenes.length - 1, onClick: () => moveScene(sceneId, 1) },
+      '-',
+      { label: 'Delete scene', icon: Trash2, danger: true, shortcut: 'Del', onClick: () => deleteScene(sceneId) },
+    ];
+  };
+
+  const musicMenuItems = () => [
+    { label: 'Music settings', icon: Settings2, onClick: () => setSidebarTab('project') },
+    { label: 'Remove music', icon: X, danger: true, disabled: !sb.settings.music_url || Boolean(busy.music), onClick: removeMusic },
+  ];
+
+  const assetMenuItems = (asset) => {
+    const visual = assetFits(asset, 'image');
+    const target = selected ? `scene ${selectedIndex + 1}` : null;
+    const use = (slot, label, icon) =>
+      assetFits(asset, slot) && target ? [{ label: `${label} in ${target}`, icon, onClick: () => placeAsset(selected.scene_id, slot, asset) }] : [];
+    return [
+      { heading: asset.name },
+      ...(visual
+        ? [
+            { label: 'Add as new scene at end', icon: Plus, onClick: () => addAssetAsScene(asset) },
+            ...(target ? [{ label: `Insert after ${target}`, icon: Plus, onClick: () => addAssetAsScene(asset, selectedIndex + 1) }] : []),
+            ...use('image', 'Use as picture', ImageIcon),
+          ]
+        : []),
+      ...use('voiceover', 'Use as voiceover', AudioLines),
+      ...use('sfx', 'Use as sound effect', Sparkles),
+      ...(assetFits(asset, 'music') ? [{ label: 'Use as background music', icon: Music, onClick: () => setMusicAsset(asset) }] : []),
+      ...(asset.type === 'video' ? [{ label: 'Take a snapshot…', icon: Camera, onClick: () => requestSnapshot(asset) }] : []),
+      '-',
+      { label: 'Rename…', icon: Pencil, onClick: () => renameAsset(asset) },
+      { label: 'Delete from library', icon: Trash2, danger: true, onClick: () => deleteAsset(asset) },
+    ];
+  };
+
+  const pasteItem = (ids) => ({
+    label: copiedPrompts
+      ? `Paste prompts of scene ${copiedPrompts.from}${ids.length > 1 ? ` into ${ids.length} scenes` : ''}`
+      : 'Paste prompts',
+    icon: ClipboardPaste,
+    shortcut: `${MOD_KEY}V`,
+    disabled: !copiedPrompts,
+    onClick: () => pastePrompts(ids),
+  });
+
+  const groupMenuItems = (ids, sceneId) => [
+    { heading: `${ids.length} scenes selected` },
+    { label: 'Copy prompts of this scene', icon: ClipboardCopy, shortcut: `${MOD_KEY}C`, onClick: () => copyPrompts(sceneId) },
+    pasteItem(ids),
+    '-',
+    { label: `Duplicate ${ids.length} scenes`, icon: Copy, shortcut: `${MOD_KEY}D`, onClick: () => duplicateScenes(ids) },
+    { label: 'Select only this scene', icon: SquareDashedMousePointer, onClick: () => selectScene(sceneId, { seekTo: false }) },
+    '-',
+    { label: `Delete ${ids.length} scenes`, icon: Trash2, danger: true, shortcut: 'Del', onClick: () => deleteScenes(ids) },
+  ];
+
+  actions.current.clipMenu = (e, sceneId, slot) => {
+    // Right-clicking inside a multi-selection acts on all of it; anywhere else selects just that scene.
+    if (selectedIds.length > 1 && selectedIds.includes(sceneId)) {
+      setSelectedId(sceneId);
+      return openMenu(e, groupMenuItems(selectedIds, sceneId));
+    }
+    selectScene(sceneId, { seekTo: false });
+    openMenu(e, clipMenuItems(sceneId, slot));
+  };
+  // Stable so the memoized timeline clips don't re-render on every App render.
+  const onClipMenu = useCallback((e, sceneId, slot) => actions.current.clipMenu(e, sceneId, slot), []);
+  const onResizeScene = useCallback((id, d) => patchScene(id, { duration_sec: d }), [patchScene]);
+
+  // ---- Projects ---------------------------------------------------------------------------------
+  // Switching saves pending edits, asks the server to open the other project, then reloads the page.
+
+  const switchProject = (id) =>
+    run(async () => {
+      await api.openProject(id);
+      window.location.reload();
+    });
+
+  const newProject = () => {
+    const title = window.prompt('Name of the new video project:');
+    if (!title?.trim()) return;
+    run(async () => {
+      await api.createProject(title.trim(), true);
+      window.location.reload();
+    });
+  };
+
+  const openProjectMenu = async (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    let projects = [];
+    try {
+      ({ projects } = await api.projects());
+    } catch (err) {
+      return notify(err.message);
+    }
+    setMenu({
+      x: rect.left,
+      y: rect.bottom + 4,
+      items: [
+        { heading: 'Projects' },
+        ...projects.map((p) => ({
+          label: p.title,
+          icon: p.open ? Check : Clapperboard,
+          shortcut: `${p.scenes} scene${p.scenes === 1 ? '' : 's'}`,
+          onClick: () => !p.open && switchProject(p.id),
+        })),
+        '-',
+        { label: 'New project…', icon: FolderPlus, onClick: newProject },
+      ],
+    });
+  };
+
   // ---- Render -----------------------------------------------------------------------------------
 
   if (!sb) {
@@ -508,6 +844,12 @@ export default function App() {
         onGenerateMissing={() => startJob(api.generateMissing)}
         onExport={() => startJob(api.exportVideo)}
         onDismissJob={() => setJob(null)}
+        history={history}
+        onOpenProjects={openProjectMenu}
+        undoShortcut={`${MOD_KEY}Z`}
+        redoShortcut={MOD_KEY === '⌘' ? '⇧⌘Z' : 'Ctrl+Y'}
+        onUndo={() => actions.current.undo()}
+        onRedo={() => actions.current.redo()}
       />
 
       <div className="flex min-h-0 flex-1">
@@ -527,6 +869,7 @@ export default function App() {
           onAddAsScene={(asset) => addAssetAsScene(asset)}
           onSetMusic={setMusicAsset}
           onDragAsset={setDragAsset}
+          onAssetMenu={(e, asset) => openMenu(e, assetMenuItems(asset))}
         />
         <main className="flex min-w-0 flex-1 flex-col">
           <Preview
@@ -551,15 +894,19 @@ export default function App() {
             time={time}
             playing={playing}
             seek={seek}
-            selectedId={selectedId}
-            onSelect={selectScene}
-            onResize={(id, d) => patchScene(id, { duration_sec: d })}
-            onAdd={addScene}
+            selectedIds={selectedIds}
+            onSelect={clickScene}
+            onResize={onResizeScene}
+            onAdd={() => addScene()}
             onDropFiles={dropFiles}
             onDropAsset={dropAsset}
             dragAsset={dragAsset}
             settings={sb.settings}
             onSelectMusic={() => setSidebarTab('project')}
+            onClipMenu={onClipMenu}
+            onReorder={reorderScenes}
+            onInsert={insertSceneAt}
+            onMusicMenu={(e) => openMenu(e, musicMenuItems())}
             busy={busy}
           />
         </main>
@@ -580,6 +927,20 @@ export default function App() {
             ))}
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto">
+            {sidebarTab === 'scene' && selectedIds.length > 1 && (
+              <div className="flex items-center gap-1 border-b border-zinc-800 bg-indigo-500/10 px-4 py-2 text-xs text-indigo-200">
+                <span className="mr-auto font-medium">{selectedIds.length} scenes selected</span>
+                <button className="btn-ghost px-2 py-1 text-xs" onClick={() => duplicateScenes(selectedIds)} title={`Duplicate (${MOD_KEY}D)`}>
+                  <Copy className="size-3.5" /> Duplicate
+                </button>
+                <button className="btn-ghost px-2 py-1 text-xs hover:!text-red-400" onClick={() => deleteScenes(selectedIds)} title="Delete (Del)">
+                  <Trash2 className="size-3.5" /> Delete
+                </button>
+                <button className="icon-btn size-6" onClick={() => selectScene(selectedId, { seekTo: false })} title="Clear selection (Esc)" aria-label="Clear selection">
+                  <X className="size-3.5" />
+                </button>
+              </div>
+            )}
             {sidebarTab === 'project' ? (
               <ProjectSettings
                 settings={sb.settings}
@@ -619,7 +980,7 @@ export default function App() {
               <div className="p-6 text-center text-sm text-zinc-500">
                 <p>No scenes yet.</p>
                 <div className="mt-4 flex justify-center gap-2">
-                  <button className="btn-secondary" onClick={addScene}>Add a scene</button>
+                  <button className="btn-secondary" onClick={() => addScene()}>Add a scene</button>
                   <button className="btn-primary" onClick={() => setShowImport(true)}>Import a script</button>
                 </div>
                 <p className="mt-4 text-xs text-zinc-600">Or drag images and videos from the library onto the timeline.</p>
@@ -632,6 +993,8 @@ export default function App() {
       {snapshotTarget && (
         <SnapshotModal asset={snapshotTarget.asset} purpose={snapshotTarget.purpose} onCancel={cancelSnapshot} onCapture={captureSnapshot} />
       )}
+
+      {menu && <ContextMenu key={`${menu.x},${menu.y}`} x={menu.x} y={menu.y} items={menu.items} onClose={closeMenu} />}
 
       {showImport && <ScriptImport hasScenes={scenes.length > 0} onClose={() => setShowImport(false)} onImport={importScript} />}
 
@@ -648,6 +1011,17 @@ export default function App() {
           }`}
         >
           {toast.message}
+          {toast.action && (
+            <button
+              className="ml-3 font-semibold underline-offset-2 hover:underline"
+              onClick={() => {
+                setToast(null);
+                toast.action.onClick();
+              }}
+            >
+              {toast.action.label}
+            </button>
+          )}
         </div>
       )}
     </div>

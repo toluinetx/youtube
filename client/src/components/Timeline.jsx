@@ -1,10 +1,17 @@
-import { memo, useEffect, useRef, useState } from 'react';
-import { AudioLines, Film, ImageIcon, Loader2, Music, Plus, Sparkles, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { AudioLines, Film, ImageIcon, Loader2, Music, NotebookPen, Plus, Sparkles, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
 import { ASSET_MIME, assetFits, formatTime } from '../util.js';
 
 const MIN_PPS = 10;
 const MAX_PPS = 200;
 const LABEL_W = 88;
+// How far (px) a clip must be dragged before it starts moving rather than just being selected.
+const REORDER_THRESHOLD = 5;
+// How close (px) the pointer must be to the boundary between two scenes to offer the + (insert) button.
+const GAP_PX = 14;
+// Auto-scroll while dragging a clip near the timeline's left/right edge.
+const EDGE_PX = 48;
+const EDGE_SPEED = 14;
 
 const TRACKS = [
   { kind: 'image', label: 'Image', icon: ImageIcon, height: 'h-16', color: 'text-image' },
@@ -25,6 +32,19 @@ const sameTarget = (a, b) => a?.track === b?.track && a?.sceneId === b?.sceneId;
 const hasFiles = (e) => [...e.dataTransfer.types].includes('Files');
 const hasAsset = (e) => [...e.dataTransfer.types].includes(ASSET_MIME);
 
+/**
+ * The scene order after moving `ids` (kept in timeline order) to before scene `index` of the current
+ * order, or null if nothing would change.
+ */
+function reorderedIds(scenes, ids, index) {
+  const current = scenes.map((s) => s.scene_id);
+  const group = current.filter((id) => ids.includes(id));
+  const rest = current.filter((id) => !ids.includes(id));
+  const at = current.slice(0, index).filter((id) => !ids.includes(id)).length;
+  const order = [...rest.slice(0, at), ...group, ...rest.slice(at)];
+  return order.every((id, i) => id === current[i]) ? null : order;
+}
+
 function tickStep(pps) {
   if (pps >= 80) return 1;
   if (pps >= 35) return 2;
@@ -33,8 +53,8 @@ function tickStep(pps) {
 }
 
 export default function Timeline({
-  scenes, starts, total, time, playing, seek, selectedId, onSelect, onResize, onAdd, onDropFiles, onDropAsset, dragAsset, settings,
-  onSelectMusic, busy,
+  scenes, starts, total, time, playing, seek, selectedIds, onSelect, onResize, onAdd, onDropFiles, onDropAsset, dragAsset, settings,
+  onSelectMusic, onClipMenu, onMusicMenu, onReorder, onInsert, busy,
 }) {
   const [pps, setPps] = useState(40);
   // While something is dragged over the timeline: { source: 'files' | 'asset', target, index, valid }.
@@ -42,9 +62,95 @@ export default function Timeline({
   const [drag, setDrag] = useState(null);
   const scrollRef = useRef(null);
   const scrubbing = useRef(false);
+  // While clips are dragged to a new position: { ids, index } (index = insert before this scene).
+  const [moving, setMoving] = useState(null);
+  const selectedSet = new Set(selectedIds);
+  // Index of the scene boundary under the pointer on the Image track (0 = before the first scene), or null.
+  const [gap, setGap] = useState(null);
 
   /** Where a new scene dropped at time t would be inserted: before the first scene whose middle is after t. */
   const insertIndexAt = (t) => scenes.filter((sc, i) => starts[i] + sc.duration_sec / 2 < t).length;
+
+  // Latest values for the window listeners of a clip drag, which outlive a render.
+  const latest = useRef({});
+  latest.current = { scenes, insertIndexAt, onReorder, onSelect, pps, selectedIds };
+
+  /** Drag the scenes `ids` to a new position; calls `onClick` instead if the pointer never moved far enough. */
+  const grabClip = useCallback((e, ids, onClick) => {
+    const el = scrollRef.current;
+    const x0 = e.clientX;
+    let state = null;
+    let lastX = x0;
+    const indexAt = (clientX) => {
+      const rect = el.getBoundingClientRect();
+      return latest.current.insertIndexAt((clientX - rect.left + el.scrollLeft) / latest.current.pps);
+    };
+    const update = (clientX) => {
+      const index = indexAt(clientX);
+      if (index !== state.index) setMoving((state = { ...state, index }));
+    };
+    const onMove = (ev) => {
+      lastX = ev.clientX;
+      if (!state) {
+        if (Math.abs(ev.clientX - x0) < REORDER_THRESHOLD) return;
+        if (latest.current.scenes.length < 2) return stop();
+        state = { ids, index: null };
+        document.body.style.cursor = 'grabbing';
+      }
+      update(ev.clientX);
+    };
+    // Keep scrolling while the pointer rests near an edge.
+    const tick = setInterval(() => {
+      if (!state) return;
+      const rect = el.getBoundingClientRect();
+      const dx = lastX < rect.left + EDGE_PX ? -EDGE_SPEED : lastX > rect.right - EDGE_PX ? EDGE_SPEED : 0;
+      if (dx) {
+        el.scrollLeft += dx;
+        update(lastX);
+      }
+    }, 16);
+    const stop = () => {
+      clearInterval(tick);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', stop);
+      window.removeEventListener('keydown', onKey, true);
+      document.body.style.cursor = '';
+      setMoving(null);
+    };
+    const onUp = () => {
+      const done = state;
+      stop();
+      if (!done) return onClick();
+      const order = done.index == null ? null : reorderedIds(latest.current.scenes, done.ids, done.index);
+      if (order) latest.current.onReorder(order);
+    };
+    const onKey = (ev) => {
+      if (ev.key !== 'Escape') return;
+      ev.stopPropagation();
+      stop();
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', stop);
+    window.addEventListener('keydown', onKey, true);
+  }, []);
+
+  /**
+   * Pointer pressed on a clip. Shift / ⌘ / Ctrl change the selection. Otherwise the scene (or the whole
+   * selection, if the clip is part of it) can be dragged to a new position once the pointer moves past
+   * the threshold; a press inside a selection that isn't dragged selects just that scene.
+   */
+  const pressClip = useCallback((e, sceneId) => {
+    if (e.button !== 0) return;
+    const { onSelect, selectedIds } = latest.current;
+    const range = e.shiftKey;
+    const toggle = e.ctrlKey || e.metaKey;
+    if (range || toggle) return onSelect(sceneId, { range, toggle });
+    const group = selectedIds.length > 1 && selectedIds.includes(sceneId) ? selectedIds : [sceneId];
+    if (group.length === 1) onSelect(sceneId, {});
+    grabClip(e, group, () => group.length > 1 && onSelect(sceneId, {}));
+  }, [grabClip]);
 
   const dragHandlers = {
     onDragOver: (e) => {
@@ -75,6 +181,10 @@ export default function Timeline({
     },
   };
   const dropStateFor = (sceneId, track) => (sameTarget(drag?.target, { sceneId, track }) ? (drag.valid ? 'ok' : 'bad') : null);
+  const movable = moving?.index != null && reorderedIds(scenes, moving.ids, moving.index);
+  const moveX = movable ? (moving.index < scenes.length ? starts[moving.index] : total) * pps : null;
+  const movingLabel =
+    moving?.ids.length > 1 ? `Move ${moving.ids.length} scenes here` : `Move scene ${scenes.findIndex((s) => s.scene_id === moving?.ids[0]) + 1} here`;
   const insertX = drag?.source === 'asset' && !drag.target && drag.valid ? (drag.index < scenes.length ? starts[drag.index] : total) * pps : null;
 
   const width = Math.max(total * pps + 160, 400);
@@ -105,10 +215,23 @@ export default function Timeline({
     onPointerUp: () => (scrubbing.current = false),
   };
 
+  // Show the + button when the pointer is near the start of a scene (not while dragging anything).
+  const gapHandlers = {
+    onPointerMove: (e) => {
+      if (e.buttons || moving || drag) return gap != null && setGap(null);
+      const x = timeFromEvent(e) * pps;
+      const i = starts.findIndex((t) => Math.abs(t * pps - x) <= GAP_PX);
+      const next = i === -1 ? null : i;
+      if (next !== gap) setGap(next);
+    },
+    onPointerLeave: () => setGap(null),
+  };
+
   const zoom = (factor) => setPps((p) => Math.round(Math.max(MIN_PPS, Math.min(MAX_PPS, p * factor))));
   const fit = () => {
     const w = scrollRef.current?.clientWidth || 800;
     setPps(Math.max(MIN_PPS, Math.min(MAX_PPS, Math.floor((w - 60) / Math.max(total, 1)))));
+    if (scrollRef.current) scrollRef.current.scrollLeft = 0;
   };
 
   return (
@@ -119,7 +242,7 @@ export default function Timeline({
           <span>
             {scenes.length} scene{scenes.length === 1 ? '' : 's'} · {formatTime(total, true)}
           </span>
-          <span className="hidden text-zinc-600 xl:inline">· drag a scene's edge to resize · drag from the library to add</span>
+          <span className="hidden text-zinc-600 xl:inline">· drag a scene to reorder it, its edge to resize</span>
         </div>
         <div className="flex items-center gap-1">
           <button className="btn-ghost px-2 py-1 text-xs" onClick={onAdd}>
@@ -157,7 +280,12 @@ export default function Timeline({
             </div>
 
             {TRACKS.map((track) => (
-              <div key={track.kind} className={`relative ${track.height} border-b border-zinc-800/60`} onPointerDown={(e) => e.target === e.currentTarget && seek(timeFromEvent(e))}>
+              <div
+                key={track.kind}
+                className={`relative ${track.height} border-b border-zinc-800/60`}
+                onPointerDown={(e) => e.target === e.currentTarget && seek(timeFromEvent(e))}
+                {...(track.kind === 'image' && gapHandlers)}
+              >
                 {scenes.map((scene, i) => (
                   <Clip
                     key={scene.scene_id}
@@ -166,13 +294,44 @@ export default function Timeline({
                     index={i}
                     left={starts[i] * pps}
                     pps={pps}
-                    selected={scene.scene_id === selectedId}
+                    selected={selectedSet.has(scene.scene_id)}
                     busy={Boolean(busy[`${scene.scene_id}:${track.kind}`])}
                     dropping={dropStateFor(scene.scene_id, track.kind)}
-                    onSelect={onSelect}
+                    moving={Boolean(moving?.ids.includes(scene.scene_id))}
+                    onPress={pressClip}
                     onResize={onResize}
+                    onMenu={onClipMenu}
                   />
                 ))}
+                {track.kind === 'image' && (
+                  <>
+                    {gap != null && (
+                      <button
+                        className="absolute top-1/2 z-30 flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-indigo-500 text-white shadow-lg ring-2 ring-zinc-900 hover:bg-indigo-400"
+                        style={{ left: Math.max(starts[gap] * pps, 13) }}
+                        title={gap === 0 ? 'Insert a blank scene at the start' : `Insert a blank scene between scenes ${gap} and ${gap + 1}`}
+                        aria-label="Insert a blank scene here"
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={() => {
+                          setGap(null);
+                          onInsert(gap);
+                        }}
+                      >
+                        <Plus className="size-4" />
+                      </button>
+                    )}
+                    <button
+                      className="absolute top-1 bottom-1 flex w-12 items-center justify-center rounded-md border border-dashed border-zinc-700 text-zinc-500 hover:border-indigo-400 hover:bg-indigo-500/10 hover:text-indigo-300"
+                      style={{ left: total * pps + (scenes.length ? 4 : 1) }}
+                      title="Add a blank scene at the end"
+                      aria-label="Add a blank scene at the end"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={() => onInsert(scenes.length)}
+                    >
+                      <Plus className="size-4" />
+                    </button>
+                  </>
+                )}
               </div>
             ))}
 
@@ -183,7 +342,19 @@ export default function Timeline({
               busy={Boolean(busy.music)}
               dropping={dropStateFor(null, 'music')}
               onSelect={onSelectMusic}
+              onMenu={onMusicMenu}
             />
+
+            {moveX != null && (
+              <div className="pointer-events-none absolute top-0 bottom-0 z-20 w-0.5 -translate-x-1/2 bg-indigo-400" style={{ left: moveX }}>
+                {/* At the very end the label goes left of the line so it isn't cut off. */}
+                <span
+                  className={`absolute top-0.5 ${moving.index < scenes.length ? 'left-1.5' : 'right-1.5'} rounded bg-indigo-500 px-1.5 text-[10px] leading-4 font-medium whitespace-nowrap text-white`}
+                >
+                  {movingLabel}
+                </span>
+              </div>
+            )}
 
             {insertX != null && (
               <div className="pointer-events-none absolute top-0 bottom-0 z-20 w-0.5 -translate-x-1/2 bg-indigo-400" style={{ left: insertX }}>
@@ -214,7 +385,7 @@ export default function Timeline({
   );
 }
 
-function MusicRow({ settings, total, pps, busy, dropping, onSelect }) {
+function MusicRow({ settings, total, pps, busy, dropping, onSelect, onMenu }) {
   const width = Math.max(total * pps, 160);
   const loopLen = settings.music_duration_sec;
   const loops = [];
@@ -230,6 +401,7 @@ function MusicRow({ settings, total, pps, busy, dropping, onSelect }) {
         }`}
         style={{ width: width - 2 }}
         onPointerDown={onSelect}
+        onContextMenu={onMenu}
         title={settings.music_url ? `${settings.music_name}: click for music settings` : 'Drop an audio file here for background music'}
       >
         {loops.map((t) => (
@@ -244,7 +416,7 @@ function MusicRow({ settings, total, pps, busy, dropping, onSelect }) {
   );
 }
 
-const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy, dropping, onSelect, onResize }) {
+const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy, dropping, moving, onPress, onResize, onMenu }) {
   const width = scene.duration_sec * pps;
   const ring = dropping
     ? dropping === 'ok'
@@ -255,14 +427,15 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
       : 'ring-1 ring-white/5 hover:ring-white/20';
   const drop = { 'data-drop-track': track, 'data-drop-scene': scene.scene_id };
   const names = scene.source_names || {};
-  const base = `absolute top-1 bottom-1 overflow-hidden rounded-md cursor-pointer ${ring}`;
+  const base = `absolute top-1 bottom-1 overflow-hidden rounded-md cursor-grab active:cursor-grabbing ${ring} ${moving ? 'opacity-40' : ''}`;
   const style = { left: left + 1, width: Math.max(2, width - 2) };
-  const select = () => onSelect(scene.scene_id);
+  const select = (e) => onPress(e, scene.scene_id);
+  const menu = (e) => onMenu(e, scene.scene_id, track);
 
   if (track === 'image') {
     const thumb = scene.video_thumb_url || scene.image_url;
     return (
-      <div className={`${base} bg-zinc-800`} style={style} onPointerDown={select} title={names.image || scene.image_prompt} {...drop}>
+      <div className={`${base} bg-zinc-800`} style={style} onPointerDown={select} onContextMenu={menu} title={names.image || scene.image_prompt} {...drop}>
         {thumb ? (
           <div className="absolute inset-0 bg-left" style={{ backgroundImage: `url("${thumb}")`, backgroundSize: 'auto 100%', backgroundRepeat: 'repeat-x' }} />
         ) : (
@@ -273,6 +446,11 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
             #{index + 1}
             {scene.video_url && <Film className="size-3 text-sky-300" aria-label="Video clip" />}
             {scene.video_url && scene.video_has_audio && scene.video_volume > 0 && <Volume2 className="size-3 text-sky-300" aria-label="Clip has sound" />}
+            {scene.notes?.trim() && (
+              <span title={`Notes: ${scene.notes}`}>
+                <NotebookPen className="size-3 text-amber-300" aria-label="Has notes" />
+              </span>
+            )}
           </span>
           {width > 60 && <span className="text-white/70 tabular-nums">{scene.duration_sec.toFixed(1)}s</span>}
         </div>
@@ -292,7 +470,7 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
   const overflow = isVoice && audioLen > scene.duration_sec;
 
   return (
-    <div className={`${base} ${url ? '' : 'border border-dashed border-zinc-700/80'}`} style={style} onPointerDown={select} title={sourceName || text} {...drop}>
+    <div className={`${base} ${url ? '' : 'border border-dashed border-zinc-700/80'}`} style={style} onPointerDown={select} onContextMenu={menu} title={sourceName || text} {...drop}>
       {url && (
         <div className={`absolute inset-y-0 left-0 border-l-2 ${color}`} style={{ width: `${filled * 100}%` }}>
           <Wave />

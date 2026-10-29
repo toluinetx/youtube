@@ -2,9 +2,15 @@ import './env.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
-import { CLIENT_DIST, EXPORTS_DIR, MEDIA_DIR } from './paths.js';
-import { DEFAULT_SETTINGS, READONLY_SETTINGS, SCENE_TEXT_FIELDS, findScene, newScene, nextSceneId, readStoryboard, updateStoryboard } from './storyboard.js';
-import { GENERATORS, removeMedia, sceneMediaUrls } from './generate.js';
+import { CLIENT_DIST, EXPORTS_DIR, MEDIA_DIR, PROJECT_ID } from './paths.js';
+import {
+  DEFAULT_SETTINGS, READONLY_SETTINGS, RESOLUTIONS, SCENE_TEXT_FIELDS, findScene, newScene, nextSceneId, readStoryboard, redo, undo,
+  updateStoryboard,
+} from './storyboard.js';
+import { historyState } from './history.js';
+import { requestContext, subscribe } from './events.js';
+import { createProject, initProjects, listProjects, openProject, trackBusy } from './projects.js';
+import { GENERATORS } from './generate.js';
 import {
   addToLibrary, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
   snapshotAsset, useAssetInScene,
@@ -19,6 +25,31 @@ const app = express();
 app.use(express.json({ limit: '2mb' }));
 
 const badRequest = (message) => Object.assign(new Error(message), { status: 400 });
+
+// Remember which browser tab made the request (X-Client), so change events can name their origin.
+app.use('/api', (req, _res, next) => requestContext.run({ client: req.get('X-Client') || null }, next));
+
+// Every API response names the open project and says what undo / redo would do next, so the client
+// notices a project switch and its undo buttons stay current.
+app.use('/api', (_req, res, next) => {
+  const json = res.json.bind(res);
+  res.json = (body) => {
+    res.set('X-Project', PROJECT_ID);
+    res.set('X-History', encodeURIComponent(JSON.stringify(historyState())));
+    return json(body);
+  };
+  next();
+});
+
+// A change sent for a project that's no longer open (X-Project) is refused rather than applied to
+// whichever project is open now.
+app.use('/api', (req, res, next) => {
+  const project = req.get('X-Project');
+  if (req.method === 'GET' || req.path.startsWith('/projects') || !project || project === PROJECT_ID) return next();
+  res.status(409).json({ error: `Project "${project}" is no longer open`, project_changed: true });
+});
+
+app.use('/api', trackBusy);
 
 function sanitizeAssetIds(value, field) {
   if (!Array.isArray(value) || !value.every((v) => typeof v === 'string')) throw badRequest(`${field} must be a list of asset ids`);
@@ -40,12 +71,31 @@ function sanitizeScenePatch(body) {
   }
   if (body.reference_asset_ids !== undefined) patch.reference_asset_ids = sanitizeAssetIds(body.reference_asset_ids, 'reference_asset_ids');
   if (body.use_global_references !== undefined) patch.use_global_references = Boolean(body.use_global_references);
+  if (body.notes !== undefined) patch.notes = String(body.notes).slice(0, 2000);
   if (body.video_volume !== undefined) {
     const v = Number(body.video_volume);
     if (!Number.isFinite(v) || v < 0 || v > 2) throw badRequest('video_volume must be between 0 and 2');
     patch.video_volume = v;
   }
   return patch;
+}
+
+const EDIT_LABELS = {
+  image_prompt: 'Edit image prompt',
+  voiceover_text: 'Edit voiceover text',
+  sfx_prompt: 'Edit sound effect prompt',
+  duration_sec: 'Change duration',
+  video_start_sec: 'Trim video',
+  video_volume: 'Change clip volume',
+  notes: 'Edit notes',
+  reference_asset_ids: 'Change references',
+  use_global_references: 'Change references',
+};
+
+/** Undo label + merge key for a scene edit: successive edits of the same fields of one scene merge. */
+function sceneEditHistory(id, patch) {
+  const fields = Object.keys(patch).sort();
+  return { label: EDIT_LABELS[fields[0]] || 'Edit scene', key: `scene:${id}:${fields.join(',')}` };
 }
 
 /** Turn a pasted script into scenes: one per paragraph, with optional [image: …] and [sfx: …] tags. */
@@ -75,6 +125,25 @@ function parseScript(script) {
     });
 }
 
+// ---- Projects ---------------------------------------------------------------------------------
+
+app.get('/api/projects', async (_req, res) => res.json({ open: PROJECT_ID, projects: await listProjects() }));
+
+// { title, open? }: create an empty project, and open it if `open` is true.
+app.post('/api/projects', async (req, res) => {
+  const project = await createProject(req.body.title);
+  if (req.body.open) await openProject(project.id);
+  res.status(201).json({ ...project, open: project.id === PROJECT_ID });
+});
+
+app.post('/api/projects/:id/open', async (req, res) => {
+  await openProject(req.params.id);
+  res.json({ open: PROJECT_ID });
+});
+
+// Server-sent events: { type: 'storyboard' | 'project', project, origin } whenever anything changes.
+app.get('/api/events', subscribe);
+
 // ---- Storyboard -------------------------------------------------------------------------------
 
 app.get('/api/storyboard', async (_req, res) => res.json(await readStoryboard()));
@@ -85,45 +154,98 @@ app.put('/api/settings', async (req, res) => {
     for (const key of Object.keys(DEFAULT_SETTINGS)) {
       if (req.body[key] !== undefined && !READONLY_SETTINGS.includes(key)) sb.settings[key] = req.body[key];
     }
-  });
+  }, { label: 'Edit project settings', key: `settings:${Object.keys(req.body).sort().join(',')}` });
   res.json(sb.settings);
 });
 
 app.put('/api/scene/:id', async (req, res) => {
   const patch = sanitizeScenePatch(req.body);
-  res.json(await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch)));
+  res.json(await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch)));
 });
 
 app.post('/api/scenes', async (req, res) => {
   const scene = await updateStoryboard((sb) => {
     const s = newScene(nextSceneId(sb), sanitizeScenePatch(req.body));
-    const after = sb.scenes.findIndex((x) => String(x.scene_id) === String(req.body.after_id));
-    sb.scenes.splice(after === -1 ? sb.scenes.length : after + 1, 0, s);
+    let at = sb.scenes.length;
+    if (Number.isInteger(req.body.index)) at = Math.max(0, Math.min(req.body.index, sb.scenes.length));
+    else {
+      const after = sb.scenes.findIndex((x) => String(x.scene_id) === String(req.body.after_id));
+      if (after !== -1) at = after + 1;
+    }
+    sb.scenes.splice(at, 0, s);
     return s;
-  });
+  }, { label: 'Add scene' });
   res.status(201).json(scene);
 });
+
+/** A new scene with the same prompts and duration as `src` (media isn't copied). */
+function copyOf(sb, src) {
+  return newScene(nextSceneId(sb), {
+    ...Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, src[f]])),
+    duration_sec: src.duration_sec,
+    notes: src.notes,
+  });
+}
+
+/** The scenes named by `ids`, in timeline order. */
+function scenesById(sb, ids) {
+  if (!Array.isArray(ids) || !ids.length) throw badRequest('ids must list at least one scene_id');
+  ids.forEach((id) => findScene(sb, id));
+  const wanted = new Set(ids.map(String));
+  return sb.scenes.filter((s) => wanted.has(String(s.scene_id)));
+}
+
+const scenesLabel = (verb, n) => `${verb} ${n === 1 ? 'scene' : `${n} scenes`}`;
 
 app.post('/api/scene/:id/duplicate', async (req, res) => {
   const scene = await updateStoryboard((sb) => {
     const src = findScene(sb, req.params.id);
-    const copy = newScene(nextSceneId(sb), {
-      ...Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, src[f]])),
-      duration_sec: src.duration_sec,
-    });
+    const copy = copyOf(sb, src);
     sb.scenes.splice(sb.scenes.indexOf(src) + 1, 0, copy);
     return copy;
-  });
+  }, { label: 'Duplicate scene' });
   res.status(201).json(scene);
 });
 
+// Copies of several scenes, placed together (in timeline order) after the last of them. Responds with the copies.
+app.post('/api/scenes/duplicate', async (req, res) => {
+  const copies = await updateStoryboard((sb) => {
+    const sources = scenesById(sb, req.body.ids);
+    const at = sb.scenes.indexOf(sources.at(-1)) + 1;
+    const made = [];
+    for (const src of sources) {
+      const copy = copyOf(sb, src);
+      sb.scenes.splice(at + made.length, 0, copy);
+      made.push(copy);
+    }
+    return made;
+  }, { label: scenesLabel('Duplicate', req.body.ids?.length) });
+  res.status(201).json(copies);
+});
+
+// The scene's media files are deleted once no undo step needs them.
 app.delete('/api/scene/:id', async (req, res) => {
-  const removed = await updateStoryboard((sb) => {
+  await updateStoryboard((sb) => {
     const s = findScene(sb, req.params.id);
     sb.scenes.splice(sb.scenes.indexOf(s), 1);
-    return s;
-  });
-  await Promise.all(sceneMediaUrls(removed).map(removeMedia));
+  }, { label: 'Delete scene' });
+  res.json({ ok: true });
+});
+
+// Replace the prompts of several scenes: { ids, prompts: { image_prompt, voiceover_text, sfx_prompt } }.
+app.post('/api/scenes/paste-prompts', async (req, res) => {
+  const prompts = Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, String(req.body.prompts?.[f] ?? '')]));
+  const sb = await updateStoryboard((sb) => {
+    for (const s of scenesById(sb, req.body.ids)) Object.assign(s, prompts);
+  }, { label: `Paste prompts into ${req.body.ids?.length === 1 ? 'scene' : `${req.body.ids?.length} scenes`}` });
+  res.json(sb);
+});
+
+app.post('/api/scenes/delete', async (req, res) => {
+  await updateStoryboard((sb) => {
+    const doomed = new Set(scenesById(sb, req.body.ids));
+    sb.scenes = sb.scenes.filter((s) => !doomed.has(s));
+  }, { label: scenesLabel('Delete', req.body.ids?.length) });
   res.json({ ok: true });
 });
 
@@ -135,25 +257,76 @@ app.post('/api/scenes/reorder', async (req, res) => {
       throw badRequest('order must list every scene_id exactly once');
     }
     sb.scenes.sort((a, b) => order.indexOf(String(a.scene_id)) - order.indexOf(String(b.scene_id)));
-  });
+  }, { label: 'Move scene' });
   res.json(sb);
 });
 
 app.post('/api/scenes/import-script', async (req, res) => {
   const parsed = parseScript(String(req.body.script || ''));
   if (!parsed.length) throw badRequest('The script is empty');
-  const replace = req.body.mode === 'replace';
-  let dropped = [];
   const sb = await updateStoryboard((sb) => {
-    if (replace) {
-      dropped = sb.scenes;
-      sb.scenes = [];
-    }
+    if (req.body.mode === 'replace') sb.scenes = [];
     for (const fields of parsed) sb.scenes.push(newScene(nextSceneId(sb), fields));
-  });
-  await Promise.all(dropped.flatMap(sceneMediaUrls).map(removeMedia));
+  }, { label: 'Import script' });
   res.json(sb);
 });
+
+const IMPORT_SCENE_FIELDS = [...SCENE_TEXT_FIELDS, 'duration_sec', 'notes'];
+const IMPORT_SETTINGS = Object.keys(DEFAULT_SETTINGS).filter((k) => !READONLY_SETTINGS.includes(k) && k !== 'reference_asset_ids');
+const SETTING_CHOICES = { aspect_ratio: Object.keys(RESOLUTIONS), motion: ['kenburns', 'none'] };
+
+/** Check an imported settings object; throws a 400 naming the problem. */
+function sanitizeImportSettings(settings = {}) {
+  if (typeof settings !== 'object' || Array.isArray(settings)) throw badRequest('settings must be an object');
+  for (const [key, value] of Object.entries(settings)) {
+    if (!IMPORT_SETTINGS.includes(key)) throw badRequest(`Unknown setting "${key}". Allowed: ${IMPORT_SETTINGS.join(', ')}`);
+    if (SETTING_CHOICES[key] && !SETTING_CHOICES[key].includes(value)) {
+      throw badRequest(`${key} must be one of ${SETTING_CHOICES[key].join(', ')}`);
+    }
+    if (typeof value !== typeof DEFAULT_SETTINGS[key]) throw badRequest(`${key} must be a ${typeof DEFAULT_SETTINGS[key]}`);
+  }
+  return settings;
+}
+
+/**
+ * Exact-timing import (used by the timeline-generation skill):
+ * { mode: 'append' | 'replace', scenes: [{ duration_sec, image_prompt, voiceover_text, sfx_prompt, notes }], settings? }.
+ * Scenes are added with no media, ready to generate. One undo step.
+ */
+app.post('/api/scenes/import', async (req, res) => {
+  const { mode, scenes } = req.body;
+  if (mode !== 'append' && mode !== 'replace') throw badRequest('mode must be "append" or "replace"');
+  if (!Array.isArray(scenes) || !scenes.length) throw badRequest('scenes must be a non-empty list');
+  if (scenes.length > 500) throw badRequest('At most 500 scenes per import');
+  const patches = scenes.map((scene, i) => {
+    const where = `Scene ${i + 1}`;
+    if (!scene || typeof scene !== 'object') throw badRequest(`${where} must be an object`);
+    const unknown = Object.keys(scene).filter((k) => !IMPORT_SCENE_FIELDS.includes(k));
+    if (unknown.length) throw badRequest(`${where}: unknown field(s) ${unknown.join(', ')}. Allowed: ${IMPORT_SCENE_FIELDS.join(', ')}`);
+    if (scene.duration_sec === undefined) throw badRequest(`${where}: duration_sec is required`);
+    for (const f of [...SCENE_TEXT_FIELDS, 'notes']) {
+      if (scene[f] !== undefined && typeof scene[f] !== 'string') throw badRequest(`${where}: ${f} must be text`);
+    }
+    try {
+      return sanitizeScenePatch(scene);
+    } catch (err) {
+      throw badRequest(`${where}: ${err.message}`);
+    }
+  });
+  const settings = sanitizeImportSettings(req.body.settings);
+  const sb = await updateStoryboard((sb) => {
+    if (mode === 'replace') sb.scenes = [];
+    Object.assign(sb.settings, settings);
+    for (const patch of patches) sb.scenes.push(newScene(nextSceneId(sb), patch));
+  }, { label: `Import ${patches.length} scene${patches.length === 1 ? '' : 's'}` });
+  res.json(sb);
+});
+
+// ---- Undo / redo ------------------------------------------------------------------------------
+// Responds with { storyboard, label }, or { storyboard: null } when there is nothing to undo / redo.
+
+app.post('/api/undo', async (_req, res) => res.json((await undo()) ?? { storyboard: null }));
+app.post('/api/redo', async (_req, res) => res.json((await redo()) ?? { storyboard: null }));
 
 // ---- Generation -------------------------------------------------------------------------------
 
@@ -162,7 +335,7 @@ for (const [route, kind] of Object.entries(routes)) {
   app.post(`/api/scene/:id/${route}`, async (req, res) => {
     // Optionally save edited prompt text in the same request.
     const patch = sanitizeScenePatch(req.body || {});
-    if (Object.keys(patch).length) await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch));
+    if (Object.keys(patch).length) await updateStoryboard((sb) => Object.assign(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch));
     res.json(await GENERATORS[kind].fn(req.params.id));
   });
 }
@@ -229,8 +402,15 @@ app.get('/api/status', (_req, res) => {
 
 // ---- Static files -----------------------------------------------------------------------------
 
-app.use('/media', express.static(MEDIA_DIR, { maxAge: '1y', immutable: true }));
-app.use('/exports', express.static(EXPORTS_DIR));
+// Media and exports are served from whichever project is open.
+const staticHandlers = new Map();
+const serveOpenProject = (dirOf, options) => (req, res, next) => {
+  const dir = dirOf();
+  if (!staticHandlers.has(dir)) staticHandlers.set(dir, express.static(dir, options));
+  staticHandlers.get(dir)(req, res, next);
+};
+app.use('/media', serveOpenProject(() => MEDIA_DIR, { maxAge: '1y', immutable: true }));
+app.use('/exports', serveOpenProject(() => EXPORTS_DIR));
 if (fs.existsSync(CLIENT_DIST)) {
   app.use(express.static(CLIENT_DIST));
   app.get(/^\/(?!api\/).*/, (_req, res) => res.sendFile(path.join(CLIENT_DIST, 'index.html')));
@@ -245,8 +425,9 @@ app.use((err, _req, res, _next) => {
   res.status(status).json({ error: err.message, ...(err.uses && { uses: err.uses }) });
 });
 
+await initProjects();
 app.listen(PORT, () => {
-  console.log(`API listening on http://localhost:${PORT}`);
+  console.log(`API listening on http://localhost:${PORT} (project: ${PROJECT_ID})`);
   if (!process.env.REPLICATE_API_TOKEN) console.warn('  ! REPLICATE_API_TOKEN missing (copy .env.example to .env)');
   if (!process.env.ELEVENLABS_API_KEY) console.warn('  ! ELEVENLABS_API_KEY missing (copy .env.example to .env)');
 });

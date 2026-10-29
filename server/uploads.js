@@ -6,7 +6,7 @@ import { pipeline } from 'node:stream/promises';
 import { mediaPathToUrl, mediaUrlToPath } from './paths.js';
 import { findScene, newScene, nextSceneId, readStoryboard, updateStoryboard } from './storyboard.js';
 import { extractFrame, extractThumbnail, probe } from './ffmpeg.js';
-import { CLEAR_IMAGE, CLEAR_VIDEO, badRequest, commitScene, fitToVoiceover, mediaFilePath, removeMedia, setSourceName } from './generate.js';
+import { CLEAR_IMAGE, CLEAR_VIDEO, badRequest, commitScene, fitToVoiceover, mediaFilePath, setSourceName } from './generate.js';
 
 export const EXTENSIONS = {
   image: ['png', 'jpg', 'jpeg', 'webp', 'bmp'],
@@ -26,8 +26,8 @@ export function fileType(name) {
 const notFound = (message) => Object.assign(new Error(message), { status: 404 });
 
 // ---- Library -----------------------------------------------------------------------------------
-// Uploaded files live in media/library/ and are only ever deleted from the library itself;
-// scenes and the music track merely reference them.
+// Uploaded files live in media/library/; scenes and the music track merely reference them. A file is
+// deleted once it has left the library and no undo step refers to it.
 
 /**
  * Stream the raw request body into the library. The client sends the file as the body with its
@@ -78,7 +78,7 @@ async function registerAsset({ file, name, type, info, size, extra }) {
   };
   await updateStoryboard((sb) => {
     sb.library.push(asset);
-  });
+  }, { label: `Add "${name}" to the library` });
   return asset;
 }
 
@@ -146,7 +146,7 @@ export function renameAsset(assetId, name) {
     }
     if (sb.settings.music_url === asset.url) sb.settings.music_name = clean;
     return asset;
-  });
+  }, { label: `Rename "${clean}"` });
 }
 
 function findAsset(sb, assetId) {
@@ -177,11 +177,11 @@ const CLEAR_SLOT = {
 const CLEAR_MUSIC = { music_url: null, music_name: null, music_duration_sec: null };
 
 /**
- * Delete an asset and its files. If it's in use, refuses with 409 unless `force`,
+ * Remove an asset from the library. If it's in use, refuses with 409 unless `force`,
  * in which case it's removed from those scenes / the music track first.
  */
-export async function deleteAsset(assetId, force) {
-  const asset = await updateStoryboard((sb) => {
+export function deleteAsset(assetId, force) {
+  return updateStoryboard((sb) => {
     const a = findAsset(sb, assetId);
     const uses = usagesOf(sb, a);
     if (uses.length && !force) {
@@ -202,14 +202,7 @@ export async function deleteAsset(assetId, force) {
     }
     sb.library = sb.library.filter((x) => x !== a);
     return a;
-  });
-  await Promise.all(
-    [asset.url, asset.type === 'video' ? asset.thumb_url : null].map((u) => {
-      const file = mediaUrlToPath(u);
-      return file ? fsp.rm(file, { force: true }) : null;
-    }),
-  );
-  return asset;
+  }, { label: 'Delete from library' });
 }
 
 // ---- Using library assets ----------------------------------------------------------------------
@@ -255,7 +248,7 @@ export async function useAssetInScene(sceneId, assetId, slot) {
     }
     fitToVoiceover(s); // never cut narration off; a short clip holds its last frame instead
     setSourceName(s, slot, asset.name);
-  });
+  }, `Use "${asset.name}"`);
 }
 
 /** Create a new scene at `index` (default: end) whose visual is an image or video asset. */
@@ -271,17 +264,11 @@ export function sceneFromAsset(assetId, index) {
     const i = Number.isInteger(index) ? Math.max(0, Math.min(index, sb.scenes.length)) : sb.scenes.length;
     sb.scenes.splice(i, 0, scene);
     return scene;
-  });
+  }, { label: `Add scene from "${asset.name}"` });
 }
 
-async function setMusic(apply) {
-  let previous;
-  const sb = await updateStoryboard((sb) => {
-    previous = sb.settings.music_url;
-    apply(sb);
-  });
-  // Only deletes music that predates the library; library files are never removed here.
-  if (previous && previous !== sb.settings.music_url) await removeMedia(previous);
+async function setMusic(apply, label) {
+  const sb = await updateStoryboard(apply, { label });
   return sb.settings;
 }
 
@@ -290,11 +277,11 @@ export function musicFromAsset(assetId) {
     const asset = findAsset(sb, assetId);
     checkSlot(asset, 'music');
     Object.assign(sb.settings, { music_url: asset.url, music_name: asset.name, music_duration_sec: asset.duration_sec });
-  });
+  }, 'Set music');
 }
 
 export function removeMusic() {
-  return setMusic((sb) => Object.assign(sb.settings, CLEAR_MUSIC));
+  return setMusic((sb) => void Object.assign(sb.settings, CLEAR_MUSIC), 'Remove music');
 }
 
 /** Remove one slot's media from a scene. Library files stay in the library. */
@@ -303,5 +290,5 @@ export function clearSceneSlot(sceneId, slot) {
   return commitScene(sceneId, (s) => {
     Object.assign(s, CLEAR_SLOT[slot]);
     setSourceName(s, slot, null);
-  });
+  }, `Remove ${{ image: 'image', voiceover: 'voiceover', sfx: 'sound effect' }[slot]}`);
 }
