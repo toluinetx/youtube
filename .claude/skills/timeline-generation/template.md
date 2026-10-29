@@ -14,7 +14,7 @@ Delete the guidance in `>` quotes as you go, or leave it. Claude ignores it.
 > Leave a line blank to keep the project's current setting.
 
 - **Title:**
-- **Format:** 16:9 (YouTube) | 9:16 (Shorts / Reels / TikTok) | 1:1
+- **Format:** 16:9 (YouTube)
 - **Visual style:**
   > Added to the end of **every** image prompt, so describe the look you want throughout and don't
   > repeat it in each scene. Name the medium, lighting, colour palette and finish. For example:
