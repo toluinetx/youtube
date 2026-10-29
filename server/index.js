@@ -127,8 +127,13 @@ app.put('/api/scene/:id', async (req, res) => {
 app.post('/api/scenes', async (req, res) => {
   const scene = await updateStoryboard((sb) => {
     const s = newScene(nextSceneId(sb), sanitizeScenePatch(req.body));
-    const after = sb.scenes.findIndex((x) => String(x.scene_id) === String(req.body.after_id));
-    sb.scenes.splice(after === -1 ? sb.scenes.length : after + 1, 0, s);
+    let at = sb.scenes.length;
+    if (Number.isInteger(req.body.index)) at = Math.max(0, Math.min(req.body.index, sb.scenes.length));
+    else {
+      const after = sb.scenes.findIndex((x) => String(x.scene_id) === String(req.body.after_id));
+      if (after !== -1) at = after + 1;
+    }
+    sb.scenes.splice(at, 0, s);
     return s;
   }, { label: 'Add scene' });
   res.status(201).json(scene);

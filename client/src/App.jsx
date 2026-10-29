@@ -367,6 +367,14 @@ export default function App() {
       selectScene(scene.scene_id, { seekTo: false });
     });
 
+  /** The timeline's + buttons: a blank scene at `index` (0 = first), shown in the sidebar and preview. */
+  const insertSceneAt = (index) =>
+    run(async () => {
+      const scene = await api.addScene({ index });
+      await reload();
+      selectScene(scene.scene_id);
+    });
+
   /** Duplicate scenes (as one undo step); the copies become the selection. */
   const duplicateScenes = (ids) =>
     run(async () => {
@@ -833,6 +841,7 @@ export default function App() {
             onSelectMusic={() => setSidebarTab('project')}
             onClipMenu={onClipMenu}
             onReorder={reorderScenes}
+            onInsert={insertSceneAt}
             onMusicMenu={(e) => openMenu(e, musicMenuItems())}
             busy={busy}
           />

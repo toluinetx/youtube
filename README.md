@@ -48,7 +48,8 @@ The top bar shows a green dot for each service that is configured. Restart `npm 
 3. **Generate everything.** **Generate missing** creates every image, voiceover and SFX that has a prompt but
    no file yet. If a voiceover runs longer than its scene, the scene is lengthened so the narration isn't cut off.
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
-   sidebar and click **Regenerate**. Only that asset is regenerated. Drag a scene's right edge to change its length,
+   sidebar and click **Regenerate**. Only that asset is regenerated. Hover between two scenes on the Image track and click
+   **+** to insert a blank scene there, or click the **+** box after the last scene. Drag a scene's right edge to change its length,
    or drag the scene itself to move it (<kbd>Esc</kbd> cancels). <kbd>Shift</kbd>-click selects a range of scenes and
    <kbd>Ctrl/⌘</kbd>-click adds or removes one; dragging, duplicating or deleting then applies to all of them.
 5. **Export.** **Export video** renders `project/exports/final_output.mp4` and opens it in the
@@ -161,7 +162,7 @@ To work on a separate video, set `PROJECT_DIR=videos/my-next-video` in `.env`.
 | GET | `/api/storyboard` | settings + all scenes |
 | PUT | `/api/settings` | update project settings |
 | PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references` |
-| POST | `/api/scenes` | add a scene (`after_id` optional) |
+| POST | `/api/scenes` | add a blank scene: at `index`, after `after_id`, or at the end |
 | POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
 | DELETE | `/api/scene/:id` | delete a scene (its media is deleted once no undo step needs it) |
 | POST | `/api/scenes/duplicate` | copy several scenes' prompts: `{ "ids": [2, 3] }`; the copies go after the last one |

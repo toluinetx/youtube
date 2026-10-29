@@ -7,6 +7,8 @@ const MAX_PPS = 200;
 const LABEL_W = 88;
 // How far (px) a clip must be dragged before it starts moving rather than just being selected.
 const REORDER_THRESHOLD = 5;
+// How close (px) the pointer must be to the boundary between two scenes to offer the + (insert) button.
+const GAP_PX = 14;
 // Auto-scroll while dragging a clip near the timeline's left/right edge.
 const EDGE_PX = 48;
 const EDGE_SPEED = 14;
@@ -52,7 +54,7 @@ function tickStep(pps) {
 
 export default function Timeline({
   scenes, starts, total, time, playing, seek, selectedIds, onSelect, onResize, onAdd, onDropFiles, onDropAsset, dragAsset, settings,
-  onSelectMusic, onClipMenu, onMusicMenu, onReorder, busy,
+  onSelectMusic, onClipMenu, onMusicMenu, onReorder, onInsert, busy,
 }) {
   const [pps, setPps] = useState(40);
   // While something is dragged over the timeline: { source: 'files' | 'asset', target, index, valid }.
@@ -63,6 +65,8 @@ export default function Timeline({
   // While clips are dragged to a new position: { ids, index } (index = insert before this scene).
   const [moving, setMoving] = useState(null);
   const selectedSet = new Set(selectedIds);
+  // Index of the scene boundary under the pointer on the Image track (0 = before the first scene), or null.
+  const [gap, setGap] = useState(null);
 
   /** Where a new scene dropped at time t would be inserted: before the first scene whose middle is after t. */
   const insertIndexAt = (t) => scenes.filter((sc, i) => starts[i] + sc.duration_sec / 2 < t).length;
@@ -211,10 +215,23 @@ export default function Timeline({
     onPointerUp: () => (scrubbing.current = false),
   };
 
+  // Show the + button when the pointer is near the start of a scene (not while dragging anything).
+  const gapHandlers = {
+    onPointerMove: (e) => {
+      if (e.buttons || moving || drag) return gap != null && setGap(null);
+      const x = timeFromEvent(e) * pps;
+      const i = starts.findIndex((t) => Math.abs(t * pps - x) <= GAP_PX);
+      const next = i === -1 ? null : i;
+      if (next !== gap) setGap(next);
+    },
+    onPointerLeave: () => setGap(null),
+  };
+
   const zoom = (factor) => setPps((p) => Math.round(Math.max(MIN_PPS, Math.min(MAX_PPS, p * factor))));
   const fit = () => {
     const w = scrollRef.current?.clientWidth || 800;
     setPps(Math.max(MIN_PPS, Math.min(MAX_PPS, Math.floor((w - 60) / Math.max(total, 1)))));
+    if (scrollRef.current) scrollRef.current.scrollLeft = 0;
   };
 
   return (
@@ -263,7 +280,12 @@ export default function Timeline({
             </div>
 
             {TRACKS.map((track) => (
-              <div key={track.kind} className={`relative ${track.height} border-b border-zinc-800/60`} onPointerDown={(e) => e.target === e.currentTarget && seek(timeFromEvent(e))}>
+              <div
+                key={track.kind}
+                className={`relative ${track.height} border-b border-zinc-800/60`}
+                onPointerDown={(e) => e.target === e.currentTarget && seek(timeFromEvent(e))}
+                {...(track.kind === 'image' && gapHandlers)}
+              >
                 {scenes.map((scene, i) => (
                   <Clip
                     key={scene.scene_id}
@@ -281,6 +303,35 @@ export default function Timeline({
                     onMenu={onClipMenu}
                   />
                 ))}
+                {track.kind === 'image' && (
+                  <>
+                    {gap != null && (
+                      <button
+                        className="absolute top-1/2 z-30 flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-indigo-500 text-white shadow-lg ring-2 ring-zinc-900 hover:bg-indigo-400"
+                        style={{ left: Math.max(starts[gap] * pps, 13) }}
+                        title={gap === 0 ? 'Insert a blank scene at the start' : `Insert a blank scene between scenes ${gap} and ${gap + 1}`}
+                        aria-label="Insert a blank scene here"
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={() => {
+                          setGap(null);
+                          onInsert(gap);
+                        }}
+                      >
+                        <Plus className="size-4" />
+                      </button>
+                    )}
+                    <button
+                      className="absolute top-1 bottom-1 flex w-12 items-center justify-center rounded-md border border-dashed border-zinc-700 text-zinc-500 hover:border-indigo-400 hover:bg-indigo-500/10 hover:text-indigo-300"
+                      style={{ left: total * pps + (scenes.length ? 4 : 1) }}
+                      title="Add a blank scene at the end"
+                      aria-label="Add a blank scene at the end"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={() => onInsert(scenes.length)}
+                    >
+                      <Plus className="size-4" />
+                    </button>
+                  </>
+                )}
               </div>
             ))}
 
