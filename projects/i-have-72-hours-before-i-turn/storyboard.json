@@ -62,7 +62,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_8999531c",
+          "layer_id": "l_ca3eeb0b",
           "prompt": "a small dictaphone record button clicking",
           "url": null,
           "duration_sec": null,
@@ -139,7 +139,7 @@
       "sfx_layers": [],
       "shots": [
         {
-          "shot_id": "s_2b79254b",
+          "shot_id": "s_e85dfa84",
           "image_prompt": "Close-up of Nora's two fingers pressed against the side of her own neck, checking her pulse, dashboard glow",
           "image_url": null,
           "motion": null,
@@ -180,7 +180,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_215a3a22",
+          "layer_id": "l_45692b5b",
           "prompt": "a deep sub-bass hit",
           "url": null,
           "duration_sec": null,
@@ -225,7 +225,7 @@
       "sfx_layers": [],
       "shots": [
         {
-          "shot_id": "s_8961a290",
+          "shot_id": "s_f370f77e",
           "image_prompt": "Eli's small sleeping hand curled around the yellow walkie-talkie, warm dome light",
           "image_url": null,
           "motion": null,
@@ -328,7 +328,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_d503a847",
+          "layer_id": "l_0ebfd08e",
           "prompt": "a toy walkie-talkie squelch beep",
           "url": null,
           "duration_sec": null,
@@ -360,7 +360,7 @@
     {
       "scene_id": 9,
       "image_prompt": "Close-up of Nora's hand setting a pair of steel handcuffs on the kitchen counter beside a coffee mug, morning light, scrubs sleeve visible",
-      "voiceover_text": "A cop's handcuffs were still in my scrubs pocket. Long night.",
+      "voiceover_text": "A cop's handcuffs were still in my scrubs pocket. An agitated patient. [pause] Long night.",
       "sfx_prompt": "Kitchen ambience",
       "video_prompt": "",
       "duration_sec": 7,
@@ -372,7 +372,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_cd38f13a",
+          "layer_id": "l_ac8138b0",
           "prompt": "a metallic clink on the counter",
           "url": null,
           "duration_sec": null,
@@ -404,10 +404,10 @@
     {
       "scene_id": 10,
       "image_prompt": "Eli at the kitchen table, fork paused in mid-air, turning to look toward the window, morning light on his face",
-      "voiceover_text": "Then every phone on the street went off at once.",
+      "voiceover_text": "Then every phone on the street screamed at once. [pause] [flatly] CDC alert. Containment failure. Seek shelter immediately.",
       "sfx_prompt": "Kitchen ambience, birds",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 8,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -416,7 +416,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_fa66d6b9",
+          "layer_id": "l_69cc4f41",
           "prompt": "several emergency alert tones blaring at once, inside and from the houses outside",
           "url": null,
           "duration_sec": null,
@@ -427,7 +427,17 @@
           "source_name": null
         }
       ],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_af7c4e0f",
+          "image_prompt": "Close-up of a smartphone lying face up on the kitchen counter, its screen glowing bright red with an emergency alert, the screen's text blurred and unreadable, morning light",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 4.3,
+          "cue": "CDC",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -443,15 +453,15 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "[interrupt: emergency alert tones break the warmth]"
+      "notes": "[interrupt: emergency alert tones break the warmth] The alert text could be added as an overlay in the edit (text in images often comes out misspelled)."
     },
     {
       "scene_id": 11,
       "image_prompt": "Close-up of Nora frozen at the stove holding a coffee mug, her forearms bare, her face draining of colour, the warm kitchen soft behind her",
-      "voiceover_text": "I'd seen forty bites in three days. I knew what came next.",
+      "voiceover_text": "I'd seen forty bites in three days. [pause] That alert meant containment had already failed.",
       "sfx_prompt": "Alert tones fading, a dog barking somewhere, sirens closer",
       "video_prompt": "",
-      "duration_sec": 6,
+      "duration_sec": 7,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -479,11 +489,11 @@
     },
     {
       "scene_id": 12,
-      "image_prompt": "Wide shot through a kitchen window of a suburban lawn, an older man in a bathrobe staggering barefoot across the wet grass toward the driveway, head tilted at a wrong angle, sprinklers running, the man alone on the lawn, the only person in the frame",
-      "voiceover_text": "Mister Dale from next door was crossing his lawn. Barefoot. Head tilted. Wrong.",
+      "image_prompt": "Wide shot through a kitchen window of a suburban lawn, an older man in a bathrobe staggering barefoot across the wet grass, head tilted at a wrong angle, turning toward the house, sprinklers running, the man alone on the lawn, the only person in the frame",
+      "voiceover_text": "Mister Dale from next door. Barefoot. Head tilted. [pause] Then he turned toward the noise. Toward us.",
       "sfx_prompt": "Sprinklers ticking, sirens in the distance, birdsong",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 7.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -492,14 +502,14 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_411a82b1",
+          "layer_id": "l_69ceb614",
           "prompt": "a low, wet groan close outside",
           "url": null,
           "duration_sec": null,
           "volume": 1,
-          "start_sec": 4.8,
+          "start_sec": 5.9,
           "length_sec": 1.5,
-          "cue": "Wrong",
+          "cue": "noise",
           "source_name": null
         }
       ],
@@ -534,7 +544,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_da78f20f",
+          "layer_id": "l_32a9fd57",
           "prompt": "a car door yanked open",
           "url": null,
           "duration_sec": null,
@@ -576,7 +586,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_666a6d4f",
+          "layer_id": "l_3a692640",
           "prompt": "a body slamming onto a car hood",
           "url": null,
           "duration_sec": null,
@@ -636,10 +646,10 @@
     {
       "scene_id": 16,
       "image_prompt": "View from the front seat into the back of the car: Eli alone in his booster seat, eyes squeezed shut, both hands pressed over his ears",
-      "voiceover_text": "Eli was in the back seat. Eyes shut. Hands over his ears. [pause] Did he see?",
+      "voiceover_text": "Eli was in the back seat. Eyes shut. Hands over his ears against the sirens. [pause] Did he see?",
       "sfx_prompt": "Car interior, muffled groaning outside the glass, her fast breathing",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 8.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -647,7 +657,17 @@
       "voiceover_words": null,
       "sfx_duration_sec": null,
       "sfx_layers": [],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_63413c67",
+          "image_prompt": "Nora's eyes in the rearview mirror, Nora alone, wide and frightened, watching the back seat",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 6.7,
+          "cue": "Did",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -680,7 +700,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_a7a16e7e",
+          "layer_id": "l_3dc241f2",
           "prompt": "gauze tearing",
           "url": null,
           "duration_sec": null,
@@ -754,7 +774,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_1a7d6989",
+          "layer_id": "l_dbe1ba40",
           "prompt": "a dictaphone record button clicking",
           "url": null,
           "duration_sec": null,
@@ -828,7 +848,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_6ad0b92e",
+          "layer_id": "l_bb3d5723",
           "prompt": "a heart monitor flatline tone",
           "url": null,
           "duration_sec": null,
@@ -920,10 +940,10 @@
     {
       "scene_id": 24,
       "image_prompt": "Distant wide shot of a military perimeter at dawn, a double fence with razor wire, floodlights on poles, a sandbagged gate, empty field in front",
-      "voiceover_text": "The gate opens at six every morning. Ten minutes. Everyone gets a thermal scan.",
+      "voiceover_text": "Next intake: Tuesday, six A.M. The gate opens for ten minutes. [pause] An hour and forty minutes before I turn.",
       "sfx_prompt": "Wind over an open field, a diesel generator far away",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 9,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -931,7 +951,17 @@
       "voiceover_words": null,
       "sfx_duration_sec": null,
       "sfx_layers": [],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_1b19f65e",
+          "image_prompt": "Close-up of Nora alone at the wheel in grey morning light, eyes fixed on the road, jaw tight",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 5.1,
+          "cue": "An hour",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -946,16 +976,16 @@
       "use_previous_scene": true,
       "motion": null,
       "shake": null,
-      "title_text": "",
-      "notes": ""
+      "title_text": "TUESDAY 6:00 AM",
+      "notes": "Only one intake before she turns: explains why they wait at the farm."
     },
     {
       "scene_id": 25,
       "image_prompt": "Close-up of a soldier's gloved hand holding a handheld thermal scanner pointed toward the camera, the soldier's body out of focus behind it, dawn light",
-      "voiceover_text": "One hundred point four, and you're turned away. [pause] The radio said one more thing.",
+      "voiceover_text": "Everyone gets a thermal scan. One hundred point four, and you're turned away. [pause] The radio said one more thing.",
       "sfx_prompt": "Wind",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 9,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -964,18 +994,28 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_fece6b14",
+          "layer_id": "l_28bb4ce6",
           "prompt": "a short electronic scanner beep",
           "url": null,
           "duration_sec": null,
           "volume": 1,
-          "start_sec": 1.2,
+          "start_sec": 3.2,
           "length_sec": 0.5,
           "cue": "four",
           "source_name": null
         }
       ],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_96b8cf6c",
+          "image_prompt": "Close-up of the silver sedan's glowing dashboard radio, Nora's hand turning the volume knob up, grey morning light, Nora's one hand only",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 5.9,
+          "cue": "The radio",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -1100,7 +1140,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_32d461bb",
+          "layer_id": "l_8bab975a",
           "prompt": "many low groans rising together",
           "url": null,
           "duration_sec": null,
@@ -1176,7 +1216,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_41c6b7bf",
+          "layer_id": "l_4fe418a3",
           "prompt": "engine roaring in reverse, tires screeching",
           "url": null,
           "duration_sec": null,
@@ -1363,7 +1403,7 @@
     },
     {
       "scene_id": 37,
-      "image_prompt": "Nora crouched at the open rear window of the silver sedan, holding one yellow walkie-talkie, Eli inside holding the other, two people, dusk",
+      "image_prompt": "Nora crouched at the open rear window of the silver sedan, holding a small blue toy walkie-talkie, Eli inside holding his yellow one, two people, dusk",
       "voiceover_text": "I gave Eli the rule. Two clicks means I'm here, I'm okay. [pause] No talking.",
       "sfx_prompt": "Wind, crows far off",
       "video_prompt": "",
@@ -1376,7 +1416,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_167da219",
+          "layer_id": "l_06d1d605",
           "prompt": "two crisp walkie-talkie clicks",
           "url": null,
           "duration_sec": null,
@@ -1439,7 +1479,7 @@
     },
     {
       "scene_id": 39,
-      "image_prompt": "Close-up of the yellow walkie-talkie on the asphalt beside Nora's knee, its small light glowing, dusk",
+      "image_prompt": "Close-up of Nora's small blue toy walkie-talkie on the asphalt beside her knee, its small light glowing, dusk",
       "voiceover_text": "Every thirty seconds, two clicks. [pause] Then the walkie hissed.",
       "sfx_prompt": "Liquid gurgling, wind",
       "video_prompt": "",
@@ -1452,7 +1492,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_3db47d4e",
+          "layer_id": "l_fdc48f57",
           "prompt": "two crisp walkie-talkie clicks",
           "url": null,
           "duration_sec": null,
@@ -1463,7 +1503,7 @@
           "source_name": null
         },
         {
-          "layer_id": "l_350781a5",
+          "layer_id": "l_10ad3044",
           "prompt": "a sudden loud walkie-talkie static burst",
           "url": null,
           "duration_sec": null,
@@ -1507,7 +1547,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_d914b26c",
+          "layer_id": "l_07ffdb8b",
           "prompt": "hands slapping and dragging across glass",
           "url": null,
           "duration_sec": null,
@@ -1551,7 +1591,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_bf5dc9ae",
+          "layer_id": "l_458f72f0",
           "prompt": "glass cracking under pressure",
           "url": null,
           "duration_sec": null,
@@ -1595,7 +1635,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_4545ee43",
+          "layer_id": "l_a69b2511",
           "prompt": "Glass shattering",
           "url": null,
           "duration_sec": null,
@@ -1785,7 +1825,7 @@
     {
       "scene_id": 48,
       "image_prompt": "Nora alone in the driver's seat at night, a thermometer in her mouth, sweat on her face, wrapped in her grey hoodie, moonlight through the windshield",
-      "voiceover_text": "Temperature, one-oh-one point two. Left hand tremor. Patient is lying to her son.",
+      "voiceover_text": "[flatly] Temperature, one-oh-one point two. Patient presents with mild intention tremor, left hand.",
       "sfx_prompt": "Car interior at night, crickets outside, her teeth chattering",
       "video_prompt": "",
       "duration_sec": 7,
@@ -1817,10 +1857,10 @@
     {
       "scene_id": 49,
       "image_prompt": "Close-up of a white pill bottle in Nora's shaking hand, white tablets tipping into her palm, moonlight",
-      "voiceover_text": "Twenty-four Tylenol when we left. Two every four hours. Sixteen left.",
+      "voiceover_text": "Sixteen Tylenol left. Two every four hours keeps me under a hundred point four. [pause] Long enough to pass the scan.",
       "sfx_prompt": "Car interior at night, pills rattling in a plastic bottle",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 9,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -1828,6 +1868,60 @@
       "voiceover_words": null,
       "sfx_duration_sec": null,
       "sfx_layers": [],
+      "shots": [
+        {
+          "shot_id": "s_ff1322ca",
+          "image_prompt": "Nora alone in the driver's seat at night swallowing two tablets dry, head tipped back, moonlight",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 6.3,
+          "cue": "Long enough",
+          "source_name": null
+        }
+      ],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_e798e6da"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "shake": null,
+      "title_text": "TYLENOL: 16",
+      "notes": "Setup: the Tylenol is how she means to pass the gate's 100.4°F scan."
+    },
+    {
+      "scene_id": 50,
+      "image_prompt": "Close-up of a single white tablet in Nora's open palm, her hand trembling slightly, a small white plastic pill bottle with its label turned away on the dashboard behind, moonlight, Nora's one hand only",
+      "voiceover_text": "But sixteen won't last until Tuesday. [pause] So, one every six hours.",
+      "sfx_prompt": "Car interior at night, crickets",
+      "video_prompt": "",
+      "duration_sec": 6,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": null,
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": null,
+      "sfx_layers": [
+        {
+          "layer_id": "l_53b3b86c",
+          "prompt": "a plastic pill bottle cap snapping shut",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 4.3,
+          "length_sec": 1,
+          "cue": "six",
+          "source_name": null
+        }
+      ],
       "shots": [],
       "video_url": null,
       "video_thumb_url": null,
@@ -1844,10 +1938,10 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the Tylenol count (pays off at the gate). Counter 24 → 16."
+      "notes": "Rationed: 16 at Hour 19 → 9 at Hour 61."
     },
     {
-      "scene_id": 50,
+      "scene_id": 51,
       "image_prompt": "Eli leaning forward from the back seat at night, holding his water bottle out to his mother, two people: Eli and, in the dark foreground, Nora's shoulder and cheek, moonlight on his face",
       "voiceover_text": "Eli kept handing me his water. [pause] Every time I coughed, there it was.",
       "sfx_prompt": "Car interior at night",
@@ -1861,7 +1955,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_e500af97",
+          "layer_id": "l_54e0819f",
           "prompt": "a plastic bottle crinkling",
           "url": null,
           "duration_sec": null,
@@ -1872,7 +1966,7 @@
           "source_name": null
         },
         {
-          "layer_id": "l_bc60ad5d",
+          "layer_id": "l_648c3fdd",
           "prompt": "a soft cough",
           "url": null,
           "duration_sec": null,
@@ -1899,10 +1993,10 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "Setup: recontextualised at the twist (he knew)."
+      "notes": "Eli copies what she does when he's sick. He doesn't know."
     },
     {
-      "scene_id": 51,
+      "scene_id": 52,
       "image_prompt": "Eli alone curled up in the back seat under his mother's grey hoodie, looking up at the car ceiling, the walkie-talkie on his chest, moonlight",
       "voiceover_text": "[softly] Then he asked me. [pause] Mom… do zombies remember people?",
       "sfx_prompt": "Car interior at night, crickets",
@@ -1934,9 +2028,9 @@
       "notes": "[open L6: do they remember people?] Stays open to the last shot on purpose. Music: a low warm piano note."
     },
     {
-      "scene_id": 52,
+      "scene_id": 53,
       "image_prompt": "Close-up of Nora's face in moonlight, Nora alone in the frame, swallowing hard, eyes wet",
-      "voiceover_text": "I'm a nurse. I know what a brain does without oxygen. [pause] No, baby.",
+      "voiceover_text": "I'm a nurse. I know what a brain does without oxygen. [pause] [softly] They do, baby. Always.",
       "sfx_prompt": "Car interior at night, crickets",
       "video_prompt": "",
       "duration_sec": 7,
@@ -1963,10 +2057,10 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": ""
+      "notes": "A lie so he can hope. Answered at Hour 79."
     },
     {
-      "scene_id": 53,
+      "scene_id": 54,
       "image_prompt": "Close-up of the black dictaphone lying on the dashboard in moonlight, the tape visible through its little window",
       "voiceover_text": "Before I slept, I pressed play to log the hour. [pause] The tape was rewound. All the way to the start.",
       "sfx_prompt": "Car interior at night, crickets",
@@ -1980,7 +2074,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_5f3deedd",
+          "layer_id": "l_571a9f54",
           "prompt": "a fast cassette tape rewinding whirr, then a click",
           "url": null,
           "duration_sec": null,
@@ -1993,7 +2087,7 @@
       ],
       "shots": [
         {
-          "shot_id": "s_d8eb325e",
+          "shot_id": "s_90401073",
           "image_prompt": "Extreme close-up of the tiny cassette inside the dictaphone, its spools fully wound to the start",
           "image_url": null,
           "motion": null,
@@ -2020,7 +2114,7 @@
       "notes": "[open L7: who keeps rewinding the tape?]"
     },
     {
-      "scene_id": 54,
+      "scene_id": 55,
       "image_prompt": "Nora alone staring at the dictaphone in her hand, frightened, her breath fogging in the cold car",
       "voiceover_text": "I didn't remember doing it. [pause] Memory loss wasn't supposed to start until hour forty-eight.",
       "sfx_prompt": "Car interior at night, crickets stop",
@@ -2052,7 +2146,61 @@
       "notes": ""
     },
     {
-      "scene_id": 55,
+      "scene_id": 56,
+      "image_prompt": "Nora alone sitting slumped in the driver's seat at night, eyes half open and unfocused, the black dictaphone held to her ear in her slack hand, her thumb on the rewind button, moonlight",
+      "voiceover_text": "Somewhere in the dark, I was playing my own voice back to myself. [pause] Holding on to who I was.",
+      "sfx_prompt": "Car interior at night, faint tape playback of a murmuring woman's voice",
+      "video_prompt": "",
+      "duration_sec": 9,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": null,
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": null,
+      "sfx_layers": [
+        {
+          "layer_id": "l_3d13edc0",
+          "prompt": "a cassette tape rewinding whirr, then a click",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 0.3,
+          "length_sec": 2,
+          "cue": null,
+          "source_name": null
+        }
+      ],
+      "shots": [
+        {
+          "shot_id": "s_a4e61e43",
+          "image_prompt": "Extreme close-up of the dictaphone's tape window, the small cassette reels turning, a faint red light, darkness",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 5.9,
+          "cue": "Holding",
+          "source_name": null
+        }
+      ],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_e798e6da"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "shake": null,
+      "title_text": "",
+      "notes": "[close L7] Her own fugues rewind the tape: an instinct to anchor her fading identity."
+    },
+    {
+      "scene_id": 57,
       "image_prompt": "View through the windshield at night: far across a dark field, a farmhouse porch light glowing warm, thin mist over the field",
       "voiceover_text": "Then a porch light came on across the field. [whispers] Something over there was moving.",
       "sfx_prompt": "Silence, wind across the field",
@@ -2066,7 +2214,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_be01e168",
+          "layer_id": "l_20d9976c",
           "prompt": "a faint electrical click far away",
           "url": null,
           "duration_sec": null,
@@ -2096,7 +2244,7 @@
       "notes": ""
     },
     {
-      "scene_id": 56,
+      "scene_id": 58,
       "image_prompt": "Grey morning, the silver sedan parked in front of an old white farmhouse, the porch light still on, the front door shut, no people",
       "voiceover_text": "Hour twenty-four. A farmhouse. Porch light still on. Front door shut.",
       "sfx_prompt": "Morning birdsong, wind, a loose screen door tapping",
@@ -2128,7 +2276,7 @@
       "notes": ""
     },
     {
-      "scene_id": 57,
+      "scene_id": 59,
       "image_prompt": "Close-up of the farmhouse front door, its frosted glass panel smeared from inside with dark handprints, a tall blurred shape behind the glass",
       "voiceover_text": "Behind the glass, a shape in a barn coat. Walking into the door. Again. And again.",
       "sfx_prompt": "Wind, birdsong stopping",
@@ -2142,7 +2290,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_e2a11795",
+          "layer_id": "l_c82687d5",
           "prompt": "a slow, repeated thud against a wooden door",
           "url": null,
           "duration_sec": null,
@@ -2172,7 +2320,7 @@
       "notes": "[open L8: will the thing in the farmhouse get out?]"
     },
     {
-      "scene_id": 58,
+      "scene_id": 60,
       "image_prompt": "Close-up of a heavy brass deadbolt and a key left in the lock on the inside of the frosted glass, the shape pressing behind it",
       "voiceover_text": "He'd locked himself in. From the inside. [pause] I think he knew what he was turning into.",
       "sfx_prompt": "Slow thudding on the door, wind",
@@ -2204,7 +2352,7 @@
       "notes": "Setup: mirrors Nora cuffing herself to the fence at the gate."
     },
     {
-      "scene_id": 59,
+      "scene_id": 61,
       "image_prompt": "Nora and Eli (two people) stepping into an old barn through its open doors, slats of morning light across the hay",
       "voiceover_text": "The barn was open. [pause] Eli found the gas cans before I did.",
       "sfx_prompt": "Barn room tone, wind through the plank walls, the distant thudding",
@@ -2236,7 +2384,7 @@
       "notes": ""
     },
     {
-      "scene_id": 60,
+      "scene_id": 62,
       "image_prompt": "Close-up of three red metal jerry cans standing against the barn wall, morning light through the slats",
       "voiceover_text": "Three cans. Fifteen gallons. Enough to get us all the way there.",
       "sfx_prompt": "Barn room tone",
@@ -2250,7 +2398,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_b117d4a9",
+          "layer_id": "l_17595833",
           "prompt": "a can scraping on wood",
           "url": null,
           "duration_sec": null,
@@ -2280,12 +2428,12 @@
       "notes": ""
     },
     {
-      "scene_id": 61,
+      "scene_id": 63,
       "image_prompt": "Inside the barn, two people: Eli asleep on hay bales under a wool blanket in lantern light, and Nora sitting alone on the far side of the barn, watching him",
-      "voiceover_text": "I parked the car inside. We slept in the hay. [pause] Me on the far side.",
+      "voiceover_text": "The gate didn't open till Tuesday. I parked inside. We slept in the hay. [pause] Me on the far side.",
       "sfx_prompt": "Barn room tone, wind through the plank walls, the lantern hissing",
       "video_prompt": "Eli sleeps still, the lantern flame flickers, dust motes drift through the slats of light; very slow push in. No cuts, no new objects.",
-      "duration_sec": 8,
+      "duration_sec": 9,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -2293,7 +2441,17 @@
       "voiceover_words": null,
       "sfx_duration_sec": null,
       "sfx_layers": [],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_9c2c261a",
+          "image_prompt": "Nora alone sitting against the far barn wall in shadow, knees drawn up, watching across the barn, lantern light",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 6.3,
+          "cue": "Me on",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -2312,7 +2470,7 @@
       "notes": ""
     },
     {
-      "scene_id": 62,
+      "scene_id": 64,
       "image_prompt": "Through a gap between the barn's planks: the farmhouse across the yard, its porch light on, the front door shut",
       "voiceover_text": "From the house, the thudding never stopped. Every few seconds. All day.",
       "sfx_prompt": "Barn room tone, wind",
@@ -2326,7 +2484,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_3ba3d962",
+          "layer_id": "l_c2ef5e86",
           "prompt": "a slow, repeated thud against a wooden door, far away",
           "url": null,
           "duration_sec": null,
@@ -2356,7 +2514,7 @@
       "notes": ""
     },
     {
-      "scene_id": 63,
+      "scene_id": 65,
       "image_prompt": "Eli alone, sitting cross-legged on a hay bale, pressing the button of his yellow walkie-talkie and grinning, lantern light",
       "voiceover_text": "Eli made up a game. Two clicks from across the barn. [pause] I had to answer every time.",
       "sfx_prompt": "Barn room tone",
@@ -2370,7 +2528,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_802b924f",
+          "layer_id": "l_f27b550e",
           "prompt": "two walkie-talkie clicks",
           "url": null,
           "duration_sec": null,
@@ -2400,7 +2558,7 @@
       "notes": "Relief before the midpoint drop. Music: a low warm piano note."
     },
     {
-      "scene_id": 64,
+      "scene_id": 66,
       "image_prompt": "Eli alone, eating peaches straight from a can with his fingers, syrup on his chin, lantern light",
       "voiceover_text": "He ate three cans of peaches. [pause] I wasn't hungry. Not for peaches.",
       "sfx_prompt": "Barn room tone, a spoon on a tin can",
@@ -2432,9 +2590,9 @@
       "notes": "Warmth with dread underneath (the hunger is coming)."
     },
     {
-      "scene_id": 65,
+      "scene_id": 67,
       "image_prompt": "The silver sedan parked inside the dark barn, its dashboard radio glowing through the windshield, Nora alone in the driver's seat",
-      "voiceover_text": "Hour thirty-eight. The car radio found Fort Calder. A soldier, reading a statement.",
+      "voiceover_text": "Hour thirty-eight. Eli was asleep in the hay. [pause] The car radio found Fort Calder.",
       "sfx_prompt": "Rain on the barn roof, car radio hiss and crackle",
       "video_prompt": "",
       "duration_sec": 7,
@@ -2461,10 +2619,10 @@
       "motion": null,
       "shake": null,
       "title_text": "HOUR 38",
-      "notes": ""
+      "notes": "Eli sleeps through the statement: he never learns the bitten are shot."
     },
     {
-      "scene_id": 66,
+      "scene_id": 68,
       "image_prompt": "Close-up of a car radio glowing amber in a dark dashboard",
       "voiceover_text": "[flatly] There is no treatment. [pause] Anyone bitten will be shot at the perimeter.",
       "sfx_prompt": "Radio hiss, rain on the roof",
@@ -2478,7 +2636,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_18fb17fd",
+          "layer_id": "l_7d5e2344",
           "prompt": "the radio static cutting out to dead silence",
           "url": null,
           "duration_sec": null,
@@ -2508,7 +2666,7 @@
       "notes": "[close L4] [interrupt: radio static cuts to silence] Midpoint reversal (~56%)."
     },
     {
-      "scene_id": 67,
+      "scene_id": 69,
       "image_prompt": "Close-up of Nora alone in the dark car, her face lit from below by the radio's glow, completely still",
       "voiceover_text": "[long pause] So that was it. There was never a cure.",
       "sfx_prompt": "Silence, then rain slowly returning on the roof",
@@ -2540,7 +2698,7 @@
       "notes": ""
     },
     {
-      "scene_id": 68,
+      "scene_id": 70,
       "image_prompt": "Two people: Nora sitting on the barn floor, her back against a hay bale, looking across the barn at Eli asleep, lantern light",
       "voiceover_text": "I'd driven a hundred and sixty miles toward a bullet. [pause] So I changed the plan.",
       "sfx_prompt": "Barn room tone, rain on the roof",
@@ -2572,7 +2730,7 @@
       "notes": ""
     },
     {
-      "scene_id": 69,
+      "scene_id": 71,
       "image_prompt": "Close-up of Nora's two hands holding the dictaphone close to her mouth in the dark barn, the red record light glowing",
       "voiceover_text": "[whispers] New plan. Eli goes in. I don't. [pause] He walks through that gate alone.",
       "sfx_prompt": "Barn room tone, rain, a dictaphone motor whirring",
@@ -2604,7 +2762,7 @@
       "notes": ""
     },
     {
-      "scene_id": 70,
+      "scene_id": 72,
       "image_prompt": "Eli asleep on the hay hugging the yellow walkie-talkie, warm lantern light on his face",
       "voiceover_text": "Now I had thirty-two hours to make an eight-year-old walk away from his mother. [pause] Without telling him why.",
       "sfx_prompt": "Barn room tone, rain",
@@ -2619,7 +2777,7 @@
       "sfx_layers": [],
       "shots": [
         {
-          "shot_id": "s_ca25dc05",
+          "shot_id": "s_e7d2a353",
           "image_prompt": "Close-up of Nora's face across the barn, watching him, eyes wet",
           "image_url": null,
           "motion": null,
@@ -2646,7 +2804,39 @@
       "notes": "[open L9: how will she get Eli to go in without her?] Music: a low warm piano note."
     },
     {
-      "scene_id": 71,
+      "scene_id": 73,
+      "image_prompt": "Close-up of Nora's trembling left hand, the gauze bandage on her forearm, holding a single white tablet between two fingers, lantern light in the barn, Nora's one hand only",
+      "voiceover_text": "The Tylenol wasn't for the scanner anymore. [pause] It was to keep my hands working until six A.M.",
+      "sfx_prompt": "Barn room tone, rain, the lantern hissing",
+      "video_prompt": "",
+      "duration_sec": 8,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": null,
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": null,
+      "sfx_layers": [],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_5cefb153"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "shake": null,
+      "title_text": "",
+      "notes": "The Tylenol now buys motor control until the gate."
+    },
+    {
+      "scene_id": 74,
       "image_prompt": "Through a gap between the barn's planks at night: the farmhouse's dark front door under the porch light, rain falling",
       "voiceover_text": "Across the yard, the farmer kept walking into his door. It held. [pause] I understood him now.",
       "sfx_prompt": "Rain, wind",
@@ -2660,7 +2850,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_9ec9f915",
+          "layer_id": "l_bcb72ada",
           "prompt": "a slow thud against a wooden door, far away",
           "url": null,
           "duration_sec": null,
@@ -2690,7 +2880,7 @@
       "notes": "[close L8]"
     },
     {
-      "scene_id": 72,
+      "scene_id": 75,
       "image_prompt": "Inside the silver sedan from the back seat in grey daylight: Nora alone in front, driving, her bandaged arm on the wheel, a flat country road ahead",
       "voiceover_text": "Hour fifty. I drove with both hands on the wheel so Eli wouldn't see them shake.",
       "sfx_prompt": "Car on a country road, road noise, wipers",
@@ -2722,7 +2912,7 @@
       "notes": ""
     },
     {
-      "scene_id": 73,
+      "scene_id": 76,
       "image_prompt": "Close-up of Nora's lips at the dictaphone, a dark grey vein visible on her neck, grey daylight",
       "voiceover_text": "Hour fifty. Patient reports… [pause] patient reports… the word is gone.",
       "sfx_prompt": "Car interior, road noise, a dictaphone motor whirring",
@@ -2754,7 +2944,7 @@
       "notes": ""
     },
     {
-      "scene_id": 74,
+      "scene_id": 77,
       "image_prompt": "Close-up of Nora's hand on the steering wheel, the fingernails grey and cracking",
       "voiceover_text": "I've said that word a thousand times. [pause] Aphasia. It took me an hour to find it.",
       "sfx_prompt": "Car interior, road noise",
@@ -2786,7 +2976,7 @@
       "notes": ""
     },
     {
-      "scene_id": 75,
+      "scene_id": 78,
       "image_prompt": "Eli sitting on a gravel road shoulder, his scraped knee beading red, Nora kneeling in front of him with gauze, two people, grey daylight",
       "voiceover_text": "Eli tripped on the gravel. Scraped his knee. [pause] I'm a nurse. I cleaned it.",
       "sfx_prompt": "Wind over an empty road, gravel crunching",
@@ -2800,7 +2990,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_4fb408c0",
+          "layer_id": "l_60caa947",
           "prompt": "a small body hitting gravel, a child's yelp",
           "url": null,
           "duration_sec": null,
@@ -2828,7 +3018,7 @@
       "notes": ""
     },
     {
-      "scene_id": 76,
+      "scene_id": 79,
       "image_prompt": "Extreme close-up of Nora's eyes, pupils wide, one iris clouding grey, staring down",
       "voiceover_text": "[slowly] And I could smell it. My son's blood. [pause] Something in me… woke up.",
       "sfx_prompt": "Wind falling away",
@@ -2842,7 +3032,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_ed0a7fec",
+          "layer_id": "l_86296352",
           "prompt": "a low sub-bass swell and a heavy heartbeat",
           "url": null,
           "duration_sec": null,
@@ -2870,7 +3060,7 @@
       "notes": "[open L10: what woke up in her?]"
     },
     {
-      "scene_id": 77,
+      "scene_id": 80,
       "image_prompt": "Night, Nora alone in the driver's seat, her left wrist handcuffed to the steering wheel, the steel cuff gleaming in moonlight",
       "voiceover_text": "That night I cuffed myself to the steering wheel. [pause] And I gave Eli the key.",
       "sfx_prompt": "Car interior at night, crickets",
@@ -2884,7 +3074,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_f0b94eb1",
+          "layer_id": "l_fe0ff989",
           "prompt": "a handcuff ratchet clicking shut",
           "url": null,
           "duration_sec": null,
@@ -2914,7 +3104,7 @@
       "notes": "[close L10] It was the hunger, and she answers it with the cuffs. [open L12: will she hurt Eli?]"
     },
     {
-      "scene_id": 78,
+      "scene_id": 81,
       "image_prompt": "Close-up of Eli's small hand closing around a tiny handcuff key in the moonlight",
       "voiceover_text": "If I act strange, you get out and lock the doors. [pause] And you never give me that key.",
       "sfx_prompt": "Car interior at night, crickets",
@@ -2929,7 +3119,7 @@
       "sfx_layers": [],
       "shots": [
         {
-          "shot_id": "s_6000c2b0",
+          "shot_id": "s_c4baecda",
           "image_prompt": "Close-up of Nora's face in moonlight, her grey-veined temple, looking straight at her son",
           "image_url": null,
           "motion": null,
@@ -2953,15 +3143,15 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the rules Eli follows at Hour 61; the key pays off at the gate."
+      "notes": "Setup: the rules Eli follows at Hour 61."
     },
     {
-      "scene_id": 79,
+      "scene_id": 82,
       "image_prompt": "Close-up of Eli's face in shadow, calm, nodding slowly",
-      "voiceover_text": "He just said okay. [pause] Not one question about the cuffs. I should have noticed that.",
+      "voiceover_text": "He just said okay. [pause] He didn't ask why. He trusted me completely. [pause] That was the worst part.",
       "sfx_prompt": "Car interior at night, crickets",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 8.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -2969,7 +3159,17 @@
       "voiceover_words": null,
       "sfx_duration_sec": null,
       "sfx_layers": [],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_65f94c01",
+          "image_prompt": "Close-up of Nora alone, her cuffed wrist on the steering wheel, looking at her son in the rearview mirror, eyes wet, dashboard glow",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 3.9,
+          "cue": "He trusted",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -2985,15 +3185,15 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "Setup for the twist."
+      "notes": "He doesn't know. He trusts her."
     },
     {
-      "scene_id": 80,
+      "scene_id": 83,
       "image_prompt": "Close-up of the dictaphone's tape window on the dashboard in early morning light",
-      "voiceover_text": "In the morning, the tape was rewound again. [pause] Third time. I stopped logging it.",
+      "voiceover_text": "In the morning, the tape was rewound again. [pause] I'm not the one who should be keeping this chart anymore.",
       "sfx_prompt": "Car interior at dawn, birds",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 9,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -3002,7 +3202,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_c226621e",
+          "layer_id": "l_17956fa8",
           "prompt": "a fast cassette tape rewinding whirr, then a click",
           "url": null,
           "duration_sec": null,
@@ -3013,7 +3213,17 @@
           "source_name": null
         }
       ],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_1e06beb4",
+          "image_prompt": "Close-up of Nora alone staring at the dictaphone in her trembling hand, early morning light",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 4.3,
+          "cue": "not the one",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -3032,7 +3242,7 @@
       "notes": ""
     },
     {
-      "scene_id": 81,
+      "scene_id": 84,
       "image_prompt": "Close-up of the white pill bottle nearly empty in Nora's grey-nailed palm",
       "voiceover_text": "Nine Tylenol left. Fever, one-oh-two.",
       "sfx_prompt": "Car interior, pills rattling",
@@ -3064,12 +3274,12 @@
       "notes": ""
     },
     {
-      "scene_id": 82,
-      "image_prompt": "Wide shot of the silver sedan parked off a highway ramp at night, a faint white glow of floodlights on the far horizon",
-      "voiceover_text": "Hour sixty-one. Forty miles out. We could see the floodlights from the road.",
+      "scene_id": 85,
+      "image_prompt": "Wide shot of the silver sedan parked off a highway ramp at night, a faint amber glow of floodlights on the low clouds over the near horizon",
+      "voiceover_text": "Hour sixty-one. Twelve miles out. Floodlights glowing on the clouds. [pause] We parked to wait for morning.",
       "sfx_prompt": "Wind, a distant generator hum, crickets",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 7.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -3094,7 +3304,7 @@
       "notes": ""
     },
     {
-      "scene_id": 83,
+      "scene_id": 86,
       "image_prompt": "Extreme close-up of Nora's eye rolling back, the red dashboard glow on her skin",
       "voiceover_text": "Then the seizure.",
       "sfx_prompt": "A sudden high ringing, then silence",
@@ -3126,7 +3336,7 @@
       "notes": "[interrupt: hard cut to silence, the blackout]"
     },
     {
-      "scene_id": 84,
+      "scene_id": 87,
       "image_prompt": "Almost total darkness, a faint red dashboard glow out of focus, the shape of a steering wheel",
       "voiceover_text": "",
       "sfx_prompt": "A muffled heartbeat, a child screaming as if heard underwater",
@@ -3158,7 +3368,7 @@
       "notes": "Planned 5 s blackout, no narration."
     },
     {
-      "scene_id": 85,
+      "scene_id": 88,
       "image_prompt": "Nora's left hand held up into the red dashboard light, her fingertips smeared with fresh blood, her face blurred behind it, Nora alone in the frame",
       "voiceover_text": "I woke up with blood on my mouth. [pause] The back seat was empty.",
       "sfx_prompt": "Car interior at night, her ragged breathing",
@@ -3172,7 +3382,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_7df3ac8d",
+          "layer_id": "l_6151bbfc",
           "prompt": "a low sub-bass hit",
           "url": null,
           "duration_sec": null,
@@ -3202,7 +3412,7 @@
       "notes": "The cold-open image again: we've caught up."
     },
     {
-      "scene_id": 86,
+      "scene_id": 89,
       "image_prompt": "View through the windshield at night: Eli alone standing in the field twenty metres away in the glow of the dashboard light, clutching his walkie-talkie, crying",
       "voiceover_text": "Eli was out in the field. Doors locked. Just like I taught him.",
       "sfx_prompt": "Car interior, wind, muffled crying outside",
@@ -3216,7 +3426,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_2a5e0a18",
+          "layer_id": "l_75513988",
           "prompt": "a car door lock clunking",
           "url": null,
           "duration_sec": null,
@@ -3246,7 +3456,7 @@
       "notes": ""
     },
     {
-      "scene_id": 87,
+      "scene_id": 90,
       "image_prompt": "Nora alone in the rearview mirror, wiping her mouth with the back of her cuffed hand, staring at the blood",
       "voiceover_text": "[panicking] Whose blood. Whose blood. I pulled at the cuff until my wrist bled.",
       "sfx_prompt": "Car interior, her fast breathing, the cuff chain rattling against the wheel",
@@ -3278,12 +3488,12 @@
       "notes": ""
     },
     {
-      "scene_id": 88,
+      "scene_id": 91,
       "image_prompt": "Close-up of Nora alone touching her lips with two fingers, eyes closing, dashboard glow",
-      "voiceover_text": "Then I felt my tongue. [pause] It was mine. I'd bitten it in the seizure. [sigh of relief]",
+      "voiceover_text": "Then my tongue found a tear inside my cheek. [pause] It was mine. I'd bitten myself in the seizure. [sigh of relief]",
       "sfx_prompt": "Car interior, wind",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 9,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -3291,7 +3501,17 @@
       "voiceover_words": null,
       "sfx_duration_sec": null,
       "sfx_layers": [],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_204694e0",
+          "image_prompt": "Close-up of Nora alone sagging back against the headrest, eyes closed, exhaling, dashboard glow",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 4.3,
+          "cue": "It was mine",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -3310,9 +3530,9 @@
       "notes": "[close L2]"
     },
     {
-      "scene_id": 89,
+      "scene_id": 92,
       "image_prompt": "Close-up of Nora alone pressing her forehead to the steering wheel, her cuffed wrist beside her face, shoulders shaking",
-      "voiceover_text": "[crying] But he'd watched me. Whatever I did for those four minutes… he saw it.",
+      "voiceover_text": "[crying] But he'd watched me. Four minutes of thrashing and foam… [pause] he saw all of it.",
       "sfx_prompt": "Car interior, wind, crying",
       "video_prompt": "",
       "duration_sec": 8,
@@ -3342,7 +3562,7 @@
       "notes": "Lowest point (~76%)."
     },
     {
-      "scene_id": 90,
+      "scene_id": 93,
       "image_prompt": "Eli alone in the dark field holding the yellow walkie-talkie to his mouth, his face wet, faint glow from the car",
       "voiceover_text": "Then my walkie clicked. Twice. [pause] I'm here. I'm okay.",
       "sfx_prompt": "Wind through grass",
@@ -3356,7 +3576,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_09079ff1",
+          "layer_id": "l_ddb6cba2",
           "prompt": "two walkie-talkie clicks",
           "url": null,
           "duration_sec": null,
@@ -3384,12 +3604,12 @@
       "notes": "Music: a low warm piano note."
     },
     {
-      "scene_id": 91,
+      "scene_id": 94,
       "image_prompt": "Eli outside the car and Nora inside (two people), his small hand and her grey hand pressed against the same window glass from either side, night",
-      "voiceover_text": "He wouldn't get back in the car for an hour. [pause] He was right not to.",
+      "voiceover_text": "He wouldn't get in the car for an hour. [pause] To him, I was just very sick. He was right to be scared.",
       "sfx_prompt": "Wind, crickets, his quiet breathing on the glass",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 10,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -3397,7 +3617,17 @@
       "voiceover_words": null,
       "sfx_duration_sec": null,
       "sfx_layers": [],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_e4d5088a",
+          "image_prompt": "Eli alone in the dark field outside the car, hugging his knees, staring at the car, the faint dashboard glow on his face",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 4.3,
+          "cue": "To him",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -3416,7 +3646,7 @@
       "notes": ""
     },
     {
-      "scene_id": 92,
+      "scene_id": 95,
       "image_prompt": "Blue pre-dawn light, the silver sedan seen from behind on an empty road, a floodlit fence line glowing far ahead",
       "voiceover_text": "Hour sixty-six. I recorded the last tape I could still say all the words on.",
       "sfx_prompt": "Car on an empty road, a distant generator hum",
@@ -3446,12 +3676,44 @@
       "notes": ""
     },
     {
-      "scene_id": 93,
-      "image_prompt": "Close-up of Nora's grey-nailed hand slipping the black dictaphone into the pocket of a small red rain jacket, blue pre-dawn light",
-      "voiceover_text": "It was for Eli. For later. [pause] I put it in his jacket pocket while he slept.",
-      "sfx_prompt": "Car interior, road noise, rain jacket rustling",
+      "scene_id": 96,
+      "image_prompt": "Close-up of the black dictaphone held in Nora's grey-nailed hand, its red record light glowing, Eli asleep in the back seat soft and out of focus behind it, two people: Nora and Eli, blue pre-dawn light",
+      "voiceover_text": "[softly] This one's for you, Eli. For when you're older. [pause] You were braver than me. You always were.",
+      "sfx_prompt": "Car interior, quiet, a dictaphone motor whirring softly",
       "video_prompt": "",
       "duration_sec": 8,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": null,
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": null,
+      "sfx_layers": [],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_e798e6da"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "shake": null,
+      "title_text": "",
+      "notes": "The last tape. Eli never plays it in the video."
+    },
+    {
+      "scene_id": 97,
+      "image_prompt": "Close-up of Nora's grey-nailed hand slipping a small cassette tape into the inner lining of a small red rain jacket, blue pre-dawn light, Nora's one hand only",
+      "voiceover_text": "I slipped the cassette into the lining of his jacket while he slept. [pause] For later.",
+      "sfx_prompt": "Car interior, road noise, rain jacket rustling",
+      "video_prompt": "",
+      "duration_sec": 7.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -3478,7 +3740,7 @@
       "notes": ""
     },
     {
-      "scene_id": 94,
+      "scene_id": 98,
       "image_prompt": "Close-up of Nora's grey hand holding Eli's small sleeping hand on the back seat",
       "voiceover_text": "I still didn't know what I'd say at the gate. [pause] I had four hours to find it.",
       "sfx_prompt": "Car interior, road noise, Eli's slow breathing",
@@ -3510,7 +3772,7 @@
       "notes": ""
     },
     {
-      "scene_id": 95,
+      "scene_id": 99,
       "image_prompt": "Wide shot from a low rise at dawn: the Fort Calder gate glowing under floodlights, a diesel generator beside the booth, a crowd of grey figures gathered along the outside of the fence",
       "voiceover_text": "But the gate's generator was loud. [pause] And the dead had been listening to it all night.",
       "sfx_prompt": "A diesel generator drone far ahead, many low groans, wind",
@@ -3542,7 +3804,7 @@
       "notes": "[open L11: can they get through the dead to the gate?]"
     },
     {
-      "scene_id": 96,
+      "scene_id": 100,
       "image_prompt": "The gate's floodlights snapping to full brightness in the dawn haze, the steel gate starting to slide open",
       "voiceover_text": "Six A.M. The gate opened. Ten minutes.",
       "sfx_prompt": "Generator drone, wind",
@@ -3556,7 +3818,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_4e557798",
+          "layer_id": "l_0aa3ce52",
           "prompt": "a loud klaxon, then a gate motor grinding",
           "url": null,
           "duration_sec": null,
@@ -3586,7 +3848,7 @@
       "notes": ""
     },
     {
-      "scene_id": 97,
+      "scene_id": 101,
       "image_prompt": "The silver sedan bouncing across the field of dead grass toward the gate, grey figures turning toward it on both sides, dawn",
       "voiceover_text": "I floored it across the field. The dead turned with us, like a tide.",
       "sfx_prompt": "Engine straining, dry grass rushing under the car, groans",
@@ -3618,7 +3880,7 @@
       "notes": ""
     },
     {
-      "scene_id": 98,
+      "scene_id": 102,
       "image_prompt": "The silver sedan stopped a few metres from the sandbagged gate, soldiers in silhouette behind the fence with rifles raised, floodlights",
       "voiceover_text": "Forty feet from the gate, I stopped. [pause] Eight minutes.",
       "sfx_prompt": "Generator drone, an engine idling, shouting far off",
@@ -3650,7 +3912,7 @@
       "notes": ""
     },
     {
-      "scene_id": 99,
+      "scene_id": 103,
       "image_prompt": "Inside the car at dawn: Nora turned around in the driver's seat, face to face with Eli in the back seat, two people, floodlight through the windows",
       "voiceover_text": "I turned around. This was it. The thing I'd been trying to say for two days.",
       "sfx_prompt": "Car interior, the generator drone muffled",
@@ -3682,7 +3944,7 @@
       "notes": ""
     },
     {
-      "scene_id": 100,
+      "scene_id": 104,
       "image_prompt": "Close-up of Eli's tear-streaked face, his small hand gripping his mother's sleeve",
       "voiceover_text": "[childlike tone] [crying] I'm not going without you, Mom.",
       "sfx_prompt": "Car interior, the generator drone muffled",
@@ -3714,9 +3976,9 @@
       "notes": ""
     },
     {
-      "scene_id": 101,
+      "scene_id": 105,
       "image_prompt": "Close-up of Nora's face, her eyes now grey, trying to smile for him",
-      "voiceover_text": "I opened my mouth to lie to him one more time. [pause] And he said it first.",
+      "voiceover_text": "I opened my mouth to tell him the truth. [pause] I looked at his face… and I couldn't.",
       "sfx_prompt": "Car interior, the drone fading away",
       "video_prompt": "",
       "duration_sec": 8,
@@ -3746,12 +4008,12 @@
       "notes": ""
     },
     {
-      "scene_id": 102,
-      "image_prompt": "Extreme close-up of Eli, suddenly calm, eyes red, looking straight at his mother",
-      "voiceover_text": "[childlike tone] [softly] I know, Mom. I heard the tapes. Every night. [pause] I rewound them so you wouldn't know.",
-      "sfx_prompt": "Total silence except a faint generator drone",
-      "video_prompt": "Eli holds still, looking straight ahead, a single tear runs down his cheek, floodlight flickers on his face; locked-off camera. No cuts, no new objects.",
-      "duration_sec": 9,
+      "scene_id": 106,
+      "image_prompt": "View from behind Eli in the back seat toward Nora turned around in the driver's seat, her hand cupping his cheek, forcing a gentle smile, two people: Eli and Nora, floodlight through the windows, dawn",
+      "voiceover_text": "[softly] The doctors are in there, baby. I'll be right behind you. [pause] I just have to park the car.",
+      "sfx_prompt": "Car interior, the generator drone muffled",
+      "video_prompt": "",
+      "duration_sec": 8.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -3761,12 +4023,12 @@
       "sfx_layers": [],
       "shots": [
         {
-          "shot_id": "s_b540fdce",
-          "image_prompt": "Close-up of the dictaphone in Eli's small hand, his thumb on the rewind button",
+          "shot_id": "s_dae89609",
+          "image_prompt": "Close-up of Eli's tear-streaked face looking up at his mother, Eli alone in the frame, floodlight on his face",
           "image_url": null,
           "motion": null,
-          "start_sec": 4.7,
-          "cue": "rewound",
+          "start_sec": 3.2,
+          "cue": "right behind you",
           "source_name": null
         }
       ],
@@ -3785,59 +4047,15 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "[close L7] [close L1] [interrupt: music and sound drop out for the twist] She doesn't have to tell him anything."
+      "notes": "[close L1] What she tells him: a lie, so he can walk away believing she's coming."
     },
     {
-      "scene_id": 103,
-      "image_prompt": "Eli holding up the white pill bottle in his small hand, three tablets rattling inside",
-      "voiceover_text": "[childlike tone] You've got three Tylenol left. You can't go in. [pause] I counted.",
-      "sfx_prompt": "Silence",
+      "scene_id": 107,
+      "image_prompt": "Close-up of Eli's tear-streaked face, holding his yellow walkie-talkie in both hands (two hands), looking up at his mother",
+      "voiceover_text": "[childlike tone] [sniffles] Promise? [pause] Two clicks?",
+      "sfx_prompt": "Car interior, the generator drone muffled",
       "video_prompt": "",
-      "duration_sec": 8,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
-      "sfx_layers": [
-        {
-          "layer_id": "l_2bccdfb9",
-          "prompt": "pills rattling once",
-          "url": null,
-          "duration_sec": null,
-          "volume": 1,
-          "start_sec": 0.8,
-          "length_sec": 1,
-          "cue": "three",
-          "source_name": null
-        }
-      ],
-      "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
-      "video_start_sec": 0,
-      "video_volume": 1,
-      "source_names": {},
-      "reference_asset_ids": [
-        "a_e798e6da"
-      ],
-      "use_global_references": true,
-      "use_previous_scene": true,
-      "motion": null,
-      "shake": null,
-      "title_text": "TYLENOL: 3",
-      "notes": ""
-    },
-    {
-      "scene_id": 104,
-      "image_prompt": "Close-up of Nora's face crumpling, a single tear, grey veins at her temple",
-      "voiceover_text": "The water. The cuffs. No questions. [pause] He'd been taking care of me since hour nineteen.",
-      "sfx_prompt": "Silence",
-      "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -3861,12 +4079,12 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "The twist recontextualises the setups: the water, the cuffs, no questions, the count. Music: a single soft piano note."
+      "notes": "He believes her."
     },
     {
-      "scene_id": 105,
+      "scene_id": 108,
       "image_prompt": "Nora's grey left hand pushing the car's back door open from inside, the floodlit gate visible through the open door, dawn",
-      "voiceover_text": "[softly] Walk to the soldiers. Don't run. [pause] Two clicks when you're inside.",
+      "voiceover_text": "[softly] Walk to the soldiers. Don't run. [pause] Two clicks when you're inside, and I'll click back.",
       "sfx_prompt": "Generator drone returning, groans getting closer",
       "video_prompt": "",
       "duration_sec": 7,
@@ -3878,7 +4096,7 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_85a1b186",
+          "layer_id": "l_3f951489",
           "prompt": "Car door opening",
           "url": null,
           "duration_sec": null,
@@ -3908,7 +4126,7 @@
       "notes": ""
     },
     {
-      "scene_id": 106,
+      "scene_id": 109,
       "image_prompt": "Eli alone walking toward the open gate across the dead grass, looking back over his shoulder, the yellow walkie on his chest, soldiers waiting at the gate, dawn",
       "voiceover_text": "Eli walked. He looked back four times. [pause] I counted.",
       "sfx_prompt": "Generator drone, small footsteps on dry grass, soldiers shouting",
@@ -3940,9 +4158,64 @@
       "notes": "[close L9]"
     },
     {
-      "scene_id": 107,
+      "scene_id": 110,
+      "image_prompt": "Close-up of Nora's grey right hand wrapped in white medical tape and black zip ties around a small blue toy walkie-talkie, her thumb resting on the push-to-talk button, chain-link fence blurred behind, dawn light, Nora's one hand only",
+      "voiceover_text": "I taped the walkie into my hand. Medical tape. Zip ties. [pause] My thumb on the button.",
+      "sfx_prompt": "Wind, the generator drone, groans far off",
+      "video_prompt": "",
+      "duration_sec": 7.5,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": null,
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": null,
+      "sfx_layers": [
+        {
+          "layer_id": "l_5e890d72",
+          "prompt": "medical tape ripping off a roll",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 2.8,
+          "length_sec": 1,
+          "cue": "Medical tape",
+          "source_name": null
+        },
+        {
+          "layer_id": "l_2204c8e1",
+          "prompt": "a plastic zip tie ratcheting tight",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 3.6,
+          "length_sec": 1,
+          "cue": "Zip ties",
+          "source_name": null
+        }
+      ],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_e60c3fd4"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "shake": null,
+      "title_text": "",
+      "notes": "Her thumb over the button: sets up the last two clicks."
+    },
+    {
+      "scene_id": 111,
       "image_prompt": "Close-up of Nora's grey left wrist as a steel handcuff snaps around a chain-link fence post, dawn light",
-      "voiceover_text": "I cuffed myself to the fence. Like the farmer. [pause] Where I couldn't follow.",
+      "voiceover_text": "Then I cuffed myself to the fence. Like the farmer. [pause] Where I couldn't follow.",
       "sfx_prompt": "Wind, the generator drone, groans",
       "video_prompt": "",
       "duration_sec": 8,
@@ -3954,12 +4227,12 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_88d4858c",
+          "layer_id": "l_6c919e5d",
           "prompt": "a handcuff ratchet clicking shut",
           "url": null,
           "duration_sec": null,
           "volume": 1,
-          "start_sec": 0.4,
+          "start_sec": 0.8,
           "length_sec": 1,
           "cue": "cuffed",
           "source_name": null
@@ -3984,9 +4257,9 @@
       "notes": "Pays off the farmer who locked himself in (Hour 24)."
     },
     {
-      "scene_id": 108,
-      "image_prompt": "Close-up of Eli's small hand at the gate, a tiny handcuff key lying in his open palm, floodlights behind",
-      "voiceover_text": "And the only key was in Eli's pocket. [pause] Inside.",
+      "scene_id": 112,
+      "image_prompt": "Close-up of a tiny silver handcuff key lying in the dead grass just inside the chain-link fence, floodlights glaring behind, dawn",
+      "voiceover_text": "And I threw the key over the gate. [pause] Into the grass. Inside.",
       "sfx_prompt": "Generator drone, soldiers' voices muffled",
       "video_prompt": "",
       "duration_sec": 6,
@@ -3996,7 +4269,19 @@
       "voiceover_duration_sec": null,
       "voiceover_words": null,
       "sfx_duration_sec": null,
-      "sfx_layers": [],
+      "sfx_layers": [
+        {
+          "layer_id": "l_8f8ff965",
+          "prompt": "a tiny metal key landing in dry grass",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 4.7,
+          "length_sec": 1,
+          "cue": "grass",
+          "source_name": null
+        }
+      ],
       "shots": [],
       "video_url": null,
       "video_thumb_url": null,
@@ -4013,15 +4298,15 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "[close L12] She never hurt him, and now she can't."
+      "notes": "[close L12] She can't follow him now."
     },
     {
-      "scene_id": 109,
-      "image_prompt": "Wide shot of the steel gate sliding shut with Eli inside, grey figures streaming along the fence toward the gate, dawn",
-      "voiceover_text": "The gate closed at six-ten. The dead came for the sound. Not for me.",
+      "scene_id": 113,
+      "image_prompt": "Wide shot of the steel gate shut with Eli inside, grey figures streaming along the outside of the fence toward the generator, passing a lone woman cuffed to a fence post, dawn",
+      "voiceover_text": "The gate slammed shut at six-ten. The dead streamed past me, toward the sound. [pause] Like I was already one of them.",
       "sfx_prompt": "The generator drone, many groans",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 9.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -4030,18 +4315,28 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_27c7967c",
+          "layer_id": "l_2a7ba264",
           "prompt": "a heavy steel gate slamming shut",
           "url": null,
           "duration_sec": null,
           "volume": 1,
           "start_sec": 0.8,
           "length_sec": 2,
-          "cue": "closed",
+          "cue": "slammed",
           "source_name": null
         }
       ],
-      "shots": [],
+      "shots": [
+        {
+          "shot_id": "s_fb08ed99",
+          "image_prompt": "Nora alone, cuffed to the fence post, grey figures shuffling past close behind her without turning toward her, dawn",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 6.3,
+          "cue": "Like I was",
+          "source_name": null
+        }
+      ],
       "video_url": null,
       "video_thumb_url": null,
       "video_duration_sec": null,
@@ -4060,11 +4355,11 @@
       "notes": "[close L11]"
     },
     {
-      "scene_id": 110,
-      "image_prompt": "Nora alone sitting against the fence post, cuffed, holding her yellow walkie-talkie, dawn light, grey shapes passing far behind her out of focus",
-      "voiceover_text": "Two clicks. [pause] Every thirty seconds. Until the sun came up.",
+      "scene_id": 114,
+      "image_prompt": "Nora alone sitting against the fence post, her left wrist cuffed to the fence, a small blue toy walkie-talkie taped into her right hand, dawn light, grey shapes passing far behind her out of focus",
+      "voiceover_text": "From inside, two clicks. [pause] I clicked back. Every thirty seconds. [pause] Slower each time.",
       "sfx_prompt": "Wind through dry grass, the distant generator drone",
-      "video_prompt": "Nora sits still, her thumb resting on the walkie button, dead grass sways, the low sun flares slowly; locked-off camera. No cuts, no new objects.",
+      "video_prompt": "Nora sits still, her taped thumb pressing the walkie button twice, dead grass sways, the low sun flares slowly; locked-off camera. No cuts, no new objects.",
       "duration_sec": 8,
       "image_url": null,
       "voiceover_url": null,
@@ -4074,14 +4369,25 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_d761c742",
+          "layer_id": "l_28e5813a",
           "prompt": "two walkie-talkie clicks",
           "url": null,
           "duration_sec": null,
           "volume": 1,
-          "start_sec": 0.4,
+          "start_sec": 0.8,
           "length_sec": 1,
-          "cue": "clicks",
+          "cue": "two clicks",
+          "source_name": null
+        },
+        {
+          "layer_id": "l_c5270144",
+          "prompt": "two slower walkie-talkie clicks",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 2.7,
+          "length_sec": 1,
+          "cue": "clicked back",
           "source_name": null
         }
       ],
@@ -4101,10 +4407,10 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": ""
+      "notes": "Her pulse slowing."
     },
     {
-      "scene_id": 111,
+      "scene_id": 115,
       "image_prompt": "Close-up of a grey hand resting in the dead grass beside the black dictaphone, its red record light glowing, golden morning light",
       "voiceover_text": "[tired] Hour seventy-two. Patient is… [long pause]",
       "sfx_prompt": "Wind through dry grass, the generator far away",
@@ -4136,19 +4442,42 @@
       "notes": "[interrupt: her voice stops mid-sentence] Planned silence."
     },
     {
-      "scene_id": 112,
+      "scene_id": 116,
       "image_prompt": "Extreme close-up of the dictaphone's red record light glowing in shadow, the tape still turning behind its little window",
       "voiceover_text": "",
       "sfx_prompt": "A dictaphone motor whirring, wind",
       "video_prompt": "",
-      "duration_sec": 5,
+      "duration_sec": 6.5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
       "voiceover_duration_sec": null,
       "voiceover_words": null,
       "sfx_duration_sec": null,
-      "sfx_layers": [],
+      "sfx_layers": [
+        {
+          "layer_id": "l_4ea20b9b",
+          "prompt": "a slow human heartbeat, slowing, then stopping",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 0,
+          "length_sec": 3.5,
+          "cue": null,
+          "source_name": null
+        },
+        {
+          "layer_id": "l_e4821140",
+          "prompt": "a single deep heartbeat thud in silence",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 5.2,
+          "length_sec": 1,
+          "cue": null,
+          "source_name": null
+        }
+      ],
       "shots": [],
       "video_url": null,
       "video_thumb_url": null,
@@ -4163,15 +4492,15 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "Planned silence after her last words."
+      "notes": "Her heart stops for four minutes, then restarts: she has turned. Planned silence."
     },
     {
-      "scene_id": 113,
-      "image_prompt": "Inside a canvas army tent, Eli alone sitting on a cot, holding the black dictaphone to his ear, soft morning light through the canvas",
-      "voiceover_text": "[softly] This one's for you, Eli. You were braver than me. [pause] You always were.",
-      "sfx_prompt": "Tent canvas flapping, distant camp sounds, faint tape hiss",
+      "scene_id": 117,
+      "image_prompt": "Inside a crowded canvas army medical tent, Eli alone sitting on a cot in the foreground, other cots and figures far behind him out of focus, a small cassette tape tucked in the pocket of his red rain jacket, soft morning light through the canvas",
+      "voiceover_text": "",
+      "sfx_prompt": "Tent canvas flapping, distant camp sounds, murmured voices",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 4,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -4193,15 +4522,15 @@
       "motion": null,
       "shake": null,
       "title_text": "HOUR 79",
-      "notes": "Nora's Hour 66 tape, played back in the camp."
+      "notes": "Her tape stays in his pocket, unplayed: saved for later."
     },
     {
-      "scene_id": 114,
-      "image_prompt": "Close-up of the yellow toy walkie-talkie lying on a cot pillow, its small light dark, soft morning light",
-      "voiceover_text": "[whispers] Mom to Eli. Over.",
-      "sfx_prompt": "Tent canvas flapping, faint tape hiss",
+      "scene_id": 118,
+      "image_prompt": "Close-up of Eli alone holding his yellow toy walkie-talkie to his lips with both hands (two hands), eyes red, soft morning light in the tent",
+      "voiceover_text": "[childlike tone] [whispers] Eli to Mom. Over.",
+      "sfx_prompt": "Tent canvas flapping, distant camp sounds",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 5,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -4210,14 +4539,14 @@
       "sfx_duration_sec": null,
       "sfx_layers": [
         {
-          "layer_id": "l_eb5411b4",
-          "prompt": "the tape ending with a single click",
+          "layer_id": "l_ffd714f6",
+          "prompt": "a toy walkie-talkie squelch beep",
           "url": null,
           "duration_sec": null,
           "volume": 1,
-          "start_sec": 2.5,
+          "start_sec": 1.2,
           "length_sec": 0.5,
-          "cue": null,
+          "cue": "Over",
           "source_name": null
         }
       ],
@@ -4235,57 +4564,15 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": ""
+      "notes": "Bookends Hour 0: \"Eli to Mom, over.\""
     },
     {
-      "scene_id": 115,
+      "scene_id": 119,
       "image_prompt": "Extreme close-up of the yellow walkie-talkie's small light blinking on",
       "voiceover_text": "",
       "sfx_prompt": "Silence, then a walkie-talkie static hiss rising",
       "video_prompt": "",
-      "duration_sec": 4.5,
-      "image_url": null,
-      "voiceover_url": null,
-      "sfx_url": null,
-      "voiceover_duration_sec": null,
-      "voiceover_words": null,
-      "sfx_duration_sec": null,
-      "sfx_layers": [
-        {
-          "layer_id": "l_c83060fd",
-          "prompt": "two crisp walkie-talkie clicks",
-          "url": null,
-          "duration_sec": null,
-          "volume": 1,
-          "start_sec": 2,
-          "length_sec": 1,
-          "cue": null,
-          "source_name": null
-        }
-      ],
-      "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
-      "video_start_sec": 0,
-      "video_volume": 1,
-      "source_names": {},
-      "reference_asset_ids": [],
-      "use_global_references": true,
-      "use_previous_scene": true,
-      "motion": null,
-      "shake": null,
-      "title_text": "",
-      "notes": "[close L6] Deliberately ambiguous: does she remember? [interrupt: static, then two clicks]"
-    },
-    {
-      "scene_id": 116,
-      "image_prompt": "Extreme close-up of Eli's eyes opening, looking at the walkie-talkie",
-      "voiceover_text": "",
-      "sfx_prompt": "Silence",
-      "video_prompt": "",
-      "duration_sec": 3.5,
+      "duration_sec": 3,
       "image_url": null,
       "voiceover_url": null,
       "sfx_url": null,
@@ -4307,7 +4594,91 @@
       "motion": null,
       "shake": null,
       "title_text": "",
-      "notes": "Cut to black on the last frame. No outro."
+      "notes": "[interrupt: static, then two clicks]"
+    },
+    {
+      "scene_id": 120,
+      "image_prompt": "Extreme close-up of Nora's grey hand at the fence line, white medical tape wrapped around a small blue toy walkie-talkie, her taped thumb twitching against the push-to-talk button, dead grass, golden morning light",
+      "voiceover_text": "",
+      "sfx_prompt": "Wind through dry grass, the generator far away",
+      "video_prompt": "",
+      "duration_sec": 3.5,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": null,
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": null,
+      "sfx_layers": [
+        {
+          "layer_id": "l_78be6f22",
+          "prompt": "two crisp walkie-talkie clicks",
+          "url": null,
+          "duration_sec": null,
+          "volume": 1,
+          "start_sec": 1,
+          "length_sec": 1,
+          "cue": null,
+          "source_name": null
+        }
+      ],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_e60c3fd4"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "shake": null,
+      "title_text": "",
+      "notes": "[close L6] A post-mortem spasm presses her taped thumb: two clicks."
+    },
+    {
+      "scene_id": 121,
+      "image_prompt": "Close-up of Eli alone in the tent, smiling through tears, wiping his cheek with the back of one hand, the yellow walkie-talkie in his other hand, soft morning light",
+      "voiceover_text": "[childlike tone] [whispers] She's okay.",
+      "sfx_prompt": "Tent canvas flapping, distant camp sounds",
+      "video_prompt": "",
+      "duration_sec": 5.5,
+      "image_url": null,
+      "voiceover_url": null,
+      "sfx_url": null,
+      "voiceover_duration_sec": null,
+      "voiceover_words": null,
+      "sfx_duration_sec": null,
+      "sfx_layers": [],
+      "shots": [
+        {
+          "shot_id": "s_7b76f709",
+          "image_prompt": "Eli alone lying on the cot with his eyes closed, the yellow walkie-talkie on his chest, soft morning light through the canvas",
+          "image_url": null,
+          "motion": null,
+          "start_sec": 3,
+          "cue": null,
+          "source_name": null
+        }
+      ],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [],
+      "use_global_references": true,
+      "use_previous_scene": true,
+      "motion": null,
+      "shake": null,
+      "title_text": "",
+      "notes": "He believes she's alive; the viewer knows she turned. Cut to black on the last frame. No outro."
     }
   ],
   "library": [
