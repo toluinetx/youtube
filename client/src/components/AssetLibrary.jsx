@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  Camera, ChevronDown, ChevronRight, Film, ImageIcon, Loader2, Music, Pause, Pencil, Play, Plus, Search, Trash2, Upload,
+  Camera, ChevronDown, ChevronRight, Film, ImageIcon, Layers, Loader2, Music, Pause, Pencil, Play, Plus, Search, Trash2, Upload,
   Volume2,
 } from 'lucide-react';
 import { ACCEPT, ASSET_MIME, formatTime } from '../util.js';
@@ -200,13 +200,14 @@ function dragProps(asset, onDragAsset) {
 /** Where an asset is used: "Scene 3", "Scenes 1, 4", "Scenes 1, 2 +3", "Music", "Reference". */
 function UsageBadge({ uses }) {
   if (!uses?.count) return null;
-  const { scenes, music, reference, style } = uses;
+  const { scenes, music, ambience, reference, style } = uses;
   const sceneLabel =
     scenes.length === 1 ? `Scene ${scenes[0]}` : scenes.length > 3 ? `Scenes ${scenes.slice(0, 2).join(', ')} +${scenes.length - 2}` : scenes.length ? `Scenes ${scenes.join(', ')}` : null;
-  const label = [sceneLabel, music && 'Music', reference && 'Reference', style && 'Style'].filter(Boolean).join(' · ');
+  const label = [sceneLabel, music && 'Music', ambience && 'Ambience', reference && 'Reference', style && 'Style'].filter(Boolean).join(' · ');
   const title = [
     scenes.length && `Used in scene${scenes.length > 1 ? 's' : ''} ${scenes.join(', ')}`,
     music && 'the music track',
+    ambience && 'an ambience bed',
     reference && 'a reference for every scene',
     style && 'a style image',
   ].filter(Boolean).join(', and as ');
@@ -218,8 +219,23 @@ function UsageBadge({ uses }) {
 }
 
 function Tile({ asset, uses, onAdd, onRename, onSnapshot, onDelete, onDragAsset, onMenu }) {
+  // A generated image with variants is drawn as a stack: the one in use on top, the others behind it.
+  const variants = asset.variants?.length > 1 ? asset.variants.length : 0;
+  const hint = variants ? `\n${variants} variants: pick one on the timeline` : '';
   return (
-    <div className="group cursor-grab active:cursor-grabbing" title={`${asset.name}\nDrag onto the timeline · right-click for more`} onContextMenu={onMenu} {...dragProps(asset, onDragAsset)}>
+    <div
+      className={`group cursor-grab active:cursor-grabbing ${variants ? 'pt-1.5 pr-1.5' : ''}`}
+      title={`${asset.name}${hint}\nDrag onto the timeline · right-click for more`}
+      onContextMenu={onMenu}
+      {...dragProps(asset, onDragAsset)}
+    >
+      <div className="relative">
+      {variants > 0 && (
+        <>
+          <div className="absolute inset-0 translate-x-1.5 -translate-y-1.5 rounded-md bg-zinc-700 ring-1 ring-white/10" />
+          <div className="absolute inset-0 translate-x-0.75 -translate-y-0.75 rounded-md bg-zinc-600 ring-1 ring-white/10" />
+        </>
+      )}
       <div className="relative aspect-video overflow-hidden rounded-md bg-zinc-800 ring-1 ring-white/5 group-hover:ring-white/25">
         {asset.thumb_url ? (
           <img src={asset.thumb_url} alt="" draggable={false} loading="lazy" className="h-full w-full object-cover" />
@@ -231,6 +247,12 @@ function Tile({ asset, uses, onAdd, onRename, onSnapshot, onDelete, onDragAsset,
         <div className="pointer-events-none absolute top-1 right-1 left-1 flex gap-1">
           <UsageBadge uses={uses} />
         </div>
+        {variants > 0 && (
+          <span className="absolute right-1 bottom-1 flex items-center gap-0.5 rounded bg-black/70 px-1 text-[9px] leading-4 text-white tabular-nums">
+            <Layers className="size-2.5" />
+            {variants}
+          </span>
+        )}
         {asset.type === 'video' && (
           <span className="absolute right-1 bottom-1 flex items-center gap-0.5 rounded bg-black/70 px-1 text-[9px] leading-4 text-white tabular-nums">
             {asset.has_audio && <Volume2 className="size-2.5" />}
@@ -253,6 +275,7 @@ function Tile({ asset, uses, onAdd, onRename, onSnapshot, onDelete, onDragAsset,
             <Trash2 className="size-3" />
           </TileButton>
         </div>
+      </div>
       </div>
       <p className="mt-1 truncate text-[11px] text-zinc-400">{asset.name}</p>
     </div>

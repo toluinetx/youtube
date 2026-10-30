@@ -1,5 +1,6 @@
 import { prices } from './usage.js';
 import { OMNI_TOKENS_PER_SECOND } from './gemini.js';
+import { imageVariantCount, withoutSpeakers } from './storyboard.js';
 
 // What one generation is expected to cost, before it's made. Prices come from the editor's own table
 // (usage.js plus the user's prices in the Usage panel), so an estimate and the Usage log agree. What
@@ -35,19 +36,23 @@ export async function costEstimator(settings) {
 
     /**
      * A picture from `prompt` with `refs` reference images (the reference model is used when there are any),
-     * plus its image check if the project has one on (the first attempt; a retry costs it all again).
+     * plus its image check if the project has one on (the first attempt; a retry costs it all again),
+     * times the number of variants the project makes with that model: { model, usd, variants }.
      */
     image(prompt, refs) {
       const picture = this.picture(prompt, refs);
+      const variants = imageVariantCount(settings, picture.model);
+      const times = (usd) => ({ ...picture, variants, usd: usd == null ? null : usd * variants });
       const checkModel = settings.image_check ? settings.image_check_model : null;
-      if (!checkModel || picture.usd == null) return picture;
+      if (!checkModel || picture.usd == null) return times(picture.usd);
       const p = table[checkModel];
-      if (!p) return { ...picture, usd: missing(checkModel) };
-      return { ...picture, usd: picture.usd + perM(CHECK_INPUT_TOKENS, p.input) + perM(CHECK_OUTPUT_TOKENS, p.text_output) };
+      if (!p) return { ...picture, variants, usd: missing(checkModel) };
+      return times(picture.usd + perM(CHECK_INPUT_TOKENS, p.input) + perM(CHECK_OUTPUT_TOKENS, p.text_output));
     },
 
     picture(prompt, refs) {
       const model = refs ? settings.reference_model : settings.image_model;
+      if (model?.startsWith('comfyui:')) return { model, usd: 0 };
       const fullPrompt = prompt + (settings.style_prompt ? `. ${settings.style_prompt}` : '');
       const p = table[model];
       if (!p) return { model, usd: missing(model) };
@@ -60,7 +65,8 @@ export async function costEstimator(settings) {
     },
 
     voice(text) {
-      const c = text.trim().length * (HALF_CREDIT_TTS.test(settings.tts_model) ? 0.5 : 1);
+      // Speaker labels ("{Eli}") aren't sent, so they cost nothing.
+      const c = withoutSpeakers(text).replace(/\s+/g, ' ').trim().length * (HALF_CREDIT_TTS.test(settings.tts_model) ? 0.5 : 1);
       return { model: settings.tts_model, credits: c, usd: credits(c) };
     },
 
@@ -68,6 +74,13 @@ export async function costEstimator(settings) {
     sfx(sec) {
       const c = Math.min(30, Math.max(0.5, sec)) * SFX_CREDITS_PER_SEC;
       return { model: settings.sfx_model, credits: c, usd: credits(c) };
+    },
+
+    /** A music track `sec` long (ElevenLabs Music): no price is known until one is set in the Usage panel. */
+    music(sec) {
+      const model = `elevenlabs ${settings.music_model || 'music_v1'}`;
+      const p = table[model];
+      return { model, sec, usd: p?.per_minute != null ? (p.per_minute * sec) / 60 : missing(model) };
     },
 
     /** A video clip for a scene `sceneSec` long (the model's duration setting wins). */

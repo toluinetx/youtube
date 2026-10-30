@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Loader2, Music, Upload, X } from 'lucide-react';
+import { Loader2, Music, Plus, Sparkles, Trash2, Upload, X } from 'lucide-react';
 import { api } from '../api.js';
-import { ACCEPT, LOOKS, MOTIONS, formatTime } from '../util.js';
+import { ACCEPT, LOOKS, MOTIONS, MUSIC_MODELS, ambienceColor, formatTime } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
-import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
+import { ImageModelControl, SfxModelControl, SpeakersControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
 
 export default function ProjectSettings({ settings, onChange, status, library, onRequestSnapshot, onUploadFiles }) {
   return (
@@ -30,7 +30,7 @@ export default function ProjectSettings({ settings, onChange, status, library, o
       </div>
       <p className="-mt-3 text-[11px] text-zinc-600">Changing the format only affects images generated afterwards; existing ones get center-cropped.</p>
 
-      <Group title="Images" subtitle="Replicate · Gemini" ok={status?.replicate || status?.gemini}>
+      <Group title="Images" subtitle={`Replicate · Gemini${status?.comfyui != null ? ' · ComfyUI' : ''}`} ok={status?.replicate || status?.gemini || status?.comfyui}>
         <ImageModelControl settings={settings} onChange={onChange} />
         <Field label="Style (appended to every image prompt)">
           <textarea
@@ -79,6 +79,33 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             </span>
           </span>
         </label>
+        <div className="text-xs text-zinc-300">
+          Make{' '}
+          <input
+            type="number"
+            min={1}
+            max={12}
+            className="field inline-block !w-12 !px-1.5 !py-0 text-center"
+            value={settings.image_variants ?? 6}
+            onChange={(e) => onChange({ image_variants: Math.min(12, Math.max(1, Math.round(Number(e.target.value) || 1))) })}
+          />{' '}
+          variants of each image with local (ComfyUI) models
+          <span className="block text-[11px] text-zinc-600">
+            Pick the one to use on the timeline. Each variant is checked once instead of retried.
+          </span>
+          <label className="mt-1.5 flex items-start gap-2">
+            <input
+              type="checkbox"
+              className="mt-0.5 accent-amber-400"
+              checked={Boolean(settings.image_variants_paid)}
+              onChange={(e) => onChange({ image_variants_paid: e.target.checked })}
+            />
+            <span>
+              Also with paid models
+              <span className="block text-[11px] text-zinc-600">Each variant costs as much as one image.</span>
+            </span>
+          </label>
+        </div>
         <Field label="Camera motion for images (scenes can override it)">
           <select className="field" value={settings.motion} onChange={(e) => onChange({ motion: e.target.value })}>
             {MOTIONS.map(([id, label]) => (
@@ -163,7 +190,8 @@ export default function ProjectSettings({ settings, onChange, status, library, o
 
       <Group title="Voice" subtitle="ElevenLabs" ok={status?.elevenlabs}>
         <VoiceModelControl settings={settings} onChange={onChange} />
-        <VoiceControl settings={settings} onChange={onChange} />
+        <VoiceControl settings={settings} onChange={onChange} label="Narrator voice" />
+        <SpeakersControl settings={settings} onChange={onChange} />
       </Group>
 
       <Group title="Sound effects" subtitle="ElevenLabs" ok={status?.elevenlabs}>
@@ -240,15 +268,48 @@ function Group({ title, subtitle, ok, children }) {
   );
 }
 
-/** The video's background music: upload, volume, ducking. Shown in the Music tab. */
-export function MusicSettings({ settings, onChange, busy, onUpload, onRemove }) {
+/** The video's background music: generate or upload, volume, ducking. Shown in the Music tab. */
+export function MusicSettings({ settings, onChange, busy, onUpload, onRemove, onGenerate }) {
   const input = useRef(null);
   return (
     <section className="space-y-3 rounded-lg border border-zinc-800 p-3">
       <h3 className="flex items-center justify-between text-xs font-semibold tracking-wide text-zinc-300 uppercase">
         Background music
-        <span className="text-[10px] font-normal tracking-normal normal-case text-zinc-500">Your own file</span>
+        <span className="text-[10px] font-normal tracking-normal normal-case text-zinc-500">Whole video · ElevenLabs Music or your file</span>
       </h3>
+      <Field label="Music prompt">
+        <textarea
+          className="field min-h-20 resize-y"
+          value={settings.music_prompt || ''}
+          placeholder="e.g. a slow dark ambient drone, low sub-bass hum, sparse distant piano notes, no drums, no melody hooks"
+          onChange={(e) => onChange({ music_prompt: e.target.value })}
+        />
+      </Field>
+      <div className="grid grid-cols-2 gap-2">
+        <Field label="Model">
+          <select className="field" value={settings.music_model || 'music_v1'} onChange={(e) => onChange({ music_model: e.target.value })}>
+            {MUSIC_MODELS.map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Length (seconds)">
+          <input
+            type="number"
+            min={10}
+            max={600}
+            step={10}
+            className="field"
+            value={settings.music_length_sec ?? 180}
+            onChange={(e) => onChange({ music_length_sec: Math.min(600, Math.max(10, Number(e.target.value) || 180)) })}
+          />
+        </Field>
+      </div>
+      <button className="btn-primary w-full" disabled={busy || !settings.music_prompt?.trim()} onClick={onGenerate}>
+        {busy ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
+        {settings.music_url ? 'Generate new music' : 'Generate music'}
+      </button>
+      <p className="text-[11px] text-zinc-600">Instrumental. Up to 10 minutes; a shorter track loops under the whole video. Earlier takes stay in the library.</p>
       {settings.music_url ? (
         <>
           <div className="flex items-center gap-2 text-xs text-zinc-300">
@@ -311,13 +372,151 @@ export function MusicSettings({ settings, onChange, busy, onUpload, onRemove }) 
   );
 }
 
+/**
+ * Ambience beds: a looping background sound per place (a car at night, birdsong outside the house).
+ * Scenes pick one; neighbouring scenes with the same bed play it as one continuous loop.
+ */
+export function AmbienceSettings({ ambience, scenes, selectedIds, busy, onAdd, onUpdate, onDelete, onGenerate, onUpload, onAssign }) {
+  const selectedCount = selectedIds.length;
+  return (
+    <section className="space-y-3 rounded-lg border border-zinc-800 p-3">
+      <h3 className="flex items-center justify-between text-xs font-semibold tracking-wide text-zinc-300 uppercase">
+        Ambience
+        <span className="text-[10px] font-normal tracking-normal normal-case text-zinc-500">Per location · looping</span>
+      </h3>
+      <p className="text-[11px] leading-relaxed text-zinc-500">
+        A background sound for each place, like room tone or birdsong. Give the scenes in one place the same ambience and it plays without a
+        break, crossfading when the place changes.
+      </p>
+      {ambience.map((bed, i) => (
+        <AmbienceBed
+          key={bed.ambience_id}
+          bed={bed}
+          color={ambienceColor(i)}
+          scenes={scenes}
+          selectedCount={selectedCount}
+          busy={Boolean(busy[`ambience:${bed.ambience_id}`])}
+          onUpdate={(patch) => onUpdate(bed.ambience_id, patch)}
+          onDelete={() => onDelete(bed)}
+          onGenerate={() => onGenerate(bed.ambience_id)}
+          onUpload={(file) => onUpload(bed.ambience_id, file)}
+          onAssign={() => onAssign(bed.ambience_id, selectedIds)}
+        />
+      ))}
+      <div className="flex gap-2">
+        <button className="btn-secondary flex-1" onClick={onAdd}>
+          <Plus className="size-3.5" /> Add ambience
+        </button>
+        {selectedCount > 0 && scenes.some((s) => selectedIds.includes(s.scene_id) && s.ambience_id) && (
+          <button className="btn-ghost" onClick={() => onAssign(null, selectedIds)} title="Selected scenes play no ambience">
+            <X className="size-3.5" /> None for {selectedCount === 1 ? 'this scene' : `${selectedCount} scenes`}
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** Scene numbers as ranges: "1–5, 9, 12–14". */
+function sceneRanges(numbers) {
+  const out = [];
+  for (const n of numbers) {
+    const last = out.at(-1);
+    if (last && n === last[1] + 1) last[1] = n;
+    else out.push([n, n]);
+  }
+  return out.map(([a, b]) => (a === b ? `${a}` : `${a}–${b}`)).join(', ');
+}
+
+function AmbienceBed({ bed, color, scenes, selectedCount, busy, onUpdate, onDelete, onGenerate, onUpload, onAssign }) {
+  // Text is saved when the field loses focus; the volume shortly after the slider stops.
+  const [name, setName] = useState(bed.name);
+  const [prompt, setPrompt] = useState(bed.prompt);
+  const [volume, setVolume] = useState(bed.volume);
+  useEffect(() => setName(bed.name), [bed.name]);
+  useEffect(() => setPrompt(bed.prompt), [bed.prompt]);
+  useEffect(() => setVolume(bed.volume), [bed.volume]);
+  useEffect(() => {
+    if (volume === bed.volume) return;
+    const t = setTimeout(() => onUpdate({ volume }), 300);
+    return () => clearTimeout(t);
+  }, [volume]); // eslint-disable-line react-hooks/exhaustive-deps
+  const input = useRef(null);
+  const used = scenes.flatMap((s, i) => (s.ambience_id === bed.ambience_id ? [i + 1] : []));
+  const savePrompt = () => prompt !== bed.prompt && onUpdate({ prompt });
+
+  return (
+    <div className="space-y-2 rounded-md border border-zinc-800 border-l-2 bg-zinc-900/40 p-2" style={{ borderLeftColor: color }}>
+      <div className="flex items-center gap-1">
+        <input
+          className="field flex-1 py-1 text-xs font-medium"
+          value={name}
+          placeholder="Place, e.g. Car at night"
+          onChange={(e) => setName(e.target.value)}
+          onBlur={() => name !== bed.name && onUpdate({ name })}
+        />
+        <button className="icon-btn size-7 hover:!text-red-400" title="Delete this ambience" aria-label="Delete this ambience" onClick={onDelete}>
+          <Trash2 className="size-3.5" />
+        </button>
+      </div>
+      <textarea
+        className="field min-h-14 resize-y text-xs"
+        value={prompt}
+        placeholder="The sound of the place, e.g. a car interior at night, low steady engine idle, faint wind against the windows"
+        onChange={(e) => setPrompt(e.target.value)}
+        onBlur={savePrompt}
+      />
+      <p className="text-[11px] text-zinc-500">{used.length ? `Scenes ${sceneRanges(used)}` : 'Not used by any scene yet'}</p>
+      {bed.url && <audio key={bed.url} src={bed.url} controls loop className="h-8 w-full" />}
+      <Field label={`Volume: ${Math.round(volume * 100)}%`}>
+        <input type="range" min={0} max={1} step={0.01} value={volume} onChange={(e) => setVolume(Number(e.target.value))} className="w-full accent-teal-400" />
+      </Field>
+      <div className="flex flex-wrap gap-1.5">
+        <button
+          className="btn-secondary px-2 py-1 text-xs"
+          disabled={busy || !prompt.trim()}
+          onClick={async () => {
+            if (prompt !== bed.prompt) await onUpdate({ prompt });
+            onGenerate();
+          }}
+        >
+          {busy ? <Loader2 className="size-3.5 animate-spin" /> : <Sparkles className="size-3.5" />}
+          {bed.url ? 'Regenerate' : 'Generate'}
+        </button>
+        <button className="btn-ghost px-2 py-1 text-xs" disabled={busy} onClick={() => input.current.click()} title="Use your own sound file">
+          <Upload className="size-3.5" /> Upload
+        </button>
+        <button
+          className="btn-ghost px-2 py-1 text-xs"
+          disabled={!selectedCount}
+          onClick={onAssign}
+          title={selectedCount ? 'Play this ambience under the selected scenes' : 'Select scenes on the timeline first (Shift-click for a range), then come back here or use the Ambience menu in the selection bar'}
+        >
+          Use for {selectedCount > 1 ? `${selectedCount} selected scenes` : 'selected scene'}
+        </button>
+      </div>
+      <input
+        ref={input}
+        type="file"
+        accept={ACCEPT.sound}
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files[0];
+          e.target.value = '';
+          if (file) onUpload(file);
+        }}
+      />
+    </div>
+  );
+}
+
 function ReferenceSettings({ settings, onChange, status, library, onRequestSnapshot, onUploadFiles }) {
   const [capacity, setCapacity] = useState(undefined);
   const model = settings.reference_model;
 
   useEffect(() => {
     setCapacity(undefined);
-    if (!status?.replicate || !model?.includes('/')) return;
+    if (!model?.startsWith('comfyui:') && (!status?.replicate || !model?.includes('/'))) return;
     const t = setTimeout(() => {
       api.modelInfo(model).then((r) => setCapacity(r.reference_capacity)).catch(() => setCapacity('error'));
     }, 500);
@@ -328,7 +527,7 @@ function ReferenceSettings({ settings, onChange, status, library, onRequestSnaps
     capacity === undefined
       ? null
       : capacity === 'error'
-        ? "Couldn't look up this model on Replicate."
+        ? `Couldn't look up this model${model?.startsWith('comfyui:') ? '' : ' on Replicate'}.`
         : capacity === 0
           ? "This model doesn't accept reference images. Pick another."
           : capacity === null

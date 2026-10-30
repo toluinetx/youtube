@@ -11,7 +11,7 @@ import TopBar from './components/TopBar.jsx';
 import Preview from './components/Preview.jsx';
 import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
-import ProjectSettings, { MusicSettings } from './components/ProjectSettings.jsx';
+import ProjectSettings, { AmbienceSettings, MusicSettings } from './components/ProjectSettings.jsx';
 import LeftPanel from './components/LeftPanel.jsx';
 import PanelResizer from './components/PanelResizer.jsx';
 import { ModelCatalogProvider } from './components/ModelControls.jsx';
@@ -116,6 +116,7 @@ export default function App() {
       const urls = [
         s.image_url, s.video_url, s.voiceover_url, s.sfx_url, ...(s.sfx_layers || []).map((l) => l.url), ...(s.shots || []).map((x) => x.image_url),
         ...(s.reference_asset_ids || []).map((id) => urlOf.get(id)),
+        ...(s.shots || []).flatMap((x) => (x.reference_asset_ids || []).map((id) => urlOf.get(id))),
       ];
       for (const url of urls) {
         const u = use(url);
@@ -124,6 +125,10 @@ export default function App() {
     });
     const music = use(sb?.settings.music_url);
     if (music) music.music = true;
+    for (const bed of sb?.ambience || []) {
+      const u = use(bed.url);
+      if (u) u.ambience = true;
+    }
     for (const id of sb?.settings.reference_asset_ids || []) {
       const u = use(urlOf.get(id));
       if (u) u.reference = true;
@@ -133,7 +138,7 @@ export default function App() {
       if (u) u.style = true;
     }
     return uses;
-  }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids, sb?.settings.style_references]);
+  }, [scenes, library, sb?.settings.music_url, sb?.settings.reference_asset_ids, sb?.settings.style_references, sb?.ambience]);
 
   /** Show a toast; `action` ({ label, onClick }) adds a button to it, e.g. Undo. */
   const notify = useCallback((message, tone = 'error', action = null) => {
@@ -452,6 +457,45 @@ export default function App() {
     }
   };
   const removeMusic = () => musicAction(api.removeMusic);
+  const generateMusic = () =>
+    musicAction(async () => {
+      const settings = await api.generateMusic();
+      api.library().then((lib) => setSb((prev) => ({ ...prev, library: lib }))).catch(() => {});
+      return settings;
+    });
+
+  // Ambience beds: every route answers with the beds and each scene's choice.
+  const applyAmbience = ({ ambience, scenes: picks }) => {
+    const pick = new Map(picks.map((p) => [p.scene_id, p.ambience_id]));
+    setSb((prev) => ({ ...prev, ambience, scenes: prev.scenes.map((s) => (pick.has(s.scene_id) ? { ...s, ambience_id: pick.get(s.scene_id) } : s)) }));
+  };
+  const ambienceAction = async (key, action, { library: refresh } = {}) => {
+    if (key) setBusy((b) => ({ ...b, [key]: true }));
+    try {
+      applyAmbience(await action());
+      if (refresh) api.library().then((lib) => setSb((prev) => ({ ...prev, library: lib }))).catch(() => {});
+    } catch (err) {
+      notify(err.message);
+    } finally {
+      if (key) setBusy(({ [key]: _, ...rest }) => rest);
+    }
+  };
+  const ambienceHandlers = {
+    onAdd: () => ambienceAction(null, () => api.addAmbience({})),
+    onUpdate: (id, patch) => ambienceAction(null, () => api.updateAmbience(id, patch)),
+    onDelete: (bed) => {
+      const count = scenes.filter((s) => s.ambience_id === bed.ambience_id).length;
+      if (count && !window.confirm(`Delete "${bed.name || 'this ambience'}"? ${count} scene${count > 1 ? 's' : ''} will have no ambience.`)) return;
+      ambienceAction(null, () => api.deleteAmbience(bed.ambience_id));
+    },
+    onGenerate: (id) => ambienceAction(`ambience:${id}`, () => api.generateAmbience(id), { library: true }),
+    onUpload: (id, file) =>
+      ambienceAction(`ambience:${id}`, async () => {
+        const asset = await uploadOne(file);
+        return api.ambienceFromAsset(id, asset.asset_id);
+      }),
+    onAssign: (id, ids) => ambienceAction(null, () => api.assignAmbience(id, ids)),
+  };
 
   const showLeftTab = (tab) => {
     setLeftTab(tab);
@@ -660,6 +704,12 @@ export default function App() {
       await reload();
     });
   };
+
+  const chooseVariant = (assetId, url) =>
+    run(async () => {
+      await api.chooseVariant(assetId, url);
+      await reload();
+    });
 
   /** Ask the user to pick a frame of a video; resolves with the new library image, or null if cancelled. */
   const requestSnapshot = (asset, purpose) => new Promise((resolve) => setSnapshotTarget({ asset, purpose, resolve }));
@@ -944,7 +994,7 @@ export default function App() {
         title={sb.settings.title}
         status={status}
         job={job}
-        missing={countMissing(scenes)}
+        missing={countMissing(scenes, sb)}
         videos={scenes.filter(wantsVideo).length}
         exportUrl={exportUrl}
         onImport={() => setShowImport(true)}
@@ -1013,6 +1063,7 @@ export default function App() {
             playing={playing}
             setPlaying={setPlaying}
             settings={sb.settings}
+            ambience={sb.ambience}
             mode={previewMode}
             setMode={setPreviewMode}
             exportUrl={exportUrl}
@@ -1032,12 +1083,15 @@ export default function App() {
             onDropAsset={dropAsset}
             dragAsset={dragAsset}
             settings={sb.settings}
+            ambience={sb.ambience}
             onSelectMusic={() => setSidebarTab('music')}
             onClipMenu={onClipMenu}
             onReorder={reorderScenes}
             onInsert={insertSceneAt}
             onMusicMenu={(e) => openMenu(e, musicMenuItems())}
             busy={busy}
+            library={sb.library}
+            onChooseVariant={chooseVariant}
           />
         </main>
 
@@ -1071,6 +1125,20 @@ export default function App() {
                 <button className="btn-ghost px-2 py-1 text-xs hover:!text-red-400" onClick={() => deleteScenes(selectedIds)} title="Delete (Del)">
                   <Trash2 className="size-3.5" /> Delete
                 </button>
+                {sb.ambience.length > 0 && (
+                  <select
+                    className="field w-28 py-1 text-xs"
+                    value=""
+                    title="Play an ambience under the selected scenes"
+                    onChange={(e) => e.target.value && ambienceHandlers.onAssign(e.target.value === 'none' ? null : e.target.value, selectedIds)}
+                  >
+                    <option value="">Ambience…</option>
+                    <option value="none">None</option>
+                    {sb.ambience.map((a) => (
+                      <option key={a.ambience_id} value={a.ambience_id}>{a.name || 'Untitled'}</option>
+                    ))}
+                  </select>
+                )}
                 <button className="icon-btn size-6" onClick={() => selectScene(selectedId, { seekTo: false })} title="Clear selection (Esc)" aria-label="Clear selection">
                   <X className="size-3.5" />
                 </button>
@@ -1084,8 +1152,12 @@ export default function App() {
                   busy={Boolean(busy.music)}
                   onUpload={uploadAndSetMusic}
                   onRemove={removeMusic}
+                  onGenerate={generateMusic}
                 />
                 <p className="mt-3 text-[11px] text-zinc-600">One track for the whole video. You can also drop a sound from the library onto the Music row of the timeline.</p>
+                <div className="mt-4">
+                  <AmbienceSettings ambience={sb.ambience} scenes={scenes} selectedIds={selectedIds} busy={busy} {...ambienceHandlers} />
+                </div>
               </div>
             ) : selected ? (
               <Inspector
@@ -1098,6 +1170,8 @@ export default function App() {
                 start={starts[selectedIndex]}
                 settings={sb.settings}
                 library={library}
+                ambience={sb.ambience}
+                onEditAmbience={() => setSidebarTab('music')}
                 busy={busy}
                 errors={errors}
                 onRequestSnapshot={(asset) => requestSnapshot(asset, `reference for scene ${selectedIndex + 1}`)}

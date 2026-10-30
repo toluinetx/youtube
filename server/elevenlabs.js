@@ -110,6 +110,20 @@ export function soundEffect({ text, durationSec, modelId, params = {} }) {
   return postForAudio('/v1/sound-generation', body);
 }
 
+/** ElevenLabs Music models, and the longest track one request makes. */
+export const MUSIC_MODELS = ['music_v1', 'music_v2', 'music_v2_5'];
+export const MUSIC_MAX_SEC = 600;
+
+/**
+ * An instrumental track from `prompt` (ElevenLabs Music), `lengthSec` long (3 s to 10 minutes).
+ * Resolves with { buffer, usage }.
+ */
+export function composeMusic({ prompt, lengthSec, modelId }) {
+  const body = { prompt, model_id: modelId || 'music_v1', force_instrumental: true };
+  if (lengthSec) body.music_length_ms = Math.round(Math.min(MUSIC_MAX_SEC, Math.max(3, lengthSec)) * 1000);
+  return postForAudio('/v1/music', body);
+}
+
 /**
  * The account's credits this billing period: { tier, used, limit, remaining, resets_at }.
  * Needs the API key's "user_read" permission.

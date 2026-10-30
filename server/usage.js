@@ -96,6 +96,7 @@ const perM = (tokens, price) => ((tokens || 0) * (price || 0)) / 1e6;
 /** Cost of one entry in USD, or null when a price it needs isn't known. */
 export function costOf(entry, table) {
   const u = entry.units || {};
+  if (entry.provider === 'comfyui') return 0; // Runs on this computer.
   const p = entry.provider === 'elevenlabs' ? table.elevenlabs : table[entry.model];
   if (!p) return null;
   switch (entry.provider) {

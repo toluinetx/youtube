@@ -3,7 +3,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 import { mediaPathToUrl, mediaUrlToPath } from './paths.js';
-import { findScene, newScene, nextSceneId, readStoryboard, syncCues, updateStoryboard } from './storyboard.js';
+import { findAmbience, findScene, newScene, nextSceneId, readStoryboard, syncCues, updateStoryboard } from './storyboard.js';
 import { extractFrame, extractThumbnail, probe } from './ffmpeg.js';
 import {
   CLEAR_IMAGE, CLEAR_VIDEO, assetRecord, badRequest, commitScene, findShot, findSfxLayer, fitToVoiceover, mediaFilePath, setSourceName,
@@ -155,10 +155,14 @@ function usagesOf(sb, asset) {
     if (s.voiceover_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'voiceover' });
     if (s.sfx_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'sfx' });
     for (const l of s.sfx_layers || []) if (l.url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'sfx_layer', layer_id: l.layer_id });
-    for (const shot of s.shots || []) if (shot.image_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'shot', shot_id: shot.shot_id });
+    for (const shot of s.shots || []) {
+      if (shot.image_url === asset.url) uses.push({ scene_id: s.scene_id, slot: 'shot', shot_id: shot.shot_id });
+      if (shot.reference_asset_ids?.includes(asset.asset_id)) uses.push({ scene_id: s.scene_id, slot: 'shot_reference', shot_id: shot.shot_id });
+    }
     if (s.reference_asset_ids?.includes(asset.asset_id)) uses.push({ scene_id: s.scene_id, slot: 'reference' });
   }
   if (sb.settings.music_url === asset.url) uses.push({ slot: 'music' });
+  for (const bed of sb.ambience || []) if (bed.url === asset.url) uses.push({ slot: 'ambience', ambience_id: bed.ambience_id });
   if (sb.settings.reference_asset_ids?.includes(asset.asset_id)) uses.push({ slot: 'project_reference' });
   if (sb.settings.style_references?.some((r) => r.asset_id === asset.asset_id)) uses.push({ slot: 'style_reference' });
   return uses;
@@ -184,6 +188,8 @@ export function deleteAsset(assetId, force) {
     }
     for (const use of uses) {
       if (use.slot === 'music') Object.assign(sb.settings, CLEAR_MUSIC);
+      // The bed keeps its prompt and its scenes, so it can be generated again.
+      else if (use.slot === 'ambience') Object.assign(findAmbience(sb, use.ambience_id), { url: null, duration_sec: null, source_name: null });
       else if (use.slot === 'project_reference') {
         sb.settings.reference_asset_ids = sb.settings.reference_asset_ids.filter((id) => id !== a.asset_id);
       } else if (use.slot === 'style_reference') {
@@ -195,6 +201,9 @@ export function deleteAsset(assetId, force) {
       } else if (use.slot === 'shot') {
         // The shot keeps its prompt and timing, so it can be generated again.
         Object.assign(findShot(findScene(sb, use.scene_id), use.shot_id), { image_url: null, source_name: null });
+      } else if (use.slot === 'shot_reference') {
+        const shot = findShot(findScene(sb, use.scene_id), use.shot_id);
+        shot.reference_asset_ids = shot.reference_asset_ids.filter((id) => id !== a.asset_id);
       } else if (use.slot === 'reference') {
         const scene = findScene(sb, use.scene_id);
         scene.reference_asset_ids = scene.reference_asset_ids.filter((id) => id !== a.asset_id);
@@ -304,6 +313,17 @@ export function musicFromAsset(assetId) {
     checkSlot(asset, 'music');
     Object.assign(sb.settings, { music_url: asset.url, music_name: asset.name, music_duration_sec: asset.duration_sec });
   }, 'Set music');
+}
+
+/** Use a library sound as an ambience bed's loop. Resolves with the bed. */
+export function ambienceFromAsset(ambienceId, assetId) {
+  return updateStoryboard((sb) => {
+    const asset = findAsset(sb, assetId);
+    checkSlot(asset, 'music');
+    const bed = findAmbience(sb, ambienceId);
+    Object.assign(bed, { url: asset.url, duration_sec: asset.duration_sec, source_name: asset.name });
+    return bed;
+  }, { label: 'Set ambience sound' });
 }
 
 export function removeMusic() {

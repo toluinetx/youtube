@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AudioLines, Film, Image, Loader2, Mic, Sparkles, X } from 'lucide-react';
+import { AudioLines, Film, Image, Loader2, Mic, Music, Sparkles, Trees, X } from 'lucide-react';
 import { api } from '../api.js';
 import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
 
@@ -8,11 +8,13 @@ const KINDS = [
   { kind: 'voiceover', label: 'Voice', icon: Mic, color: 'text-emerald-400' },
   { kind: 'sfx', label: 'Sound', icon: AudioLines, color: 'text-amber-400' },
   { kind: 'video', label: 'Video clips', icon: Film, color: 'text-fuchsia-400' },
+  { kind: 'music', label: 'Music', icon: Music, color: 'text-fuchsia-400' },
+  { kind: 'ambience', label: 'Ambience', icon: Trees, color: 'text-teal-400' },
 ];
 const KIND = Object.fromEntries(KINDS.map((k) => [k.kind, k]));
 
 const usd = (n) => (n < 0.995 ? `$${n.toFixed(3)}` : `$${n.toFixed(2)}`);
-const modelName = (id) => id?.replace(/^gemini:/, '').split('/').pop();
+const modelName = (id) => id?.replace(/^(gemini|comfyui):/, '').split('/').pop();
 
 /**
  * Asks before "Generate missing": lists everything it would make, with each item's model and estimated
@@ -175,7 +177,7 @@ export default function GenerateDialog({ settings, onChangeSettings, status, onC
                         ref={(el) => el && (el.indeterminate = on.length > 0 && on.length < sceneItems.length)}
                         onChange={(e) => toggle(sceneItems.map((i) => i.id), e.target.checked)}
                       />
-                      Scene {n}
+                      {n ? `Scene ${n}` : 'Whole video'}
                     </label>
                     <ul>
                       {sceneItems.map((i) => {
@@ -193,6 +195,7 @@ export default function GenerateDialog({ settings, onChangeSettings, status, onC
                               <span className="w-36 shrink-0 truncate text-right text-[11px] text-zinc-600" title={i.model}>
                                 {modelName(i.model)}
                                 {i.kind === 'video' && ` · ~${i.sec}s`}
+                                {i.variants > 1 && ` · ×${i.variants}`}
                               </span>
                               <span className="w-14 shrink-0 text-right text-zinc-400 tabular-nums">{i.usd == null ? 'no price' : usd(i.usd)}</span>
                             </label>

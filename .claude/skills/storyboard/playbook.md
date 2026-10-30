@@ -110,9 +110,13 @@ Numbers also give the viewer **progress meters** to follow (gallons left, CO₂ 
 push harder as a goal gets closer (goal-gradient effect), so those meters pull attention through the
 middle.
 - **Use it:**
-  - Each episode has at least one number and one procedure ("we taped the vents, moved the generator
-    to the far wall, and timed the fan: 4 minutes an hour").
-  - Show the numbers as Title cards ("CO₂: 1,800 PPM").
+  - Each episode has one concrete procedure ("we taped the vents and moved the generator to the far
+    wall") and moves the story's one meter (days left, gallons left, hours until the gate).
+  - Show the meter as Title cards ("CO₂: 1,800 PPM") so the narration doesn't have to keep saying it.
+  - **Don't overdo it:** one meter is a clock; numbers on every line are a spreadsheet. Incidental
+    figures (seconds, miles, counts) are said as what they mean ("the needle was already low"), and a
+    stat that's only there to sound precise ("thirty seconds to the car, I made it in twenty-eight")
+    is cut.
 
 ### Identification and anchor objects
 We care about specific, vulnerable people with small, real habits. Objects make feelings visible: the
@@ -139,7 +143,7 @@ Attention drops when stimulation is uniform; a change in sound or picture briefl
     - a sudden sound event;
     - a wide shot switching to a tight close-up of a gauge or an object;
     - a light camera Shake;
-    - a short video clip.
+    - a short flipbook (3–4 frames of the same shot, each a moment later).
   - The picture changes every 3–6 s in tense stretches (scenes and shots).
 
 ### Emotional rhythm (tension and release)
@@ -181,11 +185,14 @@ Check the finished storyboard against each of these:
    the central loop closes in the last 15%.
 4. **Causality:** every beat is a "but" or a "therefore" to the one before.
 5. **Escalation:** each episode is worse in a new dimension; each solution has a cost.
-6. **Specificity:** at least one number and one procedure per episode; anchor objects set up and paid off.
+6. **Specificity:** one procedure per episode and the story's meter moving; anchor objects set up and
+   paid off. Numbers only for the clock and its rules, not on most lines.
 7. **Interrupts:** none of the gaps between pattern interrupts is over 90 s, and they vary in kind.
 8. **Pictures:** a new picture every ≤ 6 s in tense stretches and ≤ 8 s elsewhere; shot sizes vary.
 9. **Voice:** no dead air over ~8 s without a planned reason; no line that only repeats what the
-   picture shows.
+   picture shows. It reads like speech: whole sentences, with a clipped one only for the few real
+   blows (`retention.mjs` flags more than 20% of sentences at 4 words or fewer, and numbers on more
+   than 30% of the lines).
 10. **Rhythm:** tension and relief alternate; there's no stretch of flat maximum tension longer than ~2 min.
 11. **Ending:** the twist pays off an earlier setup; the video ends within ~20 s of it.
 12. **Honesty:** the packaging is paid off, and fiction or dramatisation is clear.

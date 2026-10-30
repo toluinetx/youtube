@@ -32,13 +32,13 @@
 | 0:38 | HOUR 0: pancakes by walkie-talkie (his yellow, her blue), cop's handcuffs; the CDC alert ("Containment failure"), Mr. Dale turns toward the noise, the bite at 7:40 | Warmth before the break | open L3 (did Eli see?) | Alert tones, Shake (heavy), ringing silence | Warm → panic |
 | 2:07 | The chart on herself: 72-hour rules, Fort Calder 212 mi, one intake: Tuesday 6:00 for 10 min (1 h 40 before she turns), 100.4 °F scan, the cure rumour | Stakes setup, progress meters | open L4 (is the cure real?) | ER flashback, flatline | Cold |
 | 3:13 | HOUR 2: jammed interstate, the dead turn to the engine; +38 miles, gas math fails | External threat | open L5 (gas) | Title, screech, Shake | Panic |
-| 4:04 | HOUR 9: siphoning the school bus, two-click code, the dead behind glass, wound tears | Resource + the first reversal (~30%) | close L3, L5 | Static burst, glass video, Shake (heavy) | Terror → relief |
+| 4:04 | HOUR 9: siphoning the school bus, two-click code, the dead behind glass, wound tears | Resource + the first reversal (~30%) | close L3, L5 | Static burst, glass flipbook, Shake (heavy) | Terror → relief |
 | 5:33 | HOUR 19: 101.2 °F, tremor; Tylenol 16 keeps her under the scan line, rationed to one every 6 h; Eli's water; "Do zombies remember people?" "They do, baby. Always."; the rewound tape is her own fugue, holding on to her voice; a light | Body + the dependent | open L6; open/close L7 | Rewind whirr | Tender → uneasy |
 | 6:56 | HOUR 24: a farmhouse; the turned farmer has locked himself in. The barn, 15 gallons, wait for Tuesday; Eli's two-click game | External + foreshadowing | open/close L8 (will he get out?) | Title, thudding door, Shake | Dread → relief |
 | 8:03 | HOUR 38 MIDPOINT: Eli asleep; the radio: no cure, the bitten are shot at the perimeter. New plan; the Tylenol now buys motor control until 6:00 | The truth changes | close L4, open L9 | Static cuts to silence | Despair |
 | 9:06 | HOUR 50: the words go (aphasia); Eli's scraped knee wakes the hunger; she cuffs herself to the wheel and gives Eli the key. He trusts her, no questions | Mind + moral | open/close L10, open L12 (will she hurt Eli?) | Heartbeat swell, ratchet | Horror |
 | 10:25 | HOUR 61 LOWEST POINT: twelve miles out, waiting for Tuesday; seizure, blackout, blood, the back seat empty; Eli outside, doors locked. It's her own blood. To Eli she's just very sick | Lowest point (~72%) | close L2 | Blackout silence, Shake (heavy) | Despair |
-| 11:38 | HOUR 66: the last tape ("For when you're older"), slipped into Eli's jacket lining; the dead gathered at the gate's generator | Calm before the climax | open L11 | Title, video | Dread |
+| 11:38 | HOUR 66: the last tape ("For when you're older"), slipped into Eli's jacket lining; the dead gathered at the gate's generator | Calm before the climax | open L11 | Title, flipbook | Dread |
 | 12:17 | HOUR 70 CLIMAX: 10 minutes, the field, "I'm not going without you." She can't tell him the truth: "I'll be right behind you." She asks for the key back and he hands it over, no questions. Eli walks in alone; she tapes the blue walkie into her hand, cuffs herself to the fence, throws the key inside; the dead pass her by | Climax | close L1, L9, L12, L11 | Klaxon, silence, ratchet | Peak |
 | 14:17 | HOUR 72: "Patient is…", her heart stops and restarts. HOUR 79: the tape unplayed in his pocket; "Eli to Mom. Over."; a spasm in her taped thumb: two clicks; "She's okay." He never knows | Peak-end | close L6 (he believes; we know) | Silence, static, clicks | Haunting |
 
@@ -52,17 +52,37 @@
 - **Visual style:** cinematic still from a survival horror film, 35mm anamorphic lens, dramatic
   practical light from dashboards, lanterns and floodlights, flat grey overcast daylight outdoors,
   deep shadows, muted desaturated palette, Kodak 500T film grain, photorealistic, highly detailed
-- **Camera motion:** slow zoom in
+- **Camera motion:** set per picture (scene image and each shot); project default slow zoom in
 - **Camera move:** 5%
 - **Colour grade:** bleach bypass
 - **Vignette:** 45% · **Film grain:** 25%
 - **Captions:** word by word · **Position:** bottom
 - **Voice model:** Eleven v4
 - **Voice settings:** stability 0 (Creative; use 0.5 if it drifts) · style 0.3 · speed 0.95
-- **Narrator voice:** a tired, low female voice in her mid-thirties (pick one from your ElevenLabs
-  library). Eli's few lines use `[childlike tone]`.
-- **Music:** low sub-bass drone under the whole video. A sparse, warm piano motif for the Eli
-  moments (0:42, 6:09, 7:48, 11:20), dropped out completely at 12:59 for the last lie.
+- **Narrator voice:** Gsndh0O5AnuI2Hj3YUlA
+- **Speakers:** Nora: prqcFePeALHihEWRj5ll · Eli: XjGYkUkzth8BPs29fmcV
+  > The narrator reads the narration; Nora's and Eli's own spoken lines (to each other, on the tape,
+  > over the walkie) are marked `{Nora}` / `{Eli}` in the Voice lines and spoken in their voices.
+- **Music:** Slow dark ambient drone score for a tense, grieving survival horror story: a deep sub-bass hum, a soft sustained low cello note, faint high string harmonics drifting in and out, a very slow evolving texture, melancholic and uneasy, quiet and restrained, no drums, no percussion, no piano, no vocals, no melody, no build-ups · 300 s · Music v1 · volume 15%
+  > Loops under the whole video, ducked under the narration. The warm piano notes at the Eli moments
+  > (0:42, 6:09, 7:48, 11:20) are single scene sounds, not part of the drone; nothing plays under the
+  > last lie at 12:59 except the gate.
+- **Ambience:**
+  - **Car at night:** Inside a parked car at night in the countryside, a low steady engine idle, crickets chirping outside, faint wind pressing against the windows, steady and even, no voices · 30%
+  - **Suburb morning:** A quiet suburban street at sunrise, gentle birdsong from several birds, a soft breeze in the trees, a lawn sprinkler ticking far away, calm and steady, no voices, no cars · 35%
+  - **Car on the road:** Inside a moving car on an empty country road, a steady tyre rumble on asphalt, a low engine hum, light wind noise at the windows, constant and even, no music, no voices · 30%
+  - **ER flashback:** An empty hospital corridor at night, buzzing fluorescent lights, a distant heart monitor beeping slowly, a faint air conditioning hum, hollow and cold, no voices · 30%
+  - **Jammed interstate:** A jammed highway of abandoned cars under a grey sky, many engines idling, a far-off car alarm, gusting wind, distant crackling fires, uneasy and steady, no voices · 35%
+  - **Gas station at dusk:** An empty rural gas station at dusk, crickets starting up, a buzzing dead neon sign, wind across the open lot, a loose sign creaking faintly, lonely and steady, no voices · 35%
+  - **Open farmland:** Open farmland on an overcast day, wind moving through dry grass and corn stalks, crows calling in the distance, a far creaking windmill, bleak and steady, no voices · 35%
+  - **Barn:** Inside an old wooden barn, wind whistling softly through gaps in the planks, timbers creaking, a hanging oil lantern hissing faintly, close and quiet, no voices, no animals · 30%
+  - **Fort Calder gate:** A military perimeter at dawn, a diesel generator droning steadily nearby, floodlights buzzing, wind over a wide field, a low distant chorus of groaning voices, tense and constant, no gunfire, no clear speech · 35%
+  - **Army tent:** Inside a large canvas army medical tent in the morning, the canvas walls flapping gently in the wind, the soft murmur of a camp outside, a distant generator, calm and hushed, no clear words · 30%
+  - **Barn in the rain:** Inside an old wooden barn at night in steady rain, rain drumming on the roof, water dripping from the eaves, timbers creaking, close and steady, no voices, no thunder · 35%
+  > No ambience on the planned silences and drop-outs: the bite (scene 15), the crickets stopping and
+  > the porch light (55–57), the radio cutting to silence (69), something waking up in her (79), the
+  > seizure and blackout (86–87), the drone fading as she can't tell him (105), hour 72 (116–117), and
+  > the static and the fence (120–121). A scene's own SFX is only what that moment adds.
 
 ---
 
@@ -81,6 +101,9 @@
 - **Corolla interior:** the inside of a 2009 silver sedan seen from the back seat, worn grey cloth
   seats, a cracked windshield, a softly glowing dashboard, a child's booster seat behind the passenger
   seat, crumpled fast-food wrappers on the floor
+- **Corolla interior, facing back:** the same car seen from the windshield looking back: the two front seats
+  (driver on the right of the frame), the back seat with the booster seat on the left, the rear window.
+  Generated from *Corolla interior*.
 - **Gas station:** a small rural two-pump gas station on an empty two-lane road at dusk, peeling white
   paint, a dark shop window, a yellow school bus abandoned beside the pumps
 - **Farm barn:** an old wooden barn interior, stacked hay bales, a single hanging oil lantern, a
@@ -94,888 +117,1166 @@
 ## Scenes
 
 ### Scene 1 · 0:00–0:06
-- **Image:** Extreme close-up of Nora's left forearm resting on a steering wheel at night, the white gauze bandage stained dark, black veins spreading from under it toward the wrist, a steel handcuff locked around her left wrist, chained to the steering wheel, lit only by the red-orange dashboard glow, the rest of the frame in darkness
-- **Voice:** Hour sixty-one. Patient is a thirty-six-year-old female. Bite to the left forearm.
-- **SFX:** Car interior at night, engine idling low, wind pressing on the windows
-- **SFX 2 (from 0s, 0.5s):** a small dictaphone record button clicking
-- **References:** Corolla interior
+- **Image:** Extreme close-up taken from the front passenger seat at night, the camera low at the height of the steering wheel rim and facing left toward the driver's side. Nora's left forearm only (one arm, one hand), the only body part in the frame: it rests across the top of the steering wheel rim, running horizontally from her elbow at the left edge of the frame to her limp hand at the right. Her hoodie sleeve is pushed up past the elbow. The white gauze bandage around the forearm is stained dark brown-red; thin black veins spread from under its edge toward the wrist. A steel handcuff is locked around her left wrist, its short chain running to the second cuff locked around the wheel rim. Fingernails grey and cracked. Lit only from below by the dim red-orange glow of the instrument cluster, out of frame below the bottom edge. Everything beyond the arm falls into black darkness. No gauges or dashboard visible, no face, no second hand, no text.
+- **Voice:** {Nora} Hour sixty-one. Patient is a thirty-six-year-old female, bite to the left forearm.
+- **Ambience:** Car at night
+- **SFX 2 (from 0s, 0.8s):** A single small plastic record button pressed down on a cheap handheld cassette dictaphone, one crisp mechanical click with a tiny spring-loaded clack, recorded very close and completely dry, quiet and intimate, no echo, no tape hiss, no music, no voices
+- **Shot 2 (at "Bite", zoom in):** Extreme close-up, tighter than the previous picture, from the same front passenger seat position, the camera at steering-wheel height facing left toward the driver's side. Nora's left forearm only (one arm), filling the frame horizontally, elbow toward the left edge, wrist toward the right. In the centre, the white gauze bandage, stained dark red-brown with old blood and soaked through in one spot; from under its lower edge, black branching veins crawl across the olive skin toward the wrist like cracks. At the right edge of the frame, the edge of the steel handcuff around her wrist and the top of the steering wheel rim beneath the arm. Lit from below by the dim red-orange instrument glow, which is out of frame below the bottom edge; the background is pure darkness. No gauges or dashboard visible, no face, no fingers, no second arm, no text.
+- **Camera:** pan left → right
+- **References:** Corolla interior, Corolla interior, facing back
 - **Title:** HOUR 61
 - **Notes:** Confirms the thumbnail in the first frame. Cold open on the worst stretch of the story.
 
 ### Scene 2 · 0:06–0:13
-- **Image:** The rearview mirror of a dark car filling the frame, reflecting Eli alone asleep in the back seat, his yellow walkie-talkie on his chest, a warm dome light on him and cold blue darkness around the mirror
-- **Video:** Eli stays asleep, only his chest rising and falling slowly, the dome light flickering faintly once; locked-off camera. No cuts, no new objects.
-- **Voice:** Her son is asleep in the back seat. He thinks she has the flu.
-- **SFX:** Car interior at night, a child's slow breathing close by, low engine idle
-- **References:** Corolla interior
+- **Image:** Rearview mirror shot at night: the camera just behind and above the driver's seat, facing forward at the rearview mirror at the top centre of the windshield. The mirror fills the middle of the frame. In its reflection, the back seat: Eli, alone, asleep in his booster seat, which appears on the RIGHT side of the reflection, the empty seat behind the driver on the left; his head tilted against the side of the booster seat, eyes closed, both of his small hands (two hands) resting on the yellow toy walkie-talkie lying on his chest on its lanyard. Oversized red rain jacket, curly light-brown hair. Behind him, the dark rear window. A warm yellow pool of light falls on him from the dome light in the roof centre, out of frame above. Around the mirror, the windshield is cold blue darkness, the crack across its upper right, a faint amber floodlight glow on low clouds far away. No adult visible, no second child, no text.
+- **Voice:** Her son is asleep in the back seat, and he thinks she just has the flu.
+- **Ambience:** Car at night
+- **SFX:** A small child's slow, soft breathing while fast asleep, gentle even inhales and long relaxed exhales through the nose, recorded close inside a quiet parked car at night, warm and intimate, steady rhythm with no snoring, no coughing, no words, no music
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Stakes by 0:13: the dependent and the secret.
 
 ### Scene 3 · 0:13–0:21
-- **Image:** Close-up of Nora alone in the driver's seat, her face in the dashboard glow, sweat on her forehead, eyes bloodshot, the left iris faintly clouding grey, staring ahead through the windshield
-- **Voice:** In eleven hours, her heart will stop for four minutes. [pause] Then it will start again.
-- **SFX:** Car interior at night, low engine idle, a slow heartbeat underneath
-- **Shot 2 (at "Then"):** Close-up of Nora's two fingers pressed against the side of her own neck, checking her pulse, dashboard glow
-- **References:** Corolla interior
+- **Image:** Close-up of Nora's face taken from just in front of the windshield at night, the camera at her eye level facing backward into the car, straight at her. Nora, alone, the only person in the frame, sitting in the driver's seat, head and shoulders, staring ahead through the windshield just past the lens. Sweat beads on her forehead and upper lip, loose strands of dark brown hair stuck to her temples, eyes bloodshot with deep dark circles; her left iris (on the right side of the frame) faintly clouding grey, the other iris still brown. A dark grey vein on the side of her neck. Open charcoal-grey hoodie over navy scrubs. Behind her: the grey cloth driver's headrest, then the back seat and rear window lost in deep darkness. Lit from below and in front by the red-orange glow of the instrument cluster, out of frame below the bottom edge; no other light on her. No gauges, dashboard or steering wheel in the frame, no other person visible, no text.
+- **Voice:** In eleven hours her heart will stop for four minutes, [pause] and then it will start again.
+- **Ambience:** Car at night
+- **SFX:** A slow, deep human heartbeat heard from inside the body, soft muffled low thumps about fifty beats a minute, more felt than heard, heavy sub-bass with no sharp click, steady and ominous, dark cinematic tension underneath narration, no music, no other sounds
+- **Shot 2 (at "Then", still):** Close-up taken from the front passenger seat at night, the camera at eye level facing toward the driver's seat. Nora, alone, the only person in the frame, in side profile, facing toward the front of the car on the left of the frame, eyes half closed, lips slightly parted, counting her own heartbeats. She is checking the pulse in her neck the way a nurse does: her right hand (one hand) is raised to the right side of her neck, the side facing the camera. Her index and middle fingers are held straight and together, side by side, and the soft pads of their fingertips are pressed flat into the groove beside her windpipe, just below the angle of her jaw; the two fingers lie roughly level, pointing back toward her ear. Her ring finger and little finger are curled loosely into her palm, her thumb relaxed and pointing down along her jaw toward her chin. Her palm faces her neck, so the camera sees the back of her hand and the sides of the two fingers; her wrist is bent, her forearm angled up across her chest in the sleeve of the open charcoal-grey hoodie. Sweat glistens on her neck and temple, loose strands of dark brown hair stuck to her skin, dark circles, faint freckles. Behind her, the driver's side window and door, black night outside. The top of the steering wheel rim crosses the lower left of the frame in front of her. Lit from below and in front by the red-orange instrument glow, out of frame below the bottom edge. No gauges beside her head, no second hand at her neck, no other person, no text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 4 · 0:21–0:28
-- **Image:** Nora's left hand held up into the red dashboard light, her fingertips smeared with fresh blood, her face blurred behind it, Nora alone in the frame
-- **Voice:** And she just woke up with blood on her mouth. [whispers] She doesn't know whose.
-- **SFX:** Car interior at night, ticking engine, her shaky breathing
-- **SFX 2 (at "blood", 1.5s):** a deep sub-bass hit
-- **References:** Corolla interior
+- **Image:** Close-up taken from just in front of the windshield at night, the camera facing backward into the car at Nora's chest height. In the sharp foreground, Nora's left hand only (one hand), raised in front of her face, palm toward the camera, fingers slightly spread and trembling; the fingertips and the pad of the thumb smeared with fresh wet blood. A steel handcuff on her left wrist, its chain hanging down out of frame toward the steering wheel; grey cracked fingernails; the top edge of the stained gauze bandage on her forearm at the bottom of the frame. Behind the hand, her face is blurred and out of focus: the dark shapes of her eyes staring at her fingers. Behind her, the driver's headrest and the black back seat. Lit from below by the red-orange glow of the instrument cluster, out of frame below the bottom edge. Nora alone in the frame. No gauges or dashboard visible, no second hand, no text.
+- **Voice:** And she's just woken up with blood on her mouth, [whispers] and she doesn't know whose it is.
+- **Ambience:** Car at night
+- **SFX:** A frightened woman's shaky, uneven breathing very close to the microphone, short trembling inhales and unsteady exhales, slightly wet and catching in the throat, intimate and tense inside a quiet car at night, no words, no crying, no music
+- **SFX 2 (from 0s, 6s):** A warm car engine slowly cooling after being switched off, small irregular metallic ticks and pings from the engine block and exhaust under the hood, faint and spaced out, heard from inside the car, quiet and eerie, no engine running, no music
+- **SFX 3 (at "blood", 1.5s):** A single deep cinematic sub-bass hit, a heavy low boom that blooms and decays slowly over about a second, dark and ominous horror impact, felt in the chest, no high frequencies, no metallic ring, no music, no voices
+- **Shot 2 (at "She doesn't", still):** Extreme close-up taken from just in front of the windshield at night, the camera facing backward into the car at the level of Nora's mouth. Only her lower face fills the frame: the tip of her nose at the top edge, her lips slightly parted, her chin and jaw. A smear of dark fresh blood at the left corner of her mouth (on the right side of the frame), running down toward her chin, a thin trace on her lower lip. Beads of sweat on the upper lip, olive skin pale and clammy, loose dark strands of hair at the edges. Behind her, out of focus, darkness and the vague grey shape of the headrest. Lit from below by the red-orange glow of the instrument cluster, out of frame below the bottom edge, so the underside of her lips and chin is brightest. Nora alone in the frame. No eyes, no hands, no dashboard or gauges, no text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Shake:** light
 - **Notes:** [open L2: whose blood is on her mouth?]
 
 ### Scene 5 · 0:28–0:38
-- **Image:** Close-up of a small black dictaphone in Nora's trembling hand, its red record light glowing, the dark car interior behind it
-- **Voice:** In nine hours, there's a gate. I have to send him through alone. [pause] I still don't know what I'll tell him.
-- **SFX:** Car interior at night, a dictaphone motor whirring softly, wind outside
-- **Shot 2 (at "I still"):** Eli's small sleeping hand curled around the yellow walkie-talkie, warm dome light
-- **References:** Corolla interior
+- **Image:** Close-up taken from the front passenger seat at night, the camera at chest height facing left toward the driver's seat. In the foreground centre, a small black dictaphone held upright in Nora's right hand (one hand), close to her mouth; the hand trembles slightly, thumb on the side button, grey cracked fingernails. The dictaphone's tiny cassette window and its glowing red record light face the camera. Behind the hand, out of focus, Nora's jaw and the open charcoal-grey hoodie over navy scrubs; further back, the dark driver's side window at the left of the frame and black night. The dark car interior surrounds everything. Light: the small red record light glowing on her fingers, and the dim red-orange instrument glow from below, out of frame below the bottom edge. No gauges beside her, no second hand, no readable text or numbers on the dictaphone.
+- **Voice:** In nine hours there's a gate, and she has to send him through alone. [pause] She still doesn't know what she'll tell him.
+- **Ambience:** Car at night
+- **SFX:** The small electric motor of a handheld cassette dictaphone whirring softly as the tape turns, a thin steady mechanical hum with a faint rhythmic flutter of the tape reels, recorded very close and dry, quiet and continuous, no clicks, no voices, no music
+- **Shot 2 (at "I have to", zoom in):** Close-up of the rearview mirror at night, taken from the front passenger seat, the camera facing forward and slightly left, up toward the mirror at the top centre of the windshield. The mirror's dark rectangle fills the middle of the frame. Inside it, a narrow reflected strip of Nora's face: only her two eyes and brows, bloodshot, shadowed by dark circles, glancing sideways toward the back seat; one iris faintly clouding grey. Sweat on her brow, a loose strand of dark hair across it. Around the mirror, the windshield is black night with a faint amber glow of distant floodlights on low clouds, and the crack running across the upper right. Her reflected face is lit from below by the red-orange instrument glow, out of frame below. Nora alone, seen only in the mirror; no face or body outside the mirror, no second person, no text.
+- **Shot 3 (at "I still", zoom out):** Close-up taken from between the front seats at night, the camera facing backward into the back seat and angled down at Eli's chest. Eli's right hand only (one small hand), relaxed in sleep, curled around the yellow toy walkie-talkie lying on his chest, its lanyard looping up out of the frame toward his neck. His oversized red rain jacket, open over the green dinosaur T-shirt, fills the background; the edge of the booster seat's grey padding at the left of the frame. A warm yellow pool of light falls from the dome light in the roof centre, out of frame above the top edge; beyond its edge the car is cold blue darkness. Small child's fingers, short clean nails, very still. No face in frame, no adult hands, no blood, no text on the walkie-talkie.
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [open L1: what will she tell Eli at the gate?] Central loop, planted at 0:28.
 
 ### Scene 6 · 0:38–0:42
-- **Image:** Wide shot of a quiet suburban street at sunrise, dew on the lawns, a silver sedan parked in a driveway, soft golden light, no people
-- **SFX:** Morning birdsong, a single distant siren slowly rising
+- **Image:** Wide shot taken from the far side of a quiet suburban street at sunrise, the camera at standing height facing a modest single-storey house across the road. In the middle of the frame, a 2009 silver sedan parked in the concrete driveway, nose toward the closed garage, its trunk facing the street. A wet green lawn in the foreground, dew glittering on the grass; a neighbouring house on the right of the frame with its own lawn and a garden sprinkler lying in the grass. Leafy trees, a plain mailbox at the curb. The sun is low behind the houses at the left of the frame, out of frame, sending long soft golden rays and long shadows across the lawns from left to right; a pale mist in the air. Everything still and quiet. No people, no animals, no other cars, no moving vehicles, no text or house numbers anywhere.
+- **Ambience:** Suburb morning
+- **SFX:** A single emergency siren far away across a quiet town at sunrise, starting faint and slowly rising in pitch and volume, thin and distant with a soft outdoor echo off houses, lonely and ominous, no traffic, no music, no voices
+- **Camera:** zoom out
 - **Title:** 72 HOURS EARLIER
 - **Notes:** [interrupt: hard cut from night to morning]
 
 ### Scene 7 · 0:42–0:49
-- **Image:** A small sunlit kitchen, Eli alone at the table with a stack of pancakes, syrup on his chin, the yellow walkie-talkie beside his plate, morning light through the window
+- **Image:** Medium shot of a small sunlit suburban kitchen (matching the Kitchen reference), taken from the opposite side of the kitchen table at a seated child's eye level, facing Eli. Eli, 8, alone, the only person in the frame, sitting at the table in his green dinosaur T-shirt, his red rain jacket hung on the back of his chair. In front of him, a plate with a tall stack of pancakes; his right hand holds a fork, his left hand rests on the table (two hands); a drip of syrup on his chin, a happy look. The yellow toy walkie-talkie lies beside his plate, its lanyard coiled. Behind him, the window over the sink lets in bright morning sunlight from the left side of the frame, warming the countertops and his curly light-brown hair. No other people, no phone, no text on any packaging.
 - **Voice:** Saturday. Seven A.M. I'd just come off a twelve-hour night shift.
-- **SFX:** Kitchen morning ambience, pancakes sizzling in a pan, birds outside
+- **Ambience:** Suburb morning
+- **SFX:** Pancakes sizzling in a pan close by, a quiet kitchen
+- **Shot 2 (at "night shift", pan left → right):** Medium shot in the same small sunlit kitchen, taken from beside the kitchen table at standing eye level, the camera facing the kitchen counter. Nora, alone, the only person in the frame, stands at the counter facing the left of the frame, seen in profile from her right side. She pours coffee from a glass coffee pot in her right hand into a white mug on the counter; her left hand rests flat on the counter (two hands). Navy blue short-sleeved hospital scrubs, forearms bare and unbandaged; messy low dark bun with loose strands, dark circles, heavy-lidded tired eyes. Steam rising from the mug. Behind her, the window above the sink, morning sunlight pouring in from the left of the frame and lighting the steam and her face; white cabinets above. No hoodie, no bandage, no other people, no text on the mug.
+- **Camera:** zoom out
 - **References:** Kitchen
 - **Title:** HOUR 0
 - **Notes:** Warmth before the break.
 
 ### Scene 8 · 0:49–0:56
-- **Image:** Close-up of Eli grinning with his gap teeth, holding the yellow walkie-talkie to his mouth, sunlit kitchen behind him
-- **Voice:** [playfully] Eli to Mom, over. [pause] Every Saturday. Pancakes by walkie-talkie, even across the kitchen.
-- **SFX:** Kitchen ambience, sizzling pan
-- **SFX 2 (at "over", 0.5s):** a toy walkie-talkie squelch beep
+- **Image:** Close-up of Eli taken from across the kitchen table, the camera at his seated eye level facing him. Eli, alone, head and shoulders, grinning wide so the gap in his front teeth shows, big brown eyes bright, curly light-brown hair lit gold at the edges. His right hand (one hand) holds the yellow toy walkie-talkie up to his mouth, thumb pressing the talk button, its lanyard hanging around his neck over the green dinosaur T-shirt. Behind him, soft and out of focus: the sunlit kitchen, white cabinets, and the window over the sink on the left of the frame. Bright morning sunlight comes through that window from the left, lighting the side of his face nearest it. No other people, no second walkie-talkie, no syrup bottle labels, no text on the walkie-talkie.
+- **Voice:** {Eli} [playfully] Eli to Mom, over. [pause] {Narrator} Every Saturday it was pancakes by walkie-talkie, even from across the kitchen.
+- **Ambience:** Suburb morning
+- **SFX:** Pancake batter sizzling softly in a hot frying pan on a kitchen stove, gentle steady crackle and fizz of butter, close and warm, a calm homely Saturday morning, continuous and even, no voices, no music, no clatter
+- **SFX 2 (at "over", 0.6s):** A cheap plastic toy walkie-talkie squelch beep, a short bright electronic chirp followed by a quick burst of radio static cut off cleanly, slightly tinny and compressed, close and playful, half a second, no voices, no music
+- **Shot 2 (at "Every Saturday", pan right → left):** Close-up taken just above counter height in the sunlit kitchen, the camera looking slightly down at the countertop. Nora's right hand only (one hand) holds a small blue toy walkie-talkie upright, her thumb pressing its talk button; her bare forearm and the hem of her short navy scrubs sleeve enter from the right edge of the frame. Beside the walkie-talkie, on the left, a white mug of black coffee with a thread of steam. The countertop runs back to a softly blurred tiled backsplash and the window. Morning sunlight from the window, behind and to the left, falls across the counter, casting the hand's shadow toward the right. Short plain nails, olive skin, no rings, no bandage. No yellow walkie-talkie, no second hand, no text on the walkie-talkie or the mug.
+- **Camera:** zoom in
 - **References:** Kitchen
 - **Notes:** Setup: the walkie ritual (pays off at Hour 79).
 
 ### Scene 9 · 0:56–1:03
-- **Image:** Close-up of Nora's hand setting a pair of steel handcuffs on the kitchen counter beside a coffee mug, morning light, scrubs sleeve visible
-- **Voice:** A cop's handcuffs were still in my scrubs pocket. An agitated patient. [pause] Long night.
-- **SFX:** Kitchen ambience
-- **SFX 2 (at "handcuffs", 1s):** a metallic clink on the counter
+- **Image:** Close-up taken from just above the kitchen counter, the camera tilted down at about 45 degrees. Nora's right hand only (one hand), entering from the right of the frame, sets a pair of steel police handcuffs down on the countertop, the cuffs still hanging from her fingers by their short chain as they touch the surface. Her bare olive forearm and the short navy sleeve of her scrubs top at the right edge of the frame. To the left, the white coffee mug with steam rising, and the small blue toy walkie-talkie lying on the counter. Background: a blurred tiled backsplash and the bright window. Morning sunlight through the window, from behind on the left, makes the steel gleam and casts long shadows toward the camera. No bandage, no second hand, no handcuff key, no text or engraving.
+- **Voice:** A cop's handcuffs were still in Nora's scrubs pocket after a long night shift.
+- **Ambience:** Suburb morning
+- **SFX 2 (at "handcuffs", 1.2s):** A pair of steel police handcuffs set down on a hard kitchen countertop, a bright metallic clink and a short rattle of the chain settling, close and crisp, small kitchen room reflection, no music, no voices
+- **Camera:** pan right → left
 - **References:** Kitchen
 - **Notes:** Setup: the handcuffs (car door at Hour 50, the fence at Hour 70).
 
 ### Scene 10 · 1:03–1:11
-- **Image:** Eli at the kitchen table, fork paused in mid-air, turning to look toward the window, morning light on his face
-- **Voice:** Then every phone on the street screamed at once. [pause] [flatly] CDC alert. Containment failure. Seek shelter immediately.
-- **SFX:** Kitchen ambience, birds
-- **SFX 2 (at "phone", 3s):** several emergency alert tones blaring at once, inside and from the houses outside
-- **Shot 2 (at "CDC"):** Close-up of a smartphone lying face up on the kitchen counter, its screen glowing bright red with an emergency alert, the screen's text blurred and unreadable, morning light
+- **Image:** Medium close-up taken from across the kitchen table at Eli's seated eye level. Eli, alone, the only person in the frame, sitting in his green dinosaur T-shirt in front of his plate of pancakes. His right hand holds a fork frozen in mid-air with a bite of pancake on it; his left hand rests flat on the table (two hands). His head turns sharply toward the window on the left of the frame, eyes wide, mouth slightly open, startled. The yellow walkie-talkie lies beside the plate. The window over the sink at the left of the frame glows with bright morning sunlight, so bright nothing outside is visible; the light falls on his turned face. White cabinets behind him. No phone in his hand, no adults, no text.
+- **Voice:** Then every phone on the street screamed at once. [pause] [flatly] CDC alert: containment failure, seek shelter immediately.
+- **Ambience:** Suburb morning
+- **SFX 2 (at "phone", 3s):** Several smartphone emergency alert tones blaring at once, the harsh repeating two-tone wireless emergency alarm from a phone on the kitchen table and others coming faintly from the houses outside, loud, jarring and urgent, overlapping slightly out of sync, no voices, no music
+- **Shot 2 (at "CDC", still):** Close-up taken from above the kitchen counter, the camera looking down at an angle. A smartphone lies face up on the countertop in the centre of the frame, its screen glowing harsh bright red with an emergency alert, the shapes on the screen blurred and unreadable. The red glow spills onto the counter around it. Arranged as before: the white coffee mug on the left, the steel handcuffs and the small blue toy walkie-talkie on the right. Warm morning sunlight from the window, out of frame at the top left, competes with the red glare. No hands, no people, no readable text, numbers, icons or logos on the phone or anywhere.
+- **Camera:** zoom in
 - **References:** Kitchen
 - **Notes:** [interrupt: emergency alert tones break the warmth] The alert text could be added as an overlay in the edit (text in images often comes out misspelled).
 
 ### Scene 11 · 1:11–1:18
-- **Image:** Close-up of Nora frozen at the stove holding a coffee mug, her forearms bare, her face draining of colour, the warm kitchen soft behind her
-- **Voice:** I'd seen forty bites in three days. [pause] That alert meant containment had already failed.
-- **SFX:** Alert tones fading, a dog barking somewhere, sirens closer
+- **Image:** Close-up of Nora taken from the kitchen table, the camera at her chest height facing her as she stands at the stove. Nora, alone, the only person in the frame, frozen mid-motion: her right hand (one hand) holds a white coffee mug at chest height, her left arm hangs at her side out of frame. Her eyes are fixed on the window at the left of the frame, wide and unblinking, the colour draining from her olive face, lips parted. Navy short-sleeved scrubs, forearms bare and unbandaged, messy low bun, dark circles. Behind her, soft and blurred: the stove with a pan of pancakes and the warm sunlit kitchen. Bright morning sunlight from the window on the left lights one side of her face; the other side falls into soft shadow. No phone in her hand, no hoodie, no other people, no text.
+- **Voice:** She'd seen enough bites that week [pause] to know that alert meant containment had already failed.
+- **Ambience:** Suburb morning
+- **SFX:** Police and ambulance sirens across a suburb, starting in the distance and slowly getting closer and louder, several wailing tones overlapping, heard from inside a house through closed windows, tense and building, no traffic noise, no music, no voices
+- **SFX 2 (from 0s, 2.5s):** Smartphone emergency alert tones fading out, the harsh two-tone alarm stopping on one phone after another until silence, slightly muffled inside a kitchen, no voices, no music
+- **SFX 3 (from 3.2s, 2.5s, volume 70%):** A single dog barking frantically a few houses away, sharp repeated barks echoing between suburban houses, heard faintly from inside through a window, anxious and distant, no other animals, no voices, no music
+- **Shot 2 (at "That alert", still):** Extreme close-up taken at counter height beside the stove, the camera level with a white coffee mug. Nora's right hand only (one hand) grips the mug so hard her knuckles go pale and the tendons stand out on the back of her bare hand. The surface of the black coffee inside trembles in tight concentric ripples; a thin curl of steam rises and wavers above it. Only the hand and wrist, no sleeve. Behind, the blurred warm kitchen and the stove. Morning sunlight from the window to the left, out of frame, lights the steam and the rim of the mug. No bandage, no second hand, no spilled coffee, no text on the mug.
+- **Camera:** zoom in
 - **References:** Kitchen
 
 ### Scene 12 · 1:18–1:25.5
-- **Image:** Wide shot through a kitchen window of a suburban lawn, an older man in a bathrobe staggering barefoot across the wet grass, head tilted at a wrong angle, turning toward the house, sprinklers running, the man alone on the lawn, the only person in the frame
-- **Voice:** Mister Dale from next door. Barefoot. Head tilted. [pause] Then he turned toward the noise. Toward us.
-- **SFX:** Sprinklers ticking, sirens in the distance, birdsong
-- **SFX 2 (at "noise", 1.5s):** a low, wet groan close outside
+- **Image:** Wide shot taken from inside the kitchen, the camera standing just behind the window over the sink and facing out onto the side lawn. In the foreground, the white window frame and the edge of the sink frame the view, the glass clean. Beyond, a wet green suburban lawn in hazy morning sun: in the middle distance, slightly right of centre, Mr. Dale, an older man with grey hair, in a plaid bathrobe hanging open, barefoot, staggering across the grass, his head tilted onto one shoulder at a wrong angle, his body turning toward the house and the camera. Two garden sprinklers throw arcs of water on either side of him. Behind him, his own house and a low hedge. Low morning sunlight from the left, out of frame. He is alone on the lawn, the only person in the frame. No reflection of anyone in the glass, no text.
+- **Voice:** Mister Dale from next door was out on his lawn, barefoot, his head tilted. [pause] Then he turned toward the noise, toward them.
+- **Ambience:** Suburb morning
+- **SFX:** Several emergency sirens wailing far away across a suburb, a constant distant rise and fall of overlapping tones, heard from inside a kitchen through a window, ominous and steady, no traffic, no music, no voices
+- **SFX 2 (at "noise", 1.8s):** A low, wet, guttural groan from a man just outside a kitchen window, slow and rasping like air dragged through a damaged throat, inhuman and menacing, close and slightly muffled by the glass, no words, no screaming, no music
+- **Shot 2 (at "Barefoot", pan left → right):** Close-up taken outdoors at ground level on the lawn, the camera low in the wet grass, facing sideways. An old man's two bare feet only, grey-skinned with dark mottling and dirty yellowed toenails, one foot planted and the other dragging forward through the wet grass, crushing it. The frayed hem of a plaid bathrobe hangs at the top edge of the frame. To the right, a garden sprinkler sprays a fan of water droplets that sparkle in the light. Low morning sun from behind on the left, out of frame, backlights the spray and casts long shadows across the grass toward the camera. Blurred green lawn behind. No shoes, no other feet, no faces, no blood.
+- **Shot 3 (at "Then he turned", zoom in):** Medium shot taken outdoors from the edge of the lawn near the house, the camera at chest height facing Mr. Dale about four metres away. Mr. Dale, alone, the only person in the frame, visible from the knees up: an older man with thin grey hair, a plaid bathrobe hanging open over a white undershirt, grey mottled skin, his head tilted far onto his right shoulder at a wrong angle, arms hanging loose. His milky white eyes have just turned toward the camera. Behind him, two sprinklers spray arcs of water across the wet lawn, and his house with a low hedge stands in the background. Morning sunlight from the left, out of frame, lights one side of his face. No blood on him yet, no other people, no text.
+- **Camera:** zoom in
 
 ### Scene 13 · 1:25.5–1:32.5
-- **Image:** Nora hurrying Eli across a driveway toward a silver sedan, her hand on his back, a bag over her shoulder, two people, her forearms bare, morning light
-- **Voice:** Keys. Bag. Eli. Thirty seconds to the car. I made it twenty-eight.
-- **SFX:** Running footsteps on concrete, keys jangling, sirens
-- **SFX 2 (at "car", 1s):** a car door yanked open
+- **Image:** Wide shot taken from the end of the driveway at the street, the camera at standing height facing the house. The 2009 silver sedan is parked nose-first toward the garage, its trunk toward the camera; the driver's side is on the left of the frame, the passenger side on the right. Two people, Nora and Eli, hurry up the right side of the car toward its open right rear door, seen from behind and slightly to the side. Eli in front, in his oversized red rain jacket, the yellow walkie-talkie swinging on its lanyard. Nora right behind him in short-sleeved navy scrubs, forearms bare and unbandaged, her left hand pushing on his back, a black nurse's bag over her right shoulder, car keys in her right hand. Behind them, the front door of the house hangs open. Low morning sun from the left, out of frame, long shadows. No other people, no text.
+- **Voice:** She grabbed the keys, her bag and Eli, and she made it to the car, just.
+- **Ambience:** Suburb morning
+- **SFX:** Running footsteps on a concrete driveway, a woman's quick sneakers slapping the ground in a panicked sprint with a child's lighter quicker steps beside her, close and urgent outdoors, early morning, no voices, no music
+- **SFX 2 (at "keys", 1.5s):** A bunch of car keys jangling hard in a running woman's hand, bright metallic rattling of several keys on a ring, close and fast, outdoors, no voices, no music
+- **SFX 3 (at "car", 1s):** A car door yanked open hard, the sharp mechanical clunk of the handle and latch and the hinge swinging wide, an older sedan, close and urgent outdoors, no voices, no music
+- **SFX 4 (from 0s, 7s, volume 60%):** Emergency sirens wailing in the distance across a suburb, a constant faraway rise and fall of tones under the action, thin and outdoors, no traffic, no music, no voices
+- **Shot 2 (at "I made it", zoom in):** Medium shot taken from outside the car beside the open right rear door, the camera at adult chest height looking in across the back seat. Eli, alone, the only person in the frame, scrambles on his knees into the booster seat on the near side of the back seat, twisting to sit, both arms (two hands) hugging the yellow toy walkie-talkie to his chest, eyes wide. Oversized red rain jacket, green dinosaur T-shirt, curly light-brown hair. Worn grey cloth seat; crumpled paper wrappers and a brown paper bag on the floor. Behind him, the empty far rear seat and the closed far rear window with the neighbour's house beyond. The backs of the front seats and their headrests at the right edge of the frame. Morning sunlight through the far windows. No adults, no hands other than Eli's, no text.
+- **Camera:** pan left → right
 
 ### Scene 14 · 1:32.5–1:39.5
-- **Image:** Close-up of a grey-skinned hand gripping Nora's left forearm against the car door frame, her scrubs sleeve, morning light
-- **Voice:** [gasps] He came over the hood. I put my arm between him and Eli.
-- **SFX:** A struggle at the car door, ragged groaning
-- **SFX 2 (at "hood", 1s):** a body slamming onto a car hood
+- **Image:** Close-up taken outside the car beside the open right rear door, the camera at chest height facing the door opening. Nora's bare left forearm (one arm, her left hand clenched into a fist) runs across the frame from the left edge, braced against the silver-painted edge of the door frame. Clamped around the middle of her forearm is one grey-skinned hand reaching in from the right edge of the frame: an old man's right hand, mottled, its dirty yellowed nails digging into her skin, the frayed cuff of a plaid bathrobe sleeve at his wrist. Exactly two hands in the frame. The short navy sleeve of her scrubs at the far left edge. Through the door opening behind, the blurred grey cloth of the back seat. Bright morning sunlight from above left, out of frame, hard shadows. No bite or blood yet, no faces, no third hand, no text.
+- **Voice:** [gasps] He came over the hood, and she put her arm between him and Eli.
+- **Ambience:** Suburb morning
+- **SFX:** Ragged, wet groaning of an infected man in a violent struggle, guttural gasping snarls and choked growls right up close, inhuman and frantic, outdoors beside a car, no words, no screaming, no music
+- **SFX 2 (from 0.4s, 3s):** A desperate physical struggle against a car door, bodies shoving and bumping against sheet metal, clothing scuffing and a hand slapping the door frame, close, rough and chaotic, outdoors, no voices, no music
+- **SFX 3 (at "hood", 1.2s):** A grown man's body slamming hard onto the hood of a sedan, a heavy dull thud and the sheet metal buckling with a hollow boom, violent and close, outdoors, no voices, no music
+- **Shot 2 (at "Eli", still):** Medium close-up taken from outside the car, the camera at window height facing the closed right rear side window from about a metre away. Through the glass, Eli, alone, sits in his booster seat in the back seat: eyes squeezed tightly shut, mouth wide open screaming, both hands pressed flat over his ears (two hands), shoulders hunched up. Oversized red rain jacket, the yellow walkie-talkie on its lanyard on his chest. Behind him, the far rear window and blurred trees. A faint reflection of bright sky on the glass, but no reflected figures. The silver window frame and door pillar border the image. Morning sunlight from behind the camera lights his face. No adults inside or outside the car, no blood, no text.
+- **Camera:** zoom in
 - **Shake:** heavy
 
 ### Scene 15 · 1:39.5–1:44.5
-- **Image:** Extreme close-up of a bite wound on Nora's left forearm, torn scrubs sleeve, blood, cold light
-- **Voice:** Seven-forty A.M. [whispers] Bitten.
-- **SFX:** Sudden silence, a high ringing tone in the ears
+- **Image:** Extreme close-up taken from directly above, the camera looking straight down at Nora's left forearm, held palm-side up across the frame from the left edge (elbow) to the right edge (wrist). On the soft inner forearm, a fresh human bite wound: a ragged crescent of torn skin and tooth marks, dark blood welling from it and running in two thin lines around the side of the arm, the skin around it reddened. At the very left edge, the torn hem of her navy scrubs sleeve. Behind the arm, out of focus, the flat grey concrete of the driveway. Cold flat light from an overcast sky above, no warm tones, no sunlight. Nora's one arm only, no hand gripping it, no other people, no bandage yet, no text.
+- **Voice:** Seven-forty in the morning, [whispers] and she'd been bitten.
+- **SFX:** A thin high-pitched ringing tone in the ears after a shock, like tinnitus after a loud blast, a pure steady whine around eight kilohertz with everything else gone silent, disorienting and cold, slowly fading at the end, no other sounds, no music
+- **Camera:** still
 - **Title:** 7:40 AM
 - **Notes:** [interrupt: everything drops to a ringing silence]
 
 ### Scene 16 · 1:44.5–1:53
-- **Image:** View from the front seat into the back of the car: Eli alone in his booster seat, eyes squeezed shut, both hands pressed over his ears
-- **Voice:** Eli was in the back seat. Eyes shut. Hands over his ears against the sirens. [pause] Did he see?
-- **SFX:** Car interior, muffled groaning outside the glass, her fast breathing
-- **Shot 2 (at "Did"):** Nora's eyes in the rearview mirror, Nora alone, wide and frightened, watching the back seat
-- **References:** Corolla interior
+- **Image:** Medium shot taken from between the front seats of the moving car, the camera at seat-back height facing backward into the back seat. The back seat fills the frame with the rear window behind it. Looking backward flips the sides: Eli's booster seat (the car's right rear) is on the LEFT of the frame, and the empty left-rear seat is on the right. Eli, alone, the only person in the frame, in his booster seat: eyes squeezed shut, both hands pressed over his ears (two hands), knees drawn up, oversized red rain jacket, the yellow walkie-talkie on his chest. Crumpled paper wrappers and a brown paper bag on the floor. Through the rear window, a blurred suburban street receding. Grey-white morning daylight from the rear and side windows. The edges of the front seats at the bottom corners. No adults, no blood, no text.
+- **Voice:** Eli sat in the back with his eyes shut and his hands over his ears. [pause] Did he see?
+- **Ambience:** Car on the road
+- **SFX:** Muffled guttural groaning heard from inside a closed moving car, several infected people outside the windows, low moans and snarls dulled by the glass, close and menacing, no words, no music
+- **SFX 2 (from 0s, 6s):** A frightened woman's fast, shallow breathing in the driver's seat, quick ragged inhales and exhales, close-miked inside a car, tense and panicked, no words, no crying, no music
+- **Shot 2 (at "Did", zoom in):** Close-up of the rearview mirror in daylight, taken from the front passenger seat, the camera facing forward and slightly left, up toward the mirror at the top centre of the windshield. The mirror fills the middle of the frame. Inside it, a narrow reflected strip of Nora's face: only her two brown eyes and brows, wide and frightened, glancing toward the back seat, dark circles beneath them, a loose strand of dark hair. Around the mirror, the windshield shows a blurred suburban road and pale morning sky ahead, the crack across its upper right. Soft daylight through the windshield lights the mirror's frame and her reflected eyes. Nora alone, seen only in the mirror. No face or body outside the mirror, no grey in her eyes, no second person, no text.
+- **Camera:** zoom out
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [open L3: did Eli see the bite?]
 
 ### Scene 17 · 1:53–2:00
-- **Image:** Low-angle close-up of Nora's two hands (two hands) wrapping white gauze tightly around her left forearm in the driver's seat
-- **Voice:** I wrapped it with gauze from my bag before he opened his eyes.
-- **SFX:** Car interior, muffled thumps on the car body
-- **SFX 2 (at "gauze", 1.5s):** gauze tearing
-- **References:** Corolla interior
+- **Image:** Low-angle close-up taken from the front passenger seat, the camera low at lap height facing left toward the driver's seat. Both of Nora's hands (two hands), in her lap: her left forearm held out palm-up, the bite wound partly covered as her right hand winds a roll of white gauze tightly around the middle of the forearm, the clean white layers wrapping over a little seeping blood. Navy scrubs trousers below; the lower rim of the steering wheel crosses the top of the frame. Behind her hands, the driver's door with its armrest, and above it the driver's side window with grey morning daylight. An open black nurse's bag on the passenger seat in the lower right foreground. Lit by grey morning daylight from the driver's side window at the left. No face, no gauges, no third hand, no text on the gauze packet.
+- **Voice:** She wrapped it with gauze from her bag before he opened his eyes.
+- **Ambience:** Car on the road
+- **SFX:** Irregular muffled thumps on the outside of a car body, fists and bodies hitting the doors and roof as the car pulls away, dull hollow knocks heard from inside, getting fewer and fainter, no voices, no music
+- **SFX 2 (at "gauze", 1.5s):** A strip of medical gauze torn quickly from a roll, a short fibrous ripping sound, close-miked and dry inside a car, no voices, no music
+- **Shot 2 (at "before he", still):** Rearview mirror shot in daylight: the camera just behind and above the driver's seat, facing forward at the rearview mirror at the top centre of the windshield. The mirror fills the middle of the frame. In its reflection, the back seat: Eli, alone, in his booster seat, which appears on the RIGHT side of the reflection (the empty seat behind the driver on the left), his eyes still squeezed shut and both hands still pressed over his ears (two hands), oversized red rain jacket, the yellow walkie-talkie on his chest. Behind him in the reflection, the rear window and a receding street. Around the mirror, the windshield shows a blurred suburban road and bright grey morning sky, the crack across the upper right. Morning daylight fills the car. Nora not visible, no second child, no text.
+- **Camera:** pan left → right
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 18 · 2:00–2:07
-- **Image:** Wide shot of the silver sedan reversing fast out of the driveway into the street, the man in the bathrobe standing on the lawn behind it, morning light
-- **Voice:** I told him Mister Dale was sick. [pause] That was the first lie.
-- **SFX:** Engine revving, tires on asphalt, sirens fading
+- **Image:** Wide shot taken from the far side of the street, the camera at standing height facing the house. In the middle of the frame, the 2009 silver sedan reverses fast out of the driveway into the street, its trunk swinging out toward the left of the frame, front wheels turned, a spray of grit and tyre smoke behind the rear tyre. The driver is only a dark shape behind the glass. Behind the car, on the wet lawn beside the driveway, Mr. Dale stands alone: grey hair, open plaid bathrobe, barefoot, head tilted, arms hanging, facing the car, a sprinkler spraying beside him. The front door of the house hangs open. Low morning sun from the left, out of frame, long shadows across the lawn. No other people, no other moving cars, no text or house numbers.
+- **Voice:** She told him Mister Dale was sick. [pause] That was the first lie.
+- **Ambience:** Car on the road
+- **SFX:** An older sedan's engine revving hard and pulling away from a driveway, the engine climbing through the gears and tires rolling fast on asphalt, heard from across the street and moving away into the distance, no music, no voices
+- **SFX 2 (from 0s, 7s, volume 60%):** Emergency sirens far away across a suburb, slowly fading into the distance, thin and outdoors, no traffic, no music, no voices
+- **Shot 2 (at "That was", zoom in):** Close-up taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, the only person in the frame, head and shoulders, in three-quarter profile facing the windshield on the right of the frame; her eyes are lifted up and to the right toward the rearview mirror (out of frame at the top right), jaw clenched, lips pressed together. Charcoal-grey zip hoodie, open, over navy scrubs; messy low bun with loose strands, dark circles. Behind her, the driver's side window at the left of the frame with a blurred passing street. The top of the steering wheel rim at the bottom edge. Morning daylight pours through the side window behind her, rimming her cheek and hair; softer light from the windshield lights her face. No gauges beside her head, no other person, no text.
+- **Camera:** pan right → left
 - **Notes:** Music: a single low piano note at "lie".
 
 ### Scene 19 · 2:07–2:15
-- **Image:** Close-up of Nora's thumb pressing the button of the black dictaphone, her other hand on the steering wheel, a blurred road ahead in morning light
-- **Voice:** So I did what I do at work. I started a chart. [pause] On myself.
-- **SFX:** Car driving on a highway, steady road noise
-- **SFX 2 (from 0s, 0.5s):** a dictaphone record button clicking
-- **References:** Corolla interior
+- **Image:** Close-up taken from the front passenger seat, the camera at shoulder height facing forward and to the left, toward the steering wheel and windshield. In the lower foreground, Nora's right hand (one hand) holds the small black dictaphone, her thumb pressing its record button, its tiny cassette window visible. Beyond it, her left hand (the second hand) holds the top left of the steering wheel, the clean white gauze bandage on her left forearm showing below the pushed-up sleeve of her charcoal-grey hoodie. Through the windshield ahead, a blurred empty two-lane road and fields in soft grey morning light, the crack across the windshield's upper right. Lit by daylight through the windshield. Exactly two hands. No face in the frame, no gauges beside her, no readable text on the dictaphone.
+- **Voice:** So she did what she did at work and started a chart, [pause] on herself.
+- **Ambience:** Car on the road
+- **SFX 2 (from 0s, 0.8s):** A single small plastic record button pressed on a cheap handheld cassette dictaphone, one crisp mechanical click, recorded very close and dry inside a car, quiet and intimate, no tape hiss, no music, no voices
+- **Shot 2 (at "On myself", zoom in):** Extreme close-up taken from the front passenger seat, the camera close to Nora at mouth height, facing left toward her. In sharp focus in the foreground, the top of the small black dictaphone held in her right hand (one hand): its tiny red record light glowing on, the edge of the cassette window beside it. Just behind it, soft and out of focus, Nora's slightly parted lips and chin, speaking into it. Beyond her, the blurred driver's side window with grey morning daylight. Daylight from that window behind her, and soft light from the windshield on the right; the red light casts a tiny glow on her lower lip. Nora alone, only her lower face and one hand. No eyes, no gauges, no readable text or numbers on the dictaphone.
+- **Camera:** pan left → right
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Setup: the tapes are the narration.
 
 ### Scene 20 · 2:15–2:23
-- **Image:** A hospital corridor at night lined with gurneys, each holding a figure under a white sheet, flickering fluorescent lights, nobody standing
-- **Voice:** Forty bitten patients in three days. Every one turned at about seventy-two hours.
-- **SFX:** Hospital corridor room tone, buzzing fluorescent tubes, distant alarms
+- **Image:** Wide shot taken from the middle of a long hospital corridor at night, the camera at standing height facing straight down its length toward a dark far end. Gurneys line both walls nose to tail, receding into the distance, each holding a still figure completely covered by a white sheet. A pale green-grey linoleum floor with long reflections, handrails along the walls, closed doors. Overhead, rectangular fluorescent ceiling panels run down the centre: most glow cold white-green, one in the middle distance flickers half-dark, and the far end of the corridor sinks into shadow. Cold and empty, nobody standing, no staff. Sheets cover every figure completely. No faces, no blood, no readable signs, text or numbers on walls or doors.
+- **Voice:** Every bitten patient she'd seen that week had turned within about three days.
+- **Ambience:** ER flashback
+- **Shot 2 (at "Every one", pan top → bottom):** Close-up taken beside a hospital gurney at waist height in the night corridor, the camera facing the gurney's side. A white sheet covers a body on the gurney, filling the top of the frame. From under the sheet's edge, one pale grey hand hangs down limp (one hand only), fingers slightly curled, nails dark, a white plastic hospital wristband around the wrist with no readable writing. The steel side rail of the gurney runs across the frame above the hand. Behind, out of focus, more sheet-covered gurneys along the wall. Cold flickering fluorescent light from the ceiling above, out of frame, casts a hard shadow of the hand downward. Nobody standing, no faces, no blood, no text or numbers.
 - **Camera:** pan left → right
 - **Title:** 72 HOURS
 - **Notes:** [interrupt: flashback cut to the ER]
 
 ### Scene 21 · 2:23–2:31
-- **Image:** An empty ER bay at night, a heart monitor glowing green beside a single gurney, leather restraints hanging loose from the rails
-- **Video:** The empty restraints sway very slightly, the monitor glow pulses, dust drifts through the light; very slow push in. No cuts, no new objects.
-- **Voice:** Fever first. Then the shakes. Then the words go. Then the hunger. Then the heart stops… and restarts.
-- **SFX:** ER room tone, a heart monitor beeping, slowing down
-- **SFX 2 (at "stops", 2s):** a heart monitor flatline tone
+- **Image:** Wide shot of an empty emergency room bay at night, taken from its open curtain at standing height, the camera facing into the bay. A single hospital gurney stands in the centre with a rumpled white sheet; thick brown leather restraint straps hang loose from both side rails, their buckles open. On a wall arm at the right of the frame, a heart monitor glows green, its screen showing a faint trace and no numbers. Behind the gurney, a pale wall with oxygen outlets and an empty IV pole. The curtains on both sides pulled half-open. The only light: the monitor's green glow from the right, and one dim fluorescent panel overhead, out of frame. No people, no blood, no readable text or numbers.
+- **Voice:** Fever first, then the shakes, then the words go, then the hunger. Then the heart stops… and restarts.
+- **Ambience:** ER flashback
+- **SFX:** A hospital heart monitor beeping in an empty room, clean electronic beeps that start at a normal pace and slowly get further apart, cold and clinical with a faint room reflection, no voices, no music, no alarms
+- **SFX 2 (at "stops", 2.5s):** A hospital heart monitor flatline, one continuous high electronic tone, steady and cold, clinical and final, heard in an empty room, no voices, no music
+- **Shot 2 (at "Then the words", pan top → bottom):** Close-up taken at the height of a gurney's side rail in the dark ER bay, the camera facing the rail from a metre away. Two loose brown leather restraint straps hang from the steel rail, their buckles open, the leather torn ragged at one end and deeply scratched and gouged, as if clawed. The edge of a white sheet at the top of the frame. Behind, out of focus, the floor and the base of the curtain. Lit from the right by the green glow of a heart monitor, out of frame to the right, giving the steel a green sheen; deep shadow elsewhere. Empty bay, no people, no hands, no blood, no text.
+- **Shot 3 (at "Then the heart", still):** Extreme close-up of a heart monitor screen in a dark emergency room, the camera directly in front of the screen and level with it. The black screen fills most of the frame, framed by its dark grey plastic casing. A single flat bright green line runs straight across the middle of the screen from left to right, with a faint glow around it. No other traces. The green light from the screen is the only light, falling softly on the edges of the casing; the room around is black. No numbers, letters or symbols anywhere on the screen or casing, no people, no reflections of faces, no text.
+- **Shot 4 (at "and restarts", still, next frame):** The same extreme close-up of the heart monitor screen, same camera position and framing, a moment later: the camera directly in front of the screen and level with it, the black screen filling most of the frame inside its dark grey plastic casing. What changed: the single bright green line, still flat across the left half of the screen, now suddenly spikes up on the right half into three tall jagged heartbeat peaks. Everything else is identical: the faint glow around the line, the green light falling softly on the edges of the casing, the black room around. No numbers, letters or symbols anywhere, no people, no reflections of faces, no text.
+- **Camera:** zoom in
 
 ### Scene 22 · 2:31–2:38
-- **Image:** Nora alone driving, her face lit by morning light through the side window, jaw set, eyes fixed on the road
-- **Voice:** Seventy-two hours. That's Tuesday, seven-forty A.M. I had until then.
-- **SFX:** Car on a highway, road noise
-- **References:** Corolla interior
+- **Image:** Medium close-up taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, the only person in the frame, driving, seen from the chest up in three-quarter profile, facing the windshield on the right of the frame, eyes fixed on the road ahead, jaw set. Both hands on the steering wheel (two hands), its rim across the lower part of the frame in front of her; the clean white gauze bandage on her left forearm visible on the far side of the wheel. Charcoal-grey zip hoodie, open, left sleeve pushed up, over navy scrubs. Behind her, the driver's side window at the left of the frame with blurred grey fields. Grey overcast morning daylight through that side window edges her cheek and loose hair; soft fill from the windshield. No gauges beside her head, no other person, no text.
+- **Voice:** Seventy-two hours from the bite meant Tuesday morning. [pause] She had until then.
+- **Ambience:** Car on the road
+- **Shot 2 (at "I had until", still):** Close-up taken from the front passenger seat, the camera at steering-wheel height facing left at the right side of the wheel. Nora's right hand only (one hand) grips the right side of the steering wheel rim, her wrist turned slightly toward the camera. On the wrist, a plain wristwatch with a black strap and a white face marked only by simple tick marks, no numerals: the minute hand points exactly at the eight o'clock mark and the hour hand sits two-thirds of the way from the seven mark to the eight mark, showing seven-forty. The cuff of her charcoal-grey hoodie sleeve at the right edge. Behind the hand, blurred, the dark wheel spokes and the driver's door. Grey overcast morning daylight from the windshield and side window. No bandage on this arm, no second hand, no numbers or text anywhere.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 23 · 2:38–2:46
-- **Image:** Close-up of a folded paper road map on Nora's lap, her finger tracing a long route north, the map's lines blurred and unreadable, morning light
-- **Voice:** The radio said Fort Calder. An army camp, two hundred and twelve miles north.
-- **SFX:** Car on a highway, car radio hiss and crackle
+- **Image:** Close-up taken from the front passenger seat, the camera at shoulder height looking down and to the left at Nora's lap. A folded paper road map lies open across her lap, over her navy scrubs trousers. The index finger of her right hand (one hand) traces a long route from the bottom of the map toward the top (north) along a thin road line. Her left hand (the second hand) rests on the lower rim of the steering wheel at the top of the frame, the white gauze bandage on her left forearm showing. The map shows soft blurred roads, rivers and green areas; every line and label is blurred and unreadable. Grey overcast morning daylight from the windshield above and the driver's side window at the left. Exactly two hands. No face, no gauges, no readable text, numbers or place names.
+- **Voice:** The radio said to go to Fort Calder, an army camp a long way north.
+- **Ambience:** Car on the road
+- **SFX:** An old car radio between stations, soft hissing static with crackles and faint fragments of a broadcast coming and going, tinny dashboard speaker heard inside a moving car, no clear words, no music
+- **Camera:** pan bottom → top
 - **Title:** FORT CALDER · 212 MI
 
 ### Scene 24 · 2:46–2:55
-- **Image:** Distant wide shot of a military perimeter at dawn, a double fence with razor wire, floodlights on poles, a sandbagged gate, empty field in front
-- **Voice:** Next intake: Tuesday, six A.M. The gate opens for ten minutes. [pause] An hour and forty minutes before I turn.
-- **SFX:** Wind over an open field, a diesel generator far away
-- **Shot 2 (at "An hour"):** Close-up of Nora alone at the wheel in grey morning light, eyes fixed on the road, jaw tight
+- **Image:** Distant wide shot at dawn (matching the Fort Calder gate reference), taken from the far edge of a wide field of dead grass, the camera at standing height facing a military perimeter about three hundred metres away. A double chain-link fence topped with coiled razor wire stretches across the whole frame from left to right, tall floodlight poles along it, their lights still burning white. In the centre, a sandbagged vehicle gate with a heavy steel sliding gate, a small scanner booth and a diesel generator beside it. The empty field of pale dead grass fills the foreground and middle ground. Behind the fence, low grey army tents and a watchtower. Pale cold dawn light low from the right horizon, out of frame, thin mist over the field. No people, no vehicles in the field, no flags, signs, text or numbers.
+- **Voice:** The next intake was Tuesday at six A.M., when the gate opened for ten minutes. [pause] An hour and forty minutes before she'd turn.
+- **Ambience:** Car on the road
+- **SFX:** Wind blowing steadily across a wide open field of dead grass at dawn, a soft hollow rush with gentle gusts, cold, empty and exposed, no birds, no voices, no music
+- **SFX 2 (from 0s, 10.5s, volume 60%):** A diesel generator droning far away across an open field, a low steady mechanical rumble with a faint chug, distant and constant, no voices, no music
+- **Shot 2 (at "An hour", zoom in):** Close-up taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, the only person in the frame, head and shoulders, in three-quarter profile facing the windshield on the right of the frame, eyes fixed on the road ahead, jaw tight, lips pressed, a faint crease between her brows. Messy low bun with loose strands, dark circles, freckles; open charcoal-grey hoodie over navy scrubs. Behind her, the driver's side window at the left of the frame, flat grey sky and blurred bare fields beyond. The top of the steering wheel rim crosses the lower edge. Flat grey overcast morning daylight through the windshield lights her face evenly, with cooler light from the side window behind her. No gauges beside her head, no other person, no text.
+- **Camera:** pan left → right
 - **References:** Fort Calder gate
 - **Title:** TUESDAY 6:00 AM
 - **Notes:** Only one intake before she turns: explains why they wait at the farm.
 
 ### Scene 25 · 2:55–3:04
-- **Image:** Close-up of a soldier's gloved hand holding a handheld thermal scanner pointed toward the camera, the soldier's body out of focus behind it, dawn light
-- **Voice:** Everyone gets a thermal scan. One hundred point four, and you're turned away. [pause] The radio said one more thing.
-- **SFX:** Wind
-- **SFX 2 (at "four", 0.5s):** a short electronic scanner beep
-- **Shot 2 (at "The radio"):** Close-up of the silver sedan's glowing dashboard radio, Nora's hand turning the volume knob up, grey morning light, Nora's one hand only
+- **Image:** Close-up taken at adult head height in front of a soldier at a checkpoint, the camera facing him. In sharp focus in the foreground, the soldier's right hand (one hand) in a black tactical glove holds a white handheld thermal scanner gun, its nozzle pointed straight at the camera lens, its small screen dark and blank. Behind the hand, out of focus, the soldier's body: olive drab fatigues, a helmet and a face mask, his features indistinct. Behind him, blurred: chain-link fence, sandbags and a tall floodlight pole glowing white. Pale cold dawn light from behind the soldier, out of frame, rims the scanner; floodlight glare above. No second hand, no rifle, no clear face, no readable text, numbers or insignia.
+- **Voice:** Everyone got a thermal scan, and anything over a hundred point four got you turned away. [pause] The radio said one more thing.
+- **Ambience:** Car on the road
+- **SFX 2 (at "four", 0.6s):** A short electronic beep from a handheld infrared thermometer scanner, one clean high digital tone, close and clinical, outdoors at a checkpoint, no voices, no music
+- **Shot 2 (at "The radio", still):** Close-up taken from the front passenger seat, the camera at knee height facing forward and left toward the centre of the dashboard. In the middle of the frame, the car radio set into the centre of the dashboard between the two front seats, its small display glowing soft amber and blurred, with no readable characters. Nora's right hand only (one hand) reaches in from the left and turns the round volume knob clockwise between her thumb and two fingers, the cuff of her charcoal-grey hoodie at her wrist. Below the radio, the top of the gear stick. Above, the bottom of the windshield with flat grey sky. Grey overcast morning daylight from the windshield; the amber display glows on her fingertips. No gauges, no second hand, no readable text or numbers.
+- **Camera:** zoom in
 - **Title:** 100.4°F
 
 ### Scene 26 · 3:04–3:12
-- **Image:** Close-up of a car radio glowing amber in a dark dashboard, Nora's hand turning the volume knob
-- **Voice:** [quietly] Bites caught within seventy-two hours could be treated. [pause] I wanted it to be true so badly.
-- **SFX:** Car radio hiss, road noise
-- **References:** Corolla interior
+- **Image:** Extreme close-up taken from the front passenger seat, the camera close to the centre of the dashboard and level with the car radio, facing it. The radio's small display glows warm amber, blurred, with no readable characters; around it the dashboard plastic is dark grey, nearly black in the shadow under the windshield. Nora's right hand only (one hand) enters from the left of the frame, her thumb and two fingers on the round volume knob, turning it up; the amber glow lights her fingertips and knuckles. Short plain nails, olive skin. Faint grey overcast daylight from the windshield, out of frame above, barely reaches the dashboard, so the radio glow is the brightest thing in the frame. No gauges, no second hand, no readable text, numbers or logos.
+- **Voice:** [quietly] Bites caught within seventy-two hours could be treated. [pause] She wanted it to be true so badly.
+- **Ambience:** Car on the road
+- **SFX:** An old car radio hissing softly, a gentle steady static from a tinny dashboard speaker with occasional faint crackles, heard close inside a moving car, no clear words, no music
+- **Shot 2 (at "I wanted", zoom out):** Close-up taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, the only person in the frame, head and shoulders, her face turned slightly toward the camera and down toward the radio as she drives, listening. Her eyes shine wet with hope, a tired half smile at one corner of her mouth, dark circles, freckles, loose strands of hair. Open charcoal-grey hoodie over navy scrubs. Behind her, the driver's side window at the left of the frame, flat grey morning sky and blurred fields. Warm amber glow from the car radio, out of frame below the lower right edge, lights her chin and cheek from below and in front; cool grey daylight from the side window behind her. The top of the steering wheel rim at the bottom edge. No gauges beside her, no other person, no text.
+- **Camera:** pan left → right
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [open L4: is the cure at Fort Calder real?]
 
 ### Scene 27 · 3:12–3:18
-- **Image:** Extreme close-up of a car fuel gauge, the needle sitting low, dim dashboard light
-- **Voice:** Three-eighths of a tank. About a hundred and forty miles.
-- **SFX:** Car interior, road noise, the indicator ticking
-- **References:** Corolla interior
+- **Image:** Extreme close-up taken from the driver's seat, the camera looking forward through the steering wheel, between its spokes, at the instrument cluster in the dashboard behind it. One round fuel gauge fills most of the frame, its black dial marked only with plain white tick marks and a small fuel-pump icon, no letters or numbers. The orange-lit needle sits low, at about three-eighths: below the halfway mark, a little above the empty end at the bottom. The curved rim of the steering wheel crosses the top left corner, out of focus. The gauge is dimly backlit in orange; above the hooded dashboard, faint grey daylight. The neighbouring gauge is cut off at the frame edge, blurred. No hands, no readable text, letters, numbers or logos.
+- **Voice:** The needle was already low, and she didn't know if it would get them there.
+- **Ambience:** Car on the road
+- **SFX:** An old sedan's turn indicator ticking steadily, a dry plastic relay click about once a second from behind the dashboard, close and even, heard from the driver's seat, no engine roar, no music, no voices
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 - **Title:** FUEL: 3/8
 
 ### Scene 28 · 3:18–3:25
-- **Image:** Wide aerial shot of a four-lane interstate jammed with abandoned cars, doors hanging open, black smoke rising on the horizon, grey morning
-- **Voice:** Hour two. The interstate was a parking lot. Doors open. Engines still running.
-- **SFX:** Wind over the highway, idling engines, a car alarm far away
+- **Image:** Wide aerial shot taken from about thirty metres above the median of a four-lane interstate, the camera facing north along the road toward the horizon. Both carriageways are jammed solid with abandoned cars, vans and a truck, bumper to bumper, many with their doors hanging open, some angled across the lanes, one on the grass shoulder. The road runs from the bottom of the frame to a vanishing point near the centre. On the horizon, two columns of thick black smoke rise into a low flat grey sky. Bare fields on both sides. Flat grey overcast morning light, almost no shadows. No people visible, no readable signs, licence plates, text or numbers.
+- **Voice:** By the second hour the interstate was a parking lot, doors open and engines still running.
+- **Ambience:** Jammed interstate
+- **Shot 2 (at "Doors open", zoom in):** Close-up taken on the asphalt behind and to the left of an abandoned car on the interstate, the camera low at knee height, a rear three-quarter view. The car's driver's door, on its left side, hangs wide open, the empty driver's seat visible inside. Pale exhaust drifts from the tailpipe at the right of the frame, the engine still running. In the left foreground on the asphalt, a single small child's sneaker lies on its side. Behind, out of focus, more stopped cars stretch away. Flat grey overcast morning light from above. No people, no blood, no readable licence plate, text or numbers.
 - **Camera:** pan left → right
 - **Title:** HOUR 2
 
 ### Scene 29 · 3:25–3:32
-- **Image:** View through the cracked windshield of the silver sedan: between the stopped cars ahead, several grey-skinned figures turning their heads toward the camera, thirty metres away, grey daylight
-- **Voice:** And between the cars, people who weren't people anymore. Turning toward my engine.
-- **SFX:** Car interior, engine idle, wind
-- **SFX 2 (at "Turning", 2s):** many low groans rising together
-- **References:** Corolla interior
+- **Image:** View from the back seat looking forward (matching the car interior reference), the camera centred between the two front seats at seated head height, facing forward through the windshield. In the foreground, the backs and headrests of both front seats; Nora in the driver's seat on the left, seen from behind, the back of her head and her right shoulder, both hands on the wheel. Ahead, the windshield with the crack running across its upper right and the rearview mirror at the top centre; the dashboard across the lower part of the frame. Through the glass, the interstate jammed with stopped cars; about thirty metres ahead, between them, five grey-skinned figures in torn clothes turn their heads toward the car. Flat grey daylight outside, the car interior dim. No Eli visible, no readable text or licence plates.
+- **Voice:** And between the cars were people who weren't people anymore, turning toward her engine.
+- **Ambience:** Jammed interstate
+- **SFX 2 (at "turning", 2.5s):** Many low guttural groans rising together across a jammed highway, dozens of infected voices moaning in a slow swell as they turn toward a sound, heard from inside a car, inhuman and dreadful, no words, no screaming, no music
+- **Shot 2 (at "Turning", still):** Close-up taken from the sedan's position, the camera at head height facing forward into the gap between two stopped cars. One grey-skinned face fills the centre of the frame, framed by the roof edge of a dark car on the left and the side of a white van on the right. A torn shirt collar, sagging grey mottled skin, dark veins at the temples, a slack mouth, matted hair; milky white eyes looking straight into the lens. Behind the face, blurred rows of stopped cars and a flat grey sky. Flat grey overcast daylight from above. The only figure in the frame. No windshield frame or car interior, no other figures, no readable licence plates or text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 30 · 3:32–3:38
-- **Image:** Eli alone in the back seat, eyes wide, whispering to himself and counting on his fingers, grey daylight through the window
-- **Voice:** [whispers] Eli started counting. Six. Seven. Eight.
-- **SFX:** Car interior, engine idle, groans getting closer
-- **References:** Corolla interior
+- **Image:** Close-up taken from between the front seats, the camera at seat-back height facing backward into the back seat. Eli's booster seat (the car's right rear) is on the LEFT of the frame. Eli, alone, the only person in the frame, head and chest, sitting in the booster seat, eyes wide and fixed ahead, whispering to himself. Both hands raised in front of his chest (two hands), counting on his fingers: all five fingers of one hand spread and three fingers up on the other. Oversized red rain jacket, green dinosaur T-shirt, the yellow walkie-talkie on its lanyard. Behind him, the right rear side window at the left edge and the rear window, both filled with flat grey daylight. The empty seat on the right of the frame. No adults, no text.
+- **Voice:** [whispers] Eli started counting. {Eli} [whispers] Six. Seven. Eight.
+- **Ambience:** Jammed interstate
+- **SFX:** Low guttural groans outside a parked car, several infected people moaning and shuffling closer, slowly getting louder, muffled by the closed windows, tense and dreadful, no words, no screaming, no music
+- **Shot 2 (at "Eight", still):** Extreme close-up taken from between the front seats, the camera facing backward at Eli's face from very close. Eli, alone, the only person in the frame: his face fills the frame from eyebrows to chin. Big brown eyes wide and unblinking, fixed ahead; his lips mid-word, shaping a number in a whisper, the gap in his front teeth showing. Curly light-brown hair at the top edge, the collar of his red rain jacket at the bottom edge. Flat grey daylight from the rear window behind him and the side window at the left of the frame, soft and cold on his face. No hands in frame, no adults, no text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Eli counts when he's scared (pays off: "I counted").
 
 ### Scene 31 · 3:38–3:45
-- **Image:** Close-up of Nora's hand slamming the gear stick into reverse, her bandaged forearm in frame
-- **Voice:** I reversed down the shoulder for half a mile. Didn't look back.
-- **SFX:** Car interior, groans outside
-- **SFX 2 (at "reversed", 2s):** engine roaring in reverse, tires screeching
-- **References:** Corolla interior
+- **Image:** Close-up taken from the front passenger seat, the camera at chest height angled down and to the left toward the gear stick between the two front seats. Nora's two hands are in the frame: her right hand grips the gear stick knob and shoves it hard backward into reverse, knuckles white; her left hand grips the steering wheel rim in the upper left background, slightly out of focus, her charcoal-grey hoodie sleeve pushed up so the clean white gauze bandage on her left forearm shows. Foreground: the gear stick and its worn black boot in the centre-bottom of the frame, the edge of the grey cloth driver's seat on the left. Background: the lower half of the steering wheel at upper left, the windshield above it showing flat grey daylight and the back of a stopped car. Light: grey overcast daylight from the windshield, out of frame above. No other person, no blood on the gauze, no readable letters or numbers on the gear selector or anywhere.
+- **Voice:** She reversed all the way back down the shoulder and didn't look back.
+- **Ambience:** Jammed interstate
+- **SFX:** Low guttural groans of infected people just outside a car, muffled by the glass, menacing and close, no words, no screaming, no music
+- **SFX 2 (at "reversed", 2.5s):** An older sedan's engine roaring in reverse at high revs, the strained whine of reverse gear climbing fast, heard from inside the car, urgent, no voices, no music
+- **SFX 3 (from 0.6s, 2s):** Car tires screeching and skidding on asphalt as a car reverses fast, a sharp rubber squeal, close and violent, no voices, no music
+- **Shot 2 (at "Didn't look", zoom out):** Taken from inside the silver sedan, the camera at headrest height directly in front of the rear window, facing backward out through the glass as the car reverses fast. The rear window's dark rubber frame borders the image; the tops of the two grey back-seat headrests sit along the bottom edge. Through the glass: the paved road shoulder rushing away from the camera, streaked with motion blur at the edges; a long line of abandoned, stopped cars along the right side of the frame, some with doors hanging open; a grass verge and a wire fence along the left. Far down the line, tiny between the stopped cars, two or three grey-skinned figures stand facing the car. Flat grey overcast daylight, no sun. No people inside the car visible, no driver, no faces close to the camera, no readable text or licence plates.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Shake:** light
 
 ### Scene 32 · 3:45–3:53
-- **Image:** Wide shot of the silver sedan alone on a narrow two-lane country road between empty harvested corn fields, flat overcast sky
-- **Voice:** Back roads. No people, no dead. But the back roads added thirty-eight miles.
-- **SFX:** Car passing on a country road, wind through dry corn stalks
+- **Image:** Wide shot taken from a low grassy rise beside the road, the camera at standing height facing the road side-on. The silver 2009 sedan is small in the middle of the frame, driving from left to right along a narrow two-lane country road that crosses the whole frame horizontally. Foreground: the dry stubble of a harvested corn field, cut stalks in rows running toward the road. Background: more empty harvested fields stretching flat to the horizon, a line of bare trees and a single row of power poles far off on the right. The car's headlights are off; its windows are dark and no one inside is visible at this distance. No other vehicles, no buildings, no people, no figures anywhere. Light: flat, even, overcast grey late-morning sky filling the top half of the frame, no visible sun, almost no shadows. No readable signs or text.
+- **Voice:** They took the back roads after that, with no people and no dead, but they added hours to the drive.
+- **Ambience:** Car on the road
+- **SFX:** Wind moving through tall dry corn stalks beside a country road, a soft papery rustle swelling and falling in gusts, wide and lonely, overcast afternoon, no birds, no vehicles, no voices, no music
 - **Camera:** pan left → right
 - **Title:** +38 MILES
 
 ### Scene 33 · 3:53–4:01
-- **Image:** Close-up of the paper road map on Nora's knee, a pencil circle around a small town, her finger tapping it, the lines unreadable
-- **Voice:** Two hundred fifty miles. A hundred forty in the tank. [pause] I needed gas by dark.
-- **SFX:** Car interior, road noise, paper rustling
+- **Image:** Close-up taken from the front passenger seat, the camera at shoulder height looking down and to the left into Nora's lap while she drives. Nora's two hands are in frame: a folded paper road map lies open across her right knee, on her navy blue scrub trousers, and the index finger of her right hand taps a small town circled in pencil near the centre of the map; her left hand stays on the steering wheel, of which only the lower rim and her fingers show in the top left corner. The map shows blurred roads, pale green and beige areas and a thin pencil circle, no readable names, numbers or lettering. Background, out of focus: the edge of the grey cloth driver's seat and the gear stick at the right edge. Light: grey overcast afternoon daylight from the windshield and driver's side window, out of frame above, soft on the paper. No gauges or dashboard in frame, no other person.
+- **Voice:** They'd never make it on what was left in the tank. [pause] She needed gas before dark.
+- **Ambience:** Car on the road
+- **SFX:** A folded paper road map being opened and handled in a woman's lap, crisp crackling and soft rustling of paper, close-miked inside a moving car, no voices, no music
+- **Shot 2 (at "I needed", pan left → right):** Taken from inside the car, the camera just behind the windshield at dashboard height, facing straight forward along the road. The silver hood fills the bottom strip of the frame; a thin crack runs across the upper right corner of the windshield; the edge of the rearview mirror hangs at the top centre. Ahead: an empty two-lane road running straight to the horizon between flat, empty harvested fields on both sides, a wire fence along the right. The sun is low ahead, just above the horizon slightly right of the road, a pale gold disc behind thin cloud, casting long shadows of fence posts toward the camera. Late afternoon: the sky gold near the horizon, grey above. No people, no figures, no other cars, no driver visible, no gauges or dashboard in frame, no readable signs.
+- **Camera:** zoom in
 - **Notes:** [open L5: where will they get gas?]
 
 ### Scene 34 · 4:01–4:09
-- **Image:** The rearview mirror reflecting Eli alone in the back seat, looking at his mother's bandaged arm, grey daylight
-- **Voice:** [nervous] Eli asked about my arm. I said I cut it on the car door.
-- **SFX:** Car interior, road noise
-- **References:** Corolla interior
+- **Image:** Rearview mirror shot: the camera just behind and above the driver's seat, facing forward at the rearview mirror at the top centre of the windshield. The rectangular mirror fills the middle of the frame; around it, out of focus, the windshield glass with grey sky and the crack across its upper right. In the mirror's reflection: the back seat with Eli alone, sitting in his booster seat on the RIGHT side of the reflection, the empty seat behind the driver on the left; curly light-brown hair, big brown eyes, oversized red rain jacket over a green dinosaur T-shirt, the yellow toy walkie-talkie on its lanyard. His head is turned and his eyes look down toward the left side of the reflection, toward the driver's seat, where his mother's bandaged arm is, out of the reflection. His face is worried, lips pressed together. Behind him the rear window shows flat grey daylight. Light: flat grey daylight through the car's windows. No driver or Nora visible, no other person, no readable text.
+- **Voice:** [nervous] When Eli asked about her arm, she said she'd cut it on the car door.
+- **Ambience:** Car on the road
+- **Shot 2 (at "I said", pan top → bottom):** Close-up taken from the front passenger seat, the camera at chest height facing left toward the driver's seat and the steering wheel. Nora's two hands only, no face: her left hand grips the far left side of the steering wheel rim and stays there; her right hand reaches across her body and tugs the charcoal-grey hoodie sleeve down over the clean white gauze bandage on her left forearm, the last strip of gauze still showing at the cuff. The steering wheel fills the centre of the frame; the gauges are hidden behind the wheel and not visible. Behind her arms: the grey cloth of the driver's seat and, at the left edge, the driver's side window with grey fields passing. Light: flat grey overcast daylight from the driver's side window on the left and the windshield on the right, out of frame. No blood on the gauze, no other person, no readable text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 35 · 4:09–4:16
-- **Image:** Establishing wide shot of the rural gas station at dusk, two dead pumps, a yellow school bus parked beside them, the shop window dark, no people
-- **Voice:** Hour nine. Dusk. A two-pump station. The pumps were dead.
-- **SFX:** Wind across an empty lot, a loose metal sign creaking, crows
+- **Image:** Establishing wide shot taken from the edge of an empty two-lane road, the camera at standing height facing across the forecourt of a small rural gas station. Middle of the frame: two old fuel pumps on a concrete island. On the right, parked beside the pumps, a yellow school bus seen side-on, its windows dark, its door shut. Background centre: the small single-storey shop building with peeling white paint and a wide dark shop window; an unlit sign on a pole at the left. Foreground: cracked asphalt with weeds in the seams. Light: dusk; the sun has just set behind the shop, the sky behind it fading from orange near the roofline to deep violet above; the forecourt lies in soft blue shadow; no lights on anywhere. No people, no figures, no other vehicles in view, no readable text on the sign, pumps or bus.
+- **Voice:** At dusk they found a little gas station, and the pumps were dead.
+- **Ambience:** Gas station at dusk
+- **Shot 2 (at "The pumps", still):** Close-up of a single old fuel pump on the gas station forecourt, taken from about one metre away at chest height, facing the pump's front. The pump fills the middle of the frame: its small display window dark and blank, its paint faded and scratched; the black rubber hose loops down from its side and the nozzle hangs in its cradle. Behind the pump, out of focus: the concrete island, part of the yellow school bus on the right, and the violet dusk sky. Light: fading dusk, cool blue ambient light from the sky above, a faint orange rim along the pump's top edge from the afterglow behind it. Nothing on the pump is lit. No people, no hands, no readable text, numbers, prices or logos on the pump.
+- **Camera:** pan left → right
 - **References:** Gas station
 - **Title:** HOUR 9
 
 ### Scene 36 · 4:16–4:23
-- **Image:** Close-up of the school bus fuel cap, a coiled rubber hose and an empty red plastic gas can on the ground beneath it, dusk light
-- **Voice:** But the school bus beside them had a full tank. And I had a hose.
-- **SFX:** Wind, the sign creaking
+- **Image:** Close-up taken low, at knee height, about one metre from the side of the yellow school bus at the gas station, the camera facing the bus side-on. Upper middle of the frame: the round metal fuel cap on the bus's yellow side panel, dusty and scratched. Directly below it on the cracked asphalt: a coiled length of black rubber hose and an empty red plastic gas can with a black spout, standing upright. The bus's black front tyre is at the left edge of the frame; the yellow side panel fills the whole background. Light: dusk, soft cool blue ambient light from the sky, out of frame above, and a warm orange afterglow reflecting on the yellow paint from the right, out of frame. No people, no hands, no readable text, letters or numbers on the bus or the can.
+- **Voice:** But the school bus beside them still had a full tank, and she had a hose.
+- **Ambience:** Gas station at dusk
+- **Camera:** pan top → bottom
 - **References:** Gas station
 
 ### Scene 37 · 4:23–4:31
-- **Image:** Nora crouched at the open rear window of the silver sedan, holding a small blue toy walkie-talkie, Eli inside holding his yellow one, two people, dusk
-- **Voice:** I gave Eli the rule. Two clicks means I'm here, I'm okay. [pause] No talking.
-- **SFX:** Wind, crows far off
-- **SFX 2 (at "Two", 1s):** two crisp walkie-talkie clicks
+- **Image:** Medium shot taken from outside the silver sedan on its passenger (right) side, the camera at crouching height about two metres away, facing the car's right rear door side-on. Two people. Nora crouches on the left of the frame beside the rear door, in profile facing right toward the open window, her right hand holding a small blue toy walkie-talkie up near her chin to show him, her left forearm with its clean white gauze bandage resting on her knee. Sweat shines on her face; charcoal-grey hoodie open over navy scrubs. In the centre-right, through the fully rolled-down rear window, Eli sits in his booster seat inside the car, facing her, holding his yellow toy walkie-talkie on its lanyard in both hands. Behind the car, out of focus: the gas station lot and the yellow school bus. Light: dusk, cool blue ambient sky light, a faint orange afterglow on the car's silver roof. No third person, no readable text.
+- **Voice:** She gave Eli the rule: two clicks meant I'm here, I'm okay. [pause] And no talking.
+- **Ambience:** Gas station at dusk
+- **SFX 2 (at "two", 1s):** Two crisp clicks from a toy walkie-talkie's talk button, two quick plastic clicks each with a tiny burst of static, close and clear, no voices, no music
+- **Shot 2 (at "Two clicks", still):** Extreme close-up of Nora's right hand only (one hand) holding a small blue toy walkie-talkie, taken from just in front of the walkie at hand height. Her thumb presses the push-to-talk button on the side of the walkie; the blue plastic is scuffed, with a short stubby antenna on top and a round speaker grille on the front. The hand and walkie fill the centre of the frame. Background, out of focus: the silver side of the sedan and the dark open rear window. Light: dusk, cool blue ambient light from the sky above, a faint warm orange edge on her knuckles from the afterglow on the right, out of frame. No bandage visible (it is her right hand), no second hand, no faces, no readable text or numbers on the walkie.
+- **Shot 3 (at "No talking", zoom in):** Close-up of Eli alone, taken from outside the car through the open right rear window, the camera at his eye level facing into the back seat. Eli sits in his booster seat in the centre of the frame, nodding seriously, chin tucked, eyes fixed on the camera, holding his yellow toy walkie-talkie flat against his chest with both hands (two hands), the lanyard round his neck. Curly light-brown hair, big brown eyes, oversized red rain jacket over a green dinosaur T-shirt. The edge of the window frame borders the left and bottom of the image. Behind him: the grey cloth back seat, the empty left rear seat and the far rear door window showing violet dusk sky. Light: dusk light coming in through the open window behind the camera, soft and cool on his face. No adult in the frame, no readable text.
+- **Camera:** pan left → right
 - **References:** Gas station
 - **Notes:** Setup: the two-click code (pays off at Hour 70 and Hour 79).
 
 ### Scene 38 · 4:31–4:38
-- **Image:** Nora alone kneeling beside the school bus, a rubber hose to her mouth, the red gas can between her knees, dusk
-- **Voice:** Siphoning is simple. You suck until you taste gasoline. Then you spit.
-- **SFX:** Wind, liquid gurgling into a plastic can
+- **Image:** Medium-wide shot taken beside the yellow school bus, the camera low at kneeling height about three metres away, facing the bus side-on; the bus's yellow side runs across the whole background. Nora, alone, kneels on the asphalt in the centre of the frame, in profile facing right toward the bus's open fuel filler. A black rubber hose runs from the filler down to her mouth: her right hand holds the hose end to her lips; her left hand, the forearm wrapped in clean white gauze, pinches the hose lower down. Her cheeks are hollowed, sucking. A red plastic gas can stands upright on the asphalt between her knees. Sweat on her forehead, loose strands from her low bun, charcoal-grey hoodie open over navy scrubs. Light: dusk, cool blue sky light from above, a faint orange afterglow from the left, out of frame. No other people, no readable text on the bus.
+- **Voice:** Siphoning is simple: you suck until you taste gasoline, then you spit.
+- **Ambience:** Gas station at dusk
+- **SFX:** Gasoline gurgling through a plastic siphon hose into a plastic jerry can, uneven glugging and trickling liquid, close-miked at ground level outdoors at dusk, steady, no voices, no music
+- **Shot 2 (at "Then you spit", still):** Medium-wide shot from the same low position beside the school bus, the yellow bus side across the whole background. Nora, alone, still kneels in the centre with the red gas can between her knees, but has turned her head away from the bus toward the left of the frame and spits a spray of gasoline onto the asphalt, grimacing, eyes squeezed shut. Her left hand, the forearm in clean white gauze, now holds the hose end down inside the mouth of the can; her right hand is raised, the back of her wrist near her chin. The hose runs from the bus's fuel filler down into the can. A dark wet splash on the asphalt at the left. Sweat on her face. Light: dusk, cool blue ambient sky light, a faint orange afterglow from the left, out of frame. No other people, no readable text.
+- **Camera:** pan right → left
 - **References:** Gas station
 
 ### Scene 39 · 4:38–4:45
-- **Image:** Close-up of Nora's small blue toy walkie-talkie on the asphalt beside her knee, its small light glowing, dusk
-- **Voice:** Every thirty seconds, two clicks. [pause] Then the walkie hissed.
-- **SFX:** Liquid gurgling, wind
-- **SFX 2 (at "two", 1s):** two crisp walkie-talkie clicks
-- **SFX 3 (at "hissed", 2s):** a sudden loud walkie-talkie static burst
+- **Image:** Close-up taken at ground level on the asphalt beside the school bus, the camera low and facing a small blue toy walkie-talkie lying on its back on the cracked asphalt in the centre of the frame. Its tiny indicator light glows amber, the only lit thing in the image; its stubby antenna points to the right. On the right edge of the frame: Nora's knee in navy blue scrub trousers, pressed to the ground, out of focus. Background, out of focus: the bottom of the red gas can, a loop of black hose, and the yellow side of the bus. Light: deep dusk, dim cool blue ambient light from the sky above, out of frame; the amber light makes a small glow on the asphalt. No hands touching the walkie, no faces, no readable text or numbers on the walkie.
+- **Voice:** Every so often, two clicks came through. [pause] Then the walkie hissed.
+- **Ambience:** Gas station at dusk
+- **SFX:** Gasoline gurgling through a siphon hose into a plastic jerry can, a soft uneven glug and trickle, close at ground level outdoors, steady, no voices, no music
+- **SFX 2 (at "two", 1s):** Two crisp clicks from a toy walkie-talkie's talk button, two quick plastic clicks each with a tiny burst of static, close, no voices, no music
+- **SFX 3 (at "hissed", 2s):** A sudden loud burst of walkie-talkie static, a harsh crackling hiss that jumps out of silence and cuts off, close and startling, tinny toy speaker, no voices, no music
+- **Camera:** zoom out
 - **References:** Gas station
 
 ### Scene 40 · 4:45–4:52
-- **Image:** Wide shot from behind Nora at the bus: across the lot, in the dark shop window, three grey-skinned figures pressed against the glass, faces turning toward her
-- **Voice:** Inside the shop, behind the glass. Three of them. Ten feet away.
-- **SFX:** Wind, liquid gurgling
-- **SFX 2 (at "glass", 2s):** hands slapping and dragging across glass
+- **Image:** Wide shot taken from behind Nora at the school bus, the camera low at her kneeling shoulder height just behind her right shoulder, facing across the gas station lot toward the shop. Foreground right, out of focus: the back of Nora's head and right shoulder, her dark low bun and charcoal-grey hoodie; the yellow front corner of the bus at the left edge. Middle: the empty asphalt lot and the two dead pumps. Background centre: the small white shop with its wide dark window; behind the glass, three grey-skinned figures pressed against the pane side by side, their pale faces turning toward the camera, standing out against the darkness inside. Light: deep dusk, cool blue ambient light, the last orange afterglow low in the sky above the shop roof. Nora's face not visible. No fourth figure, no lights inside the shop, no readable text.
+- **Voice:** Inside the shop, just behind the glass, the dead were watching her.
+- **Ambience:** Gas station at dusk
+- **SFX:** Gasoline gurgling through a siphon hose into a plastic jerry can, a soft uneven trickle, close at ground level outdoors at dusk, no voices, no music
+- **SFX 2 (at "glass", 3s):** Hands slapping and dragging across a large shop window from the inside, dull palm thuds and the squeak of skin sliding on glass, heard from a few metres away outdoors, slow and menacing, no voices, no music
+- **Shot 2 (at "Ten feet", still):** Close-up taken from outside the shop, the camera about one metre from the window at face height, facing the glass straight on. Three grey-skinned faces fill the frame side by side, all three inside the shop behind the dark glass: pressed flat against the pane, cheeks and noses squashed pale, mouths slack and open, milky white eyes staring out past the camera, matted hair, torn collars. Small patches of fog on the glass in front of their mouths. The glass surface carries faint dust and smears. Behind them: total darkness inside the shop. Light: dim blue dusk light from outside, behind the camera, falling flat on the glass and the faces; a faint orange afterglow reflected in the pane. No living people, no reflection of Nora, no readable text.
+- **Camera:** zoom in
 - **References:** Gas station
 
 ### Scene 41 · 4:52–4:59
-- **Image:** Extreme close-up of gasoline rising inside the red can, Nora's trembling left hand holding the hose, dusk
-- **Voice:** Two gallons in the can. I needed five. [pause] The glass started to crack.
-- **SFX:** Liquid pouring, slapping on glass
-- **SFX 2 (at "crack", 1.5s):** glass cracking under pressure
+- **Image:** Extreme close-up taken at ground level beside the red plastic gas can, the camera facing the can's side. The can's red plastic is thin and semi-translucent, so the dark level of gasoline shows through it, about two-fifths of the way up. From the top of the frame a black rubber hose comes down into the can's mouth, gasoline trickling from its end. Nora's left hand only (one hand) holds the hose at the can's mouth, trembling, fingertips pale; the clean white gauze bandage on her forearm shows at the top edge. Background, out of focus: the yellow side of the school bus. Light: deep dusk, cool blue ambient sky light from above, out of frame, a faint orange gleam on the wet hose. No second hand, no faces, no readable text, markings or numbers on the can.
+- **Voice:** The can was barely half full [pause] when the glass started to crack.
+- **Ambience:** Gas station at dusk
+- **SFX:** Gasoline pouring through a siphon hose into a plastic jerry can, a steady liquid glug, close at ground level outdoors, no voices, no music
+- **SFX 2 (from 0s, 5s):** Several hands slapping and pounding on a large shop window from inside, dull rhythmic thuds on glass getting harder and faster, heard from a few metres away outdoors, menacing, no voices, no music
+- **SFX 3 (at "crack", 1.5s):** Thick plate glass cracking under pressure, a sharp splintering crackle spreading across a large shop window, tense and brittle, outdoors, no shattering yet, no voices, no music
+- **Shot 2 (at "The glass", zoom in):** Extreme close-up taken outside the gas station shop, the camera about half a metre from the dark shop window, facing the glass straight on. A fresh crack spiders across the pane from the centre of the frame, thin white lines radiating outward. At the centre of the crack, a single grey palm with long grey fingers presses flat against the glass from inside the shop, the skin mottled, the nails dark. Behind the glass: darkness, the faint shapes of grey faces barely visible behind the hand. Light: dim blue dusk light from outside, behind the camera, catching the edges of the crack so they glint. No people outside the glass, no reflection of Nora, no readable text.
+- **Camera:** pan bottom → top
 - **References:** Gas station
 
 ### Scene 42 · 4:59–5:05
-- **Image:** The dark shop window splintering outward, grey hands pushing through the cracked glass, dusk
-- **Video:** The cracked shop window bulges as grey hands press against it, a crack spreads slowly across the glass, small flecks of glass fall; locked-off camera. No cuts, no new objects.
-- **Voice:** [panicking] I ran.
-- **SFX:** Groans spilling out
-- **SFX 2 (from 0s, 1.5s):** Glass shattering
+- **Image:** Medium shot taken on the gas station lot, the camera fixed at standing height about five metres from the shop, facing its wide dark window straight on. The window fills the middle of the frame, framed by the shop's peeling white walls; cracked asphalt pavement runs across the bottom third. The glass is splintering outward: a web of cracks across the whole pane, its centre bulging toward the camera, and two grey hands with mottled grey skin pushing through jagged holes, one at the centre and one at the lower left. Behind the glass: darkness, three grey faces dimly visible. Light: dusk, cool blue ambient sky light falling on the shop front from behind the camera. No living people, no Nora, no readable text or signs.
+- **Voice:** [panicking] She ran.
+- **Ambience:** Gas station at dusk
+- **SFX:** Guttural groans and snarls spilling out of a shop into an open lot, several infected people moaning as they stumble outside, getting closer, outdoors at dusk, no words, no screaming, no music
+- **SFX 2 (from 0s, 2s):** A large plate glass shop window shattering, a loud explosive crash with thousands of shards raining onto concrete, violent and sudden, outdoors, no voices, no music
+- **Shot 2 (from 1.5s, still, next frame):** The same medium shot of the shop window, same camera position and framing, a split second later: the camera still fixed at standing height five metres from the shop, facing the wide window straight on, the peeling white walls around it and the cracked asphalt across the bottom third. Changed: the glass now bursts outward in a shower of glittering shards flying toward the camera, and three grey-skinned figures push through the window frame, grey arms reaching out, two heads and shoulders breaking through, mouths open, milky eyes. Light: the same cool blue dusk light from behind the camera. No living people, no Nora, no readable text.
+- **Shot 3 (from 3s, still, next frame):** The same medium shot of the shop window, same camera position and framing, a moment later: the camera at standing height five metres away facing the window straight on, the peeling white walls around it, the asphalt across the bottom third. Changed: the window is now an empty broken frame with jagged glass teeth around its edges, and the three grey figures have tumbled out through it and lie sprawled on the pavement in front of the shop amid scattered glass, a few shards still in the air above them, one figure's legs still hooked over the window sill. Light: the same cool blue dusk light from behind the camera. No living people, no Nora, no readable text.
+- **Shot 4 (from 4.5s, zoom in, next frame):** The same medium shot of the shop window, same camera position and framing, a moment later: the camera at standing height five metres away facing the empty broken window frame, the peeling white walls around it, the asphalt across the bottom third, glass now settled on the pavement. Changed: the three grey figures are getting up from the broken glass, one on hands and knees, one rising to a crouch, one standing, and all three faces are turning toward the camera, milky eyes catching the light. Light: the same cool blue dusk light from behind the camera. No living people, no Nora, no readable text.
+- **Camera:** still
 - **References:** Gas station
 - **Shake:** heavy
 
 ### Scene 43 · 5:05–5:12
-- **Image:** Nora, alone, running across the lot toward the silver sedan with the red gas can, her bandaged forearm soaked red, dusk, motion blur
-- **Voice:** Something tore in my arm when I swung the can. I felt it go warm.
-- **SFX:** Running footsteps on asphalt, sloshing gas can, groans behind
+- **Image:** Wide shot taken at waist height on the gas station lot, the camera side-on to Nora's path. Nora, alone, runs from the left of the frame toward the right, mid-stride, leaning forward, mouth open, sweat on her face, strands loose from her low bun, the charcoal-grey hoodie flapping open over navy scrubs. Her right hand carries the red plastic gas can, swinging heavily at her side; her left arm is bent, the white gauze bandage on her left forearm soaked bright red. Background right: the silver sedan parked, waiting, its windows dark. Background left: the white shop with its smashed window, small grey figures on the pavement in front of it, far behind her. Light: deep dusk, cool blue ambient light, the last orange glow on the horizon behind the shop. Slight motion blur on her legs and the can. No other living person, no readable text.
+- **Voice:** Something tore in her arm when she swung the can, and she felt it go warm.
+- **Ambience:** Gas station at dusk
+- **SFX:** Running footsteps on cracked asphalt, a woman's sneakers in a fast panicked sprint, close and urgent, outdoors at dusk, no voices, no music
+- **SFX 2 (from 0s, 5s):** Gasoline sloshing heavily inside a half-full plastic jerry can swung while running, a deep liquid slosh with every stride, close, no voices, no music
+- **SFX 3 (from 0.5s, 6s, volume 80%):** Infected people groaning and snarling behind a running woman, guttural moans a few metres back and slowly falling behind, outdoors, no words, no screaming, no music
+- **Shot 2 (at "I felt", zoom in):** Close-up of Nora, alone, running, taken from just ahead of her and slightly to her left at shoulder height, the camera facing back at her. She fills the centre of the frame from the chest up: face twisted in pain, wincing, eyes narrowed, sweat on her forehead, strands of dark hair across her face. Her left forearm is pressed flat against her chest, the white gauze bandage soaked through bright red, a smear of blood on her navy scrub top; her right shoulder dips with the weight of the gas can, which is out of frame below. Background, motion-blurred: the dark gas station lot and the dusk sky. Light: cool blue dusk ambient light from above, a faint orange afterglow from behind her. No other people, no figures near her.
+- **Camera:** pan left → right
 - **References:** Gas station
 
 ### Scene 44 · 5:12–5:19
-- **Image:** The silver sedan speeding away from the gas station into the dusk, three grey figures stumbling in the lot behind it
-- **Voice:** Five miles later I looked down. The gauze was red, all the way through.
-- **SFX:** Engine accelerating, then steady road noise
+- **Image:** Wide shot taken on the gas station lot, the camera at standing height near the shop, facing out toward the two-lane road. Foreground and middle: three grey-skinned figures seen from behind, stumbling after the car across the asphalt lot, arms half raised, one limping. Background: the silver sedan small on the road, driving away to the right, its red tail lights glowing, its headlights off, a faint wisp of dust behind it. The two dead pumps stand at the left of the middle ground with the yellow school bus beyond them. Sky: deep dusk, violet with a thin orange band along the horizon. Light: dim blue ambient dusk light, no lamps. No living people outside the car, no faces visible in the car, no readable text.
+- **Voice:** A few miles later she looked down, and the gauze was red all the way through.
+- **Ambience:** Gas station at dusk
+- **SFX:** An older sedan accelerating hard onto a country road, the engine climbing through the gears, then settling into a steady road noise of tires on asphalt, heard from inside the car, no music, no voices
+- **Shot 2 (at "The gauze", pan top → bottom):** Close-up taken from the front passenger seat, the camera at shoulder height facing left toward the steering wheel. Nora's left hand only (one hand): her left forearm rests across the top of the steering wheel rim, the hand gripping the rim, the hoodie sleeve pushed up to the elbow. The white gauze bandage on her forearm is soaked dark red all the way through, blood seeping at its edges, a thin dried trickle toward the wrist. The wheel rim crosses the lower part of the frame; the gauges are hidden behind the wheel and not visible. Behind her arm: the driver's side window at the left edge, showing dark fields and a violet dusk sky. Light: fading dusk light through the windshield on the right, out of frame, plus a faint orange glow from the instrument cluster, out of frame below the wheel. No face, no second hand, no readable text.
+- **Camera:** zoom out
 - **References:** Gas station
 
 ### Scene 45 · 5:19–5:26
-- **Image:** The rearview mirror reflecting Eli alone in the back seat facing the window, eyes shut, counting on his fingers
-- **Voice:** I checked the mirror. Eli was facing the window, eyes shut, still counting.
-- **SFX:** Car interior at dusk, road noise
-- **References:** Corolla interior
+- **Image:** Rearview mirror shot: the camera just behind and above the driver's seat, facing forward at the rearview mirror at the top centre of the windshield. The mirror fills the middle of the frame; around it, out of focus, the windshield shows a darkening violet dusk sky and the crack across its upper right. In the reflection: the back seat with Eli alone in his booster seat on the RIGHT side of the reflection, his whole body turned toward the side window beside him at the right edge of the reflection, forehead nearly touching the glass, eyes squeezed shut, lips moving, both hands (two hands) raised in front of his chest counting on his fingers. Oversized red rain jacket, curly light-brown hair, the yellow walkie-talkie on its lanyard. Behind him the rear window shows dusk. Light: dim dusk light through his side window. No driver or Nora visible, no other person, no readable text.
+- **Voice:** When she checked the mirror, Eli was facing the window with his eyes shut, still counting.
+- **Ambience:** Car on the road
+- **Camera:** pan right → left
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 46 · 5:26–5:33
-- **Image:** Close-up of Nora alone driving, eyes closing briefly in relief, dusk light across her face
-- **Voice:** [sigh of relief] He hadn't seen. [pause] At least, that's what I told myself.
-- **SFX:** Car interior, road noise
-- **References:** Corolla interior
+- **Image:** Close-up taken from the front passenger seat, the camera at eye level facing left toward the driver. Nora, alone, in three-quarter profile, faces the windshield on the right of the frame, her hands out of frame below on the wheel; her eyes are closed for a moment in relief, brows easing, lips parted in a slow breath out. Sweat on her forehead and upper lip, loose strands of hair stuck to her temple, freckles, dark circles, charcoal-grey hoodie open over navy scrubs. Behind her: her headrest and, at the left edge of the frame, the driver's side window showing dark fields under a violet dusk sky. The top of the steering wheel rim crosses the bottom edge of the frame in front of her. Light: the last orange-pink dusk light through the windshield from the right, out of frame, falling across her face; a faint orange glow from the instrument cluster, out of frame below. No gauges beside her head, no other person.
+- **Voice:** [sigh of relief] He hadn't seen. [pause] At least, that's what she told herself.
+- **Ambience:** Car on the road
+- **Shot 2 (at "At least", zoom in):** Rearview mirror shot: the camera just behind and above the driver's seat, facing forward at the rearview mirror at the top centre of the windshield; the mirror fills the middle of the frame, the dusky windshield around it out of focus with the crack at upper right. In the reflection: Eli alone in his booster seat on the RIGHT side of the reflection, slumped toward his side window as if asleep, but one eye barely open, its pupil turned toward the left side of the reflection, toward the driver's seat. Curly light-brown hair, oversized red rain jacket, both hands in his lap holding the yellow walkie-talkie. Behind him the rear window shows a deep violet dusk sky. Light: dim dusk light through his side window. No driver or Nora visible, no other person, no readable text.
+- **Camera:** zoom out
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [close L3] [close L5] Two gallons buys them time, not the whole distance. Music: a low warm piano note.
 
 ### Scene 47 · 5:33–5:40
-- **Image:** Night, the silver sedan parked under a lone tree on a dark farm road, headlights off, a faint moonlit field around it
-- **Voice:** Hour nineteen. We drove only in daylight. Headlights bring them from miles away.
-- **SFX:** Crickets, wind in an open field, a cooling engine ticking
+- **Image:** Wide shot at night taken from the edge of a dark farm road, the camera at standing height about thirty metres away, facing the car side-on. The silver sedan is parked on the grass verge in the centre of the frame under a single large tree with bare branches whose crown spreads across the top of the frame. Its headlights, tail lights and interior lights are all off; its windows are black. Around it: a flat, empty field of dry grass, silvered by moonlight, stretching to a low horizon. Sky: dark blue-black with scattered stars, a bright moon high in the upper right. Light: cold blue moonlight from the upper right, the tree's branch shadows falling across the car's roof. No people, no figures, no lit buildings, no other vehicles.
+- **Voice:** From then on they only drove in daylight, because headlights drew the dead from miles away.
+- **Ambience:** Car at night
+- **Shot 2 (at "Headlights", pan left → right):** Wide shot at night of a dark open field under moonlight, taken from beside the parked car at standing height, facing across the field toward the horizon. Foreground: dry grass silvered by the moon, thin low mist lying over it. Background: near the horizon, far away and tiny, four grey figures standing far apart from each other, motionless, all their faces turned to the right toward a distant road, a thin pale line along the right horizon. Sky: dark blue-black with stars, the moon out of frame upper right. Light: cold blue moonlight from the upper right, out of frame. No figures close to the camera, no headlights, no lit windows, no car in frame.
+- **Camera:** zoom out
 - **Title:** HOUR 19
 
 ### Scene 48 · 5:40–5:47
-- **Image:** Nora alone in the driver's seat at night, a thermometer in her mouth, sweat on her face, wrapped in her grey hoodie, moonlight through the windshield
-- **Voice:** [flatly] Temperature, one-oh-one point two. Patient presents with mild intention tremor, left hand.
-- **SFX:** Car interior at night, crickets outside, her teeth chattering
-- **References:** Corolla interior
+- **Image:** Medium close-up at night taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, sits in the driver's seat in three-quarter profile with a white digital thermometer stick in her mouth, her right hand holding its end; her left hand rests in her lap. She wears the charcoal-grey hoodie zipped up to her chin, hood down, shoulders hunched against the cold. Fever: sweat beading on her forehead and upper lip, hair damp at the temples, eyes glassy. Behind her: her headrest and, at the left edge, the driver's side window, a black field and the dark outline of the tree beyond. The steering wheel rim crosses the bottom of the frame in front of her. Light: cold blue moonlight through the windshield from the right of the frame, out of frame; the engine is off and the dashboard is dark. No readable numbers on the thermometer, no other person, no gauges beside her.
+- **Voice:** {Nora} [flatly] Temperature, one-oh-one point two. Patient presents with mild intention tremor, left hand.
+- **Ambience:** Car at night
+- **SFX:** A woman's teeth chattering from fever chills, a fast uncontrollable clicking of teeth with shaky breaths through the nose, very close and intimate inside a quiet car at night, no words, no music
+- **Shot 2 (at "Patient", still):** Close-up at night of Nora's left hand only (one hand), taken from the front passenger seat at chest height facing left. Her left hand holds the small black dictaphone up near her chin, its red record light glowing, the tiny cassette window visible on its face; the hand trembles, the fingers slightly blurred by the tremor. The cuff of the zipped charcoal-grey hoodie covers her wrist and forearm, so the bandage is hidden. Background, out of focus: the zipped grey hoodie and the edge of her chin at the top right, the dark driver's side window at the left. Light: cold blue moonlight through the windshield to the right, out of frame, and the small red glow of the record light on her fingertips. No second hand, no gauges, no readable text on the dictaphone.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Title:** 101.2°F
 
 ### Scene 49 · 5:47–5:56
-- **Image:** Close-up of a white pill bottle in Nora's shaking hand, white tablets tipping into her palm, moonlight
-- **Voice:** Sixteen Tylenol left. Two every four hours keeps me under a hundred point four. [pause] Long enough to pass the scan.
-- **SFX:** Car interior at night, pills rattling in a plastic bottle
-- **Shot 2 (at "Long enough"):** Nora alone in the driver's seat at night swallowing two tablets dry, head tipped back, moonlight
-- **References:** Corolla interior
+- **Image:** Close-up at night taken from the front passenger seat, the camera at chest height angled down and to the left toward Nora's lap. Nora's two hands only: her left hand, shaking, tips a small white plastic pill bottle, white tablets tumbling out; her right hand is cupped open below it, catching them, two tablets in her palm and one in the air. The cuffs of the zipped charcoal-grey hoodie cover both wrists. The bottle's label faces away from the camera. Background, out of focus: her navy scrub trousers on her thigh and the dark lower rim of the steering wheel at the upper left. Light: cold blue moonlight from the windshield above and to the right, out of frame, catching the white tablets; the dashboard is dark. No face, no gauges, no readable text or label on the bottle.
+- **Voice:** If she kept taking Tylenol, it might hold the fever down [pause] long enough to pass the scan.
+- **Ambience:** Car at night
+- **SFX:** A few pills rattling inside a small plastic pill bottle, shaken gently in a trembling hand, light dry clicking, close-miked inside a quiet car at night, no voices, no music
+- **Shot 2 (at "Long enough", zoom in):** Medium close-up at night taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, sits with her head tipped back against the headrest, eyes shut, throat working as she swallows two tablets dry, her right hand just dropping away from her lips, the white pill bottle held in her left hand in her lap. Charcoal-grey hoodie zipped to the chin; sweat shining on her face and neck, damp strands of hair on her forehead. Behind her: the headrest and, at the left edge, the driver's side window with the black field outside. The steering wheel rim crosses the bottom edge. Light: cold blue moonlight through the windshield from the right, out of frame, on her face and throat; the dashboard is dark. No water bottle, no other person, no gauges beside her.
+- **Camera:** pan top → bottom
+- **References:** Corolla interior, Corolla interior, facing back
 - **Title:** TYLENOL: 16
 - **Notes:** Setup: the Tylenol is how she means to pass the gate's 100.4°F scan.
 
 ### Scene 50 · 5:56–6:02
-- **Image:** Close-up of a single white tablet in Nora's open palm, her hand trembling slightly, a small white plastic pill bottle with its label turned away on the dashboard behind, moonlight, Nora's one hand only
-- **Voice:** But sixteen won't last until Tuesday. [pause] So, one every six hours.
-- **SFX:** Car interior at night, crickets
-- **SFX 2 (at "six", 1s):** a plastic pill bottle cap snapping shut
-- **References:** Corolla interior
+- **Image:** Close-up at night from Nora's point of view in the driver's seat, the camera at her eye level looking forward and slightly down. Nora's left hand only (one hand) is held open, palm up, in the centre of the frame, a single white tablet resting in the middle of the palm; the hand trembles slightly, the fingers a little unsteady. The zipped charcoal-grey hoodie cuff covers her wrist. Behind the hand, out of focus: the centre of the dashboard with the dark car radio, and on the flat top of the dashboard just below the windshield, a small white plastic pill bottle standing upright, its label turned away. Beyond: the windshield and the moonlit field. The steering wheel and gauges are out of frame to the left. Light: cold blue moonlight through the windshield in front of the camera, catching the tablet. No second hand, no readable text, label or numbers.
+- **Voice:** There weren't enough pills to last until Tuesday, [pause] so she started taking half.
+- **Ambience:** Car at night
+- **SFX 2 (at "half", 0.8s):** A plastic pill bottle cap snapped shut, one firm crisp plastic click, close and dry inside a quiet car, no voices, no music
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Rationed: 16 at Hour 19 → 9 at Hour 61.
 
 ### Scene 51 · 6:02–6:09
-- **Image:** Eli leaning forward from the back seat at night, holding his water bottle out to his mother, two people: Eli and, in the dark foreground, Nora's shoulder and cheek, moonlight on his face
-- **Voice:** Eli kept handing me his water. [pause] Every time I coughed, there it was.
-- **SFX:** Car interior at night
-- **SFX 2 (at "water", 1s):** a plastic bottle crinkling
-- **SFX 3 (at "coughed", 1s):** a soft cough
-- **References:** Corolla interior
+- **Image:** Medium shot at night taken from between the front seats, the camera just to the right of Nora's head, facing backward into the back seat. Two people. Foreground right, dark and out of focus: Nora's right shoulder in the zipped charcoal-grey hoodie and the curve of her cheek, seen from the side, turned toward the back seat. Centre-left: Eli leaning forward out of his booster seat, which is on the LEFT of the frame, his arm stretched toward the camera, holding a small clear plastic water bottle out to his mother between the two front seats, his face earnest, eyes on her. Behind him: the rear window and, at the left edge, his side window with a moonlit sky. Behind Nora's shoulder on the right: the empty left rear seat. Light: cold blue moonlight through the side window on the left, out of frame, falling on Eli's face. No third person, dome light off, no readable label on the bottle.
+- **Voice:** Eli kept handing her his water, [pause] every time she coughed.
+- **Ambience:** Car at night
+- **SFX 2 (at "water", 1.2s):** A thin plastic water bottle crinkling as a child's hand passes it forward between car seats, soft crackling plastic, close inside a quiet car at night, no voices, no music
+- **SFX 3 (at "coughed", 1s):** A woman's single dry, rough cough, held back and muffled, close inside a quiet car at night, no words, no music
+- **Shot 2 (at "Every time", still):** Close-up at night taken from between the front seats at shoulder height, the camera facing backward toward the back seat. Eli's left hand only (one hand) reaches forward through the gap between the two front seats, small fingers holding a clear plastic water bottle out toward the camera, half full, cap on. The side of the grey cloth front passenger seat is at the left of the frame, the side of the driver's seat at the right, the top of the gear stick at the bottom edge. Behind the hand, out of focus: the red sleeve of his rain jacket and the dark back seat. Light: cold blue moonlight through the rear window behind the hand, catching the water in the bottle. No faces, no second hand, no readable label on the bottle.
+- **Camera:** pan right → left
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Eli copies what she does when he's sick. He doesn't know.
 
 ### Scene 52 · 6:09–6:17
-- **Image:** Eli alone curled up in the back seat under his mother's grey hoodie, looking up at the car ceiling, the walkie-talkie on his chest, moonlight
-- **Voice:** [softly] Then he asked me. [pause] Mom… do zombies remember people?
-- **SFX:** Car interior at night, crickets
-- **References:** Corolla interior
+- **Image:** Medium shot at night taken from between the front seats, the camera at headrest height facing backward into the back seat; the back seat fills the frame with the rear window behind it. Eli, alone, sits curled up in his booster seat on the LEFT of the frame, knees drawn up, his mother's charcoal-grey hoodie spread over him like a blanket up to his chin; his yellow toy walkie-talkie lies on his chest on top of the hoodie. His head is tipped back against the seat and his big brown eyes look up at the car's roof. On the right of the frame: the empty left rear seat, crumpled paper wrappers and a brown paper bag on the floor below it. Behind him: the rear window with a dark moonlit sky and tree branches. Light: cold blue moonlight through the rear window and his side window at the left, out of frame. Dome light off. No adult, no other person.
+- **Voice:** [softly] Then he asked her, [pause] {Eli} [softly] Mom… do zombies remember people?
+- **Ambience:** Car at night
+- **Shot 2 (at "do zombies", zoom in):** Close-up at night of Eli, alone, taken from just in front of and slightly above his face in the back seat, the camera angled down, facing backward toward him. His face fills the centre of the frame, framed by the charcoal-grey hoodie pulled up to his chin like a blanket; his big brown eyes are wide and serious, looking up past the camera toward the car's roof; his mouth slightly open as if about to ask something, the gap in his front teeth just visible. Curly light-brown hair against the grey cloth of the booster seat. The edge of the yellow walkie-talkie at the bottom of the frame. Light: cold blue moonlight from his side window on the left of the frame, out of frame, half his face lit, half in shadow. No adult, no other person.
+- **Camera:** zoom out
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [open L6: do they remember people?] Stays open to the last shot on purpose. Music: a low warm piano note.
 
 ### Scene 53 · 6:17–6:24
-- **Image:** Close-up of Nora's face in moonlight, Nora alone in the frame, swallowing hard, eyes wet
-- **Voice:** I'm a nurse. I know what a brain does without oxygen. [pause] [softly] They do, baby. Always.
-- **SFX:** Car interior at night, crickets
-- **References:** Corolla interior
+- **Image:** Close-up at night of Nora's face, Nora alone in the frame, taken from the windshield looking back at the driver: the camera in front of her face at eye level, facing backward into the car. Her face fills the centre: eyes wet and shining, a tear gathered at the lower lid, jaw tight, throat moving as she swallows hard, lips pressed together. Fever sweat on her forehead, loose dark strands stuck to her temple, freckles, dark circles. The hoodie is gone (it is over Eli): she wears only the navy blue scrub top. Behind her: the grey driver's headrest, then the dark back seat in deep shadow. Light: cold blue moonlight through the driver's side window, which is out of frame on the right, lighting the right side of her face; the dashboard is dark and out of frame below. No gauges, steering column or dashboard visible, no other person.
+- **Voice:** She was a nurse, and she knew what a brain does without oxygen. [pause] {Nora} [softly] They do, baby. Always.
+- **Ambience:** Car at night
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** A lie so he can hope. Answered at Hour 79.
 
 ### Scene 54 · 6:24–6:33
-- **Image:** Close-up of the black dictaphone lying on the dashboard in moonlight, the tape visible through its little window
-- **Voice:** Before I slept, I pressed play to log the hour. [pause] The tape was rewound. All the way to the start.
-- **SFX:** Car interior at night, crickets
-- **SFX 2 (at "rewound", 2s):** a fast cassette tape rewinding whirr, then a click
-- **Shot 2 (at "rewound"):** Extreme close-up of the tiny cassette inside the dictaphone, its spools fully wound to the start
-- **References:** Corolla interior
+- **Image:** Close-up at night taken from the driver's seat, the camera low at dashboard height facing forward. The small black dictaphone lies flat on top of the dashboard in the centre of the frame, just below the windshield, to the right of the steering wheel; its tiny cassette window faces the camera, the miniature cassette visible inside. Its red record light is off. Behind it: the windshield glass, and beyond it the moonlit field with dark tree branches across the top; the crack across the upper right of the windshield catches the moonlight. The dark top of the dashboard runs across the bottom of the frame. Light: cold blue moonlight through the windshield, behind the dictaphone, giving it a pale rim. No hands, no gauges, no people, no readable text on the dictaphone.
+- **Voice:** Before she slept, she pressed play to log the hour, [pause] and the tape had been rewound all the way to the start.
+- **Ambience:** Car at night
+- **SFX 2 (at "rewound", 1.6s):** A cassette tape in a small dictaphone fast-rewinding, a rising high-pitched mechanical whirr of the tape reels spinning fast, close and tinny, no voices, no music
+- **SFX 3 (from 8s, 0.6s):** A small dictaphone's rewind stopping at the start of the tape, one sharp plastic mechanical clunk, close and dry, no voices, no music
+- **Shot 2 (at "rewound", still):** Extreme close-up at night of the tiny cassette inside the black dictaphone, seen through its small clear plastic window, the camera directly in front of the window. The two small reels fill the frame side by side: the left reel is fat, wound full with brown tape; the right reel is a bare white plastic hub with almost no tape on it, the tape rewound all the way to the start. Fine scratches on the plastic window; the black dictaphone body frames the edges. Light: cold blue moonlight falling across the window from the upper right, out of frame. No hands, no red light, no readable text, labels or numbers on the cassette.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [open L7: who keeps rewinding the tape?]
 
 ### Scene 55 · 6:33–6:40
-- **Image:** Nora alone staring at the dictaphone in her hand, frightened, her breath fogging in the cold car
-- **Voice:** I didn't remember doing it. [pause] Memory loss wasn't supposed to start until hour forty-eight.
-- **SFX:** Car interior at night, crickets stop
-- **References:** Corolla interior
+- **Image:** Medium close-up at night taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, sits in the driver's seat holding the small black dictaphone in her right hand at chest height, staring down at it, frightened: eyes wide, brows drawn together, lips parted. Her breath makes a small white cloud of fog in front of her mouth in the cold car. She wears only the navy blue scrub top, arms bare; the white gauze on her left forearm stained dark red and dried; her left hand trembles in her lap. Sweat on her forehead despite the cold. Behind her: the headrest and, at the left edge, the driver's side window with the black field outside. The steering wheel rim crosses the bottom edge. Light: cold blue moonlight through the windshield from the right of the frame, out of frame; the dashboard is dark. No other person, no gauges beside her.
+- **Voice:** She didn't remember doing it, [pause] and memory loss wasn't supposed to start for another day.
+- **SFX:** Dead quiet inside a parked car at night, an almost silent space with only a faint high electrical hum and the barely audible hush of the cabin, oppressive and lonely, no engine, no crickets, no voices, no music
+- **Camera:** zoom out
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 56 · 6:40–6:49
-- **Image:** Nora alone sitting slumped in the driver's seat at night, eyes half open and unfocused, the black dictaphone held to her ear in her slack hand, her thumb on the rewind button, moonlight
-- **Voice:** Somewhere in the dark, I was playing my own voice back to myself. [pause] Holding on to who I was.
-- **SFX:** Car interior at night, faint tape playback of a murmuring woman's voice
-- **SFX 2 (from 0.3s, 2s):** a cassette tape rewinding whirr, then a click
-- **Shot 2 (at "Holding"):** Extreme close-up of the dictaphone's tape window, the small cassette reels turning, a faint red light, darkness
-- **References:** Corolla interior
+- **Image:** Medium shot at night taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, sits slumped low in the driver's seat, her head lolling against the headrest and tilted toward the driver's side window, eyes half open and unfocused, mouth slack. Her right hand, loose and slack, holds the black dictaphone against her right ear, her thumb resting on the rewind button. Her left arm lies limp in her lap, the dark-stained gauze on the forearm. Navy blue scrub top, no hoodie; sweat glistening on her face and neck. Behind her: the driver's side window at the left edge, the black field outside. The steering wheel rim crosses the bottom of the frame. Light: cold blue moonlight through the windshield from the right, out of frame, and a faint red glow from the dictaphone on her cheek. No other person, no gauges beside her.
+- **Voice:** Somewhere in the dark she'd been playing her own voice back to herself, [pause] holding on to who she was.
+- **SFX:** Faint playback of a woman's voice murmuring from a small dictaphone speaker, unintelligible and tinny, low and distant as if half asleep, with soft tape hiss, eerie and intimate, no clear words, no music
+- **SFX 2 (from 0.3s, 1.6s):** A cassette tape in a small dictaphone fast-rewinding, a high mechanical whirr of the reels, close and tinny, no voices, no music
+- **SFX 3 (from 1.9s, 0.6s):** A small dictaphone's rewind stopping, one sharp plastic mechanical clunk, close and dry, no voices, no music
+- **Shot 2 (at "Holding", zoom in):** Extreme close-up in darkness of the black dictaphone's tape window, the camera directly in front of it. Through the small clear plastic window the two tiny cassette reels are turning, a soft blur of motion on their spokes, brown tape stretched between them. Above the window a tiny red light glows, casting a faint red tint on the plastic. The black body of the dictaphone fills the edges; at the right edge, the blurred tip of a slack thumb. Everything else is darkness. Light: only the small red light and a faint thread of blue moonlight from the upper left, out of frame. No readable text, labels or numbers.
+- **Camera:** pan right → left
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [close L7] Her own fugues rewind the tape: an instinct to anchor her fading identity.
 
 ### Scene 57 · 6:49–6:56
-- **Image:** View through the windshield at night: far across a dark field, a farmhouse porch light glowing warm, thin mist over the field
-- **Video:** The distant porch light glows steadily while thin mist drifts across the dark field; locked-off camera. No cuts, no new objects.
-- **Voice:** Then a porch light came on across the field. [whispers] Something over there was moving.
-- **SFX:** Silence, wind across the field
-- **SFX 2 (at "light", 1s):** a faint electrical click far away
-- **References:** Corolla interior
+- **Image:** View at night from the driver's seat, the camera at eye level facing forward through the windshield. The windshield fills most of the frame: the crack runs across its upper right corner; the rearview mirror hangs at the top centre; the dark top of the dashboard and the unlit upper rim of the steering wheel run along the bottom edge. Through the glass: a dark flat field covered by thin low mist, and far away across it, small in the centre-left, an old farmhouse with one warm yellow porch light glowing, a tiny pool of light on its porch. Dark tree branches hang across the top of the view outside. Sky: dark blue-black with stars. Light: cold blue moonlight on the field, the warm porch light far away. No people visible, no lit gauges, no headlights.
+- **Voice:** Then a porch light came on across the field, [whispers] and something over there was moving.
+- **SFX:** Faint night wind across an open field heard from inside a parked car, a soft hollow rush against the glass, cold and lonely, no crickets, no voices, no music
+- **SFX 2 (at "light", 1s):** A faint electrical click far away across a field at night, a porch light switch or relay snapping on, small and distant with a soft outdoor echo, no voices, no music
+- **Shot 2 (at "Something over", still):** Telephoto view at night of the distant farmhouse, the camera far across the misty field facing the front of the house, the house front filling the frame. Layout from left to right: a lit window on the far left, a second lit window just left of the front door, the closed front door with a warm yellow porch light glowing above it, and a dark window on the right; a covered porch runs along the whole front. Behind the far-left window: a tall dark human-shaped silhouette, standing. Thin mist hangs across the bottom of the frame over the field. Light: the warm yellow porch light and the dim yellow glow of the two lit windows; cold blue moonlight on the roof and white siding. No people outside, no readable text.
+- **Shot 3 (at "moving", zoom in, next frame):** The same telephoto view of the farmhouse at night, same camera position and framing, a moment later: the house front fills the frame; from left to right the far-left lit window, the second lit window just left of the front door, the closed front door with the warm yellow porch light above it, and the dark window on the right; the covered porch along the whole front; thin mist across the bottom. Changed: the far-left window is now empty, and the tall dark silhouette stands behind the second lit window, right beside the front door. Light: the same warm porch light and window glow, cold blue moonlight on the roof and siding. No people outside, no readable text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 58 · 6:56–7:03
-- **Image:** Grey morning, the silver sedan parked in front of an old white farmhouse, the porch light still on, the front door shut, no people
-- **Voice:** Hour twenty-four. A farmhouse. Porch light still on. Front door shut.
-- **SFX:** Morning birdsong, wind, a loose screen door tapping
+- **Image:** Wide shot on a grey morning taken from the gravel drive in front of an old white farmhouse, the camera at standing height about fifteen metres away, facing the front of the house. The two-storey white farmhouse fills the background, paint peeling, a covered porch along the front, the front door in the middle shut, its yellow porch light still glowing weakly above it, the windows dark. In the middle ground on the left, the silver sedan is parked on the gravel facing the house, doors closed, no one visible inside. Foreground: gravel and tufts of wet grass. An empty field and bare trees to the right of the house. Light: flat overcast grey morning, soft and almost shadowless; the porch light is the only warm spot. No people, no figures, no faces in the windows, no readable text or numbers.
+- **Voice:** By the next morning they'd reached a farmhouse with its porch light on and the door shut.
+- **Ambience:** Open farmland
+- **SFX:** Morning birdsong around an old farmhouse, a few songbirds and a distant crow calling on a grey overcast morning, sparse and lonely, outdoors, no voices, no music
+- **SFX 2 (from 1s, 5s):** A loose wooden screen door tapping against its frame in the wind, irregular soft wooden knocks and a faint spring creak, a few metres away on a porch, no voices, no music
+- **Camera:** pan left → right
 - **References:** Farmhouse
 - **Title:** HOUR 24
 
 ### Scene 59 · 7:03–7:10
-- **Image:** Close-up of the farmhouse front door, its frosted glass panel smeared from inside with dark handprints, a tall blurred shape behind the glass
-- **Voice:** Behind the glass, a shape in a barn coat. Walking into the door. Again. And again.
-- **SFX:** Wind, birdsong stopping
-- **SFX 2 (at "Walking", 3s):** a slow, repeated thud against a wooden door
+- **Image:** Close-up on a grey morning taken on the farmhouse porch, the camera at chest height about one metre from the front door, facing it straight on. The front door fills the frame: old painted wood with a tall frosted glass panel in its upper half. The frosted glass is smeared from inside with dark brown-red handprints and streaks. Behind the glass stands the tall blurred dark shape of a man in a bulky barn coat, pressed close, its outline soft and indistinct. A brass doorknob at the lower right edge. Light: flat grey overcast daylight from behind the camera; the yellow porch light above the door, out of frame above, casts a warm tint on the top of the door. No people on the porch, no clear face behind the glass, no readable text or numbers.
+- **Voice:** Behind the glass, a man in a barn coat kept walking into the door, again and again.
+- **Ambience:** Open farmland
+- **SFX 2 (at "walking", 4s):** A slow, heavy body thudding against a locked wooden front door from the inside, a dull hollow boom repeated every two seconds, the door rattling in its frame, heard on a porch, relentless and eerie, no voices, no music
+- **Shot 2 (at "Again. And", still):** Extreme close-up on a grey morning of the frosted glass panel in the farmhouse front door, the camera at chest height half a metre away facing it straight on. The panel fills the frame and rattles in its wooden frame: a thin dark gap shows along one edge where it shifts, and small flakes of old paint and dust fall from the top of the frame through the air. Dark handprint smears on the inside of the glass. Behind the glass, the dark blurred shape of a man in a barn coat presses against it, a shoulder and the side of a head pushed flat against the pane. Light: flat grey overcast daylight from behind the camera; a warm porch-light tint from above, out of frame. No people on the porch, no clear face behind the glass, no readable text.
+- **Camera:** zoom in
 - **References:** Farmhouse
 - **Shake:** light
 - **Notes:** [open L8: will the thing in the farmhouse get out?]
 
 ### Scene 60 · 7:10–7:18
-- **Image:** Close-up of a heavy brass deadbolt and a key left in the lock on the inside of the frosted glass, the shape pressing behind it
-- **Voice:** He'd locked himself in. From the inside. [pause] I think he knew what he was turning into.
-- **SFX:** Slow thudding on the door, wind
+- **Image:** Close-up on a grey morning taken on the farmhouse porch, the camera pressed close to a narrow clear-glass sidelight window beside the front door, looking in at an angle at the inside face of the door. Through the clear glass: the inside of the old wooden door and a heavy brass deadbolt with a brass key left in its inside lock, turned to locked, a small ring of keys hanging from it. To the right of the lock, blurred and out of focus, the dark brown canvas of a barn coat sleeve and shoulder pressed against the door from inside; the frosted glass panel of the door glows pale above. Faint reflections of the grey sky on the sidelight glass. Light: dim grey daylight entering the dark hallway, catching the brass. No face visible, no people on the porch, no readable text.
+- **Voice:** He'd locked himself in from the inside. [pause] She thought he knew what he was turning into.
+- **Ambience:** Open farmland
+- **SFX:** Slow, heavy thudding of a body against a locked wooden door from inside, a dull hollow knock about every two seconds, the door rattling faintly, heard close on a porch, relentless, no voices, no music
+- **Shot 2 (at "I think", still):** Close-up on a grey morning taken on the farmhouse porch from just left of the front door frame, the camera at face height angled so the frosted glass panel of the door fills the left half of the frame. Nora, alone, stands in the right half in three-quarter profile, close to the glass, facing it (toward frame left), lips parted, eyes sad and knowing. Her face is faintly reflected in the frosted glass, a pale ghost overlapping the dark blurred shape of the man in the barn coat behind the glass. Fever sweat on her face, dark circles, loose strands from her low bun; the charcoal-grey hoodie back on, open over navy scrubs. Light: flat grey overcast morning light from behind her on the right; the porch light glows above the door, out of frame above, warming her forehead. No second living person, no readable text.
+- **Camera:** zoom in
 - **References:** Farmhouse
 - **Notes:** Setup: mirrors Nora cuffing herself to the fence at the gate.
 
 ### Scene 61 · 7:18–7:25
-- **Image:** Nora and Eli (two people) stepping into an old barn through its open doors, slats of morning light across the hay
-- **Voice:** The barn was open. [pause] Eli found the gas cans before I did.
-- **SFX:** Barn room tone, wind through the plank walls, the distant thudding
+- **Image:** Wide shot from inside the barn, the camera low near the back wall and facing the open double doors at the front. Two people only, Nora and Eli, stepping in through the doorway in the middle distance, small and partly silhouetted. Eli is a step ahead on the left, his head turned left toward the barn wall; Nora is on the right, her right hand on the edge of the open door. Foreground: hay bales stacked on the left, a workbench with hand tools on the right, an unlit oil lantern hanging from a beam at the top. Through the doorway behind them: a muddy yard under a flat grey morning sky. Light: grey daylight pouring in through the doors behind them, and thin pale slats of light through gaps in the plank walls falling across the hay. Nora: sickly pale, navy scrubs, open charcoal-grey hoodie, stained bandage on her left forearm; Eli: oversized red rain jacket, yellow walkie-talkie on its lanyard. No animals, no third person.
+- **Voice:** The barn was open, [pause] and Eli found the gas cans before she did.
+- **Ambience:** Barn
+- **SFX:** A slow, dull thudding on a wooden door far away across a farmyard, faint hollow knocks every two seconds, heard from inside a barn, eerie and relentless, no voices, no music
+- **Camera:** pan left → right
 - **References:** Farm barn
 
 ### Scene 62 · 7:25–7:32
-- **Image:** Close-up of three red metal jerry cans standing against the barn wall, morning light through the slats
-- **Voice:** Three cans. Fifteen gallons. Enough to get us all the way there.
-- **SFX:** Barn room tone
-- **SFX 2 (from 0s, 1.5s):** a can scraping on wood
+- **Image:** Close-up at floor level inside the barn, the camera low and facing the back plank wall straight on. Three red metal jerry cans stand side by side against the wall, filling the middle of the frame from left to right: scratched and dented red paint, black screw caps, sturdy carry handles on top. Behind them, the weathered grey vertical planks of the wall, with narrow gaps between the boards. Light: flat grey morning daylight coming in through those gaps from outside, laying thin vertical stripes of pale light across the cans and the straw-strewn dirt floor; the rest of the barn in soft shadow. At the right edge of the frame, the wooden leg of the workbench and a coil of old rope; loose straw in the foreground, slightly out of focus. No people, no hands, no labels, no text or numbers anywhere, no other containers.
+- **Voice:** The cans were full, enough to get them all the way there.
+- **Ambience:** Barn
+- **SFX 2 (from 0s, 1.5s):** A full metal jerry can dragged across rough wooden barn floorboards, a heavy grinding scrape and a liquid slosh inside, close, no voices, no music
+- **Camera:** pan left → right
 - **References:** Farm barn
 - **Title:** +15 GALLONS
 
 ### Scene 63 · 7:32–7:41
-- **Image:** Inside the barn, two people: Eli asleep on hay bales under a wool blanket in lantern light, and Nora sitting alone on the far side of the barn, watching him
-- **Video:** Eli sleeps still, the lantern flame flickers, dust motes drift through the slats of light; very slow push in. No cuts, no new objects.
-- **Voice:** The gate didn't open till Tuesday. I parked inside. We slept in the hay. [pause] Me on the far side.
-- **SFX:** Barn room tone, wind through the plank walls, the lantern hissing
-- **Shot 2 (at "Me on"):** Nora alone sitting against the far barn wall in shadow, knees drawn up, watching across the barn, lantern light
+- **Image:** Wide shot of the barn interior at night, taken from a high position just inside the closed front doors, the camera looking down the length of the barn. Two people only, about eight metres apart. Frame left, middle ground: Eli asleep on his side on a low platform of hay bales, under a brown wool blanket pulled to his chin, his curly light-brown hair and red jacket collar showing. Directly above him an oil lantern hangs from a beam, throwing a warm pool of light over him. Frame right, against the far right plank wall in much dimmer light: Nora sitting on the dirt floor, her legs stretched out in front of her, her back to the wall, her face turned left toward Eli. Background centre, in deep shadow between them: the rear of the silver sedan, parked facing away from the camera. The plank gaps are black. Nora is pale and sweating, a stained bandage on her left forearm. No third person.
+- **Voice:** The gate didn't open until Tuesday, so she parked inside and they slept in the hay, [pause] her on the far side.
+- **Ambience:** Barn
+- **Shot 2 (at "We slept", still, next frame):** The same wide shot of the barn interior at night, same high camera position just inside the closed front doors and same framing, a little later. Two people only, about eight metres apart. Frame left, middle ground: Eli asleep on his side on the low platform of hay bales under the brown wool blanket, exactly as before, his curly hair and red jacket collar showing. Above him the oil lantern hangs from the same beam, but it is now turned low: its pool of warm light is smaller and dimmer. Frame right, against the far right plank wall: Nora still sits on the floor with her back to the wall, but she has now drawn her knees up to her chest and wrapped her arms around them, her face still turned left toward Eli. Background centre in deep shadow: the rear of the silver sedan. Black plank gaps. Only the lantern brightness and Nora's knees have changed. No third person.
+- **Shot 3 (at "Me on", zoom in):** Medium close-up of Nora, alone, the only person in the frame, taken from the middle of the barn at her seated eye level, the camera facing the far right plank wall. She sits on the dirt floor with her back against the weathered vertical planks, knees drawn up to her chest, both arms wrapped around her shins, the stained white gauze bandage on her left forearm visible across her knees. Her eyes look just past the camera, across the barn toward her sleeping son, who is out of frame behind the camera. Behind her: the grey planks, the narrow gaps between them black with night. Light: a weak warm glow from the oil lantern hanging across the barn, out of frame behind the camera, touching her face and knees from the front; the wall around her falls into shadow. She is sickly pale, sweat at her hairline, a messy dark low bun, navy scrubs and an open charcoal-grey hoodie. No second person, no lantern in the frame.
+- **Camera:** still
 - **References:** Farm barn
 
 ### Scene 64 · 7:41–7:48
-- **Image:** Through a gap between the barn's planks: the farmhouse across the yard, its porch light on, the front door shut
-- **Voice:** From the house, the thudding never stopped. Every few seconds. All day.
-- **SFX:** Barn room tone, wind
-- **SFX 2 (at "thudding", 3s):** a slow, repeated thud against a wooden door, far away
+- **Image:** Point-of-view shot from inside the barn through a narrow vertical gap between two wall planks, the camera right up against the wood and facing out across the yard. The left and right edges of the frame are filled by the dark, rough, out-of-focus boards; through the bright vertical slit in the middle: a muddy farmyard and, about forty metres away, the old white two-storey farmhouse, its covered front porch with the porch light still glowing yellow, and the front door shut, a frosted glass panel in its upper half. Light: flat grey overcast daylight outside; the inside faces of the planks almost black. Grey sky above the roofline, a bare tree at the side of the house. The farmhouse is small, sharp and centred in the gap. No people outside, no figure visible behind the glass, no animals, no text.
+- **Voice:** From the house, the thudding never stopped. It went on every few seconds, all day.
+- **Ambience:** Barn
+- **SFX 2 (at "thudding", 4s):** A slow, dull thud against a wooden door far away across a farmyard, faint hollow knocks every two seconds, heard from inside a barn, relentless and eerie, no voices, no music
+- **Camera:** still
 - **References:** Farm barn
 
 ### Scene 65 · 7:48–7:56
-- **Image:** Eli alone, sitting cross-legged on a hay bale, pressing the button of his yellow walkie-talkie and grinning, lantern light
-- **Voice:** Eli made up a game. Two clicks from across the barn. [pause] I had to answer every time.
-- **SFX:** Barn room tone
-- **SFX 2 (at "clicks", 1s):** two walkie-talkie clicks
+- **Image:** Medium shot of Eli, alone, the only person in the frame, taken at his eye level from about a metre in front of him and slightly to his right. He sits cross-legged on top of a hay bale, his oversized red rain jacket open over his green dinosaur T-shirt. His right hand holds the small yellow toy walkie-talkie up near his chin, his right thumb pressing its side button; its lanyard runs up around his neck; his left hand rests on his left knee. He grins wide, showing the gap in his front teeth, his big brown eyes looking past the camera across the barn. Behind him: more hay bales stacked high, fading into the dark barn. Light: a warm oil lantern hanging from a beam above and to the left, just out of frame beyond the top left edge, lighting his face and curls from above. Evening; the plank gaps behind him are dark. No adult, no second walkie-talkie in the frame.
+- **Voice:** Eli made up a game: two clicks from across the barn, [pause] and she had to answer every time.
+- **Ambience:** Barn
+- **SFX 2 (at "clicks", 1s):** Two clicks from a toy walkie-talkie's talk button across a quiet barn, two quick plastic clicks with a tiny burst of static, slightly distant with a wooden room reflection, no voices, no music
+- **Shot 2 (at "I had to", zoom in):** Medium shot of Nora, alone, the only person in the frame, taken at her seated eye level from about a metre in front of her, the camera facing the far right plank wall of the barn. She sits on the dirt floor with her back against the planks, knees up. Her right hand holds the small blue toy walkie-talkie close to her mouth, her right thumb pressing its button; her left forearm, wrapped in the stained gauze bandage, rests across her knees. She smiles softly, tired eyes looking just past the camera across the barn toward her son, who is out of frame behind the camera. Behind her: weathered grey planks with dark gaps between them. Light: the warm glow of the oil lantern hanging across the barn, out of frame behind the camera, lighting her face from the front; deep shadow behind her. Sickly pale, sweat at her temples, messy low bun, navy scrubs, open charcoal-grey hoodie. No second person, no yellow walkie-talkie.
+- **Camera:** pan left → right
 - **References:** Farm barn
 - **Notes:** Relief before the midpoint drop. Music: a low warm piano note.
 
 ### Scene 66 · 7:56–8:03
-- **Image:** Eli alone, eating peaches straight from a can with his fingers, syrup on his chin, lantern light
-- **Voice:** He ate three cans of peaches. [pause] I wasn't hungry. Not for peaches.
-- **SFX:** Barn room tone, a spoon on a tin can
+- **Image:** Medium close-up of Eli, alone, the only person in the frame, taken at his eye level from directly in front of him. He sits on a hay bale with a brown wool blanket around his shoulders over his red rain jacket. His left hand holds an open metal can of peaches at chest height, its lid bent back; the fingers of his right hand lift a dripping slice of peach to his open mouth. Peach syrup shines on his chin. His eyes are half closed with happiness. Beside him on the bale, at frame right: two empty opened cans. The yellow walkie-talkie hangs on its lanyard against his chest. Behind him: stacked hay bales and the dark barn. Light: warm oil lantern light from above and to the left, the lantern itself out of frame beyond the top left edge. Night, the gaps in the plank walls black. No adult, no labels or readable text on the cans.
+- **Voice:** He ate peaches straight out of the can. [pause] She wasn't hungry. Not for peaches.
+- **Ambience:** Barn
+- **SFX:** A metal spoon scraping the inside of a tin can, slow scrapes and small clinks as a child eats canned peaches, close and quiet inside a barn, no voices, no music
+- **Shot 2 (at "Not for", zoom in):** Extreme close-up of Nora's eyes, Nora alone in the frame, taken from directly in front of her face at eye level, the frame filled from her brows to the bridge of her nose: both eyes, dark eyebrows, a few loose dark strands of hair across her forehead, dark circles beneath. Her gaze is fixed and unblinking, aimed just past the camera toward frame left, at her son across the barn, who is not shown. Her skin is sickly pale with beads of sweat. Her left iris (on the right side of the frame) has the faintest milky grey haze at its rim; her right iris is still clear and dark. Light: warm oil lantern light from in front of her and slightly above, the lantern out of frame behind the camera, small warm catchlights in both eyes. The background is dark. No other person, no hands, no mouth in the frame.
+- **Camera:** pan right → left
 - **References:** Farm barn
 - **Notes:** Warmth with dread underneath (the hunger is coming).
 
 ### Scene 67 · 8:03–8:10
-- **Image:** The silver sedan parked inside the dark barn, its dashboard radio glowing through the windshield, Nora alone in the driver's seat
-- **Voice:** Hour thirty-eight. Eli was asleep in the hay. [pause] The car radio found Fort Calder.
-- **SFX:** Rain on the barn roof, car radio hiss and crackle
+- **Image:** Wide shot inside the dark barn at night, the camera standing between the barn's back wall and the front of the parked silver sedan, slightly toward the car's driver side, facing the car's front at standing height. The sedan fills the middle of the frame nose-on: grey bonnet, headlights switched off, the windshield with a crack across its upper part on the frame-left side (the car's passenger side). Through the windshield, on the frame-right side: Nora, alone, sitting in the driver's seat behind the steering wheel, her face turned down toward the centre of the dashboard, her hands in her lap. The only light: the small amber glow of the car radio in the centre of the dashboard, seen through the glass, lighting her face from below and from her right. Around the car: dark hay bales, timber posts, black plank walls, rain dripping through a gap in the roof in thin silver threads. No other people, no headlights on, no lit lantern, no text.
+- **Voice:** That night, while Eli slept in the hay, [pause] the car radio finally found Fort Calder.
+- **Ambience:** Barn in the rain
+- **SFX:** A car radio scanning through static in a dark barn at night, hissing and crackling from a tinny dashboard speaker as stations come and go, close and eerie, no clear words, no music
+- **Camera:** zoom out
 - **References:** Farm barn
 - **Title:** HOUR 38
 - **Notes:** Eli sleeps through the statement: he never learns the bitten are shot.
 
 ### Scene 68 · 8:10–8:18
-- **Image:** Close-up of a car radio glowing amber in a dark dashboard
-- **Video:** The radio display glows and flickers, dust floats through its light; locked-off camera. No cuts, no new objects.
+- **Image:** Close-up of the car radio in the centre of the dark dashboard, taken from between the two front seats at seat height, the camera facing straight forward. The radio fills the middle of the frame: a rectangular unit with two round knobs and a row of small buttons, its narrow display glowing soft amber, showing only a blank bar of light. Around it the dashboard is black plastic in deep shadow; the top of the gear stick pokes up at the lower edge of the frame; above the dashboard the inside of the windshield is black, with the faint shapes of barn beams beyond. Light: only the radio's own amber glow, spilling onto the surrounding plastic and fading to black within a hand's width. Night, the car parked inside the barn. No people, no hands, no readable text or numbers on the display or buttons, no gauges in the frame.
 - **Voice:** [flatly] There is no treatment. [pause] Anyone bitten will be shot at the perimeter.
-- **SFX:** Radio hiss, rain on the roof
-- **SFX 2 (at "shot", 1s):** the radio static cutting out to dead silence
-- **References:** Corolla interior
+- **Ambience:** Barn in the rain
+- **SFX:** A car radio hissing with soft static under a broadcast, a gentle constant crackle from a tinny dashboard speaker, close inside a dark barn at night, no music
+- **SFX 2 (at "shot", 1s):** Radio static cutting out abruptly to dead silence, a short crackle that stops with a sharp electrical click, close, no voices, no music
+- **Shot 2 (at "Anyone bitten", still):** Distant wide shot of the Fort Calder perimeter at night, taken from far out in a field of dead grass, the camera low at waist height and facing the fence about two hundred metres away. A double chain-link fence topped with coiled razor wire runs across the whole width of the frame. At frame left stands a sandbagged wooden watchtower; on its platform a single soldier in silhouette, helmeted, holding a rifle diagonally across his chest in both hands, looking out over the field. Tall floodlight poles along the fence throw hard white light down onto the fence and the dead grass in front of it, leaving the sky black and the near field dark. At frame right, the closed steel vehicle gate flanked by sandbags. Light: the floodlights on the poles, in frame, behind the fence line. One person only, the soldier. No other people, no figures in the field, no text or signs.
+- **Shot 3 (at "shot", still, next frame):** The same distant wide shot of the Fort Calder perimeter at night, same low camera position in the dead-grass field and same framing, a moment later. The double chain-link fence with coiled razor wire still runs across the whole frame; the tall floodlight poles still throw hard white light onto the fence and the dead grass in front of it; black sky; the closed steel vehicle gate with sandbags at frame right, all unchanged. At frame left, on the platform of the same sandbagged wooden watchtower, the single silhouetted soldier has now raised his rifle to his shoulder in both hands and is aiming it down over the dark field toward the camera side. Only the soldier's pose has changed. One person only, the soldier. No muzzle flash, no other people, no figures in the field, no text or signs.
+- **Shot 4 (from 6s, zoom out):** The same close-up of the car radio in the centre of the dashboard, taken from between the two front seats at seat height, the camera facing straight forward, same framing as before. The radio sits in the middle of the frame with its two round knobs and its row of small buttons, but its display is now completely dark, with no glow at all. The surrounding dashboard is black; the top of the gear stick is a faint shape at the lower edge; through the windshield above, the barn is pitch black. Light: almost none, only a very faint cold grey sheen on the radio's edges and knobs, so the shapes are barely readable against the black. Night, the car parked inside the barn. No people, no hands, no readable text or numbers, no gauges in the frame, no glow from any light.
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [close L4] [interrupt: radio static cuts to silence] Midpoint reversal (~56%).
 
 ### Scene 69 · 8:18–8:25
-- **Image:** Close-up of Nora alone in the dark car, her face lit from below by the radio's glow, completely still
-- **Voice:** [long pause] So that was it. There was never a cure.
-- **SFX:** Silence, then rain slowly returning on the roof
-- **References:** Corolla interior
+- **Image:** Close-up of Nora, alone, the only person in the frame, taken from the windshield looking back at the driver: the camera sits just in front of her face, facing backward into the dark car. She sits completely still in the driver's seat, both hands out of frame in her lap, her face slightly lowered, eyes open, staring at nothing just below the camera. Behind her: the grey driver's headrest, then the black back seat and rear window, with the dark barn beyond. Light: the dim amber glow of the car radio, which is in the centre of the dashboard and out of frame below the lower left corner, lighting her chin, cheek and the underside of her nose from below and from frame left; the rest of her face falls into shadow. She is sickly pale, a sheen of sweat on her skin, dark circles, loose strands from her messy dark bun, the charcoal-grey hoodie collar. No dashboard, gauges or steering wheel in the frame, no second person.
+- **Voice:** [long pause] So that was it. There had never been a cure.
+- **SFX:** Rain slowly returning on an old wooden barn roof at night, starting from near silence with a few scattered drops and building into a soft steady patter, close and intimate, no thunder, no voices, no music
+- **Camera:** zoom out
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 70 · 8:25–8:33
-- **Image:** Two people: Nora sitting on the barn floor, her back against a hay bale, looking across the barn at Eli asleep, lantern light
-- **Voice:** I'd driven a hundred and sixty miles toward a bullet. [pause] So I changed the plan.
-- **SFX:** Barn room tone, rain on the roof
+- **Image:** Wide shot inside the barn at night, taken low from behind Nora's right shoulder, the camera at seated height and facing across the barn toward the far side where Eli sleeps. Two people only. Foreground right: Nora sitting on the dirt floor, seen from behind in three-quarter, her back leaning against a single hay bale, her head turned toward Eli, her right hand resting on the floor beside her, her stained bandaged left forearm resting on her knee. Middle ground left, about eight metres away: Eli asleep on his side on the low platform of hay bales under the brown wool blanket, beneath the oil lantern hanging from a beam above him in a warm pool of light. Between them: dark open floor with scattered straw. Light: the lantern above Eli is the only light; Nora is mostly a dark silhouette, rim-lit by it along her cheek and shoulder. Rain streaks glint through the black gaps in the plank walls; a drip falls from a roof beam. No third person.
+- **Voice:** She'd driven all that way toward a bullet, [pause] so she changed the plan.
+- **Ambience:** Barn in the rain
+- **Shot 2 (at "So I changed", zoom in):** Close-up of Nora, alone, the only person in the frame, taken at her seated eye level from directly in front of her, the camera facing the far right plank wall of the barn. She presses the heel of her right hand against her right eye, wiping away tears; her left eye is open, wet and red-rimmed, looking just past the camera. Her jaw is set hard, lips pressed together, a decision forming. Her left hand is out of frame. Behind her: weathered grey vertical planks with thin black gaps between them, rain glistening on their outer edges. Light: the warm glow of the oil lantern hanging across the barn, out of frame behind the camera, lighting her face from the front and slightly above. She is sickly pale with sweat on her forehead, dark circles, loose strands of dark hair, the charcoal-grey hoodie open over navy scrubs. No second person, no lantern in the frame.
+- **Camera:** pan left → right
 - **References:** Farm barn
 
 ### Scene 71 · 8:33–8:41
-- **Image:** Close-up of Nora's two hands holding the dictaphone close to her mouth in the dark barn, the red record light glowing
-- **Voice:** [whispers] New plan. Eli goes in. I don't. [pause] He walks through that gate alone.
-- **SFX:** Barn room tone, rain, a dictaphone motor whirring
+- **Image:** Close-up of Nora's lower face and both of her hands (two hands), taken from slightly below and in front of her at chin level in the dark barn, the camera facing her. Both hands cup the small black dictaphone just in front of her lips, her right thumb on the record button; its tiny red record light glows, throwing a faint red tint onto her fingertips, lips and chin. Her lips are parted, whispering. Her left wrist and the edge of the stained gauze bandage show at the lower right of the frame. Only her mouth, chin, jaw and hands are in the frame; her eyes are cropped off above the top edge. Background: the pure darkness of the barn at night, the gaps in the plank walls faintly visible and wet with rain. Light: the tiny red record light, plus a very faint warm spill from a lantern turned low, out of frame behind the camera. Sickly pale skin, sweat. No second person, no readable text on the dictaphone.
+- **Voice:** [whispers] The new plan was that Eli would go in, and she wouldn't. [pause] He'd walk through that gate alone.
+- **Ambience:** Barn in the rain
+- **SFX:** The small electric motor of a cassette dictaphone whirring softly as it records, a thin steady hum with a faint tape flutter, close and dry in a dark barn, no clicks, no voices, no music
+- **Shot 2 (at "He walks", pan bottom → top):** Wide shot from far behind a small boy, the camera low in a field of dead grass about forty metres behind him and facing the same way he walks. Eli, alone, the only person in the frame, walks away from the camera toward an open steel vehicle gate in the background centre: a small figure seen from behind, his oversized red rain jacket and curly light-brown hair, the yellow walkie-talkie lanyard around his neck, his arms at his sides. The gate stands open in a double chain-link fence topped with razor wire that runs across the whole width of the frame; sandbags beside the gate, tall floodlight poles glowing white above the fence. Sky: pale blue-grey dawn with a faint pink band low on the horizon. Light: the floodlights ahead of him and the dawn sky behind the fence, so he is a dark, slightly backlit silhouette. No other people, no soldiers, no adult, no figures at the fence, no text or signs.
+- **Camera:** zoom in
 - **References:** Farm barn
 
 ### Scene 72 · 8:41–8:50
-- **Image:** Eli asleep on the hay hugging the yellow walkie-talkie, warm lantern light on his face
-- **Voice:** Now I had thirty-two hours to make an eight-year-old walk away from his mother. [pause] Without telling him why.
-- **SFX:** Barn room tone, rain
-- **Shot 2 (at "Without"):** Close-up of Nora's face across the barn, watching him, eyes wet
+- **Image:** Close-up of Eli, alone, the only person in the frame, asleep on his side on the hay bales, taken at hay level from about half a metre in front of his face, the camera looking slightly down. He lies curled under the brown wool blanket, his cheek on the hay, his mouth slightly open, eyes closed, curly light-brown hair falling over his forehead. Both of his small hands (two hands) hug the yellow toy walkie-talkie against his chest, its lanyard looped around his neck; the collar of his red rain jacket shows above the blanket. Background: soft dark hay and the darkness of the barn. Light: warm golden oil lantern light from above, the lantern hanging out of frame beyond the top edge, falling across his face and curls. Night, rain on the roof. No adult, no second walkie-talkie.
+- **Voice:** Now she had a day and a half to make her son walk away from her, [pause] without telling him why.
+- **Ambience:** Barn in the rain
+- **Shot 2 (at "Without", zoom in):** Close-up of Nora's face, Nora alone in the frame, taken at her seated eye level from directly in front of her, the camera facing the far right plank wall of the barn. She sits very still, looking just past the camera toward frame left, across the barn at her sleeping son, who is out of frame. Her eyes are wet, tears pooled on the lower lids and one tear running down her right cheek; her mouth is soft and closed. Behind her: weathered grey planks with thin black gaps between them, damp with rain. Light: the warm glow of the oil lantern across the barn, out of frame behind the camera, lighting her face from the front, the wall behind her falling into shadow. She is sickly pale with a sheen of sweat, dark circles, loose strands from her messy dark bun, the charcoal-grey hoodie open over navy scrubs. No hands in the frame, no second person.
+- **Camera:** pan left → right
 - **References:** Farm barn
 - **Notes:** [open L9: how will she get Eli to go in without her?] Music: a low warm piano note.
 
 ### Scene 73 · 8:50–8:58
-- **Image:** Close-up of Nora's trembling left hand, the gauze bandage on her forearm, holding a single white tablet between two fingers, lantern light in the barn, Nora's one hand only
-- **Voice:** The Tylenol wasn't for the scanner anymore. [pause] It was to keep my hands working until six A.M.
-- **SFX:** Barn room tone, rain, the lantern hissing
+- **Image:** Close-up of Nora's left hand only (one hand), taken from in front of her at chest height, the camera facing her. Her left hand is raised in the centre of the frame, the back of the hand toward the camera, fingers up, holding a single small white tablet pinched between the tips of her thumb and index finger so the tablet shows clearly above them. The fingers tremble, slightly blurred with the tremor. Under her fingernails a first faint grey shadow is creeping in from the nail beds. Below the wrist, the white gauze bandage wrapped around her forearm, stained dark rusty red, runs down out of the bottom edge. Background: her navy scrub top and open charcoal-grey hoodie, dark and out of focus, then the black barn. Light: warm oil lantern light from the upper left, the lantern out of frame. Night, inside the barn. No right hand, no face, no pill bottle, no text.
+- **Voice:** The Tylenol wasn't for the scanner anymore. [pause] It was to keep her hands working until the gate opened.
+- **Ambience:** Barn in the rain
+- **Shot 2 (at "It was to", still):** Close-up of both of Nora's hands (two hands), the camera in front of her and above her hands, angled down toward them and facing her. She holds both hands out flat, palms down, side by side in the middle of the frame, fingers spread, a few centimetres above her knees in navy scrub trousers. The fingers tremble, their tips slightly blurred. Under every fingernail a grey shadow is creeping up from the nail bed; the skin of the hands is sickly pale. Her left hand is on the right side of the frame, the edge of the stained gauze bandage at its wrist; her right hand is on the left side. Below the hands, out of focus: her knees and straw on the barn floor. Light: warm oil lantern light from behind the camera and above, the lantern out of frame, casting soft shadows of the fingers onto her knees. Night. No face, no pill, no third hand.
+- **Camera:** zoom in
 - **References:** Farm barn
 - **Notes:** The Tylenol now buys motor control until the gate.
 
 ### Scene 74 · 8:58–9:06
-- **Image:** Through a gap between the barn's planks at night: the farmhouse's dark front door under the porch light, rain falling
-- **Voice:** Across the yard, the farmer kept walking into his door. It held. [pause] I understood him now.
-- **SFX:** Rain, wind
-- **SFX 2 (at "walking", 3s):** a slow thud against a wooden door, far away
+- **Image:** Point-of-view shot at night from inside the barn through a narrow vertical gap between two wall planks, the camera right against the wood and facing out across the yard. The left and right edges of the frame are filled with dark, rough, out-of-focus boards, wet along their edges. Through the slit in the middle: steady rain falling in thin bright streaks, a muddy yard with puddles, and, about forty metres away, the farmhouse's covered front porch under its glowing yellow porch light, the front door shut and dark, a frosted glass panel in its upper half with a vague dark shape just behind it. Light: the porch light is the only light, its reflection shimmering in the puddles; everything else is black. No people outside, no figures in the yard, no animals, no text.
+- **Voice:** Across the yard, the farmer kept walking into his door, and the door held. [pause] She understood him now.
+- **Ambience:** Barn in the rain
+- **SFX 2 (at "walking", 4s):** A slow, dull thud against a wooden door far away across a rainy farmyard at night, faint hollow knocks every two seconds, heard from inside a barn, eerie and relentless, no voices, no music
+- **Shot 2 (at "I understood", zoom in):** Close-up of Nora, alone, the only person in the frame, taken from inside the barn at her eye level, the camera on her left side, facing her profile and the plank wall. The wall of vertical planks fills the left third of the frame, seen almost edge-on; Nora faces frame left, her face pressed close to the boards, her left eye at a narrow vertical gap between two planks, peering out. A thin vertical sliver of warm yellow porch light comes through the gap and falls across her left eye and the bridge of her nose; the rest of her face, her ear and her messy dark bun sink into darkness. Rain beads glint on the edges of the boards. Background at frame right: the total black of the barn. Light: only that sliver of porch light from outside, coming through the gap. Sickly pale skin, sweat. No hands in the frame, no second person.
+- **Camera:** still
 - **References:** Farm barn
 - **Notes:** [close L8]
 
 ### Scene 75 · 9:06–9:14
-- **Image:** Inside the silver sedan from the back seat in grey daylight: Nora alone in front, driving, her bandaged arm on the wheel, a flat country road ahead
-- **Voice:** Hour fifty. I drove with both hands on the wheel so Eli wouldn't see them shake.
-- **SFX:** Car on a country road, road noise, wipers
-- **References:** Corolla interior
+- **Image:** Medium shot from the middle of the back seat looking forward through the car, grey daylight. In the foreground, the backs and headrests of both front seats: the driver's seat at frame left, the empty front passenger seat at frame right. Nora, alone in front, the only person in the frame, drives, seen from behind and slightly from her right: the back of her head, her messy dark bun, the charcoal-grey hoodie on her shoulders. Both of her hands (two hands) grip the top of the steering wheel at ten and two; her left forearm with its stained gauze bandage is raised on the wheel, visible past the left edge of her headrest. Ahead through the windshield: a flat, empty country road running straight to the horizon between brown fields under an overcast sky; the crack across the windshield's upper right; the rearview mirror at top centre. Light: flat grey daylight through the windshield. No one in the passenger seat, no other cars, no text.
+- **Voice:** By then she was driving with both hands on the wheel so Eli wouldn't see them shake.
+- **Ambience:** Car on the road
+- **SFX:** Windshield wipers swishing steadily across wet glass, a rubbery swish and soft thump at each end of the stroke, heard from inside a car on a grey day, even and hypnotic, no rain storm, no voices, no music
+- **Shot 2 (at "so Eli", still):** Close-up of both of Nora's hands (two hands) on the steering wheel, taken from just above and behind her right shoulder, the camera looking down and forward over the top of the wheel. Her left hand grips the rim at the ten o'clock position and her right hand at two o'clock, knuckles pale and tight, fingers trembling. Her fingernails are grey and cracking at the edges. At the left edge of the frame, the stained white gauze bandage around her left forearm. Through the gap in the wheel below her hands, the instrument cluster, dark-faced and unlit. Above the wheel, out of focus: the windshield and a flat grey road between brown fields. Light: flat grey overcast daylight coming through the windshield in front of her. No face in the frame, no readable numbers or text, no third hand.
+- **Camera:** pan left → right
+- **References:** Corolla interior, Corolla interior, facing back
 - **Title:** HOUR 50
 
 ### Scene 76 · 9:14–9:21
-- **Image:** Close-up of Nora's lips at the dictaphone, a dark grey vein visible on her neck, grey daylight
-- **Voice:** Hour fifty. Patient reports… [pause] patient reports… the word is gone.
-- **SFX:** Car interior, road noise, a dictaphone motor whirring
-- **References:** Corolla interior
+- **Image:** Close-up taken from the front passenger seat, the camera at Nora's mouth level, facing left toward the driver. Nora, alone, the only person in the frame, is in profile, facing frame right toward the windshield; the frame holds her lower face and neck: lips, chin, jaw and the right side of her neck. Her right hand only (one hand) holds the small black dictaphone up close to her lips, its red record light on. Her lips are parted mid-word, hesitating. Down the right side of her neck, from under the jaw to the collar of her navy scrubs, a dark grey vein stands out under sickly pale, sweaty skin. Behind her: the driver's side window, grey fields blurring past. The top of the steering wheel rim crosses the lower edge of the frame. Light: flat grey daylight from the windshield at frame right and the side window behind her. No gauges beside her head, no readable text.
+- **Voice:** {Nora} [flatly] Patient reports… [pause] patient reports… {Narrator} the word was gone.
+- **Ambience:** Car on the road
+- **SFX:** The small electric motor of a cassette dictaphone whirring softly as it records, a thin steady hum with a faint tape flutter, close and dry inside a car, no clicks, no voices, no music
+- **Shot 2 (at "the word is", zoom in):** Extreme close-up of Nora's eyes, Nora alone in the frame, taken from the windshield looking back at the driver: the camera just in front of her face, facing backward into the car. The frame holds both eyes, brows and the bridge of her nose, with her right temple at the left edge of the frame. Her eyes are unfocused and searching, drifting up and to one side, brows drawn together as she reaches for a lost word. Her left iris (on the right side of the frame) is faintly clouding grey; her right iris is still dark. A dark grey vein traces across her right temple at the left edge of the frame. Sickly pale skin, a sheen of sweat, dark circles, loose dark strands of hair. Light: flat grey daylight through the windshield behind the camera, soft and even on her face. Background: blurred grey. No dashboard, no hands, no second person.
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 77 · 9:21–9:29
-- **Image:** Close-up of Nora's hand on the steering wheel, the fingernails grey and cracking
-- **Voice:** I've said that word a thousand times. [pause] Aphasia. It took me an hour to find it.
-- **SFX:** Car interior, road noise
-- **References:** Corolla interior
+- **Image:** Close-up of Nora's left hand only (one hand) on the steering wheel, taken from just to the right of the steering column at hand height, the camera facing left toward the driver's door. Her left hand grips the rim of the wheel at the ten o'clock position, filling the middle of the frame; her fingernails are grey, cracked and split at the edges, the skin around them pale and dry. Just above her wrist, the edge of the stained white gauze bandage on her left forearm. Behind the hand: the inside of the driver's door and the side window, through which flat brown fields and a grey sky blur past. Light: flat grey overcast daylight through the side window and windshield. No right hand, no face, no gauges or dashboard in the frame, no text.
+- **Voice:** She'd said that word a thousand times at work. [pause] Aphasia. It took her an hour to find it.
+- **Ambience:** Car on the road
+- **Camera:** pan left → right
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 78 · 9:29–9:37
-- **Image:** Eli sitting on a gravel road shoulder, his scraped knee beading red, Nora kneeling in front of him with gauze, two people, grey daylight
-- **Voice:** Eli tripped on the gravel. Scraped his knee. [pause] I'm a nurse. I cleaned it.
-- **SFX:** Wind over an empty road, gravel crunching
-- **SFX 2 (at "tripped", 1s):** a small body hitting gravel, a child's yelp
+- **Image:** Medium-wide shot from the edge of the road, the camera low at kneeling height, facing the gravel shoulder side-on. Two people only, both in profile. Frame left: Eli sits on the gravel facing right, his left leg folded, his right leg stretched toward Nora, his jeans rolled up above the knee; his right knee, the one nearest the camera, is scraped raw, a bead of bright red blood on it. He clutches his walkie-talkie lanyard, wincing. Frame right: Nora kneels on the gravel facing left toward him. Her right hand holds a square of white gauze toward his knee; her left hand, the stained bandage on its forearm and grey cracked nails, steadies his shin. A dark grey vein shows on her neck. Background: the silver sedan parked on the shoulder with its passenger door open, flat brown fields, an overcast grey sky. Flat grey daylight from above. No third person, no other cars.
+- **Voice:** Eli tripped on the gravel and scraped his knee, [pause] and because she was a nurse, she cleaned it.
+- **Ambience:** Open farmland
+- **SFX:** Footsteps crunching on a gravel road shoulder, two people walking slowly, an adult's heavier steps and a child's lighter ones, close and outdoors on an overcast day, no voices, no music
+- **SFX 2 (at "tripped", 1s):** A small child's body falling onto gravel, a quick scuffling slide and a soft thud with loose stones scattering, close and outdoors, no voices, no music
+- **SFX 3 (at "tripped", 0.8s):** A young boy's short sharp yelp of pain as he falls, one quick breathy cry, close and outdoors, no words, no music
+- **Shot 2 (at "Scraped", zoom in):** Extreme close-up of Eli's right knee, taken low and close from the side, the camera at knee height a hand's width away. The rolled-up hem of his blue jeans crosses the top of the frame. On the pale skin of the kneecap, a fresh graze with grey gravel dust and a few tiny grains of grit pressed in, and one bright round bead of red blood welling up in the middle of it. Below and behind the knee, out of focus: the grey gravel of the road shoulder. Light: flat grey overcast daylight from above, soft, so the bead of blood catches a single small highlight. No hands, no gauze yet, no other body parts, no faces in the frame.
+- **Camera:** pan left → right
 
 ### Scene 79 · 9:37–9:45
-- **Image:** Extreme close-up of Nora's eyes, pupils wide, one iris clouding grey, staring down
-- **Video:** Nora's eyes stay fixed downward, her pupils widen slowly, a tremor in her lower eyelid; very slow push in. No cuts, no new objects.
-- **Voice:** [slowly] And I could smell it. My son's blood. [pause] Something in me… woke up.
-- **SFX:** Wind falling away
-- **SFX 2 (at "woke", 2s):** a low sub-bass swell and a heavy heartbeat
+- **Image:** Extreme close-up of Nora's eyes, Nora alone in the frame, taken from just below her eye line in front of her, the camera tilted slightly up at her face as she kneels and looks down. The frame holds both eyes, brows and the bridge of her nose. Her eyes stare downward, past the bottom edge of the frame, at her son's bleeding knee, which is not shown. Her pupils are wide and dark. Her left iris (on the right side of the frame) is clouded grey across about a third of it; her right iris is still dark. Sickly pale skin, a sheen of sweat, dark circles, loose dark strands of hair over her forehead. Light: flat grey overcast daylight from above and behind the camera, soft and even. Background: out-of-focus grey sky. No hands, no mouth, no second person.
+- **Voice:** [slowly] And she could smell it, her son's blood. [pause] Something in her… woke up.
+- **SFX 2 (at "woke", 1.4s):** A slow, deep cinematic sub-bass swell rising out of silence, a dark low rumble that builds over a second and stops dead, ominous horror tension, felt more than heard, no high frequencies, no music
+- **SFX 3 (at "woke", 1.2s):** A single heavy human heartbeat, one deep double thump, close and muffled as if heard from inside the body, ominous, no music, no other sounds
+- **Shot 2 (at "My son's", still, next frame):** The same extreme close-up of Nora's eyes, same camera position just below her eye line in front of her, same framing, a moment later. The frame still holds both eyes, brows and the bridge of her nose; she still stares downward past the bottom edge of the frame; the same sickly pale skin, sweat, dark circles and loose dark strands over her forehead; the same flat grey overcast daylight from above and behind the camera; the same out-of-focus grey sky behind. What has changed: her pupils have dilated wider, and the grey cloud in her left iris (on the right side of the frame) has spread further, now covering about half of it. Her right iris is still dark. Nothing else changes. No hands, no mouth, no second person.
+- **Shot 3 (at "Something", zoom in, next frame):** The same extreme close-up of Nora's eyes, same camera position just below her eye line in front of her, same framing, a moment later. Both eyes, brows and the bridge of her nose fill the frame; the same pale sweating skin, dark circles and loose dark strands; the same flat grey overcast daylight from above and behind the camera; the same blurred grey sky. Her pupils stay wide and her left iris (on the right side of the frame) stays half clouded grey. What has changed: a thin dark grey vein has surfaced at the outer corner of her left eye, branching toward the temple, a faint grey haze has appeared at the rim of her right iris, and her gaze has locked, fixed and unblinking, hungry. No hands, no mouth, no second person.
+- **Camera:** still
 - **Shake:** light
 - **Notes:** [open L10: what woke up in her?]
 
 ### Scene 80 · 9:45–9:53
-- **Image:** Night, Nora alone in the driver's seat, her left wrist handcuffed to the steering wheel, the steel cuff gleaming in moonlight
-- **Voice:** That night I cuffed myself to the steering wheel. [pause] And I gave Eli the key.
-- **SFX:** Car interior at night, crickets
-- **SFX 2 (at "cuffed", 1s):** a handcuff ratchet clicking shut
-- **References:** Corolla interior
+- **Image:** Medium shot at night, taken from the front passenger seat, the camera at shoulder height facing left toward the driver's seat. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her body facing the windshield at frame right, her head bowed toward her wrist. Her left wrist is locked in one ring of a steel handcuff; the short chain runs to the other ring, closed around the steering wheel rim at the nine o'clock position, in the lower part of the frame in front of her. The steel cuff gleams. Her right hand rests in her lap. Behind her: the driver's side window, a moonlit field beyond. Light: cold blue moonlight through the windshield from frame right, catching the steel cuff and her cheek; a faint orange glow from the instrument cluster, low behind the wheel and out of frame. Stained bandage on her left forearm, a dark grey vein on her neck. No second person, no gauges beside her head.
+- **Voice:** That night she cuffed herself to the steering wheel [pause] and gave Eli the key.
+- **Ambience:** Car at night
+- **SFX 2 (at "cuffed", 1s):** A steel handcuff ratcheting shut around a wrist, a fast metallic zip of the teeth and a final hard click, close and cold inside a quiet car at night, no voices, no music
+- **Camera:** pan right → left
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [close L10] It was the hunger, and she answers it with the cuffs. [open L12: will she hurt Eli?]
 
 ### Scene 81 · 9:53–10:02
-- **Image:** Close-up of Eli's small hand closing around a tiny handcuff key in the moonlight
-- **Voice:** If I act strange, you get out and lock the doors. [pause] And you never give me that key.
-- **SFX:** Car interior at night, crickets
-- **Shot 2 (at "never"):** Close-up of Nora's face in moonlight, her grey-veined temple, looking straight at her son
-- **References:** Corolla interior
+- **Image:** Close-up of Eli's right hand only (one hand), small, held palm up in the middle of the frame, taken from slightly above, the camera looking down at it in the back seat at night. A tiny silver handcuff key lies across his palm, and his fingers are curling closed around it, half shut, the key still glinting between them. The cuff of his oversized red rain jacket sleeve covers his wrist at the bottom of the frame. Below and behind the hand, out of focus: the edge of his booster seat and the worn grey cloth of the back seat. Light: cold blue moonlight through the rear side window from the upper left, the window out of frame, catching the key. Everything else dark. No adult hand, no second hand, no face, no text.
+- **Voice:** {Nora} If I act strange, you get out and lock the doors. [pause] And you never give me that key.
+- **Ambience:** Car at night
+- **Shot 2 (at "never", still):** Close-up of Nora's face at night, Nora alone in the frame, taken from the right side of the back seat, the camera at a child's eye level looking forward and to the left at the driver's seat. Nora has turned her head over her right shoulder and looks straight back into the camera, at her son. Her face fills the middle of the frame: sickly pale, sweat, dark circles, her mouth steady, her eyes serious, her left iris faintly clouded grey. Dark grey veins trace her right temple and the right side of her neck. The edge of the grey driver's headrest is beside her face; behind her, the windshield and driver's side window, black, with a moonlit field. Light: cold blue moonlight through the windshield, falling on the side of her face. No hands, no second person, no gauges beside her head.
+- **Camera:** pan top → bottom
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Setup: the rules Eli follows at Hour 61; Eli keeps the key until he hands it back at the gate.
 
 ### Scene 82 · 10:02–10:10.5
-- **Image:** Close-up of Eli's face in shadow, calm, nodding slowly
-- **Voice:** He just said okay. [pause] He didn't ask why. He trusted me completely. [pause] That was the worst part.
-- **SFX:** Car interior at night, crickets
-- **Shot 2 (at "He trusted"):** Close-up of Nora alone, her cuffed wrist on the steering wheel, looking at her son in the rearview mirror, eyes wet, dashboard glow
-- **References:** Corolla interior
+- **Image:** Close-up of Eli, alone, the only person in the frame, taken from between the front seats looking back into the back seat at night. He sits in his booster seat, which from this camera is on the left side of the back seat; his face fills the middle of the frame. His chin is dipping in a slow nod, his big brown eyes calm and steady, looking straight at the camera toward his mother. His curly light-brown hair, the collar of his oversized red rain jacket, the yellow walkie-talkie on its lanyard against his green dinosaur T-shirt. His right hand is closed into a small fist against his chest. Half of his face is in shadow. Behind him: the grey cloth seat back and the dark rear window. Light: cold blue moonlight through the rear side window behind him at frame left, rim-lighting his curls and one cheek. No adult, no second child.
+- **Voice:** He just said okay, and he didn't ask why. He trusted her completely. [pause] That was the worst part.
+- **Ambience:** Car at night
+- **Shot 2 (at "He trusted", zoom out):** Medium close-up of Nora, alone, the only person in the frame, taken from the front passenger seat, the camera at her eye level facing left toward the driver. She sits in the driver's seat in three-quarter view, facing the windshield at frame right, her eyes lifted up and to her right toward the rearview mirror, whose dark edge just enters the upper right corner of the frame, its reflection not visible. Her eyes are wet and shining, her mouth pressed tight. Her left wrist, locked in a steel handcuff chained to the steering wheel rim, rests on the wheel at the lower edge of the frame. Behind her: the driver's side window and a moonlit field. Light: the dim orange glow of the instrument cluster, low in front of her behind the wheel and out of frame, lighting her face from below; cool moonlight from the window behind her. A dark grey vein on her neck. No gauges beside her head, no second person.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** He doesn't know. He trusts her.
 
 ### Scene 83 · 10:10.5–10:19.5
-- **Image:** Close-up of the dictaphone's tape window on the dashboard in early morning light
-- **Voice:** In the morning, the tape was rewound again. [pause] I'm not the one who should be keeping this chart anymore.
-- **SFX:** Car interior at dawn, birds
-- **SFX 2 (at "rewound", 2s):** a fast cassette tape rewinding whirr, then a click
-- **Shot 2 (at "not the one"):** Close-up of Nora alone staring at the dictaphone in her trembling hand, early morning light
-- **References:** Corolla interior
+- **Image:** Close-up of the small black dictaphone lying flat on top of the dashboard just below the windshield, taken at dashboard level from the driver's side, the camera facing forward. The dictaphone is in the centre of the frame and sharp, its tiny cassette window facing up toward the camera: inside it the tape is fully rewound, the left spool fat with tape, the right spool empty. Beyond it, out of focus, the windshield: a misty field in pale early morning light, the crack across the upper right of the glass. Light: cold, pale grey-blue dawn light through the windshield, backlighting the dictaphone and glinting along its edges; its red record light is off. No hands, no people, no readable text, labels or numbers.
+- **Voice:** In the morning the tape was rewound again. [pause] She wasn't the one who should be keeping this chart anymore.
+- **Ambience:** Car at night
+- **SFX:** The first birds starting at dawn outside a parked car, a few sparse chirps and a distant songbird, faint through the closed windows, quiet and cold, no voices, no music
+- **SFX 2 (at "rewound", 1.6s):** A cassette tape in a small dictaphone fast-rewinding, a high mechanical whirr of the reels spinning, close and tinny, no voices, no music
+- **SFX 3 (from 3.4s, 0.6s):** A small dictaphone's rewind stopping at the start of the tape, one sharp plastic mechanical clunk, close and dry, no voices, no music
+- **Shot 2 (at "not the one", zoom out):** Close-up taken from the front passenger seat, the camera at chest height facing left toward the driver. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her head bowed, staring down at the small black dictaphone in her right hand only (one hand), held in front of her chest; the hand trembles, its fingernails grey and cracked. Her face: sickly pale, sweat, dark circles, the left iris faintly clouding grey, a dark grey vein on her neck, her expression hollow. Her left wrist, still cuffed to the steering wheel rim, is a dim shape at the lower edge of the frame. Behind her: the driver's side window, fogged at its edges, and a misty field at dawn. Light: cold, pale early morning light through the windshield at frame right, lighting her face from the side. No gauges beside her head, no second person, no readable text.
+- **Camera:** pan left → right
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 84 · 10:19.5–10:25.5
-- **Image:** Close-up of the white pill bottle nearly empty in Nora's grey-nailed palm
-- **Voice:** Nine Tylenol left. Fever, one-oh-two.
-- **SFX:** Car interior, pills rattling
-- **References:** Corolla interior
+- **Image:** Close-up of Nora's right hand only (one hand), open and palm up in the middle of the frame, taken from above, the camera looking straight down from her eye level as she looks into her own hand. A small white plastic pill bottle stands upright in her palm with its cap off; looking down into its open mouth, only a few white tablets lie at the bottom, the rest of the bottle empty. Her fingers are curled slightly around it and trembling, the fingernails grey, cracked and split. Below the hand, out of focus: her navy scrub trousers on her lap and the edge of the grey cloth driver's seat. Light: pale grey early morning daylight from the windshield in front of her, soft and cold. The bottle's label is turned away. No readable text or numbers, no second hand, no face.
+- **Voice:** The pills were nearly gone, and the fever was still climbing.
+- **Ambience:** Car at night
+- **SFX:** A few last pills rattling inside a nearly empty plastic pill bottle, shaken in a trembling hand, sparse dry clicks, close-miked inside a quiet car, no voices, no music
+- **Camera:** pan top → bottom
+- **References:** Corolla interior, Corolla interior, facing back
 - **Title:** TYLENOL: 9
 
 ### Scene 85 · 10:25.5–10:33
-- **Image:** Wide shot of the silver sedan parked off a highway ramp at night, a faint amber glow of floodlights on the low clouds over the near horizon
-- **Voice:** Hour sixty-one. Twelve miles out. Floodlights glowing on the clouds. [pause] We parked to wait for morning.
-- **SFX:** Wind, a distant generator hum, crickets
+- **Image:** Wide shot at night from outside the car, the camera low on the gravel about thirty metres behind the silver sedan and off to its left, facing forward the same way the car faces. The sedan sits small in the lower middle of the frame on a gravel patch at the bottom of a highway off-ramp, parked, headlights and taillights off, a faint red-orange glow inside the cabin. At frame right, the concrete ramp with a steel guardrail curves up and away into the dark. Beyond the car: a flat black field and a low treeline. Above the near horizon, the undersides of low clouds glow a dull amber from distant floodlights hidden below the horizon, the only real light, silhouetting the car's roof. The upper sky is black. Nobody outside the car. No streetlights on, no other vehicles, no readable signs or text.
+- **Voice:** By hour sixty-one they were close enough to see the floodlights glowing on the clouds. [pause] They parked to wait for morning.
+- **Ambience:** Car at night
+- **SFX:** A large generator humming far away across open fields at night, a low steady drone carried on the wind, distant and constant, heard outdoors beside a parked car, no voices, no music
+- **Shot 2 (at "Floodlights", pan bottom → top):** Wide shot of the night sky over the horizon, taken from ground level beside the parked car, the camera facing forward toward the distant camp and tilted slightly up. The lower fifth of the frame: a flat black field and a jagged black treeline running across the whole width. Above it, filling most of the frame, a ceiling of low, heavy clouds whose undersides glow dull amber, brightest just above the trees in the centre and fading to black toward the top of the frame. Light: floodlights far away below the horizon, out of frame, lighting the clouds from beneath. No fence, floodlight poles or buildings visible, no people, no car, no moon, no text.
+- **Shot 3 (at "We parked", zoom in):** Medium shot at night, taken from the front passenger seat, the camera at shoulder height facing left toward the driver. Nora, alone, the only person in the frame, slumps in the driver's seat, her head resting against the driver's side window at frame left, eyes half closed, sweat on her face. Her left forearm lies on the steering wheel rim at the lower edge of the frame: the gauze bandage stained dark, black veins spreading from under it toward the wrist, a steel handcuff locked on her left wrist and chained to the wheel rim. Her right hand lies in her lap. Through the window behind her head: black night with a faint amber glow on low clouds. Light: the dim red-orange glow of the instrument cluster, low in front of her behind the wheel and out of frame below, lighting her face and arm from below. No gauges beside her head, no second person, no blood on her mouth yet.
+- **Camera:** zoom out
 - **Title:** HOUR 61
 
 ### Scene 86 · 10:33–10:36.5
-- **Image:** Extreme close-up of Nora's eye rolling back, the red dashboard glow on her skin
-- **Voice:** Then the seizure.
-- **SFX:** A sudden high ringing, then silence
-- **References:** Corolla interior
+- **Image:** Extreme close-up of Nora's left eye, Nora alone in the frame, taken from the windshield looking back at the driver, the camera a hand's width from her face and facing backward into the car. The frame holds only her left eye, its eyebrow and the skin around it. The eye is rolling back: the iris, faintly clouded grey, is half hidden under the upper lid, mostly the bloodshot white showing, the lower lashes trembling. Beads of sweat on the brow and eyelid, sickly pale skin. Light: harsh red-orange glow from the instrument cluster, out of frame below the bottom edge, lighting the skin from below; deep shadow toward the top of the frame. The background is black. No dashboard, gauges or steering wheel in the frame, no hands, no second eye fully visible.
+- **Voice:** Then the seizure came.
+- **SFX:** A sudden sharp high-pitched ringing tone rising fast and piercing, like a seizure flooding the senses, then cutting off abruptly into total silence, disorienting and frightening, no music, no voices
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 - **Shake:** heavy
 - **Notes:** [interrupt: hard cut to silence, the blackout]
 
 ### Scene 87 · 10:36.5–10:41.5
-- **Image:** Almost total darkness, a faint red dashboard glow out of focus, the shape of a steering wheel
-- **SFX:** A muffled heartbeat, a child screaming as if heard underwater
-- **References:** Corolla interior
+- **Image:** Near-total darkness inside the parked car at night, taken from the driver's seat position at chest height, the camera facing forward at the steering wheel. Ninety percent of the frame is black. In the middle, out of focus, a faint, soft smudge of dim red-orange glow from the instrument cluster behind the wheel, and against it the black silhouette of the upper arc of the steering wheel rim and its spokes, just barely readable as a shape. The glow is blurred like a fading after-image, and every edge of the frame falls off into pure black. No other light; the windshield above is black. No person, no hands, no face, no readable gauges, numbers or text, nothing else in the frame.
+- **SFX:** A slow muffled human heartbeat heard as if from underwater, heavy dull thumps with a deep watery blur, disorienting and dreamlike, no music
+- **SFX 2 (from 1s, 3s):** A young boy screaming in terror heard as if from underwater, a distorted muffled cry far away and blurred, frightening and dreamlike, no clear words, no music
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Planned 5 s blackout, no narration.
 
 ### Scene 88 · 10:41.5–10:48.5
-- **Image:** Nora's left hand held up into the red dashboard light, her fingertips smeared with fresh blood, her face blurred behind it, Nora alone in the frame
-- **Voice:** I woke up with blood on my mouth. [pause] The back seat was empty.
-- **SFX:** Car interior at night, her ragged breathing
-- **SFX 2 (at "empty", 1s):** a low sub-bass hit
-- **References:** Corolla interior
+- **Image:** Close-up taken from the windshield looking back at the driver, the camera in front of Nora at chest height, facing backward into the dark car. Nora, alone, the only person in the frame. Her left hand only (one hand) is raised in the foreground, sharp, on the right side of the frame, palm and fingertips turned toward the camera, fingers slightly curled; the pads of her index and middle fingers are smeared with fresh dark red blood. A steel handcuff is locked around her left wrist, its chain hanging down out of the bottom edge toward the steering wheel; black veins run up from the bottom edge toward the wrist. Behind the hand, out of focus: her face, staring at her fingers, a dark smear of blood at her mouth; behind her, the driver's headrest and the black back seat. Light: red-orange glow from the instrument cluster, out of frame below the bottom edge, lighting hand and face from below. No dashboard, gauges or steering wheel in the frame.
+- **Voice:** She woke up with blood on her mouth, [pause] and the back seat was empty.
+- **Ambience:** Car at night
+- **SFX:** A woman's ragged, heavy breathing just after waking from a seizure, deep shaky gasps and wet exhales, very close inside a dark car, frightened, no words, no music
+- **SFX 2 (at "empty", 1.5s):** A single low cinematic sub-bass hit, a deep dark boom that blooms and fades, ominous and heavy, felt in the chest, no high frequencies, no music, no voices
+- **Shot 2 (at "The back seat", zoom in):** Medium shot from between the front seats looking back into the back seat at night, the camera at headrest height. The back seat fills the frame, with the dark rear window behind it. On the left side of the frame: Eli's booster seat, empty, its hollow seat and the grey cloth beneath it. On the right side: the empty left-rear seat. Both rear doors are shut, their lock pins pushed down. On the floor: crumpled paper wrappers and a brown paper bag. Through the rear window: black night and a faint amber glow on low clouds. Light: the dim red-orange glow of the instrument cluster, behind the camera and out of frame, faintly lighting the seat backs and the booster seat. No people, no hands, no blanket shaped like a child, no walkie-talkie.
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** The cold-open image again: we've caught up.
 
 ### Scene 89 · 10:48.5–10:55.5
-- **Image:** View through the windshield at night: Eli alone standing in the field twenty metres away in the glow of the dashboard light, clutching his walkie-talkie, crying
-- **Voice:** Eli was out in the field. Doors locked. Just like I taught him.
-- **SFX:** Car interior, wind, muffled crying outside
-- **SFX 2 (at "locked", 1s):** a car door lock clunking
-- **References:** Corolla interior
+- **Image:** View through the windshield at night from the driver's seat, the camera at Nora's eye level facing forward. Foreground: the dark top of the dashboard along the bottom edge and the black silhouette of the steering wheel's upper arc; the rearview mirror at top centre; the crack across the upper right of the windshield glass. Beyond the glass, about twenty metres away in a field of dead grass, centre frame: Eli, alone, the only person in the frame, standing small and still, facing the car, both of his hands (two hands) clutching the yellow toy walkie-talkie to his chest, his oversized red rain jacket hanging open, his face crumpled, crying. Light: the dull amber glow of distant floodlights on the low clouds behind him, rim-lighting his curls and shoulders; a faint red-orange reflection of the instrument cluster along the bottom of the windshield. Headlights off. No other people, no figures in the field, no Nora in the frame.
+- **Voice:** Eli was out in the field with the doors locked, just like she'd taught him.
+- **Ambience:** Car at night
+- **SFX:** A young boy crying quietly outside a car at night, muffled sobs and shaky breaths heard faintly through the closed windows, heartbreaking and distant, no words, no music
+- **SFX 2 (at "locked", 1s):** A car door lock clunking shut, one solid mechanical thunk of a sedan's central locking, close inside the car, no voices, no music
+- **Shot 2 (at "Doors locked", still):** Extreme close-up of the driver's door lock pin at night, taken from inside the car just above the door's inner window sill, the camera close and angled down along the door toward the front of the car. The small plastic lock pin is pushed all the way down, only its rounded tip showing in its hole in the sill, sharp in the centre of the frame. Above and beyond it, the dark side window glass, a faint mist of condensation on it and black night outside. Light: the dim red-orange glow of the instrument cluster from the right, out of frame, catching the top of the pin and the edge of the sill. No hands, no people, no readable text, no door handle in focus.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 90 · 10:55.5–11:03.5
-- **Image:** Nora alone in the rearview mirror, wiping her mouth with the back of her cuffed hand, staring at the blood
-- **Voice:** [panicking] Whose blood. Whose blood. I pulled at the cuff until my wrist bled.
-- **SFX:** Car interior, her fast breathing, the cuff chain rattling against the wheel
-- **References:** Corolla interior
+- **Image:** Rearview mirror shot at night: the camera just behind and above the driver's seat, looking forward at the rearview mirror at the top centre of the windshield. The mirror fills the middle of the frame; the back of Nora's head and her messy dark bun are out of focus in the lower left foreground. In the mirror, reflected, Nora alone: she has leaned forward and tilted her face up into the mirror, staring at herself in horror. She wipes her mouth with the back of her left hand, the cuffed hand: the steel handcuff on her wrist, its chain pulled taut downward out of the reflection toward the steering wheel. Fresh blood smears her lips, chin and the back of her hand. Behind her in the reflection: the dark, empty back seat, with Eli's empty booster seat on the right side of the reflection. Around the mirror: the black windshield and an amber glow on low clouds. Light: red-orange instrument glow from below, out of frame. No second person anywhere.
+- **Voice:** [panicking] Whose blood? Whose blood? She pulled at the cuff until her wrist bled.
+- **Ambience:** Car at night
+- **SFX:** A woman's fast, panicked breathing, sharp gasps and frightened ragged exhales, very close inside a dark car at night, no words, no crying, no music
+- **SFX 2 (at "pulled", 4s):** A short steel handcuff chain rattling and yanked hard against a car steering wheel, frantic metallic clanking and grinding, close inside a car, no voices, no music
+- **Shot 2 (at "I pulled", still):** Extreme close-up of Nora's left wrist and hand only (one hand) at the steering wheel, taken from the passenger side at wheel height, the camera facing left. The steering wheel rim crosses the bottom of the frame; one ring of a steel handcuff is locked around it, and the short chain is pulled straight and taut upward to the other ring, which bites deep into the skin of her left wrist in the middle of the frame as she yanks her arm up and back. Her hand is clenched into a fist, tendons standing out, grey cracked fingernails digging into the palm. Fresh blood beads and runs from under the edge of the cuff. Above the wrist, black veins spread from under the stained gauze bandage on her forearm. Background: the dark driver's side window. Light: red-orange glow of the instrument cluster, out of frame below and behind the wheel. No second hand, no face, no text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 91 · 11:03.5–11:12.5
-- **Image:** Close-up of Nora alone touching her lips with two fingers, eyes closing, dashboard glow
-- **Voice:** Then my tongue found a tear inside my cheek. [pause] It was mine. I'd bitten myself in the seizure. [sigh of relief]
-- **SFX:** Car interior, wind
-- **Shot 2 (at "It was mine"):** Close-up of Nora alone sagging back against the headrest, eyes closed, exhaling, dashboard glow
-- **References:** Corolla interior
+- **Image:** Close-up taken from the windshield looking back at the driver: the camera is just in front of Nora's face, facing backward into the dark car. Nora, alone, the only person in the frame, sits in the driver's seat facing the camera. Her right hand only (one hand) is raised, index and middle fingers touching her lower lip, which is smeared with fresh blood; her eyes are closing, her brows easing. Behind her: the grey cloth driver's headrest, then the dark back seat and the black rear window. She is lit from below and in front by the dim orange-red glow of the instrument cluster, which is out of frame below the bottom edge; the rest of the car falls into darkness. Night, Hour 61: sweat on her forehead and upper lip, loose dark strands stuck to her skin, her left iris clouding grey, her right eye dark brown, charcoal hoodie open over navy scrubs. No gauges, dashboard or steering wheel in the frame, no second person.
+- **Voice:** Then her tongue found a tear inside her cheek. [pause] It was hers. She'd bitten herself in the seizure. [sigh of relief]
+- **Ambience:** Car at night
+- **Shot 2 (at "It was mine", zoom out):** Close-up taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, the only person in the frame, seen in profile facing frame right toward the windshield, has sagged back with the back of her head resting against the grey cloth headrest, eyes closed, mouth slightly open as she exhales, shoulders dropped in relief. One hand visible: her left wrist, cuffed with a steel handcuff to the top of the steering wheel rim, which crosses the lower edge of the frame; her right hand is out of frame in her lap. Behind her, at the left edge of the frame, the dark driver's side window, black night outside with a faint pale floodlight glow far away on the horizon. Lit from below and in front by the dim orange-red instrument glow, out of frame below the wheel. Fresh blood on her lips, sweat, black veins at her wrist. No gauges beside her head, no second person.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [close L2]
 
 ### Scene 92 · 11:12.5–11:20.5
-- **Image:** Close-up of Nora alone pressing her forehead to the steering wheel, her cuffed wrist beside her face, shoulders shaking
-- **Voice:** [crying] But he'd watched me. Four minutes of thrashing and foam… [pause] he saw all of it.
-- **SFX:** Car interior, wind, crying
-- **References:** Corolla interior
+- **Image:** Close-up taken from the front passenger seat, the camera low at the height of the steering wheel, facing left toward the driver's seat. Nora, alone, the only person in the frame, leans forward with her forehead pressed against the top of the steering wheel rim, her face turned down and half hidden, shoulders hunched and shaking with sobs. Both of her hands (two hands) are on the wheel: her left wrist is cuffed to the rim with a steel handcuff just beside her face, the hand hanging limp, black veins spreading from under the stained gauze bandage on her left forearm toward the wrist; her right hand grips the rim on the right side of the frame. Behind her, the dark driver's side window and black night. Lit from below by the dim orange-red glow of the instrument cluster, which is hidden behind the wheel below her face, out of sight. Sweat, fresh blood on her mouth, messy dark bun. No dials or gauges beside her head, no second person.
+- **Voice:** [crying] But he'd watched her thrashing and foaming at the mouth, [pause] and he saw all of it.
+- **Ambience:** Car at night
+- **SFX:** A woman crying quietly, soft broken sobs and shaky breaths held back, very close and intimate inside a dark car at night, no words, no music
+- **Shot 2 (at "he saw all", zoom in):** Medium close-up taken in the dark field at a child's eye level, about ten metres in front of the parked car, the camera facing away from the car toward Eli. Eli, alone, the only person in the frame, stands very still in knee-high dead grass, staring straight past the camera at the car with wide, wet brown eyes, lips pressed together. Both arms hang at his sides; his right hand loosely holds the small yellow toy walkie-talkie, which dangles at knee height on its lanyard; his left hand is empty. Behind him: the black field and, far away on the horizon, a pale floodlight glow under the night sky. His face is faintly lit warm orange from the front by the car's dim interior glow, which is out of frame behind the camera; a cold rim of distant floodlight on his curly light-brown hair. Oversized red rain jacket over a green dinosaur T-shirt. No car in the frame, no adults, no other figures in the field.
+- **Camera:** zoom out
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** Lowest point (~76%).
 
 ### Scene 93 · 11:20.5–11:28.5
-- **Image:** Eli alone in the dark field holding the yellow walkie-talkie to his mouth, his face wet, faint glow from the car
-- **Voice:** Then my walkie clicked. Twice. [pause] I'm here. I'm okay.
-- **SFX:** Wind through grass
-- **SFX 2 (at "clicked", 1s):** two walkie-talkie clicks
+- **Image:** Medium close-up taken in the dark field at Eli's eye level, the camera facing him, the parked car out of frame behind the camera. Eli, alone, the only person in the frame, holds the small yellow toy walkie-talkie up to his mouth with both hands (two hands), pressing its button, his cheeks wet with tears, his eyes fixed past the camera on the car. Its lanyard loops around his neck. Behind him: knee-high dead grass, then black night and a pale floodlight glow far away on the horizon. His face is lit faintly from the front by the warm orange interior glow of the car, out of frame behind the camera, with cold pale rim light on his curly light-brown hair from the distant floodlights. Oversized red rain jacket over a green dinosaur T-shirt. No car in the frame, no other people, no readable text.
+- **Voice:** Then her walkie clicked twice: [pause] I'm here, I'm okay.
+- **Ambience:** Car at night
+- **SFX 2 (at "clicked", 1s):** Two clicks from a toy walkie-talkie's talk button, two quick plastic clicks each with a tiny burst of static from its speaker, close inside a dark car at night, no voices, no music
+- **Shot 2 (at "I'm here", zoom in):** Close-up taken from the windshield looking back at the driver: the camera is just in front of Nora's face, facing backward into the car. Nora, alone, the only person in the frame, sits in the driver's seat, eyes squeezed shut, tears running down through the sweat on her cheeks. Her right hand only (one hand) presses the small blue toy walkie-talkie flat against her chest over her navy scrubs, inside her open charcoal hoodie; her cuffed left arm hangs down out of frame toward the wheel. Behind her: the grey cloth driver's headrest, then the dark back seat with the empty booster seat in shadow on the left of the background, and the black rear window. Lit from below and in front by the dim orange-red instrument glow, which is out of frame below the bottom edge. Fresh blood smeared on her mouth and chin, left iris clouding grey. No gauges, dashboard or steering column in the frame, no second person.
+- **Camera:** zoom out
 - **Notes:** Music: a low warm piano note.
 
 ### Scene 94 · 11:28.5–11:38.5
-- **Image:** Eli outside the car and Nora inside (two people), his small hand and her grey hand pressed against the same window glass from either side, night
-- **Voice:** He wouldn't get in the car for an hour. [pause] To him, I was just very sick. He was right to be scared.
-- **SFX:** Wind, crickets, his quiet breathing on the glass
-- **Shot 2 (at "To him"):** Eli alone in the dark field outside the car, hugging his knees, staring at the car, the faint dashboard glow on his face
-- **References:** Corolla interior
+- **Image:** Close-up taken from outside the car beside the driver's side window, the camera facing the glass at the height of Eli's shoulder. Two people: Eli outside, Nora inside. Eli stands in the left foreground, his back half turned to the camera, his right hand only (one hand) pressed flat on the outside of the window glass. On the other side of the glass, Nora in the driver's seat presses her left palm (one hand) against the same spot from inside, palm to palm with his; a steel handcuff on her left wrist, its chain pulled taut down to the steering wheel rim below the window line. Her hand is pale and grey-tinged with black veins at the wrist. Her face, behind the glass in the middle of the frame, is dim and blurred, lit from below by the orange-red instrument glow inside the car. Night: the glass faintly fogged, the silver door below, black sky above. Faint orange glow on Eli's curls and red jacket. No third person, no headlights.
+- **Voice:** He wouldn't get in the car for an hour. [pause] To him she was just very sick, and he was right to be scared.
+- **Ambience:** Car at night
+- **SFX:** A small child's quiet breathing against a car window, soft shaky breaths fogging the glass, slightly muffled and very close, heard from inside the car at night, no words, no crying, no music
+- **Shot 2 (at "To him", zoom out):** Wide shot taken low in the dark field beside Eli, the camera facing across him toward the car. Eli, alone, the only person in the frame, sits in the dead grass on the right of the frame, seen in profile facing left, hugging his knees to his chest with both arms, both hands (two hands) clasped around his shins, chin on his knees, staring at the car. On the left, about twenty metres away in the background, the silver sedan sits parked and dark, its only light a faint orange-red glow inside the windshield; no figure visible inside. Above, black night sky; a pale floodlight glow on the far horizon. The faint orange glow from the car touches the left side of his face; the rest of him is in near darkness. Red rain jacket, curly light-brown hair, the yellow toy walkie-talkie on its lanyard resting against his knees. No other people, no headlights, no moon.
+- **Shot 3 (at "He was right", zoom out):** Close-up taken from outside the car, just beyond the driver's side window, the camera facing the glass. Nora, alone, the only person in the frame, sits in the driver's seat with her forehead resting against the inside of the cold window glass, eyes closed, lips parted. The glass is faintly fogged around her forehead, with a few beads of condensation. Behind her, inside the car: the dark interior and the grey passenger headrest in shadow. She is lit from below by the dim orange-red instrument glow inside the car, out of frame below the window's lower edge; outside is black night, a cold blue sheen on the silver door frame along the bottom of the frame. Sweat on her face, blood smeared at the corner of her mouth, loose strands of dark hair stuck to the glass, her left iris clouding grey under the lid. No hands in the frame, no second person, no reflections of other people.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 95 · 11:38.5–11:45.5
-- **Image:** Blue pre-dawn light, the silver sedan seen from behind on an empty road, a floodlit fence line glowing far ahead
-- **Voice:** Hour sixty-six. I recorded the last tape I could still say all the words on.
-- **SFX:** Car on an empty road, a distant generator hum
+- **Image:** Wide shot taken from the middle of the empty road about fifteen metres behind the car, the camera low at bumper height, facing forward in the direction the car is driving. The silver 2009 sedan, centred in the frame, is seen from directly behind, its red taillights glowing, its headlight beams reaching ahead along the two-lane asphalt. No people visible; the rear window is dark. The road runs straight ahead to the horizon between flat fields of dead grass on the left and right, a faded white centre line down the middle. Far ahead on the horizon, a long chain-link fence line glows white under a row of tall floodlights, small and distant. Light: blue pre-dawn, the sky deep blue overhead fading to a pale band at the horizon; the floodlights are the brightest point in the frame. No other vehicles, no road signs, a blank licence plate, no figures on the road.
+- **Voice:** At hour sixty-six she recorded the last tape she could still say all the words on.
+- **Ambience:** Car on the road
+- **SFX:** A large generator humming far away across open country, a low steady drone carried on the wind, distant and constant, heard from an empty road, no voices, no music
+- **Camera:** zoom in
 - **Title:** HOUR 66
 
 ### Scene 96 · 11:45.5–11:53.5
-- **Image:** Close-up of the black dictaphone held in Nora's grey-nailed hand, its red record light glowing, Eli asleep in the back seat soft and out of focus behind it, two people: Nora and Eli, blue pre-dawn light
-- **Voice:** [softly] This one's for you, Eli. For when you're older. [pause] You were braver than me. You always were.
-- **SFX:** Car interior, quiet, a dictaphone motor whirring softly
-- **References:** Corolla interior
+- **Image:** Close-up taken from between the front seats, the camera at the height of the centre console, facing backward into the back seat. Two people: Nora (her hand only) and Eli. In the foreground on the right of the frame, Nora's right hand only (one hand) reaches in from the right edge holding the small black dictaphone upright, its red record light glowing, the tiny cassette visible in its window; her skin is grey, her fingernails grey and cracked, the charcoal hoodie cuff at her wrist. Behind it, soft and out of focus, Eli sits asleep in his booster seat on the LEFT of the frame, head tilted against the rear side window, red rain jacket, curly light-brown hair. The empty left-rear seat is on the right of the background, the rear window behind. Blue pre-dawn light comes through the rear and side windows from behind Eli. Nora's face not in frame, no third person, no readable text.
+- **Voice:** {Nora} [softly] This one's for you, Eli, for when you're older. [pause] You were braver than me. You always were.
+- **Ambience:** Car on the road
+- **SFX:** The small electric motor of a cassette dictaphone whirring softly as it records, a thin steady hum with a faint tape flutter, close and dry inside a car, no clicks, no voices, no music
+- **Shot 2 (at "You were braver", zoom out):** Close-up taken from between the front seats, the camera facing backward toward Eli's booster seat on the right rear of the car, which appears on the LEFT of the frame. Eli, alone, the only person in the frame, sleeps in the booster seat, his head tilted to the left of the frame against the rear side window, mouth slightly open, eyelashes on his cheeks, curls flattened on one side. His left hand only (one hand) rests on the small yellow toy walkie-talkie lying on his chest on its lanyard; his other hand is out of frame in his lap. Behind him, the window glass shows a blue pre-dawn sky over dark fields. Soft blue pre-dawn light falls on his face from that window, from behind and beside him; the car interior is dim. Oversized red rain jacket over a green dinosaur T-shirt, worn grey cloth seat. No adult, no other hands, no readable text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** The last tape. Eli never plays it in the video.
 
 ### Scene 97 · 11:53.5–12:01
-- **Image:** Close-up of Nora's grey-nailed hand slipping a small cassette tape into the inner lining of a small red rain jacket, blue pre-dawn light, Nora's one hand only
-- **Voice:** I slipped the cassette into the lining of his jacket while he slept. [pause] For later.
-- **SFX:** Car interior, road noise, rain jacket rustling
-- **References:** Corolla interior
+- **Image:** Close-up looking down at Eli's chest from just above it, the camera between the front seats leaning into the back seat, facing down and backward. In the frame: the front of Eli's oversized red rain jacket hanging open over his green dinosaur T-shirt; its left front panel is folded back to show the dark grey nylon lining and a small inside pocket. Nora's right hand only (one hand) enters from the bottom edge of the frame and slips a small clear cassette tape halfway into that inside lining pocket. Her skin is grey, her nails grey and cracked, black veins faint at the wrist, the charcoal hoodie cuff at her wrist. Eli's face is out of frame above; his chest is still in sleep; the yellow toy walkie-talkie lies on the T-shirt near the top edge of the frame. Light: soft blue pre-dawn from the rear window, out of frame. No faces, no second hand, no readable text on the cassette.
+- **Voice:** She slipped the cassette into the lining of his jacket while he slept, [pause] for later.
+- **Ambience:** Car on the road
+- **SFX:** A child's nylon rain jacket rustling softly as a hand slips something into its lining, gentle crinkling of thin waterproof fabric, very close and careful inside a quiet car, no voices, no music
+- **Camera:** pan top → bottom
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 98 · 12:01–12:09
-- **Image:** Close-up of Nora's grey hand holding Eli's small sleeping hand on the back seat
-- **Voice:** I still didn't know what I'd say at the gate. [pause] I had four hours to find it.
-- **SFX:** Car interior, road noise, Eli's slow breathing
-- **References:** Corolla interior
+- **Image:** Close-up looking down at the back seat cushion, the camera between the front seats facing backward and down. Two hands only: Nora's right hand, reaching in from the bottom edge of the frame, and Eli's small left hand. Eli's hand lies limp, palm up, on the worn grey cloth seat beside his booster seat, fingers half curled in sleep, the cuff of his red rain jacket at his wrist. Nora's hand gently holds it from underneath, her thumb over his knuckles; her skin is grey, her nails grey and cracked, faint black veins at her wrist under the charcoal hoodie cuff. In the background, out of focus: the base of the booster seat and a crumpled paper wrapper on the floor. Soft blue pre-dawn light from the rear window, out of frame above. No faces, no third hand, no readable text.
+- **Voice:** She still didn't know what she'd say at the gate, [pause] and she had four hours to find it.
+- **Ambience:** Car on the road
+- **SFX:** A small child's slow, deep breathing in his sleep, soft even breaths, close and peaceful inside a quiet car, no snoring, no words, no music
+- **Shot 2 (at "I had four", zoom in):** Close-up taken from the back seat looking forward, over Nora's right shoulder. Nora, alone, the only person in the frame, sits in the driver's seat on the left of the frame: her right cheek, ear, messy dark bun and the edge of her eye are seen from behind and to the side as she stares straight ahead through the windshield. The grey cloth driver's headrest is beside her head. Beyond her, through the windshield in the upper middle of the frame: flat dark land and, far away on the horizon, a thin floodlit fence line glowing white. A crack runs across the upper right of the windshield. One hand visible: her left wrist cuffed to the top of the steering wheel rim at the lower left. Light: cold blue pre-dawn through the windshield, lighting the edge of her face; the dashboard is dark. Grey skin on her neck with a dark grey vein. No second person, no readable text.
+- **Camera:** zoom out
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 99 · 12:09–12:17
-- **Image:** Wide shot from a low rise at dawn: the Fort Calder gate glowing under floodlights, a diesel generator beside the booth, a crowd of grey figures gathered along the outside of the fence
-- **Video:** The grey figures sway slowly along the fence line, floodlight haze drifts, the generator exhaust puffs; very slow push in. No cuts, no new objects.
-- **Voice:** But the gate's generator was loud. [pause] And the dead had been listening to it all night.
-- **SFX:** A diesel generator drone far ahead, many low groans, wind
+- **Image:** Wide shot taken from a low rise in a field of dead grass about three hundred metres from the fence, the camera at standing eye level facing the Fort Calder gate. The double chain-link fence, topped with razor wire, runs straight across the middle of the frame from the left edge to the right edge. In the centre stands the sandbagged vehicle gate, shut; to its right, inside the fence, a small scanner booth and a boxy diesel generator. Tall floodlight poles stand along the fence, glowing white and casting haze. Along the outside of the fence, on the near side, a crowd of grey figures stands packed together, thickest near the generator, all small dark silhouettes. In the foreground, empty dead grass slopes down toward them. Light: early dawn, the sky pale blue-grey, the floodlights the brightest points. No vehicles, no soldiers visible, no readable signs.
+- **Voice:** But the gate's generator was loud, [pause] and the dead had been listening to it all night.
+- **Ambience:** Fort Calder gate
+- **Shot 2 (at "And the dead", still):** Medium shot taken standing just outside the fence, the camera at head height looking along the fence line. The chain-link fence runs from the right foreground into the distance on the right half of the frame, razor wire against the sky. Packed shoulder to shoulder along its outside, on the left half of the frame, stands a row of grey figures, the dead: grey skin, slack faces, torn everyday clothes, seen from the side and from behind, all facing right through the wire toward a boxy diesel generator inside the fence in the right background. The nearest figures are large in the left foreground, the row shrinking into the distance. Light: a floodlight on a tall pole above the fence, out of frame top right, throws cold white light down on their shoulders; pale dawn sky. No living people, no soldiers, no blood, no readable signs.
+- **Shot 3 (at "listening", still, next frame):** The same view along the fence, same camera position and framing, a moment later: the chain-link fence still runs from the right foreground into the distance on the right half of the frame, razor wire against the sky; the row of grey figures, the dead, still stands packed along its outside on the left half, facing right through the wire toward the boxy diesel generator in the right background. What changed: the row has shifted along the wire by half a step, and three of the nearest figures in the left foreground have turned their heads toward the camera, their pale clouded eyes looking straight out of the frame; all the others still face the generator. Light unchanged: cold white floodlight from a pole out of frame top right, pale dawn sky. No living people, no soldiers, no blood, no readable signs.
+- **Camera:** zoom out
 - **References:** Fort Calder gate
 - **Notes:** [open L11: can they get through the dead to the gate?]
 
 ### Scene 100 · 12:17–12:23
-- **Image:** The gate's floodlights snapping to full brightness in the dawn haze, the steel gate starting to slide open
-- **Voice:** Six A.M. The gate opened. Ten minutes.
-- **SFX:** Generator drone, wind
-- **SFX 2 (from 0s, 2s):** a loud klaxon, then a gate motor grinding
+- **Image:** Wide shot taken from the field about fifty metres in front of the gate, the camera at standing eye level facing the gate head-on. The heavy steel sliding gate fills the centre of the frame, set in the double chain-link fence topped with razor wire, with chest-high sandbag walls on either side and the small scanner booth on the right. The gate has just started to slide to the right: a narrow dark gap has opened at its left end. Above, the tall floodlight poles on both sides of the gate have snapped to full brightness, their white glare blooming through the dawn haze and lighting the ground. In the foreground: dead grass, wet with dew. At the far left and right edges of the frame, small grey figures stand along the fence in shadow. Light: blue-grey dawn sky, the floodlights the brightest thing in the image. No soldiers in the gap, no vehicles, no readable signs.
+- **Voice:** At dawn the gate opened, for ten minutes.
+- **Ambience:** Fort Calder gate
+- **SFX 2 (from 0s, 2s):** A loud military klaxon blaring across a field at dawn, a harsh low horn blast echoing off fences and open ground, urgent and imposing, no voices, no music
+- **SFX 3 (from 1.6s, 4s):** A heavy electric gate motor grinding as a steel vehicle gate slides open, a low mechanical whine with metal rumbling on a track, a few dozen metres away outdoors, no voices, no music
+- **Shot 2 (at "Ten minutes", pan left → right):** Close-up at ground level just outside the gate, the camera low and facing the bottom edge of the steel sliding gate. A heavy grooved steel wheel at the gate's lower edge rolls along a steel rail set in concrete, which runs horizontally across the lower third of the frame; the gate's bottom frame and chain-link panel fill the upper part of the frame, moving from left to right. Dust and grit kick up from the rail and hang in the air, glowing in the beam of a floodlight behind the gate, out of frame at the top. In the background beyond the mesh, blurred sandbags. Light: cold white floodlight from above and behind the gate, blue dawn haze. No people, no feet, no hands, no readable text.
+- **Camera:** pan bottom → top
 - **References:** Fort Calder gate
 - **Title:** HOUR 70 · 6:00 AM
 - **Shake:** light
 
 ### Scene 101 · 12:23–12:30
-- **Image:** The silver sedan bouncing across the field of dead grass toward the gate, grey figures turning toward it on both sides, dawn
-- **Voice:** I floored it across the field. The dead turned with us, like a tide.
-- **SFX:** Engine straining, dry grass rushing under the car, groans
+- **Image:** Wide shot taken low in the dead grass beside the car's path, on the car's right-hand side, the camera facing across the field; the car moves from left to right across the frame toward the gate on the right. The silver 2009 sedan, seen side-on from its passenger side, bounces over a bump with its front wheels lifted, dust and dry grass spraying behind it, headlights on. Through its side windows only dark shapes; no faces visible. Grey figures, the dead, stand scattered across the field in the foreground and background, on both sides of the car, all turning their heads and bodies toward it. In the right background: the floodlit chain-link fence and the gate, glowing white. Light: blue-grey dawn sky, floodlight glare from the right. No soldiers, no other vehicles, no readable licence plate.
+- **Voice:** She floored it across the field, and the dead turned with them like a tide.
+- **Ambience:** Fort Calder gate
+- **SFX:** An older sedan's engine straining at full throttle across rough ground, a loud high revving roar with the car bouncing, heard from close beside it outdoors, urgent, no voices, no music
+- **SFX 2 (from 0s, 6s):** Dry dead grass rushing and whipping under a speeding car, a loud brushing swish and stalks snapping against the underside, close outdoors, no voices, no music
+- **Shot 2 (at "The dead", zoom in):** Wide shot taken low, at the height of a car's bonnet, from the middle of the field, the camera facing forward toward the distant gate. Dozens of grey figures, the dead, stand scattered across the field of dead grass between the camera and the fence, in the foreground, middle and background, on the left and the right of the frame. All of them are turning at once toward the camera, heads and shoulders swinging around, slack grey faces and clouded eyes beginning to face out of the frame. Behind them, across the background, the chain-link fence with razor wire, the gate, and tall floodlight poles glaring white, so the figures are backlit, their outlines rimmed with cold light and their fronts in shadow. Blue-grey dawn sky. No living people, no car or bonnet visible in the frame, no blood, no readable signs.
+- **Camera:** pan left → right
 - **References:** Fort Calder gate
 
 ### Scene 102 · 12:30–12:36
-- **Image:** The silver sedan stopped a few metres from the sandbagged gate, soldiers in silhouette behind the fence with rifles raised, floodlights
-- **Voice:** Forty feet from the gate, I stopped. [pause] Eight minutes.
-- **SFX:** Generator drone, an engine idling, shouting far off
+- **Image:** Wide shot taken from behind the car, the camera low at its left rear corner, facing forward toward the gate. The silver 2009 sedan stands stopped in the left foreground, seen from behind and slightly to the side, its brake lights glowing red, dust settling around its wheels in the dead grass. About twelve metres ahead, the sandbagged gate fills the middle of the frame: the steel sliding gate drawn open, chest-high sandbag walls on either side, the small scanner booth on the right. Behind the sandbags and the chain-link, four soldiers stand as dark silhouettes with rifles raised and aimed at the car. Tall floodlights above the gate glare straight toward the camera, haloed in the haze. Through the car's rear window, only dark shapes. Blue-grey dawn sky. No faces visible, no grey figures near the car, no readable signs or licence plate.
+- **Voice:** She stopped just short of the gate. [pause] Eight minutes left.
+- **Ambience:** Fort Calder gate
+- **SFX:** An older sedan's engine idling roughly after a hard stop, a low uneven rumble with a faint rattle, heard from just behind the car outdoors at dawn, no voices, no music
+- **SFX 2 (from 1s, 4s, volume 70%):** Soldiers shouting far off at a military gate, a few urgent unintelligible commands carried across a field, distant and echoing, no clear words, no music
+- **Shot 2 (at "Eight minutes", still):** Close-up taken from the front passenger seat, the camera looking left and down at the right side of the steering wheel. Nora's right hand only (one hand) grips the wheel rim, which crosses the frame diagonally. On her right wrist, a plain wristwatch with a round white face and a black strap, no numerals, only tick marks: the hour hand points at six and the minute hand just past twelve. Her skin is grey, her nails grey and cracked, black veins faint above the wrist, the charcoal hoodie cuff pushed back. Behind the hand, the dark plastic top of the dashboard, out of focus. Lit from the front by cold white floodlight shining through the windshield from out of frame above, with grey dawn light. No gauges, no other hand, no numbers or text on the watch face.
+- **Camera:** zoom in
 - **References:** Fort Calder gate
 - **Title:** 8 MIN
 
 ### Scene 103 · 12:36–12:44
-- **Image:** Inside the car at dawn: Nora turned around in the driver's seat, face to face with Eli in the back seat, two people, floodlight through the windows
-- **Voice:** I turned around. This was it. The thing I'd been trying to say for two days.
-- **SFX:** Car interior, the generator drone muffled
-- **References:** Corolla interior
+- **Image:** Medium wide shot taken from the rear of the car, the camera at the centre of the rear window at head height, facing forward through the whole car. Two people: Nora and Eli. On the right of the frame, in the foreground, Eli sits in his booster seat on the right rear seat, seen from behind and slightly to his left: curly light-brown hair, red rain jacket, face turned up toward his mother. On the left of the frame, in the middle ground, Nora is twisted around in the driver's seat to her right, her face in three-quarter view looking back at Eli, face to face with him. Her two hands: her right hand grips the top of her seat back; her left arm stretches forward behind her, the wrist still cuffed to the steering wheel rim. The empty left-rear seat in the left foreground. Light: the floodlit gate glaring white through the windshield beyond them, rimming their hair; blue-grey dawn. No third person.
+- **Voice:** She turned around. This was it, the thing she'd been trying to say all along.
+- **Ambience:** Fort Calder gate
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 104 · 12:44–12:51
-- **Image:** Close-up of Eli's tear-streaked face, his small hand gripping his mother's sleeve
-- **Voice:** [childlike tone] [crying] I'm not going without you, Mom.
-- **SFX:** Car interior, the generator drone muffled
-- **References:** Corolla interior
+- **Image:** Close-up taken from between the front seats, the camera facing backward toward Eli's booster seat, which is on the LEFT of the frame. Eli, the only person in the frame, sits in the booster seat looking up at the camera, at his mother's eyes, his face wet and tear-streaked, lower lip trembling, eyes red, the gap in his front teeth showing. His right hand only (one hand) reaches forward at the lower edge of the frame and grips the sleeve of a charcoal-grey hoodie, which enters from the lower right corner; his small knuckles are white. Behind him: the right rear side window, then the rear window, grey dawn outside. Lit from the front by cold white floodlight coming through the windshield behind the camera, out of frame, falling flat on his face. Oversized red rain jacket, curly light-brown hair. No adult face, no other hands.
+- **Voice:** {Eli} [crying] I'm not going without you, Mom.
+- **Ambience:** Fort Calder gate
+- **Camera:** still
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 105 · 12:51–12:59
-- **Image:** Close-up of Nora's face, her eyes now grey, trying to smile for him
-- **Voice:** I opened my mouth to tell him the truth. [pause] I looked at his face… and I couldn't.
-- **SFX:** Car interior, the drone fading away
-- **References:** Corolla interior
+- **Image:** Close-up taken from Eli's booster seat in the back seat, the camera at a child's eye level facing forward and to the left toward the driver's seat. Nora, alone, the only person in the frame, is turned around in the driver's seat to face the camera, her chin over her right shoulder, trying to smile: the corners of her mouth lifted, lips pressed, eyes glistening. Both of her eyes are now clouded grey. Behind her head: the driver's side window and the left part of the windshield, through which the gate's cold white floodlights glare and bloom. Lit from behind and the side by that floodlight, a white rim on her loose hair and cheek, her face in soft shadow with grey dawn fill. A dark grey vein on her neck, sweat, freckles, messy dark brown bun, charcoal hoodie over navy scrubs. No hands in the frame, no second person, no gauges beside her head.
+- **Voice:** She opened her mouth to tell him the truth. [pause] She looked at his face… and she couldn't.
+- **SFX:** A low distant drone slowly fading away to near silence, a deep soft hum receding as if the world goes quiet inside a closed car, muffled and intimate, no voices, no music
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 106 · 12:59–13:07.5
-- **Image:** View from behind Eli in the back seat toward Nora turned around in the driver's seat, her hand cupping his cheek, forcing a gentle smile, two people: Eli and Nora, floodlight through the windows, dawn
-- **Voice:** [softly] The doctors are in there, baby. I'll be right behind you. [pause] I just have to park the car.
-- **SFX:** Car interior, the generator drone muffled
-- **Shot 2 (at "right behind you"):** Close-up of Eli's tear-streaked face looking up at his mother, Eli alone in the frame, floodlight on his face
-- **References:** Corolla interior
+- **Image:** Medium close-up taken over Eli's left shoulder from behind him, the camera at the back of the car above the rear seat, facing forward and slightly left. Two people: Eli and Nora. In the right foreground, out of focus, the back of Eli's curly light-brown head and the shoulder of his red rain jacket. In the middle of the frame, Nora is turned around in the driver's seat, leaning back between the front seats toward him, her face toward the camera, forcing a gentle smile, eyes grey and wet. Her right hand only (one hand) cups Eli's left cheek, her grey thumb on his cheekbone; her left arm stretches away behind her toward the steering wheel, out of focus. Behind her: the windshield, through which the floodlit gate glares white. Lit from behind her by the floodlight through the windshield, rimming her hair, with grey dawn light on her face. No third person, no readable text.
+- **Voice:** {Nora} [softly] The doctors are in there, baby. I'll be right behind you. [pause] I just have to park the car.
+- **Ambience:** Fort Calder gate
+- **Shot 2 (at "right behind you", still):** Close-up taken from between the front seats, the camera at Nora's eye level facing backward and slightly down toward Eli's booster seat, which is on the LEFT of the frame. Eli, alone, the only person in the frame, looks up into the camera at his mother, his face tear-streaked, eyes wide and wet, mouth slightly open, the gap in his front teeth visible. His face fills most of the frame: curly light-brown hair, the collar of his red rain jacket. Behind him, out of focus: the right rear side window and the rear window, grey dawn sky. Lit from the front by cold white floodlight shining in through the windshield behind the camera, out of frame, falling evenly on his face and catching in his tears. No hands, no adults, no third person.
+- **Shot 3 (at "I just have", zoom in):** Close-up taken from Eli's booster seat, the camera at a child's eye level facing forward and to the left toward the driver's seat. Nora, alone, the only person in the frame, is turned around to face the camera, her forced smile trembling at the corners, chin dimpled with the effort, both eyes clouded grey and brimming with tears. Her face fills most of the frame. Behind her head: the driver's side window and the left part of the windshield, the gate's floodlights glaring white through the glass. Lit from behind and to the side by that floodlight, a white rim on her cheek and loose hair, soft grey dawn light on her face. Sweat on her brow, a dark grey vein on her neck, freckles, charcoal hoodie collar. No hands, no second person, no gauges beside her head.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** [close L1] What she tells him: a lie, so he can walk away believing she's coming.
 
 ### Scene 107 · 13:07.5–13:12.5
-- **Image:** Close-up of Eli's tear-streaked face, holding his yellow walkie-talkie in both hands (two hands), looking up at his mother
-- **Voice:** [childlike tone] [sniffles] Promise? [pause] Two clicks?
-- **SFX:** Car interior, the generator drone muffled
-- **References:** Corolla interior
+- **Image:** Close-up taken from between the front seats, the camera at Nora's eye level facing backward and slightly down toward Eli's booster seat, on the LEFT of the frame. Eli, alone, the only person in the frame, looks up at the camera, at his mother: his tear-streaked face in the upper half of the frame, eyes red, lips parted in a question, the gap in his front teeth visible. In the lower half of the frame he holds the small yellow toy walkie-talkie against his chest with both hands (two hands), fingers wrapped tightly around it, its lanyard around his neck. Oversized red rain jacket over a green dinosaur T-shirt, curly light-brown hair. Behind him: the right rear side window and the rear window, grey dawn. Lit from the front by cold white floodlight through the windshield behind the camera, out of frame. No adult, no other hands, no readable text.
+- **Voice:** {Eli} [sniffles] Promise? [pause] Two clicks?
+- **Ambience:** Fort Calder gate
+- **Camera:** pan bottom → top
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** He believes her.
 
 ### Scene 108 · 13:12.5–13:23
-- **Image:** Nora alone in the driver's seat turned toward the back seat, holding out her open grey palm, a gentle forced smile, floodlight through the car window, dawn
-- **Voice:** [softly] I need the key back, baby. [pause] He dug it out of his pocket and put it in my hand. He didn't ask why.
-- **SFX:** Car interior, the generator drone muffled
-- **SFX 2 (at "my hand", 0.5s):** a tiny metal key dropping into a palm
-- **Shot 2 (at "He dug"):** Eli alone in the back seat digging in the pocket of his red rain jacket, his eyes on his mother, floodlight on his face
-- **Shot 3 (at "my hand"):** Close-up of Eli's small hand placing a tiny silver handcuff key into Nora's open grey palm, two hands: Eli's one hand and Nora's one hand, floodlight, dawn
-- **Shot 4 (at "ask why"):** Close-up of Nora alone closing her grey fingers around the key, eyes wet, floodlight through the window
-- **References:** Corolla interior
+- **Image:** Medium close-up taken from Eli's booster seat, the camera at a child's eye level facing forward and to the left toward the driver's seat. Nora, alone, the only person in the frame, is turned around in the driver's seat to face the camera. Both of her hands (two hands): her right hand is held out toward the camera, palm up and open, grey skin, grey cracked nails, black veins at the wrist; her left wrist stays cuffed to the top of the steering wheel rim behind her left shoulder, out of focus. She wears a gentle forced smile, both eyes grey. Behind her head: the driver's side window, the gate's floodlights glaring white through it. Lit from behind and the side by the floodlight, with grey dawn fill on her face. Charcoal hoodie over navy scrubs, stained gauze on her left forearm. No second person, nothing in her palm yet, no gauges beside her head.
+- **Voice:** {Nora} [softly] I need the key back, baby. [pause] {Narrator} He dug it out of his pocket and put it in her hand, and he didn't ask why.
+- **Ambience:** Fort Calder gate
+- **SFX 2 (at "her hand", 0.6s):** A tiny metal car key dropping into an open palm, a light metallic tick and soft skin muffle, very close, no voices, no music
+- **Shot 2 (at "He dug", pan top → bottom):** Medium close-up taken from between the front seats, the camera facing backward toward Eli's booster seat, which is on the LEFT of the frame. Eli, alone, the only person in the frame, sits in the booster seat with both hands visible (two hands): his right hand is pushed up to the wrist into the right-hand pocket of his oversized red rain jacket, digging; his left hand holds the yellow toy walkie-talkie on its lanyard against his chest. His eyes stay on the camera, on his mother, wet and trusting. Behind him: the right rear side window and the rear window, grey dawn sky. Lit from the front by cold white floodlight shining through the windshield behind the camera, out of frame, on his face. Green dinosaur T-shirt, curly light-brown hair. No adults, no key visible yet, no readable text.
+- **Shot 3 (at "my hand", still):** Extreme close-up of two hands over the gap between the front seats, the camera at hand height looking slightly down. Two hands only: Nora's right hand and Eli's right hand. Nora's open palm, held up from the bottom of the frame, has grey skin, grey cracked nails and faint black veins at the wrist under the charcoal hoodie cuff. Eli's small hand comes down from the top of the frame, the cuff of his red rain jacket at his wrist, his fingertips just letting go of a tiny silver handcuff key, which drops into the middle of her palm. Background, out of focus: the worn grey cloth of the back seat. Lit from the front by cold white floodlight through the windshield, out of frame, glinting on the key; grey dawn fill. No faces, no third hand, no text.
+- **Shot 4 (at "ask why", zoom in):** Close-up taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, the only person in the frame, has turned back to face forward, seen in three-quarter view facing frame right, head bowed, eyes wet and grey, looking down. Both of her hands (two hands): her right hand is closed into a tight fist around the key, held against her chest, grey fingers and cracked nails curled in; her left wrist is still cuffed to the steering wheel rim, which crosses the lower left of the frame. Behind her, at the left edge, the driver's side window with grey dawn outside. Lit from the front by cold white floodlight through the windshield, out of frame right, on the side of her face. A dark grey vein on her neck. No gauges beside her head, no second person, no key visible between her fingers.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 - **Notes:** The key Eli has kept since Hour 50 comes back to her. He trusts her, no questions, one last time.
 
 ### Scene 109 · 13:23–13:30
-- **Image:** Nora's grey left hand pushing the car's back door open from inside, the floodlit gate visible through the open door, dawn
-- **Voice:** [softly] Walk to the soldiers. Don't run. [pause] Two clicks when you're inside, and I'll click back.
-- **SFX:** Generator drone returning, groans getting closer
-- **SFX 2 (from 0s, 2s):** Car door opening
-- **References:** Corolla interior
+- **Image:** Close-up taken low in the back seat beside Eli's booster seat, the camera facing right toward the inside of the car's right rear door. Nora's left hand and forearm only (one hand) reach in from the upper left of the frame, from where she kneels turned around on the driver's seat, and push the rear door open: her grey palm flat against the inner door panel, grey cracked nails, black veins at the wrist, a raw red mark around the wrist where the handcuff was, the stained gauze bandage on her forearm under the pushed-up hoodie sleeve. The door swings outward on the right of the frame; through the widening gap: dead grass and the chain-link fence, with the gate's floodlights glaring white. Grey dawn light pours in through the gap. Eli is out of frame below. No faces, no second hand, no readable text.
+- **Voice:** {Nora} [softly] Walk to the soldiers. Don't run. [pause] Two clicks when you're inside, and I'll click back.
+- **Ambience:** Fort Calder gate
+- **SFX:** Guttural groans of many infected people getting closer across a field, slow moans swelling as they approach, heard from inside a parked car, dreadful and building, no words, no screaming, no music
+- **SFX 2 (from 0s, 1.5s):** A car rear door opening, the metallic click of the inside handle and the door swinging out, close inside the car, no voices, no music
+- **Shot 2 (at "Two clicks", still):** Medium close-up taken from inside the car, the camera in the back seat facing right, out through the open right rear door. Eli, alone, the only person in the frame, stands on the dead grass just outside the open door, framed by the door's edge on the right and the roof edge at the top. He holds the small yellow toy walkie-talkie against his chest with both hands (two hands), its lanyard around his neck, and nods, his face tear-streaked and serious, eyes on the camera. Behind him, on the left of the frame: the floodlit gate, sandbags, the open steel gate, white floodlight glare in the dawn haze. Lit from behind and from the left by the floodlights, a rim on his curly hair; grey dawn on his face. Red rain jacket, green dinosaur T-shirt. No soldiers close by, no adults, no readable text.
+- **Camera:** zoom in
+- **References:** Corolla interior, Corolla interior, facing back
 
 ### Scene 110 · 13:30–13:38
-- **Image:** Eli alone walking toward the open gate across the dead grass, looking back over his shoulder, the yellow walkie on his chest, soldiers waiting at the gate, dawn
-- **Voice:** Eli walked. He looked back four times. [pause] I counted.
-- **SFX:** Generator drone, small footsteps on dry grass, soldiers shouting
+- **Image:** Wide shot taken from just in front of the parked car, the camera low at bonnet height, facing the gate. Eli, the only person in the foreground, small in the middle of the frame, walks away from the camera across the dead grass toward the open steel gate, his head turned back over his left shoulder to look at the camera, his face pale and small. His red rain jacket is bright against the grey grass; the yellow toy walkie-talkie hangs on its lanyard at his chest. Ahead of him, about ten metres on, the open sandbagged gate with three soldiers waiting at the gap, rifles lowered, dark silhouettes. The chain-link fence with razor wire runs left and right across the background; tall floodlights glare white above it, backlighting him. Light: blue-grey dawn. No car in the frame, no grey figures near him, no readable signs.
+- **Voice:** Eli walked toward the soldiers. He looked back four times. [pause] She counted.
+- **Ambience:** Fort Calder gate
+- **SFX:** A small child's footsteps walking on dry dead grass, light uneven crunching steps moving away from the listener, outdoors at dawn, no voices, no music
+- **SFX 2 (from 2s, 4s, volume 70%):** Soldiers shouting at a military gate ahead, a few urgent unintelligible commands echoing across a field, distant, no clear words, no music
+- **Shot 2 (at "I counted", zoom in):** Close-up taken from outside the windshield looking back at the driver: the camera is just in front of Nora's face, facing backward into the car. Nora, alone, the only person in the frame, sits in the driver's seat staring past the camera, eyes wet and grey, lips parted mid-word as she silently counts, brows drawn together. Behind her: the grey cloth driver's headrest, then the back seat with the empty booster seat in shadow on the left of the background, and the rear window. Lit from in front by the gate's cold white floodlights, which are out of frame behind the camera, flat light on her face; grey dawn. A dark grey vein on her neck, sweat, loose strands of dark hair. No hands in the frame, no dashboard or gauges, no second person, no reflections of people.
+- **Camera:** zoom out
 - **References:** Fort Calder gate
 - **Notes:** [close L9]
 
 ### Scene 111 · 13:38–13:45.5
-- **Image:** Close-up of Nora's grey right hand wrapped in white medical tape and black zip ties around a small blue toy walkie-talkie, her thumb resting on the push-to-talk button, chain-link fence blurred behind, dawn light, Nora's one hand only
-- **Voice:** I taped the walkie into my hand. Medical tape. Zip ties. [pause] My thumb on the button.
-- **SFX:** Wind, the generator drone, groans far off
-- **SFX 2 (at "Medical tape", 1s):** medical tape ripping off a roll
-- **SFX 3 (at "Zip ties", 1s):** a plastic zip tie ratcheting tight
+- **Image:** Close-up taken at chest height outside the fence, the camera facing Nora's raised right hand. Nora's right hand only (one hand), in the centre of the frame, is wrapped around a small blue toy walkie-talkie and bound to it with white medical tape wound several times around her palm and the back of the hand, plus two black plastic zip ties pulled tight across her fingers. Her thumb rests on the push-to-talk button on the side of the walkie. Her skin is grey, her nails grey and cracked, faint black veins at her wrist, the charcoal hoodie cuff at the bottom of the frame. Behind the hand, out of focus, the diamond mesh of the chain-link fence fills the background. Lit from the left by the low pale dawn sky and from above by a floodlight out of frame. No face, no second hand, no readable text on the tape or walkie.
+- **Voice:** She taped the walkie into her hand with medical tape and zip ties, [pause] her thumb on the button.
+- **Ambience:** Fort Calder gate
+- **SFX 2 (at "medical tape", 1s):** Medical tape ripped quickly off a roll, a sharp sticky tearing sound, very close outdoors, no voices, no music
+- **SFX 3 (at "zip ties", 1s):** A plastic zip tie ratcheting tight, a fast series of small plastic clicks pulled hard, very close, no voices, no music
+- **Camera:** pan left → right
 - **References:** Fort Calder gate
 - **Notes:** Her thumb over the button: sets up the last two clicks.
 
 ### Scene 112 · 13:45.5–13:53.5
-- **Image:** Close-up of Nora's grey left wrist as a steel handcuff snaps around a chain-link fence post, dawn light
-- **Voice:** Then I cuffed myself to the fence. Like the farmer. [pause] Where I couldn't follow.
-- **SFX:** Wind, the generator drone, groans
-- **SFX 2 (at "cuffed", 1s):** a handcuff ratchet clicking shut
+- **Image:** Close-up taken low beside the fence, the camera facing a thin round galvanised steel fence post that stands vertically in the centre of the frame, chain-link mesh on both sides of it. One steel ring of a pair of handcuffs is locked around the post; the other ring is snapping shut around Nora's left wrist. Nora's left hand only (one hand) is in the frame, her forearm entering from the lower left: grey skin, grey cracked nails, black veins spreading from under the stained gauze bandage toward the wrist, the charcoal hoodie sleeve pushed up. Behind the fence, out of focus: dead grass and the blur of a floodlight pole. Lit from the left by low pale dawn light, a cold glint on the steel. No face, no second hand, no other people.
+- **Voice:** Then she cuffed herself to the fence, like the farmer, [pause] where she couldn't follow.
+- **Ambience:** Fort Calder gate
+- **SFX 2 (at "cuffed", 1s):** A steel handcuff ratcheting shut around a metal fence post, a fast metallic zip and a hard click, a faint clank of the chain on steel, close outdoors, no voices, no music
+- **Shot 2 (at "Like the farmer", pan right → left):** Medium shot taken from the farmhouse porch steps, the camera at standing eye level facing the front door straight on. The old white farmhouse's front door is shut in the centre of the frame, its upper half a frosted glass panel smeared from inside with dark handprints. Behind the frosted glass, the tall dark blurred shape of a person presses against it. Above the door, a porch light in a small glass fixture still glows warm yellow. Peeling white clapboard walls on the left and right; a worn doormat and grey wooden porch boards in the foreground. Light: flat grey overcast morning from behind the camera, plus the weak warm porch light above the door. No one outside, no car, no readable text, no face visible through the glass.
+- **Camera:** still
 - **References:** Fort Calder gate
 - **Notes:** Pays off the farmer who locked himself in (Hour 24).
 
 ### Scene 113 · 13:53.5–13:59.5
-- **Image:** Close-up of a tiny silver handcuff key lying in the dead grass just inside the chain-link fence, floodlights glaring behind, dawn
-- **Voice:** And I threw the key over the gate. [pause] Into the grass. Inside.
-- **SFX:** Generator drone, soldiers' voices muffled
-- **SFX 2 (at "grass", 1s):** a tiny metal key landing in dry grass
+- **Image:** Extreme close-up at ground level outside the fence, the camera lying in the dead grass facing the fence. In the foreground, the bottom edge of the chain-link mesh crosses the frame, soft and out of focus; the camera looks through one of its diamonds. Just beyond the wire, inside the fence, sharp in the middle of the frame, a tiny silver handcuff key lies in the flattened dead grass, catching a glint of light. Behind it, out of focus: the inner fence, then tall floodlight poles glaring white in the background, haloed in the dawn haze. Light: the floodlights shine from behind the key toward the camera, backlighting the grass blades; blue-grey dawn. No hands, no people, no feet, no readable signs.
+- **Voice:** And she threw the key over the gate, [pause] into the grass inside.
+- **Ambience:** Fort Calder gate
+- **SFX:** Soldiers' voices muffled behind a perimeter fence, a low indistinct murmur of several men talking urgently, distant and unintelligible, outdoors at dawn, no clear words, no music
+- **SFX 2 (at "grass", 1s):** A tiny metal key landing in dry grass, a soft rustle and a faint metallic tick, close at ground level outdoors, no voices, no music
+- **Camera:** pan top → bottom
 - **References:** Fort Calder gate
 - **Notes:** [close L12] The key he just gave back: now she can't follow him.
 
 ### Scene 114 · 13:59.5–14:09
-- **Image:** Wide shot of the steel gate shut with Eli inside, grey figures streaming along the outside of the fence toward the generator, passing a lone woman cuffed to a fence post, dawn
-- **Voice:** The gate slammed shut at six-ten. The dead streamed past me, toward the sound. [pause] Like I was already one of them.
-- **SFX:** The generator drone, many groans
-- **SFX 2 (at "slammed", 2s):** a heavy steel gate slamming shut
-- **Shot 2 (at "Like I was"):** Nora alone, cuffed to the fence post, grey figures shuffling past close behind her without turning toward her, dawn
+- **Image:** Wide shot taken from the field about forty metres out from the fence, the camera at standing eye level facing it. The double chain-link fence with razor wire runs across the frame. Right of centre, the steel gate is shut; inside it, small behind the wire, Eli in his red rain jacket stands with soldiers near the scanner booth and the diesel generator on the right. On the far left, Nora, a lone woman in a charcoal hoodie and navy scrubs, stands with her back against a fence post, her left wrist cuffed to it, her head bowed. Along the outside of the fence a stream of grey figures, the dead, shuffles from the left of the frame toward the generator on the right, walking right past her without stopping. Light: dawn, the low sun a pale glow on the left horizon, floodlights still on above the fence. The car out of frame, no readable signs.
+- **Voice:** The gate slammed shut behind him, and the dead streamed past her toward the sound, [pause] like she was already one of them.
+- **Ambience:** Fort Calder gate
+- **SFX:** Many infected people shuffling past very close, dragging footsteps through dry grass and a crowd of low guttural groans moving by on both sides, outdoors, dreadful and immersive, no words, no screaming, no music
+- **SFX 2 (at "slammed", 2.5s):** A heavy steel vehicle gate slamming shut, a massive metallic crash and a long resonant clang echoing across a field, final and loud, no voices, no music
+- **Shot 2 (at "Like I was", zoom out):** Medium shot taken outside the fence, the camera at standing eye level a few metres away, facing Nora and the fence at a slight angle. Nora, the only living person in the frame, stands with her back against a thin steel fence post on the right of the frame, head bowed, eyes grey and half open. Both of her hands (two hands): her left wrist is cuffed to the post; her right hand, taped around the small blue toy walkie-talkie, hangs at her side. The chain-link fence runs behind her and recedes to the left. Grey figures, the dead, shuffle along the fence from the left background toward the right, the nearest passing just beyond her shoulder, close enough to touch, none of them turning their heads toward her. Light: pale dawn from the left, floodlights above the fence. Stained bandage on her left forearm, grey skin. No soldiers, no blood, no readable signs.
+- **Camera:** pan left → right
 - **References:** Fort Calder gate
 - **Notes:** [close L11]
 
 ### Scene 115 · 14:09–14:17
-- **Image:** Nora alone sitting against the fence post, her left wrist cuffed to the fence, a small blue toy walkie-talkie taped into her right hand, dawn light, grey shapes passing far behind her out of focus
-- **Video:** Nora sits still, her taped thumb pressing the walkie button twice, dead grass sways, the low sun flares slowly; locked-off camera. No cuts, no new objects.
-- **Voice:** From inside, two clicks. [pause] I clicked back. Every thirty seconds. [pause] Slower each time.
-- **SFX:** Wind through dry grass, the distant generator drone
-- **SFX 2 (at "two clicks", 1s):** two walkie-talkie clicks
-- **SFX 3 (at "clicked back", 1s):** two slower walkie-talkie clicks
+- **Image:** Medium shot taken low in the field a few metres out from the fence, the camera at the height of a seated person, angled along the fence line. Nora, the only person in focus, sits in the dead grass on the left of the frame with her back against a thin steel fence post, legs stretched out in front of her, head leaning back, eyes grey. Both of her hands (two hands): her left wrist is cuffed to the post beside her hip; her right hand rests in her lap with the small blue toy walkie-talkie taped into it with white medical tape. The chain-link fence recedes toward the right background, where, far away and out of focus, grey shapes shuffle toward the gate. Light: low pale dawn sun from the left, cool floodlight from above. Charcoal hoodie, navy scrubs, stained bandage on her left forearm. No soldiers nearby, no blood, no readable text.
+- **Voice:** From inside came two clicks. [pause] She clicked back, again and again, [pause] slower each time.
+- **Ambience:** Fort Calder gate
+- **SFX 2 (at "two clicks", 1s):** Two clicks from a toy walkie-talkie speaker, two quick plastic clicks each with a tiny burst of static, slightly distant and tinny, outdoors, no voices, no music
+- **SFX 3 (at "clicked back", 1.5s):** Two slow, weak clicks of a walkie-talkie talk button pressed by a tired thumb, a long gap between them, close and quiet outdoors, no voices, no music
+- **Shot 2 (at "I clicked", still):** Extreme close-up of Nora's right hand only (one hand) resting in her lap on her navy scrubs, the camera close and level with it. The small blue toy walkie-talkie is taped into her grey palm with white medical tape and black zip ties; her grey thumb, with its cracked grey nail, presses down on the push-to-talk button on the side of the walkie, the skin of the thumb dimpling. A small light on top of the walkie glows. Background out of focus: dead grass and the bottom of a steel fence post. Light: low pale dawn sun from the left, raking across the tape. No face, no second hand, no readable text.
+- **Shot 3 (at "Slower", zoom in):** Close-up taken low and in front of Nora, the camera at her eye level facing her. Nora, alone, the only person in the frame, sits with her head tilted back and to the side, resting against the thin steel fence post behind her, eyes half closed and grey, lips parted, breathing slowly, her face slack and calm. Behind her head: the post and the chain-link mesh, out of focus, and beyond it a pale blurred field. Light: low pale dawn sun from the left, falling across half of her face; the other half in cool shadow. Grey skin, a dark grey vein on her neck, drying sweat, loose strands of dark hair stuck to her cheek. No hands in the frame, no other people, no blood.
+- **Camera:** zoom out
 - **References:** Fort Calder gate
 - **Notes:** Her pulse slowing.
 
 ### Scene 116 · 14:17–14:24
-- **Image:** Close-up of a grey hand resting in the dead grass beside the black dictaphone, its red record light glowing, golden morning light
-- **Voice:** [tired] Hour seventy-two. Patient is… [long pause]
-- **SFX:** Wind through dry grass, the generator far away
+- **Image:** Close-up taken at ground level, the camera low in the dead grass beside the bottom of the fence post, looking slightly down. Nora's left hand only (one hand) lies palm up in the dry golden dead grass, fingers slack and slightly curled, her skin grey, her nails grey and cracked, black veins at the wrist. The steel handcuff is still locked around her wrist, its chain leading out of the frame at the top left to the foot of the fence post. Just beyond her fingertips, on the right, the small black dictaphone lies in the grass, its red record light glowing, its tiny cassette window visible. Light: golden morning sun, low from the left, long shadows of grass blades across her palm. No face, no second hand, no walkie-talkie, no readable text.
+- **Voice:** {Nora} [tired] Hour seventy-two. Patient is… [long pause]
+- **SFX:** Wind blowing gently through dry dead grass at ground level, a soft papery rustle in slow gusts, close and lonely, outdoors at dawn, no birds, no voices, no music
+- **SFX 2 (from 0s, 7s, volume 60%):** A diesel generator droning far away behind a fence, a low steady mechanical rumble, distant and constant, outdoors, no voices, no music
+- **Camera:** zoom in
 - **References:** Fort Calder gate
 - **Title:** HOUR 72
 - **Notes:** [interrupt: her voice stops mid-sentence] Planned silence.
 
 ### Scene 117 · 14:24–14:30.5
-- **Image:** Extreme close-up of the dictaphone's red record light glowing in shadow, the tape still turning behind its little window
-- **SFX:** A dictaphone motor whirring, wind
-- **SFX 2 (from 0s, 3.5s):** a slow human heartbeat, slowing, then stopping
-- **SFX 3 (from 5.2s, 1s):** a single deep heartbeat thud in silence
+- **Image:** Extreme close-up of the small black dictaphone lying in the dead grass, the camera a hand's width from it, level with its front. It lies in deep shadow cast by the fence post and Nora's body, both out of frame. Its small round red record light glows in the upper part of the frame, the brightest thing in the image; below it, behind a tiny clear window, the cassette's two small reels are turning, the brown tape stretched between them. A few dry grass blades cross the foreground, out of focus. A sliver of golden morning light touches only the tips of the grass in the far background. No hands, no people, no readable text or numbers on the dictaphone.
+- **SFX:** The small electric motor of a cassette dictaphone whirring as it keeps recording, a thin steady hum with a faint tape flutter, close at ground level in dry grass, lonely, no clicks, no voices, no music
+- **SFX 2 (from 0s, 3.5s):** A slow human heartbeat slowing down and then stopping, soft muffled thumps getting further apart until silence, close and intimate, no music, no other sounds
+- **SFX 3 (from 5.2s, 1s):** A single deep human heartbeat thud breaking a long silence, one heavy muffled thump, close, ominous, no music, no other sounds
+- **SFX 4 (from 0s, 6.5s, volume 60%):** Wind blowing gently through dry dead grass at ground level, a soft papery rustle, close and lonely, outdoors, no voices, no music
+- **Camera:** still
 - **Notes:** Her heart stops for four minutes, then restarts: she has turned. Planned silence.
 
 ### Scene 118 · 14:30.5–14:34.5
-- **Image:** Inside a crowded canvas army medical tent, Eli alone sitting on a cot in the foreground, other cots and figures far behind him out of focus, a small cassette tape tucked in the pocket of his red rain jacket, soft morning light through the canvas
-- **SFX:** Tent canvas flapping, distant camp sounds, murmured voices
+- **Image:** Medium wide shot inside a large canvas army medical tent, the camera at a seated child's eye level in the aisle between two rows of cots, facing Eli. Eli, alone in the foreground, sits on the edge of a green canvas army cot on the left of the frame, shoulders slumped, both hands (two hands) in his lap, looking down. His oversized red rain jacket hangs open over the green dinosaur T-shirt; on his left side, in the jacket's inside lining pocket, the corner of a small clear cassette tape is just visible. The yellow toy walkie-talkie hangs on its lanyard on his chest. Behind him, far back and out of focus: more cots and a few blurred figures of medics and patients. Light: soft morning sun glowing through the pale canvas walls from the right, diffuse and warm. No one near him, no blood, no readable text.
+- **Ambience:** Army tent
+- **Camera:** zoom out
 - **Title:** HOUR 79
 - **Notes:** Her tape stays in his pocket, unplayed: saved for later.
 
 ### Scene 119 · 14:34.5–14:39.5
-- **Image:** Close-up of Eli alone holding his yellow toy walkie-talkie to his lips with both hands (two hands), eyes red, soft morning light in the tent
-- **Voice:** [childlike tone] [whispers] Eli to Mom. Over.
-- **SFX:** Tent canvas flapping, distant camp sounds
-- **SFX 2 (at "Over", 0.5s):** a toy walkie-talkie squelch beep
+- **Image:** Close-up taken in front of Eli at his eye level, inside the canvas army medical tent. Eli, alone, the only person in the frame, holds the small yellow toy walkie-talkie up to his lips with both hands (two hands), fingers wrapped around it, whispering into it; his eyes are red-rimmed and wet, looking down at the walkie. His curly light-brown hair is messy; the collar of his red rain jacket frames his face, the lanyard around his neck. Behind him, out of focus: the pale canvas wall of the tent and the edge of a cot. Light: soft diffuse morning sun glowing through the canvas from the right, warm on his cheek. No adults, no other hands, no readable text.
+- **Voice:** {Eli} [whispers] Eli to Mom. Over.
+- **Ambience:** Army tent
+- **SFX 2 (at "over", 0.6s):** A toy walkie-talkie squelch beep, a short bright electronic chirp and a quick burst of static cut off cleanly, tinny and close inside a canvas tent, no voices, no music
+- **Camera:** zoom in
 - **Notes:** Bookends Hour 0: "Eli to Mom, over."
 
 ### Scene 120 · 14:39.5–14:42.5
-- **Image:** Extreme close-up of the yellow walkie-talkie's small light blinking on
-- **SFX:** Silence, then a walkie-talkie static hiss rising
+- **Image:** Extreme close-up of the top of the small yellow toy walkie-talkie, the camera a few centimetres from it and level with it, inside the canvas army medical tent. The walkie fills most of the frame: chunky yellow plastic, a stubby black antenna on the left, a round speaker grille below, and a small round indicator light on the top front, just blinking on and glowing bright green. Eli's small fingertips from both hands curl around the sides of the walkie at the bottom edge of the frame. Background, out of focus: the warm pale canvas wall of the tent. Light: soft diffuse morning light through the canvas from the right; the indicator light is the brightest point. No face, no readable text, numbers or logos on the walkie.
+- **SFX:** A walkie-talkie static hiss rising out of silence, a faint crackle slowly growing into a soft steady hiss from a tinny toy speaker, very close, tense, no voices, no music
+- **Camera:** still
 - **Notes:** [interrupt: static, then two clicks]
 
 ### Scene 121 · 14:42.5–14:46
-- **Image:** Extreme close-up of Nora's grey hand at the fence line, white medical tape wrapped around a small blue toy walkie-talkie, her taped thumb twitching against the push-to-talk button, dead grass, golden morning light
-- **SFX:** Wind through dry grass, the generator far away
-- **SFX 2 (from 1s, 1s):** two crisp walkie-talkie clicks
+- **Image:** Extreme close-up at ground level by the fence, the camera low in the dead grass facing Nora's right hand only (one hand). Her grey hand lies on its side in the dry golden grass beside the bottom of the chain-link fence, wrapped around the small blue toy walkie-talkie and bound to it with white medical tape and black zip ties, the tape grubby and frayed. Her grey thumb, also taped, is pressed down on the push-to-talk button on the side of the walkie, caught mid-twitch, its joint bent. Her nails are grey and cracked, black veins at the wrist. Behind the hand, out of focus: the chain-link mesh and the foot of a thin steel post. Light: golden morning sun, low from the left, warm across the tape. No face, no second hand, no readable text.
+- **SFX:** Wind blowing gently through dry dead grass at ground level, a soft papery rustle, close and lonely, outdoors at dawn, no birds, no voices, no music
+- **SFX 2 (from 0s, 3.5s, volume 60%):** A diesel generator droning far away, a low steady rumble, distant and constant, outdoors, no voices, no music
+- **SFX 3 (from 1s, 1s):** Two crisp clicks from a toy walkie-talkie speaker, two quick plastic clicks with a tiny burst of static, close at ground level, no voices, no music
+- **Camera:** zoom in
 - **References:** Fort Calder gate
 - **Notes:** [close L6] A post-mortem spasm presses her taped thumb: two clicks.
 
 ### Scene 122 · 14:46–14:51.5
-- **Image:** Close-up of Eli alone in the tent, smiling through tears, wiping his cheek with the back of one hand, the yellow walkie-talkie in his other hand, soft morning light
-- **Voice:** [childlike tone] [whispers] She's okay.
-- **SFX:** Tent canvas flapping, distant camp sounds
-- **Shot 2 (from 3s):** Eli alone lying on the cot with his eyes closed, the yellow walkie-talkie on his chest, soft morning light through the canvas
+- **Image:** Close-up taken in front of Eli at his eye level, inside the canvas army medical tent. Eli, alone, the only person in the frame, smiles through tears, the gap in his front teeth showing, cheeks wet. Both of his hands (two hands): with the back of his right hand he wipes his right cheek; his left hand holds the small yellow toy walkie-talkie just below his chin, its lanyard around his neck. Red-rimmed eyes, curly light-brown hair, the collar of his red rain jacket. Behind him, out of focus: the pale canvas tent wall and the edge of a cot. Light: soft diffuse morning sun glowing through the canvas from the right, warm on his face. No adults, no third hand, no readable text.
+- **Voice:** {Eli} [whispers] She's okay.
+- **Ambience:** Army tent
+- **Shot 2 (from 3s, zoom out):** Medium shot looking down at Eli from beside the cot, the camera at standing height facing down. Eli, alone, the only person in the frame, lies on his back on a green canvas army cot, eyes closed, face calm, dried tear tracks on his cheeks. Both of his hands (two hands) rest on his chest on top of the small yellow toy walkie-talkie, its lanyard around his neck. His oversized red rain jacket is still on, open over the green dinosaur T-shirt, the corner of the cassette tape just visible in its inside lining pocket. His curly light-brown hair spreads on a folded grey army blanket used as a pillow. Around the cot: the tent's wooden floorboards. Light: soft morning sun glowing through the canvas wall from the right, warm and diffuse. No other people, no blood, no readable text.
+- **Camera:** zoom in
 - **Notes:** He believes she's alive; the viewer knows she turned. Cut to black on the last frame. No outro.

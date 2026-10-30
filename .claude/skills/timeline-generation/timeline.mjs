@@ -11,9 +11,10 @@
 //   {
 //     "project": { "id": "existing-id" } | { "new": "Title of the new project" },
 //     "mode": "append" | "replace",
-//     "settings": { "style_prompt": "...", "aspect_ratio": "16:9", ... },      (optional)
-//     "references": [{ "name": "Bucky", "prompt": "...", "for_every_scene": true }],      (references command)
-//     "scenes": [{ "duration_sec": 7, "image_prompt": "...", "voiceover_text": "...", "sfx_prompt": "...", "notes": "..." }]
+//     "settings": { "style_prompt": "...", "aspect_ratio": "16:9", "music_prompt": "...", ... },      (optional)
+//     "ambience": [{ "name": "Bunker", "prompt": "...", "volume": 0.3 }],      (optional: looping beds per location)
+//     "references": [{ "name": "Bucky", "prompt": "...", "for_every_scene": true }, { "name": "Kitchen, facing the door", "prompt": "...", "based_on": ["Kitchen"] }],      (references command, in order)
+//     "scenes": [{ "duration_sec": 7, "image_prompt": "...", "voiceover_text": "...", "sfx_prompt": "...", "ambience": "Bunker", "notes": "..." }]
 //   }
 import fs from 'node:fs';
 import path from 'node:path';
@@ -66,11 +67,12 @@ async function openProject(project) {
 }
 
 async function importPayload(file) {
-  const { project = {}, mode, settings, scenes } = await loadPayload(file, 'import');
+  const { project = {}, mode, settings, scenes, ambience } = await loadPayload(file, 'import');
   const id = await openProject(project);
 
   // X-Project makes the server refuse the import if another project was opened in the meantime.
-  const sb = await call('POST', '/api/scenes/import', { mode, settings, scenes }, { 'X-Project': id });
+  const sb = await call('POST', '/api/scenes/import', { mode, settings, scenes, ambience }, { 'X-Project': id });
+  const bedName = new Map(sb.ambience.map((b) => [b.ambience_id, b.name]));
 
   const added = mode === 'replace' ? sb.scenes : sb.scenes.slice(-scenes.length);
   const offset = sb.scenes.length - added.length;
@@ -82,12 +84,15 @@ async function importPayload(file) {
     const layers = s.sfx_layers || [];
     const sounds = (s.sfx_prompt ? 1 : 0) + layers.length;
     const flags = [s.image_prompt && 'image', s.voiceover_text && 'voice', sounds && (sounds > 1 ? `${sounds} sfx` : 'sfx')].filter(Boolean).join(' + ') || 'empty';
-    const extras = [s.title_text && `title "${s.title_text}"`, s.shake && `${s.shake} shake`, s.reference_asset_ids?.length && `${s.reference_asset_ids.length} reference(s)`]
+    const extras = [
+      s.title_text && `title "${s.title_text}"`, s.shake && `${s.shake} shake`, s.reference_asset_ids?.length && `${s.reference_asset_ids.length} reference(s)`,
+      s.ambience_id && `ambience "${bedName.get(s.ambience_id)}"`, s.motion && `camera ${s.motion}`,
+    ]
       .filter(Boolean).map((x) => `  · ${x}`).join('');
     console.log(`  Scene ${offset + i + 1}  ${fmt(t)}–${fmt(t + s.duration_sec)}  (${s.duration_sec}s)  ${flags}${extras}${s.notes ? `  · note: ${s.notes}` : ''}`);
     // Shots and event sounds with their timing (synced ones are re-timed exactly when the voiceover is generated).
     for (const sh of s.shots || []) {
-      console.log(`      shot: ${sh.image_prompt.slice(0, 50)}  · ${sh.cue ? `at "${sh.cue}" (~${sh.start_sec}s)` : `from ${sh.start_sec}s`}`);
+      console.log(`      shot: ${sh.image_prompt.slice(0, 50)}  · ${sh.cue ? `at "${sh.cue}" (~${sh.start_sec}s)` : `from ${sh.start_sec}s`}${sh.motion ? ` · ${sh.motion}` : ''}${sh.continues ? ' · next frame' : ''}`);
     }
     for (const l of layers) {
       const when = l.cue ? `at "${l.cue}" (~${l.start_sec}s)` : `from ${l.start_sec}s`;
@@ -95,6 +100,8 @@ async function importPayload(file) {
     }
     t += s.duration_sec;
   }
+  if (sb.ambience.length) console.log(`\nAmbience beds: ${sb.ambience.map((b) => b.name).join(', ')}`);
+  if (sb.settings.music_prompt) console.log(`Music prompt: ${sb.settings.music_prompt.slice(0, 80)}${sb.settings.music_prompt.length > 80 ? '…' : ''}`);
   const total = sb.scenes.reduce((sum, s) => sum + s.duration_sec, 0);
   console.log(`\nTotal length: ${fmt(total)}. Nothing is generated yet: use "Generate missing" or each scene's Generate buttons.`);
   console.log('Ctrl/Cmd+Z in the editor undoes the whole import.');
@@ -122,7 +129,9 @@ async function referencesPayload(file) {
   for (const r of references) {
     process.stdout.write(`  ${r.name}${r.for_every_scene ? ' (every scene)' : ''}… `);
     try {
-      const { asset, check } = await call('POST', '/api/references/generate', { name: r.name, prompt: r.prompt, for_every_scene: Boolean(r.for_every_scene) }, headers);
+      const { asset, check } = await call('POST', '/api/references/generate', {
+        name: r.name, prompt: r.prompt, for_every_scene: Boolean(r.for_every_scene), based_on: r.based_on,
+      }, headers);
       const verdict = !check ? '' : check.error ? `  · check failed: ${check.error}` : check.ok ? '  · check passed' : `  · CHECK: ${check.issues.join(' ')}`;
       console.log(`done → library "${asset.name}"${verdict}`);
     } catch (err) {
@@ -148,10 +157,10 @@ async function loadPayload(file, usage) {
 }
 
 async function estimatePayload(file) {
-  const { project = {}, mode = 'append', settings: changes = {}, scenes = [], references = [] } = await loadPayload(file, 'estimate');
+  const { project = {}, mode = 'append', settings: changes = {}, scenes = [], references = [], ambience = [] } = await loadPayload(file, 'estimate');
   // Imported after .env is loaded, so PROJECTS_DIR is the editor's.
   const { PROJECTS_DIR } = await import('../../../server/paths.js');
-  const { DEFAULT_SETTINGS } = await import('../../../server/storyboard.js');
+  const { AMBIENCE_LOOP_SEC, DEFAULT_SETTINGS } = await import('../../../server/storyboard.js');
   const { costEstimator } = await import('../../../server/estimate.js');
 
   // The target project's settings (read only), with the payload's changes on top.
@@ -221,10 +230,17 @@ async function estimatePayload(file) {
     ].filter(Boolean);
     console.log(`  Scene ${r.n}  ${usd(r.total)}${r.unpriced.size ? '+' : ''}  ${parts.join(' · ') || 'nothing to generate'}`);
   }
-  const total = sum('total');
+  // The whole video's sounds: one loop per ambience bed, and the music.
+  const beds = ambience.filter((b) => b.prompt?.trim()).map(() => cost.sfx(AMBIENCE_LOOP_SEC));
+  const bedUsd = beds.reduce((t, c) => t + (c.usd || 0), 0);
+  const bedCredits = beds.reduce((t, c) => t + (c.credits || 0), 0);
+  const music = s.music_prompt?.trim() ? cost.music(Number(s.music_length_sec) || 180) : null;
+  if (beds.length) console.log(`  Ambience  ${beds.length} loop${beds.length > 1 ? 's' : ''} ${usd(bedUsd)}`);
+  if (music) console.log(`  Music  ${music.sec}s with ${music.model}: ${music.usd == null ? 'no price' : usd(music.usd)}`);
+  const total = sum('total') + bedUsd + (music?.usd || 0);
   const videos = rows.filter((r) => r.video?.usd != null);
-  console.log(`\n  Images ${usd(sum('image'))} · Voice ${usd(sum('voice'))} · Sound ${usd(sum('sfx'))}`);
-  console.log(`  TOTAL ${usd(total)}${unpriced.size ? '+' : ''} for "Generate missing" (${Math.round(sum('credits')).toLocaleString('en-US')} ElevenLabs credits)`);
+  console.log(`\n  Images ${usd(sum('image'))} · Voice ${usd(sum('voice'))} · Sound ${usd(sum('sfx') + bedUsd)}`);
+  console.log(`  TOTAL ${usd(total)}${unpriced.size ? '+' : ''} for "Generate missing" (${Math.round(sum('credits') + bedCredits).toLocaleString('en-US')} ElevenLabs credits)`);
   if (videos.length) console.log(`  + ${usd(videos.reduce((t, r) => t + r.video.usd, 0))} if the ${videos.length} suggested video clip(s) are generated`);
   if (unpriced.size) console.log(`\n  No price for: ${[...unpriced].join(', ')}. Those items aren't included (marked +). Set a price in the editor's Usage panel.`);
   console.log(`\n  Regenerating an item costs the same again. ElevenLabs is at its pay-as-you-go rate (${elevenlabs == null ? 'no price set' : `$${elevenlabs}/1k credits`}); on a subscription it uses the plan's credits instead.`);

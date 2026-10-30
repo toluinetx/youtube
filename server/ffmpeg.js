@@ -100,6 +100,16 @@ export async function referenceDataUri(imagePath, atSec) {
   }
 }
 
+/** Join audio files one after another into an mp3 at `outPath`, with `gapSec` of silence between them. */
+export async function joinAudio(paths, gapSec, outPath) {
+  const chains = paths.map((_, i) => `[${i}:a]${AFORMAT}${i < paths.length - 1 && gapSec > 0 ? `,apad=pad_dur=${gapSec}` : ''}[p${i}]`);
+  const filter = `${chains.join(';')};${paths.map((_, i) => `[p${i}]`).join('')}concat=n=${paths.length}:v=0:a=1[a]`;
+  await run(FFMPEG, [
+    '-y', '-hide_banner', '-v', 'error', ...paths.flatMap((p) => ['-i', p]),
+    '-filter_complex', filter, '-map', '[a]', '-c:a', 'libmp3lame', '-b:a', '128k', outPath,
+  ]);
+}
+
 function parseTime(line) {
   const m = line.match(/time=(\d+):(\d+):(\d+(?:\.\d+)?)/);
   return m ? Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]) : null;
@@ -222,23 +232,56 @@ export async function renderSceneClip({
   }
 }
 
+/** How long one ambience bed takes to fade into the next (they overlap by this much). */
+const AMBIENCE_CROSSFADE_SEC = 1.5;
+
 /**
  * Join clips that share codec settings. Video is stream-copied; audio is re-encoded to avoid gaps at the seams.
- * With `music`, a looped background track is mixed underneath (faded in/out, optionally ducked under speech).
+ * With `music` ({ path, totalSec, volume, ducking }), a looped background track is mixed underneath (faded
+ * in/out, optionally ducked under speech). Each of `beds` ({ path, start, end, volume }, in seconds) is an
+ * ambience loop played from `start` to `end`; beds that meet overlap so one crossfades into the next.
  */
-export async function concatClips(clipPaths, outPath, listPath, music = null) {
+export async function concatClips(clipPaths, outPath, listPath, { music = null, beds = [] } = {}) {
   const list = clipPaths.map((p) => `file '${p.replace(/\\/g, '/').replace(/'/g, "'\\''")}'`).join('\n');
   await fs.writeFile(listPath, list + '\n');
   const args = ['-y', '-hide_banner', '-f', 'concat', '-safe', '0', '-i', listPath];
+  const filters = [];
+  const layers = [];
+  let next = 1;
+  let main = '[0:a]';
   if (music) {
     const total = music.totalSec;
     const fadeOut = Math.min(2, total / 4);
     args.push('-stream_loop', '-1', '-i', music.path);
-    const bed = `[1:a]${AFORMAT},atrim=0:${total},volume=${music.volume},afade=t=in:d=${Math.min(1, total / 4)},afade=t=out:st=${total - fadeOut}:d=${fadeOut}`;
-    const filter = music.ducking
-      ? `[0:a]${AFORMAT},asplit=2[main][key];${bed}[bed];[bed][key]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=400[duck];[main][duck]amix=inputs=2:duration=first:normalize=0[a]`
-      : `[0:a]${AFORMAT}[main];${bed}[bed];[main][bed]amix=inputs=2:duration=first:normalize=0[a]`;
-    args.push('-filter_complex', filter, '-map', '0:v', '-map', '[a]');
+    const bed = `[${next++}:a]${AFORMAT},atrim=0:${total},volume=${music.volume},afade=t=in:d=${Math.min(1, total / 4)},afade=t=out:st=${total - fadeOut}:d=${fadeOut}`;
+    if (music.ducking) {
+      filters.push(`[0:a]${AFORMAT},asplit=2[main][key]`, `${bed}[bed]`, '[bed][key]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=400[duck]');
+      main = '[main]';
+      layers.push('[duck]');
+    } else {
+      filters.push(`${bed}[bed]`);
+      layers.push('[bed]');
+    }
+  }
+  for (const [k, b] of beds.entries()) {
+    const start = Math.max(0, b.start - (b.start > 0 ? AMBIENCE_CROSSFADE_SEC / 2 : 0));
+    const end = b.end + (b.atEnd ? 0 : AMBIENCE_CROSSFADE_SEC / 2);
+    const len = end - start;
+    if (len <= 0.1) continue;
+    const fadeIn = Math.min(start > 0 ? AMBIENCE_CROSSFADE_SEC : 0.5, len / 3);
+    const fadeOut = Math.min(b.atEnd ? 2 : AMBIENCE_CROSSFADE_SEC, len / 3);
+    const ms = Math.round(start * 1000);
+    args.push('-stream_loop', '-1', '-i', b.path);
+    filters.push(
+      `[${next++}:a]${AFORMAT},atrim=0:${len.toFixed(3)},asetpts=PTS-STARTPTS,volume=${b.volume},` +
+        `afade=t=in:d=${fadeIn.toFixed(3)},afade=t=out:st=${(len - fadeOut).toFixed(3)}:d=${fadeOut.toFixed(3)},adelay=${ms}:all=1[amb${k}]`,
+    );
+    layers.push(`[amb${k}]`);
+  }
+  if (layers.length) {
+    if (main === '[0:a]') filters.unshift(`[0:a]${AFORMAT}[main]`);
+    filters.push(`[main]${layers.join('')}amix=inputs=${layers.length + 1}:duration=first:normalize=0[a]`);
+    args.push('-filter_complex', filters.join(';'), '-map', '0:v', '-map', '[a]');
   }
   args.push('-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', outPath);
   try {

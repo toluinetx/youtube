@@ -91,4 +91,4 @@ at 11:40.
 
 **Interrupts used:** a Title card at every day change, radio static that cuts out, the CO₂ alarm,
 whispered lines, a light Shake on footsteps, close-ups of the calendar, the gauge and the rabbit, and a
-short micro-motion video clip of dust falling from the ceiling.
+short flipbook of dust falling from the ceiling (3 frames of the same shot).

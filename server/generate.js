@@ -1,13 +1,17 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { MEDIA_DIR, mediaPathToUrl, mediaUrlToPath } from './paths.js';
-import { findScene, readStoryboard, sceneTimeline, syncCues, updateStoryboard } from './storyboard.js';
+import {
+  AMBIENCE_LOOP_SEC, findAmbience, findScene, imageVariantCount, readStoryboard, sceneTimeline, speakerParts, syncCues, updateStoryboard, withoutSpeakers,
+} from './storyboard.js';
 import { generateImage, referenceCapacity } from './replicate.js';
 import { OMNI_TOKENS_PER_SECOND, checkImage, generateGeminiImage, generateGeminiVideo, geminiReferenceCapacity, isGeminiModel } from './gemini.js';
+import { comfyReferenceCapacity, generateComfyImage, isComfyModel } from './comfyui.js';
 import { recordUsage } from './usage.js';
-import { soundEffect, textToSpeech } from './elevenlabs.js';
-import { extractThumbnail, probe, probeDuration, referenceDataUri } from './ffmpeg.js';
+import { composeMusic, soundEffect, textToSpeech } from './elevenlabs.js';
+import { extractThumbnail, joinAudio, probe, probeDuration, referenceDataUri } from './ffmpeg.js';
 
 export function badRequest(message) {
   return Object.assign(new Error(message), { status: 400 });
@@ -70,10 +74,11 @@ const firstWords = (text, n = 6) => text.replace(/\[[^\]]*\]/g, ' ').trim().spli
 
 /**
  * Like commitScene, and also adds the generated file to the library (same undo step), named after
- * the scene and its prompt, e.g. "Scene 3 image - A lone submarine descending into.png".
+ * the scene and its prompt, e.g. "Scene 3 image - A lone submarine descending into.png". With
+ * `variants`, the entry is a stack of pictures ([{ url, image_check }]) and `file` the one in use.
  */
-async function commitGenerated(sceneId, { file, kind, type, prompt, model, info, thumbUrl }, mutate, label) {
-  const asset = await assetRecord({ file, type, info, thumbUrl, name: '', extra: { generated: { kind, model, prompt } } });
+async function commitGenerated(sceneId, { file, kind, type, prompt, model, info, thumbUrl, variants }, mutate, label) {
+  const asset = await assetRecord({ file, type, info, thumbUrl, name: '', extra: { generated: { kind, model, prompt }, ...(variants && { variants }) } });
   return updateStoryboard((sb) => {
     const s = findScene(sb, sceneId);
     mutate(s);
@@ -99,9 +104,9 @@ export function sceneReferences(sb, scene) {
 }
 
 /**
- * The project's style images for a scene, with their captions: [{ asset, caption }]. Sent whenever
- * the scene uses project references ("+ project refs"); a standalone reference sets
- * `use_style_references` to get the style without the other references.
+ * The project's style images for a scene, with their captions: [{ asset, caption }]. Sent if the
+ * scene's `use_style_references` says so ("+ style"), else whenever it uses project references
+ * ("+ project refs"), so a scene can keep the style without the project's characters and places.
  */
 export function styleReferences(sb, scene) {
   if (!(scene.use_style_references ?? scene.use_global_references !== false)) return [];
@@ -111,7 +116,7 @@ export function styleReferences(sb, scene) {
     .filter((r) => r.asset?.type === 'image' && mediaUrlToPath(r.asset.url));
 }
 
-/** A style image as a reference for generateImageFor: labelled by its caption, marked `style`. */
+/** A style image as a reference for generateImagesFor: labelled by its caption, marked `style`. */
 const styleRef = ({ asset, caption }) => ({
   label: caption ? `style: ${caption}` : 'style reference', caption, path: mediaUrlToPath(asset.url), style: true,
 });
@@ -161,6 +166,7 @@ function referencePrompt(scenePrompt, style, refs, guardrails) {
   const design = refs.filter((r) => !r.previous && !r.style);
   const styles = refs.filter((r) => r.style);
   const previous = refs.find((r) => r.previous);
+  const frame = previous?.frame;
   const only = design.length === refs.length;
   return [
     `Reference images, in order: ${refs.map((r) => `${n(r)}) ${r.label}`).join(', ')}.`,
@@ -178,7 +184,12 @@ function referencePrompt(scenePrompt, style, refs, guardrails) {
         : `Reference ${n(styles[0])} shows the art style of this video. Match its medium, linework, colour palette, lighting, ` +
           'texture and rendering, but don\'t copy its characters, objects, setting or composition.' +
           (styles[0].caption ? ` Take from it: ${styles[0].caption}.` : '')),
-    previous &&
+    frame &&
+      `Reference ${n(previous)} is the previous frame of this same shot, a moment earlier. Keep its framing, camera angle, ` +
+        'composition, lens, lighting, characters, clothing and setting exactly the same, as if it were the next frame of a film. ' +
+        "Change only what the scene below describes, as the next moment of the action. Don't add people, arms or hands that " +
+        "the scene below doesn't describe.",
+    previous && !frame &&
       `Reference ${n(previous)} is the previous shot of this video. Keep continuity with it: the same characters, clothing, ` +
       'props, lighting and state of the setting, and the same art style. But this is a new shot: frame and stage it as the ' +
       'scene below describes rather than copying the previous one. Don\'t carry over people, arms or hands from it that ' +
@@ -191,10 +202,15 @@ function referencePrompt(scenePrompt, style, refs, guardrails) {
     .join('\n\n');
 }
 
-/** Reference images an image model accepts (0 = none, null = no stated limit), from either provider. */
+/** Reference images an image model accepts (0 = none, null = no stated limit), from any provider. */
 export async function imageReferenceCapacity(model) {
+  if (isComfyModel(model)) return comfyReferenceCapacity(model);
   return isGeminiModel(model) ? geminiReferenceCapacity(model) : referenceCapacity(model);
 }
+
+/** Which provider an image model id belongs to: 'gemini', 'comfyui' or 'replicate'. */
+export const imageProvider = (model) => (isGeminiModel(model) ? 'gemini' : isComfyModel(model) ? 'comfyui' : 'replicate');
+const IMAGE_GENERATORS = { gemini: generateGeminiImage, comfyui: generateComfyImage, replicate: generateImage };
 
 /**
  * Added to every image prompt (unless the project turns it off): image models often add a second
@@ -209,10 +225,12 @@ const IMAGE_GUARDRAILS =
  * Generate an image for `scene` from `imagePrompt`, with the scene's and project's references and the
  * `previous` shot (for continuity). If the project checks images, a vision model looks at each one and
  * it's regenerated (telling the model what went wrong) until it passes or the retries run out; the
- * attempt with the fewest problems is kept. Resolves with { buffer, ext, model, check }, where check is
- * { ok, issues, people, hands, attempts }, { error } if the check itself failed, or null if it's off.
+ * attempt with the fewest problems is kept. With `variants`, makes as many pictures as the project asks
+ * for with this model (see imageVariantCount), each checked once instead of retried.
+ * Resolves with { model, images: [{ buffer, ext, check }] }, where check is { ok, issues, people, hands,
+ * attempts }, { error } if the check itself failed, or null if it's off.
  */
-async function generateImageFor(sb, scene, imagePrompt, previous) {
+async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = false } = {}) {
   const { settings } = sb;
   // Scene references, then project ones, then style images, then the previous shot (dropped first if
   // the model takes fewer). An image that's both a reference and a style image is sent once, as style.
@@ -233,43 +251,94 @@ async function generateImageFor(sb, scene, imagePrompt, previous) {
 
   const guardrails = settings.image_guardrails !== false;
   const style = settings.style_prompt?.trim();
-  const basePrompt = refs.length
-    ? referencePrompt(imagePrompt, style, refs, guardrails)
-    : // Last, so a model that cuts long prompts short (FLUX) drops it before the scene and the style.
-      [imagePrompt, style, guardrails && IMAGE_GUARDRAILS].filter(Boolean).join('. ');
-  const references = await Promise.all(refs.map((r) => referenceDataUri(r.path, r.atSec)));
+  /** The prompt and reference images for a list of references. */
+  const inputsFor = async (list) => ({
+    refs: list,
+    basePrompt: list.length
+      ? referencePrompt(imagePrompt, style, list, guardrails)
+      : // Last, so a model that cuts long prompts short (FLUX) drops it before the scene and the style.
+        [imagePrompt, style, guardrails && IMAGE_GUARDRAILS].filter(Boolean).join('. '),
+    references: await Promise.all(list.map((r) => referenceDataUri(r.path, r.atSec))),
+  });
+  const first = await inputsFor(refs);
+  // Retries after a failed check leave out the previous shot: a mistake in the picture before (a prop
+  // in the wrong place) would otherwise be copied again on every try. A flipbook's previous frame stays,
+  // since matching it is the point.
+  const withoutPrevious = refs.filter((r) => !r.previous || r.frame);
+  let retryInputs = null;
   const params = settings.image_params?.[model] || {};
-  const generate = isGeminiModel(model) ? generateGeminiImage : generateImage;
+  const provider = imageProvider(model);
+  const generate = IMAGE_GENERATORS[provider];
+  const count = variants ? imageVariantCount(settings, model) : 1;
   const checkModel = settings.image_check && hasGeminiKey() ? settings.image_check_model?.trim() : null;
-  const tries = checkModel ? 1 + Math.min(5, Math.max(0, Math.round(Number(settings.image_check_retries) || 0))) : 1;
+  // Variants are each checked once: picking among them replaces retrying.
+  const tries = checkModel && count === 1 ? 1 + Math.min(5, Math.max(0, Math.round(Number(settings.image_check_retries) || 0))) : 1;
+  const seeded = params.seed !== undefined && params.seed !== null && params.seed !== '';
 
-  let best = null;
-  let problems = [];
-  for (let attempt = 1; attempt <= tries; attempt++) {
-    const prompt = problems.length
-      ? `${basePrompt}\n\nAn earlier attempt at this image was rejected for: ${problems.join(' ')} Make sure this one doesn't have these problems.`
-      : basePrompt;
-    const { buffer, ext, usage } = await generate({
-      prompt, model, aspectRatio: settings.aspect_ratio, references, referenceLabels: refs.map((r) => r.label), params,
-    });
-    recordUsage({ provider: isGeminiModel(model) ? 'gemini' : 'replicate', kind: 'image', model, scene_id: scene.scene_id, units: usage });
-    if (!checkModel) return { buffer, ext, model, check: null };
+  /** One picture; variant `n` > 0 gets the next seed if a seed is set, so they don't all come out the same. */
+  async function picture(n) {
+    const pictureParams = n && seeded ? { ...params, seed: Number(params.seed) + n } : params;
+    let best = null;
+    let problems = [];
+    for (let attempt = 1; attempt <= tries; attempt++) {
+      const retrying = problems.length > 0 && withoutPrevious.length > 0 && withoutPrevious.length < refs.length;
+      const { refs: sent, basePrompt, references } = retrying ? (retryInputs ??= await inputsFor(withoutPrevious)) : first;
+      const prompt = problems.length
+        ? `${basePrompt}\n\nAn earlier attempt at this image was rejected for: ${problems.join(' ')} Make sure this one doesn't have these problems.`
+        : basePrompt;
+      const { buffer, ext, usage } = await generate({
+        prompt, model, aspectRatio: settings.aspect_ratio, references, referenceLabels: sent.map((r) => r.label), params: pictureParams,
+      });
+      recordUsage({ provider, kind: 'image', model, scene_id: scene.scene_id, units: usage });
+      if (!checkModel) return { buffer, ext, check: null };
 
-    let check;
-    try {
-      const { usage: checkUsage, ...result } = await checkImage({ image: bufferDataUri(buffer, ext), brief: imagePrompt, model: checkModel });
-      recordUsage({ provider: 'gemini', kind: 'image check', model: checkModel, scene_id: scene.scene_id, units: checkUsage });
-      check = { ...result, attempts: attempt };
-    } catch (err) {
-      // A check that can't run mustn't lose an image that's already paid for.
-      console.warn(`Image check failed: ${err.message}`);
-      return { buffer, ext, model, check: { error: err.message, attempts: attempt } };
+      let check;
+      try {
+        const { usage: checkUsage, ...result } = await checkImage({ image: bufferDataUri(buffer, ext), brief: imagePrompt, model: checkModel });
+        recordUsage({ provider: 'gemini', kind: 'image check', model: checkModel, scene_id: scene.scene_id, units: checkUsage });
+        check = { ...result, attempts: attempt };
+      } catch (err) {
+        // A check that can't run mustn't lose an image that's already paid for.
+        console.warn(`Image check failed: ${err.message}`);
+        return { buffer, ext, check: { error: err.message, attempts: attempt } };
+      }
+      if (!best || check.issues.length < best.check.issues.length) best = { buffer, ext, check };
+      if (check.ok) return best;
+      problems = check.issues;
     }
-    if (!best || check.issues.length < best.check.issues.length) best = { buffer, ext, model, check };
-    if (check.ok) return best;
-    problems = check.issues;
+    return { ...best, check: { ...best.check, attempts: tries } };
   }
-  return { ...best, check: { ...best.check, attempts: tries } };
+
+  // All at once: a local ComfyUI queues them, a paid API runs them side by side. Variants that failed
+  // are left out, unless they all did.
+  const results = await Promise.allSettled(Array.from({ length: count }, (_, n) => picture(n)));
+  const images = results.filter((r) => r.status === 'fulfilled').map((r) => r.value);
+  if (!images.length) throw results[0].reason;
+  return { model, images };
+}
+
+/** Index of the variant to show first: the first that passed its check, else the one with the fewest problems. */
+function bestVariant(images) {
+  const passed = images.findIndex((i) => i.check?.ok);
+  if (passed !== -1) return passed;
+  const issues = (i) => (i.check?.issues ? i.check.issues.length : Infinity);
+  return images.reduce((best, img, n) => (issues(img) < issues(images[best]) ? n : best), 0);
+}
+
+/**
+ * Save generated `images` for a scene, then resolve with { file, url, check, variants }: the picture to
+ * use and, for more than one, the library's list of them all ([{ url, image_check }]) to pick from.
+ */
+async function saveImages(sceneId, images) {
+  const saved = [];
+  for (const { buffer, ext, check } of images) {
+    const file = await saveMedia('images', sceneId, ext, buffer);
+    const url = mediaPathToUrl(file);
+    saved.push({ file, url, check: checkRecord(check, url) });
+  }
+  const chosen = saved[bestVariant(images)];
+  const variants = saved.length > 1 ? saved.map(({ url, check }) => ({ url, image_check: check })) : null;
+  return { ...chosen, variants };
 }
 
 const hasGeminiKey = () => Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY);
@@ -280,16 +349,47 @@ const bufferDataUri = (buffer, ext) => `data:${MIME[ext] || 'image/png'};base64,
 const checkRecord = (check, url) => (check ? { url, ...check } : null);
 
 /**
+ * Use another of a library image's variants (`url`) instead of the one it shows now: in the library
+ * entry and wherever that picture is used (scenes and shots), as one undo step. Resolves with the entry.
+ */
+export async function chooseImageVariant(assetId, url) {
+  const variantOf = (sb) => {
+    const asset = sb.library.find((a) => a.asset_id === assetId);
+    if (!asset) throw Object.assign(new Error('No such library item'), { status: 404 });
+    const variant = asset.variants?.find((v) => v.url === url);
+    if (!variant) throw badRequest("That picture isn't one of this item's variants");
+    return { asset, variant };
+  };
+  variantOf(await readStoryboard());
+  const size = (await fs.stat(mediaUrlToPath(url))).size;
+  return updateStoryboard((sb) => {
+    const { asset, variant } = variantOf(sb);
+    const old = asset.url;
+    if (old === url) return asset;
+    Object.assign(asset, { url, thumb_url: url, size_bytes: size });
+    const swap = (slot) => {
+      if (slot.image_url === old) Object.assign(slot, { image_url: url, image_check: variant.image_check ?? null });
+    };
+    for (const s of sb.scenes) {
+      swap(s);
+      for (const shot of s.shots || []) swap(shot);
+    }
+    return asset;
+  }, { label: 'Choose image variant' });
+}
+
+/**
  * Generate a reference image (a character sheet or a location's master shot) into the library as
- * `name`, made without other references. Images already named `name` are renamed "(earlier)" and
+ * `name`, made without other references, or from `basedOn` (library image ids): the same character
+ * or place seen from another angle. Images already named `name` are renamed "(earlier)" and
  * replaced by the new one wherever they're used as a reference. With `forEveryScene`, it's also added
  * to the project-wide references. Resolves with { asset, check }.
  */
-export async function generateReferenceImage({ name, prompt, forEveryScene }) {
+export async function generateReferenceImage({ name, prompt, forEveryScene, basedOn = [] }) {
   const sb = await readStoryboard();
-  // Only the style images: a new character or place should be drawn in the video's style.
-  const standalone = { scene_id: 'reference', reference_asset_ids: [], use_global_references: false, use_style_references: true };
-  const { buffer, ext, model, check } = await generateImageFor(sb, standalone, prompt, null);
+  // The style images (a new character or place is drawn in the video's style), plus the references it's based on.
+  const standalone = { scene_id: 'reference', reference_asset_ids: basedOn, use_global_references: false, use_style_references: true };
+  const { model, images: [{ buffer, ext, check }] } = await generateImagesFor(sb, standalone, prompt, null);
   const file = await saveMedia('images', 'reference', ext, buffer);
   const url = mediaPathToUrl(file);
   const asset = await assetRecord({
@@ -319,17 +419,17 @@ export async function generateSceneImage(sceneId) {
   const scene = findScene(sb, sceneId);
   if (!scene.image_prompt.trim()) throw badRequest('This scene has no image prompt');
 
-  const { buffer, ext, model, check } = await generateImageFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene));
-  const file = await saveMedia('images', scene.scene_id, ext, buffer);
-  const media = { file, kind: 'image', type: 'image', prompt: scene.image_prompt.trim(), model };
+  const { model, images } = await generateImagesFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene), { variants: true });
+  const { file, url, check, variants } = await saveImages(scene.scene_id, images);
+  const media = { file, kind: 'image', type: 'image', prompt: scene.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {
-    Object.assign(s, CLEAR_VIDEO, { image_url: mediaPathToUrl(file), image_check: checkRecord(check, mediaPathToUrl(file)) });
+    Object.assign(s, CLEAR_VIDEO, { image_url: url, image_check: check });
     setSourceName(s, 'image', null);
   }, 'Generate image');
 }
 
 const CONTEXT_CHARS = 600;
-const withoutTags = (text) => text.replace(/\[[^\]\n]{1,60}\]/g, ' ').replace(/\s+/g, ' ').trim();
+const withoutTags = (text) => withoutSpeakers(text).replace(/\[[^\]\n]{1,60}\]/g, ' ').replace(/\s+/g, ' ').trim();
 
 /**
  * The narration around a scene: the voiceover of the scenes before it (up to CONTEXT_CHARS, nearest
@@ -347,19 +447,73 @@ function narrationContext(scenes, scene) {
   return { previousText: previous.slice(-CONTEXT_CHARS), nextText: next.slice(0, CONTEXT_CHARS) };
 }
 
+/** Silence between two speakers' parts of one voiceover. */
+const SPEAKER_GAP_SEC = 0.25;
+
+/** The ElevenLabs voice for a speaker label (null = the narrator). */
+function voiceFor(settings, speaker) {
+  if (!speaker) return settings.voice_id;
+  const voice = (settings.voices || []).find((v) => v.name.toLowerCase() === speaker.toLowerCase());
+  if (voice?.voice_id) return voice.voice_id;
+  if (speaker.toLowerCase() === 'narrator') return settings.voice_id;
+  throw badRequest(`No voice for "{${speaker}}". Add a speaker named ${speaker} under Voice in the Project panel (left).`);
+}
+
+/**
+ * Speak a voiceover line, each part in its speaker's voice ("{Eli} …"), joined with a short gap.
+ * Resolves with { buffer, words }, the word times running across the whole line.
+ */
+async function speakLine(settings, scenes, scene, text) {
+  const parts = speakerParts(text).map((p) => ({ ...p, voiceId: voiceFor(settings, p.speaker) }));
+  if (!parts.length) throw badRequest('This scene has no voiceover text');
+  // The neighbouring narration is sent as context, so tone and pace carry across scenes (and parts).
+  const context = narrationContext(scenes, scene);
+  const spoken = [];
+  for (const [i, part] of parts.entries()) {
+    const { buffer, usage, words } = await textToSpeech({
+      text: part.text, voiceId: part.voiceId, modelId: settings.tts_model, params: settings.tts_params,
+      previousText: i ? withoutTags(parts.slice(0, i).map((p) => p.text).join(' ')) : context.previousText,
+      nextText: i < parts.length - 1 ? withoutTags(parts[i + 1].text) : context.nextText,
+    });
+    recordUsage({
+      provider: 'elevenlabs', kind: 'voiceover', model: settings.tts_model, scene_id: scene.scene_id,
+      units: { ...usage, characters: part.text.length, ...(part.speaker && { speaker: part.speaker }) },
+    });
+    spoken.push({ buffer, words });
+  }
+  if (spoken.length === 1) return spoken[0];
+
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'voiceover-'));
+  try {
+    const files = [];
+    for (const [i, { buffer }] of spoken.entries()) {
+      files.push(path.join(dir, `part-${i}.mp3`));
+      await fs.writeFile(files[i], buffer);
+    }
+    // Each part's words move along by the length of the parts (and gaps) before it.
+    const words = [];
+    let offset = 0;
+    for (const [i, part] of spoken.entries()) {
+      if (part.words) words.push(...part.words.map((w) => ({ ...w, start: round2(w.start + offset), end: round2(w.end + offset) })));
+      offset += (await probeDuration(files[i])) + SPEAKER_GAP_SEC;
+    }
+    const joined = path.join(dir, 'joined.mp3');
+    await joinAudio(files, SPEAKER_GAP_SEC, joined);
+    return { buffer: await fs.readFile(joined), words: spoken.every((p) => p.words) ? words : null };
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+}
+
+const round2 = (n) => Math.round(n * 100) / 100;
+
 export async function generateSceneVoiceover(sceneId) {
   const { settings, scenes } = await readStoryboard();
   const scene = findScene({ scenes }, sceneId);
   if (!scene.voiceover_text.trim()) throw badRequest('This scene has no voiceover text');
 
   const text = scene.voiceover_text.trim();
-  // The neighbouring narration is sent as context, so tone and pace carry across scenes.
-  const { buffer, usage, words } = await textToSpeech({
-    text, voiceId: settings.voice_id, modelId: settings.tts_model, params: settings.tts_params, ...narrationContext(scenes, scene),
-  });
-  recordUsage({
-    provider: 'elevenlabs', kind: 'voiceover', model: settings.tts_model, scene_id: scene.scene_id, units: { ...usage, characters: text.length },
-  });
+  const { buffer, words } = await speakLine(settings, scenes, scene, text);
   const file = await saveMedia('voiceover', scene.scene_id, 'mp3', buffer);
   const duration = await probeDuration(file);
   const media = {
@@ -408,14 +562,21 @@ export async function generateSceneShotImage(sceneId, shotId) {
   if (!shot.image_prompt.trim()) throw badRequest('This shot has no image prompt');
 
   const before = pictureBefore(scene, shot.start_sec);
-  const previous = before && { label: 'Previous shot (the picture just before this one)', ...before };
-  const { buffer, ext, model, check } = await generateImageFor(sb, scene, shot.image_prompt.trim(), previous);
-  const file = await saveMedia('images', scene.scene_id, ext, buffer);
-  const media = { file, kind: 'image', type: 'image', prompt: shot.image_prompt.trim(), model };
+  // A flipbook frame always gets the frame before. Another shot gets the picture before it unless the
+  // scene doesn't send previous pictures ("+ previous scene" off): models that copy their references
+  // closely (Qwen Edit) would otherwise repeat its people and framing.
+  const previous = before && (shot.continues
+    ? { label: 'Previous frame (this same shot a moment earlier)', ...before, frame: true }
+    : scene.use_previous_scene !== false ? { label: 'Previous shot (the picture just before this one)', ...before } : null);
+  // With its own references, the shot is made as if the scene had those.
+  const asScene = shot.reference_asset_ids ? { ...scene, reference_asset_ids: shot.reference_asset_ids } : scene;
+  const { model, images } = await generateImagesFor(sb, asScene, shot.image_prompt.trim(), previous, { variants: true });
+  const { file, url, check, variants } = await saveImages(scene.scene_id, images);
+  const media = { file, kind: 'image', type: 'image', prompt: shot.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {
     // The shot may have been removed while it was generating; then the image just goes to the library.
     const target = (s.shots || []).find((x) => x.shot_id === shotId);
-    if (target) Object.assign(target, { image_url: mediaPathToUrl(file), source_name: null, image_check: checkRecord(check, mediaPathToUrl(file)) });
+    if (target) Object.assign(target, { image_url: url, source_name: null, image_check: check });
   }, 'Generate shot');
 }
 
@@ -511,6 +672,63 @@ export async function generateSceneVideo(sceneId) {
     // Show the whole clip unless the scene is already longer (a short clip holds its last frame).
     if (info.duration > s.duration_sec) s.duration_sec = Math.round(info.duration * 10) / 10;
   }, 'Generate video');
+}
+
+/**
+ * Generate the video's background music from the project's music prompt (ElevenLabs Music,
+ * instrumental). It goes into the library and becomes the music track. Resolves with the settings.
+ */
+export async function generateMusic() {
+  const { settings } = await readStoryboard();
+  const prompt = settings.music_prompt?.trim();
+  if (!prompt) throw badRequest('Write a music prompt first');
+  const model = settings.music_model || 'music_v1';
+  const { buffer, usage } = await composeMusic({ prompt, lengthSec: Number(settings.music_length_sec) || 180, modelId: model });
+  recordUsage({ provider: 'elevenlabs', kind: 'music', model, units: { ...usage, seconds: Number(settings.music_length_sec) || null } });
+  const file = mediaFilePath('music', 'music', 'mp3');
+  await fs.mkdir(path.dirname(file), { recursive: true });
+  await fs.writeFile(file, buffer);
+  const duration = await probeDuration(file);
+  const words = firstWords(prompt);
+  const asset = await assetRecord({
+    file, type: 'audio', name: `Music${words ? ` - ${words}` : ''}.mp3`, info: { duration, hasAudio: true },
+    extra: { generated: { kind: 'music', model, prompt } },
+  });
+  const sb = await updateStoryboard((sb) => {
+    sb.library.push(asset);
+    Object.assign(sb.settings, { music_url: asset.url, music_name: asset.name, music_duration_sec: duration });
+  }, { label: 'Generate music' });
+  return sb.settings;
+}
+
+/**
+ * Generate an ambience bed's sound: a seamless loop (ElevenLabs sound effects with `loop`) of
+ * AMBIENCE_LOOP_SEC seconds from its prompt, also added to the library. Resolves with the bed.
+ */
+export async function generateAmbience(ambienceId) {
+  const { settings, ...sb } = await readStoryboard();
+  const bed = findAmbience(sb, ambienceId);
+  const prompt = bed.prompt.trim();
+  if (!prompt) throw badRequest(`Ambience "${bed.name || 'untitled'}" has no prompt`);
+  const { buffer, usage } = await soundEffect({
+    text: prompt, durationSec: AMBIENCE_LOOP_SEC, modelId: settings.sfx_model, params: { ...settings.sfx_params, auto_duration: false, loop: true },
+  });
+  recordUsage({ provider: 'elevenlabs', kind: 'ambience', model: settings.sfx_model, units: usage });
+  const file = mediaFilePath('sfx', 'ambience', 'mp3');
+  await fs.mkdir(path.dirname(file), { recursive: true });
+  await fs.writeFile(file, buffer);
+  const duration = await probeDuration(file);
+  const asset = await assetRecord({
+    file, type: 'audio', name: `Ambience - ${(bed.name || firstWords(prompt)).replace(/[\\/:*?"<>|]/g, '')}.mp3`, info: { duration, hasAudio: true },
+    extra: { generated: { kind: 'ambience', model: settings.sfx_model, prompt } },
+  });
+  return updateStoryboard((sb) => {
+    sb.library.push(asset);
+    // The bed may have been deleted while it was generating; then the sound just goes to the library.
+    const target = sb.ambience.find((a) => a.ambience_id === ambienceId);
+    if (target) Object.assign(target, { url: asset.url, duration_sec: duration, source_name: null });
+    return target ?? null;
+  }, { label: `Generate ambience "${bed.name || 'untitled'}"` });
 }
 
 export { setSourceName };

@@ -1,10 +1,10 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { AudioLines, Film, ImageIcon, Loader2, Music, NotebookPen, Plus, Sparkles, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
-import { ASSET_MIME, assetFits, formatTime, sceneTimeline } from '../util.js';
+import { AudioLines, Film, ImageIcon, Layers, Loader2, Music, NotebookPen, Plus, Sparkles, Trees, Upload, Volume2, ZoomIn, ZoomOut } from 'lucide-react';
+import { ASSET_MIME, ambienceRuns, assetFits, formatTime, sceneTimeline, shotNumbers } from '../util.js';
 
 const MIN_PPS = 10;
 const MAX_PPS = 200;
-const LABEL_W = 88;
+const LABEL_W = 100;
 // How far (px) a clip must be dragged before it starts moving rather than just being selected.
 const REORDER_THRESHOLD = 5;
 // How close (px) the pointer must be to the boundary between two scenes to offer the + (insert) button.
@@ -19,6 +19,7 @@ const TRACKS = [
   { kind: 'sfx', label: 'SFX', icon: Sparkles, height: 'h-10', color: 'text-sfx' },
 ];
 const MUSIC_TRACK = { kind: 'music', label: 'Music', icon: Music, height: 'h-8', color: 'text-fuchsia-400' };
+const AMBIENCE_TRACK = { kind: 'ambience', label: 'Ambience', icon: Trees, height: 'h-8', color: 'text-teal-400' };
 
 /** Which slot a file is being dragged over: a clip ({ sceneId, track }), the music row, or empty space (null). */
 function dropTargetOf(el) {
@@ -53,10 +54,12 @@ function tickStep(pps) {
 }
 
 export default function Timeline({
-  scenes, starts, total, time, playing, seek, selectedIds, onSelect, onResize, onAdd, onDropFiles, onDropAsset, dragAsset, settings,
-  onSelectMusic, onClipMenu, onMusicMenu, onReorder, onInsert, busy,
+  scenes, starts, total, time, playing, seek, selectedIds, onSelect, onResize, onAdd, onDropFiles, onDropAsset, dragAsset, settings, ambience,
+  onSelectMusic, onClipMenu, onMusicMenu, onReorder, onInsert, busy, library = [], onChooseVariant,
 }) {
   const [pps, setPps] = useState(40);
+  // Generated images with variants, by the url of the one in use.
+  const stacks = new Map(library.filter((a) => a.variants?.length > 1).map((a) => [a.url, a]));
   // While something is dragged over the timeline: { source: 'files' | 'asset', target, index, valid }.
   // target is the clip / music row under the pointer, or null for empty space (index = where a new scene would go).
   const [drag, setDrag] = useState(null);
@@ -259,12 +262,16 @@ export default function Timeline({
         </div>
       </div>
 
+      {selectedIds.length === 1 && (
+        <VariantPicker scenes={scenes} sceneId={selectedIds[0]} stacks={stacks} busy={busy} onChoose={onChooseVariant} />
+      )}
+
       <div className="flex">
         <div className="shrink-0 border-r border-zinc-800" style={{ width: LABEL_W }}>
           <div className="h-6 border-b border-zinc-800" />
-          {[...TRACKS, MUSIC_TRACK].map((t) => (
+          {[...TRACKS, MUSIC_TRACK, AMBIENCE_TRACK].map((t) => (
             <div key={t.kind} className={`${t.height} flex items-center gap-1.5 border-b border-zinc-800/60 px-3 text-xs text-zinc-400`}>
-              <t.icon className={`size-3.5 ${t.color}`} /> {t.label}
+              <t.icon className={`size-3.5 shrink-0 ${t.color}`} /> {t.label}
             </div>
           ))}
         </div>
@@ -295,6 +302,7 @@ export default function Timeline({
                     left={starts[i] * pps}
                     pps={pps}
                     selected={selectedSet.has(scene.scene_id)}
+                    stacked={track.kind === 'image' && pictureUrls(scene).some((url) => stacks.has(url))}
                     busy={Boolean(busy[`${scene.scene_id}:${track.kind}`])}
                     dropping={dropStateFor(scene.scene_id, track.kind)}
                     moving={Boolean(moving?.ids.includes(scene.scene_id))}
@@ -344,6 +352,8 @@ export default function Timeline({
               onSelect={onSelectMusic}
               onMenu={onMusicMenu}
             />
+
+            <AmbienceRow scenes={scenes} starts={starts} ambience={ambience} total={total} pps={pps} busy={busy} onSelect={onSelectMusic} />
 
             {moveX != null && (
               <div className="pointer-events-none absolute top-0 bottom-0 z-20 w-0.5 -translate-x-1/2 bg-indigo-400" style={{ left: moveX }}>
@@ -416,7 +426,40 @@ function MusicRow({ settings, total, pps, busy, dropping, onSelect, onMenu }) {
   );
 }
 
-const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy, dropping, moving, onPress, onResize, onMenu }) {
+/** The ambience beds under the scenes: one block per run of neighbouring scenes with the same bed. */
+function AmbienceRow({ scenes, starts, ambience, total, pps, busy, onSelect }) {
+  const runs = ambienceRuns(scenes, ambience, starts);
+  return (
+    <div className="relative h-8 border-b border-zinc-800/60" onPointerDown={(e) => e.target === e.currentTarget && onSelect()}>
+      {!runs.length && (
+        <div
+          className="absolute top-1 bottom-1 left-px cursor-pointer rounded-md border border-dashed border-zinc-700/80 px-1.5 text-[10px] leading-6 text-zinc-600"
+          style={{ width: Math.max(total * pps, 160) - 2 }}
+          onPointerDown={onSelect}
+          title="Add ambience in the Music tab, then pick it for scenes"
+        >
+          No ambience. Add a background sound per location in the Music tab
+        </div>
+      )}
+      {runs.map((r) => (
+        <div
+          key={`${r.ambience.ambience_id}:${r.from}`}
+          className={`absolute top-1 bottom-1 cursor-pointer overflow-hidden rounded-md border-l-2 ring-1 ring-white/5 hover:ring-white/20 ${r.ambience.url ? '' : 'border-dashed opacity-60'}`}
+          style={{ left: r.start * pps + 1, width: Math.max(2, (r.end - r.start) * pps - 2), borderColor: r.color, background: `color-mix(in srgb, ${r.color} 22%, transparent)` }}
+          onPointerDown={onSelect}
+          title={`${r.ambience.name || 'Untitled ambience'}: scenes ${r.from + 1}–${r.to + 1}${r.ambience.url ? '' : ' (no sound yet)'}. Click for ambience settings`}
+        >
+          <div className="truncate px-1.5 text-[10px] leading-6 text-zinc-200">
+            {r.ambience.name || 'Untitled'}{r.ambience.url ? '' : ' · not generated'}
+          </div>
+          {busy[`ambience:${r.ambience.ambience_id}`] && <BusyOverlay />}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const Clip = memo(function Clip({ track, scene, index, left, pps, selected, stacked, busy, dropping, moving, onPress, onResize, onMenu }) {
   const width = scene.duration_sec * pps;
   const ring = dropping
     ? dropping === 'ok'
@@ -436,6 +479,7 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
     const thumb = scene.video_thumb_url || scene.image_url;
     // Each shot's picture over the stretch of the scene it's on screen.
     const parts = sceneTimeline(scene);
+    const numbers = shotNumbers(scene);
     return (
       <div className={`${base} bg-zinc-800`} style={style} onPointerDown={select} onContextMenu={menu} title={names.image || scene.image_prompt} {...drop}>
         {parts.map(({ shot, start, end }) => {
@@ -449,9 +493,14 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
                 width: (end - start) * pps,
                 ...(picture && { backgroundImage: `url("${picture}")`, backgroundSize: 'auto 100%', backgroundRepeat: 'repeat-x' }),
               }}
-              title={shot ? `Shot from ${start.toFixed(1)}s: ${shot.image_prompt}` : undefined}
+              title={shot ? `Picture ${index + 1}.${numbers.get(shot.shot_id)}, from ${start.toFixed(1)}s: ${shot.image_prompt}` : undefined}
             >
               {!picture && <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(255_255_255/0.03)_6px_12px)]" />}
+              {(end - start) * pps >= 26 && (
+                <span className="absolute top-0.5 left-0.5 rounded bg-black/65 px-1 text-[9px] leading-3.5 font-semibold text-white tabular-nums">
+                  {index + 1}.{shot ? numbers.get(shot.shot_id) : 1}
+                </span>
+              )}
             </div>
           );
         })}
@@ -459,6 +508,11 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
           <span className="flex items-center gap-1 font-semibold">
             #{index + 1}
             {scene.video_url && <Film className="size-3 text-sky-300" aria-label="Video clip" />}
+            {stacked && (
+              <span title="Has variants: select the scene to pick one">
+                <Layers className="size-3 text-emerald-300" aria-label="Has variants" />
+              </span>
+            )}
             {scene.video_url && scene.video_has_audio && scene.video_volume > 0 && <Volume2 className="size-3 text-sky-300" aria-label="Clip has sound" />}
             {scene.notes?.trim() && (
               <span title={`Notes: ${scene.notes}`}>
@@ -506,6 +560,63 @@ const Clip = memo(function Clip({ track, scene, index, left, pps, selected, busy
     </div>
   );
 });
+
+/** The scene's own picture (unless a video clip shows instead) and its shots' pictures. */
+const pictureUrls = (scene) => [!scene.video_url && scene.image_url, ...(scene.shots || []).map((s) => s.image_url)].filter(Boolean);
+
+/**
+ * For the selected scene, a row per picture that has variants (its own image, then its shots), to pick
+ * the one to use.
+ */
+function VariantPicker({ scenes, sceneId, stacks, busy, onChoose }) {
+  const index = scenes.findIndex((s) => s.scene_id === sceneId);
+  const scene = scenes[index];
+  if (!scene) return null;
+  const numbers = shotNumbers(scene);
+  const rows = [
+    !scene.video_url && { key: 'main', label: `${index + 1}.1`, url: scene.image_url },
+    ...(scene.shots || []).map((shot) => ({ key: shot.shot_id, label: `${index + 1}.${numbers.get(shot.shot_id)}`, url: shot.image_url })),
+  ].filter((r) => r && stacks.has(r.url));
+  if (!rows.length) return null;
+  const working = Boolean(busy[`${sceneId}:image`]);
+
+  return (
+    <div className="max-h-56 space-y-1.5 overflow-y-auto border-b border-zinc-800/80 px-3 py-2">
+      {rows.map(({ key, label, url }) => {
+        const asset = stacks.get(url);
+        return (
+          <div key={key} className="flex items-center gap-2">
+            <span className="w-16 shrink-0 text-[11px] text-zinc-500">
+              <Layers className="mr-1 inline size-3 text-emerald-300" />
+              Picture {label}
+            </span>
+            <div className="flex min-w-0 gap-1.5 overflow-x-auto pb-0.5">
+              {asset.variants.map((v, n) => {
+                const chosen = v.url === url;
+                const issues = v.image_check?.issues || [];
+                return (
+                  <button
+                    key={v.url}
+                    type="button"
+                    disabled={working}
+                    onClick={() => !chosen && onChoose?.(asset.asset_id, v.url)}
+                    className={`relative h-16 shrink-0 overflow-hidden rounded ${chosen ? 'ring-2 ring-indigo-400' : 'opacity-75 ring-1 ring-white/10 hover:opacity-100 hover:ring-white/40'}`}
+                    style={{ aspectRatio: '16 / 9' }}
+                    title={`Variant ${n + 1}${chosen ? ' (in use)' : ', click to use it'}${issues.length ? `\nCheck found: ${issues.join(' ')}` : v.image_check?.ok ? '\nPassed the check' : ''}`}
+                  >
+                    <img src={v.url} alt={`Variant ${n + 1}`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
+                    <span className="absolute top-0.5 left-0.5 rounded bg-black/65 px-1 text-[9px] leading-3.5 font-semibold text-white tabular-nums">{n + 1}</span>
+                    {issues.length > 0 && <span className="absolute top-1 right-1 size-1.5 rounded-full bg-amber-400" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 function Wave() {
   return (

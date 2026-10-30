@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Pause, Play } from 'lucide-react';
+import { Pause, Play, Plus, Trash2 } from 'lucide-react';
 import { api } from '../api.js';
 import Picker from './Picker.jsx';
 import ParamsPanel, { GearButton, countSet } from './ParamsPanel.jsx';
@@ -71,7 +71,8 @@ const SFX_PARAMS = [
 
 const REPLICATE_ID = /^[\w.-]+\/[\w.-]+(:\w+)?$/;
 const GEMINI_ID = /^gemini:[\w.-]+$/;
-const isImageModelId = (q) => REPLICATE_ID.test(q) || GEMINI_ID.test(q);
+const COMFY_ID = /^comfyui:[\w.-]+$/;
+const isImageModelId = (q) => REPLICATE_ID.test(q) || GEMINI_ID.test(q) || COMFY_ID.test(q);
 const isGeminiId = (q) => GEMINI_ID.test(q);
 const isElevenLabsId = (q) => /^[\w-]+$/.test(q);
 
@@ -92,10 +93,11 @@ function runs(n) {
 }
 
 /**
- * Curated Replicate and Gemini models first, then the rest of Gemini's, then Replicate's collections
- * (those in the `prefer` collection first).
+ * Curated Replicate and Gemini models first, then the rest of Gemini's, then local ComfyUI workflows
+ * (for `refs`, those that take reference images; otherwise the others), then Replicate's collections
+ * (those in `prefer` first).
  */
-function imageModelOptions(curated, catalog, prefer) {
+function imageModelOptions(curated, catalog, prefer, refs) {
   const known = new Set(curated.map(([id]) => id));
   const rest = (catalog.models || []).filter((m) => !known.has(m.id));
   const ranked = [...rest.filter((m) => m.collections.includes(prefer)), ...rest.filter((m) => !m.collections.includes(prefer))];
@@ -103,6 +105,7 @@ function imageModelOptions(curated, catalog, prefer) {
     ...curatedOptions(curated, 'Replicate'),
     ...curatedOptions(GEMINI_IMAGE_MODELS, 'Gemini'),
     ...extraGemini(GEMINI_IMAGE_MODELS, catalog.gemini?.image),
+    ...(catalog.comfy || []).filter((m) => (m.references !== 0) === refs).map((m) => ({ ...m, sub: `${m.sub ? `${m.sub} · ` : ''}${m.id}`, badge: 'Local', provider: 'ComfyUI' })),
     ...ranked.map((m) => ({ id: m.id, label: m.id, sub: m.description, badge: runs(m.run_count), provider: 'Replicate' })),
   ];
 }
@@ -134,6 +137,11 @@ export function ModelCatalogProvider({ status, onError, children }) {
     if (!status?.gemini) return;
     api.geminiModels().then((gemini) => setCatalog((c) => ({ ...c, gemini }))).catch(() => {});
   }, [status?.gemini]);
+
+  useEffect(() => {
+    if (status?.comfyui == null) return;
+    api.comfyModels().then((comfy) => setCatalog((c) => ({ ...c, comfy }))).catch(() => {});
+  }, [status?.comfyui]);
 
   useEffect(() => {
     if (!status?.elevenlabs) return;
@@ -271,7 +279,7 @@ function ServerModelRow({ label, hint, model, onModel, options, starList, settin
 export function ImageModelControl({ settings, onChange, refs = false, label, hint }) {
   const { catalog } = useCatalog();
   const key = refs ? 'reference_model' : 'image_model';
-  const options = imageModelOptions(refs ? REFERENCE_MODELS : IMAGE_MODELS, catalog, refs ? 'image-editing' : 'text-to-image');
+  const options = imageModelOptions(refs ? REFERENCE_MODELS : IMAGE_MODELS, catalog, refs ? 'image-editing' : 'text-to-image', refs);
   const status = catalog.error
     ? `Couldn't load more models from Replicate (${catalog.error}). Type owner/model or gemini:model to use any model.`
     : catalog.models
@@ -407,6 +415,66 @@ export function VoiceControl({ settings, onChange, label = 'Voice', hint }) {
         >
           {voice && playing === voice.voice_id ? <Pause className="size-4" /> : <Play className="size-4" />}
         </button>
+      </div>
+    </Row>
+  );
+}
+
+/**
+ * More voices for the narration, by speaker (settings.voices). A voiceover's "{Eli}" starts a part in
+ * Eli's voice, "{Narrator}" goes back to the voice above.
+ */
+export function SpeakersControl({ settings, onChange }) {
+  const { voices, starred, star } = useCatalog();
+  const speakers = settings.voices || [];
+  const options = (voices || []).map((v) => ({ id: v.voice_id, label: v.name, sub: [v.description, v.category].filter(Boolean).join(' · ') }));
+  const set = (i, patch) => onChange({ voices: speakers.map((s, k) => (k === i ? { ...s, ...patch } : s)) });
+  const remove = (i) => onChange({ voices: speakers.filter((_, k) => k !== i) });
+  const add = () => onChange({ voices: [...speakers, { name: `Speaker ${speakers.length + 1}`, voice_id: settings.voice_id }] });
+  return (
+    <Row label="Speakers" hint="for dialogue">
+      <div className="space-y-1.5">
+        {speakers.map((s, i) => (
+          <div key={i} className="flex gap-2">
+            <input
+              className="field !w-28 shrink-0"
+              value={s.name}
+              onChange={(e) => set(i, { name: e.target.value.replace(/[{}]/g, '') })}
+              aria-label={`Speaker ${i + 1} name`}
+              placeholder="Name"
+            />
+            {voices ? (
+              <Picker
+                value={s.voice_id}
+                options={options}
+                onChange={(id) => set(i, { voice_id: id })}
+                starred={starred.voice}
+                onStar={star('voice')}
+                custom={isElevenLabsId}
+                placeholder="Search voices, or paste a voice ID"
+                ariaLabel={`${s.name} voice`}
+              />
+            ) : (
+              <input
+                className="field font-mono text-xs"
+                value={s.voice_id}
+                onChange={(e) => set(i, { voice_id: e.target.value.trim() })}
+                placeholder="ElevenLabs voice ID"
+                aria-label={`${s.name} voice ID`}
+              />
+            )}
+            <button type="button" className="icon-btn shrink-0 border border-zinc-800" title={`Remove ${s.name}`} onClick={() => remove(i)}>
+              <Trash2 className="size-4" />
+            </button>
+          </div>
+        ))}
+        <button type="button" className="btn-ghost w-full text-xs" onClick={add}>
+          <Plus className="size-3.5" /> Add a speaker
+        </button>
+        <p className="text-[11px] text-zinc-600">
+          In a voiceover, <span className="font-mono text-zinc-400">{'{Name}'}</span> starts a part in that speaker&apos;s voice and{' '}
+          <span className="font-mono text-zinc-400">{'{Narrator}'}</span> goes back to the voice above. The labels aren&apos;t spoken.
+        </p>
       </div>
     </Row>
   );

@@ -69,7 +69,7 @@ export function finishFilters({ look, vignette = 0, grain = 0, shake, width, hei
 
 const WORDS_PER_SEC = 2.5;
 const BREAK_AFTER = /[.!?;:,…—–-]["')\]]*$/;
-const withoutTags = (text) => text.replace(/\[[^\]\n]{1,60}\]/g, ' ');
+const withoutTags = (text) => text.replace(/\[[^\]\n]{1,60}\]|\{[^{}\n]{1,40}\}/g, ' ');
 
 /**
  * The spoken words of a scene with their times (seconds into the scene): the voiceover's word timings

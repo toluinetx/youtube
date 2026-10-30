@@ -2,12 +2,14 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { CLIPS_DIR, EXPORTS_DIR, mediaUrlToPath } from './paths.js';
-import { RESOLUTIONS, readStoryboard, sceneMotion, sceneTimeline } from './storyboard.js';
+import { AMBIENCE_LOOP_SEC, RESOLUTIONS, ambienceRuns, readStoryboard, sceneMotion, sceneTimeline } from './storyboard.js';
 import { concatClips, renderSceneClip } from './ffmpeg.js';
 import { captionWords, captionsAss, finishFilters } from './finish.js';
-import { GENERATORS, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, sceneReferences, styleReferences } from './generate.js';
+import {
+  GENERATORS, generateAmbience, generateMusic, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, imageProvider, sceneReferences,
+  styleReferences,
+} from './generate.js';
 import { costEstimator } from './estimate.js';
-import { isGeminiModel } from './gemini.js';
 import { accountBalances } from './usage.js';
 
 /**
@@ -48,7 +50,8 @@ async function existingFile(url) {
 
 export function startExport() {
   return start('export', async (report, current) => {
-    const { settings, scenes } = await readStoryboard();
+    const sb = await readStoryboard();
+    const { settings, scenes } = sb;
     if (!scenes.length) throw new Error('The storyboard has no scenes');
     const { width, height } = RESOLUTIONS[settings.aspect_ratio] || RESOLUTIONS['16:9'];
     const fps = Number(settings.fps) || 30;
@@ -129,9 +132,24 @@ export function startExport() {
     };
     if (settings.music_url && !musicPath) current.warnings.push('Background music file is missing');
 
-    report(scenes.length / steps, music ? 'Stitching scenes and mixing music…' : 'Stitching scenes together…');
+    // Ambience beds, each looping across its run of scenes.
+    const beds = [];
+    const silent = new Set();
+    for (const run of ambienceRuns(sb)) {
+      const file = await existingFile(run.ambience.url);
+      if (!file) {
+        silent.add(run.ambience.name || 'untitled');
+        continue;
+      }
+      const volume = Number.isFinite(Number(run.ambience.volume)) ? Number(run.ambience.volume) : 0.3;
+      beds.push({ path: file, start: run.start, end: Math.min(run.end, totalSec), atEnd: run.end >= totalSec - 0.01, volume });
+    }
+    if (silent.size) current.warnings.push(`Ambience without a sound yet (left silent): ${[...silent].join(', ')}`);
+
+    const mixing = [music && 'music', beds.length && 'ambience'].filter(Boolean).join(' and ');
+    report(scenes.length / steps, mixing ? `Stitching scenes and mixing ${mixing}…` : 'Stitching scenes together…');
     const output = path.join(EXPORTS_DIR, 'final_output.mp4');
-    await concatClips(clipPaths, output, path.join(CLIPS_DIR, 'concat.txt'), music);
+    await concatClips(clipPaths, output, path.join(CLIPS_DIR, 'concat.txt'), { music, beds });
 
     // Drop clips no longer referenced by any scene.
     const keep = new Set(clipPaths.map((p) => path.basename(p)));
@@ -174,8 +192,9 @@ async function missingItems(sb) {
     // Extra shots count as images; each continues from the picture before it.
     for (const [n, s] of (scene.shots || []).entries()) {
       if (s.image_prompt?.trim() && !(await existingFile(s.image_url))) {
+        const own = s.reference_asset_ids ? sceneReferences(sb, { ...scene, reference_asset_ids: s.reference_asset_ids }).length + styleReferences(sb, scene).length : refs;
         add({
-          id: `${scene.scene_id}:shot:${s.shot_id}`, kind: 'image', label: `Shot ${n + 2}`, prompt: s.image_prompt.trim(), refs: refs + (hasPicture ? 1 : 0),
+          id: `${scene.scene_id}:shot:${s.shot_id}`, kind: 'image', label: `Shot ${n + 2}`, prompt: s.image_prompt.trim(), refs: own + (hasPicture && (s.continues || scene.use_previous_scene !== false) ? 1 : 0),
           run: () => generateSceneShotImage(scene.scene_id, s.shot_id),
         });
       }
@@ -206,7 +225,24 @@ async function missingItems(sb) {
     }
     previousHasPicture = hasPicture;
   }
-  return [...items, ...videos];
+  // The whole video's sounds: the music, and each ambience bed that a scene uses.
+  const whole = [];
+  const music = sb.settings.music_prompt?.trim();
+  if (music && !(await existingFile(sb.settings.music_url))) {
+    whole.push({
+      scene_id: null, scene: 0, id: 'music', kind: 'music', label: 'Music', prompt: music,
+      sec: Number(sb.settings.music_length_sec) || 180, run: () => generateMusic(),
+    });
+  }
+  const used = new Set(sb.scenes.map((s) => s.ambience_id).filter(Boolean));
+  for (const bed of sb.ambience || []) {
+    if (!used.has(bed.ambience_id) || !bed.prompt?.trim() || (await existingFile(bed.url))) continue;
+    whole.push({
+      scene_id: null, scene: 0, id: `ambience:${bed.ambience_id}`, kind: 'ambience', label: `Ambience: ${bed.name || 'untitled'}`,
+      prompt: bed.prompt.trim(), sec: AMBIENCE_LOOP_SEC, run: () => generateAmbience(bed.ambience_id),
+    });
+  }
+  return [...whole, ...items, ...videos];
 }
 
 /**
@@ -221,8 +257,9 @@ export async function generationPlan(settings) {
     const estimate =
       item.kind === 'image' ? cost.image(item.prompt, refs)
         : item.kind === 'voiceover' ? cost.voice(item.prompt)
-          : item.kind === 'sfx' ? cost.sfx(sec)
-            : cost.video(sec);
+          : item.kind === 'sfx' || item.kind === 'ambience' ? cost.sfx(sec)
+            : item.kind === 'music' ? cost.music(sec)
+              : cost.video(sec);
     return { ...item, ...estimate };
   });
   // ElevenLabs is the only provider whose API reports what's left (null when it can't be read).
@@ -257,9 +294,10 @@ function classify(err, lastTry) {
 
 /** Which account an item is paid from. */
 function providerOf(item, settings) {
-  if (item.kind === 'voiceover' || item.kind === 'sfx') return 'ElevenLabs';
+  if (['voiceover', 'sfx', 'ambience', 'music'].includes(item.kind)) return 'ElevenLabs';
   if (item.kind === 'video') return 'Gemini';
-  return isGeminiModel(item.refs ? settings.reference_model : settings.image_model) ? 'Gemini' : 'Replicate';
+  const provider = imageProvider(item.refs ? settings.reference_model : settings.image_model);
+  return { gemini: 'Gemini', comfyui: 'ComfyUI', replicate: 'Replicate' }[provider];
 }
 
 /** Run an item, retrying errors that may pass (rate limits, server errors). Throws with `err.kind`. */
@@ -304,7 +342,7 @@ export function startGenerateMissing({ kinds, ids } = {}) {
         stopped.get(provider).skipped++;
         continue;
       }
-      const step = `Scene ${scene}: generating ${label.toLowerCase()} (${n + 1}/${todo.length})`;
+      const step = `${scene ? `Scene ${scene}: generating` : 'Generating'} ${label.toLowerCase()} (${n + 1}/${todo.length})`;
       report(n / todo.length, `${step}…`);
       try {
         await runWithRetry(item, (err, ms) => report(n / todo.length, `${step}: ${err.message.slice(0, 80)}. Retrying in ${ms / 1000} s…`));
@@ -318,11 +356,11 @@ export function startGenerateMissing({ kinds, ids } = {}) {
           const what = err.kind === 'credits' ? 'is out of credits or over its quota' : 'refused the API key';
           const fix = err.kind === 'credits' ? 'Top up' : 'Check the key in .env (then restart)';
           current.warnings.push(
-            `${name} ${what} (scene ${scene} ${label.toLowerCase()}): ${err.message}. ` +
+            `${name} ${what} (${scene ? `scene ${scene} ` : ''}${label.toLowerCase()}): ${err.message}. ` +
               `Nothing more was sent to ${name}. ${fix}, then use Generate missing again to make the rest.`,
           );
         } else {
-          current.warnings.push(`Scene ${scene} ${label.toLowerCase()}: ${err.message}`);
+          current.warnings.push(`${scene ? `Scene ${scene} ` : ''}${label.toLowerCase()}: ${err.message}`);
         }
       }
     }
