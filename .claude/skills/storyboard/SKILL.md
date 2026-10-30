@@ -73,7 +73,9 @@ Fill in the story bible (`story-bible.md`):
   medicine box, a family photo, a wall calendar). Each comes back at least twice: set up, then pay off.
 - **World rules and numbers:** the resource math and the rules the threat follows (500 gallons, about
   5.5 months; 1 cup per person per day; the fever breaks after 3 days, then the violence starts). These
-  make it real and give the audience progress meters to track.
+  make it real and give the audience progress meters to track. Pick the one or two that are the
+  clock: those are the numbers the narration says (and the Title cards show); the rest stay in the
+  bible and come out in the voice as what they mean.
 - **The threat ladder:** 4–7 escalating problems, each worse in a new way (outside, inside, body,
   morals, mind). There's no repeat of the same kind of problem.
 - **The central open loop:** the big question planted in the first 30 s and answered only at the end.
@@ -119,21 +121,49 @@ Show the map as a table. The user approves or adjusts.
 
 Write the full scene list in the **`timeline-generation` template format**
 (`.claude/skills/timeline-generation/template.md`). Include the Project section (suggest **Preset:
-survival horror** or another fitting preset), **Cast & locations**, and every scene with Image,
-Voice, SFX layers, Camera, References, Title and Shake. Follow that template's *Writing like a
+survival horror** or another fitting preset) with a **Music** prompt and an **Ambience** per location,
+**Cast & locations**, and every scene with Image, Voice, Ambience, SFX layers, Shots, Camera,
+References, Title and Shake. Follow that template's *Writing like a
 director* and these rules:
 - **Narration:**
-  - Spoken, short sentences, mostly present or close past tense, first person if chosen.
-  - Concrete numbers and objects in every episode. Show, don't tell.
+  - Written the way someone tells the story out loud: whole sentences joined with *and*, *so*,
+    *then*, *when*, mostly present or close past tense, first person if chosen. "I grabbed the keys,
+    my bag and Eli, and I made it to the car, just", not "Keys. Bag. Eli. Thirty seconds to the
+    car."
+  - A clipped line ("I ran." / "Did he see?") is a blow: save it for the few real ones, at most
+    about one a minute. Stacked fragments on every line read like a list, and the suspense goes flat.
+  - Numbers only for the story's clock and its one or two rules (the hours left, the gate's time, the
+    fever cut-off), and the clock said sparingly. Everything else is said as what it means: "the
+    needle was already low", not "three-eighths of a tank"; "I'd seen enough bites that week", not
+    "forty bites in three days". Never a stat for its own sake ("thirty seconds to the car, I made it
+    in twenty-eight").
+  - Concrete objects and actions in every episode. Show, don't tell.
+  - Characters who speak (dialogue, a voice on a tape or radio) get their own voice: list them under
+    **Speakers** with a voice each, and mark their words in the Voice line with `{Name}` (and
+    `{Narrator}` where the narration picks up).
   - Size it to about 2.5 words per second of scene.
   - No filler: every line raises a question, answers one, or raises the stakes.
 - **Re-hooks:** at most one per episode end, in the voice ("That was the last normal day." / "The
   footsteps stopped right above Theo's crib.") Never generic ("But wait, there's more").
 - **Pictures:** vary the shots, wide → close-up → detail, and use object close-ups (gauges,
-  calendars, hands, the anchor objects) as visual pattern interrupts. Plan a new picture every 3–6 s
-  (scenes and shots).
-- **Sound:** room tone in every scene. Event sounds on the scary words. Planned silences before the
-  biggest beats.
+  calendars, hands, the anchor objects) as visual pattern interrupts. Plan a new picture every 2–4 s
+  on most lines (a scene's Image plus Shots cut on the narration's words), and **vary the rhythm**:
+  pairs of pictures for most narration, quick runs of 3–4 for action, and one long still or slowly
+  pushing hold for the biggest beats. When something *happens* (a window bursting, a crowd turning,
+  eyes clouding), make it a **flipbook**: 3–4 frames of the same framing, each a moment later (shots
+  marked *next frame*, template: *Motion without video*). No video clips unless the user asks.
+- **Camera:** a move on **every picture** (each scene's Camera and each shot's move), chosen for the
+  beat: zoom in for tension or a face, zoom out for isolation or a reveal, pan left → right for travel
+  (one screen direction per journey), pan right → left for retreat or memory, top → bottom onto an
+  object, bottom → top for something rising, still for a shock or a silence. No move on more than
+  ~40% of the pictures and never the same one 4 times in a row (`retention.mjs` checks both). See
+  the template's *Vary the camera and the cut*.
+- **Sound:** a generated drone as the Music under the whole video. An **Ambience** per place (the car
+  at night, the barn, the gate), named on every scene there, so the room tone runs without a break
+  until the story moves; scene SFX only for what one moment adds. Event sounds on the scary words.
+  One sound per SFX line, each described in full (source, texture, timing, distance, what to leave
+  out), as in the timeline template's SFX notes.
+  Planned silences (no ambience) before or on the biggest beats.
 - **Loop tags:** in each scene's **Notes**, mark loops as `[open L1: what is knocking?]` and
   `[close L1]`, and pattern interrupts the fields don't already show as `[interrupt: radio static
   cuts out]`. `retention.mjs` reads them. `timeline-generation` keeps them as notes.
@@ -147,7 +177,8 @@ first 2 lines).
 Run `node .claude/skills/storyboard/retention.mjs <file>` and also review the draft against
 `playbook.md` → *Retention audit checklist*. Report:
 - the script's numbers;
-- every warning, with a concrete fix (rewritten line, added interrupt, a split scene);
+- every warning, with a concrete fix (rewritten line, added interrupt, a split scene, a different
+  camera move for named pictures);
 - the 3 weakest moments where viewers are most likely to leave, and how to fix each.
 
 Apply the fixes the user accepts, and re-run until there are no warnings or the user accepts the rest.

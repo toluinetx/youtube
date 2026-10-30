@@ -1,15 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Captions, Film, ImageOff, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
-import { formatTime, lookFilter, motionTransform, sceneIndexAt, sceneMotion, sceneTimeline } from '../util.js';
+import {
+  AUDIO_TAG, ambienceRuns, formatTime, lookFilter, motionTransform, sceneIndexAt, sceneMotion, sceneTimeline, shotNumbers, withoutSpeakers,
+} from '../util.js';
 
 const RESYNC_THRESHOLD_SEC = 0.25;
+// A clip that only starts playing once it has loaded runs this much late at most, rather than jumping
+// ahead to the playhead (which cut off a voiceover's first words); further behind than this, it jumps.
+const MAX_START_LAG_SEC = 1.5;
+
+/** Get ready to start `el` from `at`: it's kept in step only once it's actually playing (see below). */
+function startFrom(el, at) {
+  if (el.currentTime !== at) el.currentTime = at;
+  el._starting = true;
+  el._startFrom = at;
+  el._lag = 0;
+}
 
 /**
  * Live preview: shows the current scene's video clip or image (with the same zoom / pan motion as the
- * export) and plays its voiceover, SFX and the background music in sync with a wall-clock playhead.
+ * export) and plays its voiceover, SFX, ambience bed and the background music in sync with a wall-clock playhead.
  */
 export default function Preview({
-  scenes, starts, total, time, seekToken, setTime, seek, playing, setPlaying, settings, mode, setMode, exportUrl,
+  scenes, starts, total, time, seekToken, setTime, seek, playing, setPlaying, settings, ambience, mode, setMode, exportUrl,
 }) {
   const voRef = useRef(null);
   const sfxRef = useRef(null);
@@ -17,6 +30,7 @@ export default function Preview({
   const layerRefs = useRef(new Map());
   const videoRef = useRef(null);
   const musicRef = useRef(null);
+  const ambienceRef = useRef(null);
   const timeRef = useRef(time);
   const clock = useRef({ origin: 0, base: 0 });
   const [captions, setCaptions] = useState(true);
@@ -55,6 +69,12 @@ export default function Preview({
   // Keep every media element following the playhead. Each one has the position it should be at.
   const lastSeek = useRef(seekToken);
   const musicLen = Number(settings.music_duration_sec) || 0;
+  // The ambience bed under the playhead loops from the start of its run of scenes.
+  const runs = useMemo(() => ambienceRuns(scenes, ambience, starts), [scenes, ambience, starts]);
+  const run = runs.find((r) => time >= r.start && time < r.end);
+  const bed = run?.ambience;
+  const bedLen = Number(bed?.duration_sec) || 0;
+  const bedAt = run ? (bedLen ? (time - run.start) % bedLen : time - run.start) : 0;
   useEffect(() => {
     const forceSeek = lastSeek.current !== seekToken;
     lastSeek.current = seekToken;
@@ -70,6 +90,7 @@ export default function Preview({
         holdLastFrame: true,
       },
       { el: musicRef.current, url: settings.music_url, at: musicLen ? time % musicLen : time, volume: Number(settings.music_volume) || 0 },
+      { el: ambienceRef.current, url: bed?.url, at: bedAt, volume: Number(bed?.volume) || 0 },
       ...(scene?.sfx_layers || []).map((l) => ({
         el: layerRefs.current.get(l.layer_id),
         url: l.url,
@@ -101,12 +122,49 @@ export default function Preview({
       if (!active || ended || early) {
         if (!el.paused) el.pause();
         if ((reseek || early) && (!ended || holdLastFrame) && el.currentTime !== target) el.currentTime = target;
+        // When its moment comes, it starts from where it waits.
+        el._starting = true;
+        el._startFrom = el.currentTime;
+        el._lag = 0;
         continue;
       }
-      if (reseek || Math.abs(el.currentTime - target) > RESYNC_THRESHOLD_SEC) el.currentTime = target;
+      if (reseek) startFrom(el, target);
+      else if (el._starting) {
+        // Still loading: once its time moves it's playing, and stays this far behind the playhead
+        // rather than skipping its start. Too far behind (a slow load), it jumps after all.
+        if (!el.paused && el.currentTime > el._startFrom + 0.02) {
+          el._starting = false;
+          const lag = target - el.currentTime;
+          el._lag = lag > 0 ? lag : 0;
+        } else if (target - el._startFrom > MAX_START_LAG_SEC) startFrom(el, target);
+      } else if (Math.abs(el.currentTime - (target - (el._lag || 0))) > RESYNC_THRESHOLD_SEC) {
+        // Drifted: back in step with the playhead.
+        el.currentTime = target;
+        el._lag = 0;
+      }
       if (el.paused) el.play().catch(() => {});
     }
-  }, [scene, local, time, musicLen, playing, mode, seekToken, settings.sfx_volume, settings.music_url, settings.music_volume]);
+  }, [scene, local, time, musicLen, bed, bedAt, playing, mode, seekToken, settings.sfx_volume, settings.music_url, settings.music_volume]);
+
+  // Load the next scene's sounds ahead, so they're ready the moment it starts.
+  const preloaded = useRef(new Map());
+  const nextScene = scenes[idx + 1];
+  useEffect(() => {
+    const urls = nextScene ? [nextScene.voiceover_url, nextScene.sfx_url, ...(nextScene.sfx_layers || []).map((l) => l.url)].filter(Boolean) : [];
+    for (const url of urls) {
+      if (preloaded.current.has(url)) continue;
+      const audio = new Audio();
+      audio.preload = 'auto';
+      audio.src = url;
+      preloaded.current.set(url, audio);
+    }
+    for (const [url, audio] of preloaded.current) {
+      if (urls.includes(url)) continue;
+      audio.removeAttribute('src');
+      audio.load();
+      preloaded.current.delete(url);
+    }
+  }, [nextScene]);
 
   // Warm the browser cache so scene changes don't flash.
   useEffect(() => {
@@ -187,6 +245,11 @@ export default function Preview({
                 style={{ background: `radial-gradient(ellipse at center, transparent ${70 - 25 * vignette}%, rgba(0,0,0,${(0.35 + 0.5 * vignette).toFixed(2)}) 100%)` }}
               />
             )}
+            {mode === 'live' && scene && (
+              <div className="pointer-events-none absolute top-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-[11px] font-semibold text-white/90 tabular-nums" title="Picture ID">
+                {idx + 1}.{shot ? shotNumbers(scene).get(shot.shot_id) : 1}
+              </div>
+            )}
             {mode === 'live' && titleShown && (
               <div className={`pointer-events-none absolute inset-x-0 flex justify-center px-[8%] ${settings.caption_position === 'center' ? 'top-[10%]' : 'top-1/2 -translate-y-1/2'}`}>
                 <p className="text-center text-[clamp(16px,6cqmin,72px)] font-extrabold tracking-wider text-white uppercase [text-shadow:0_0_6px_#000,0_2px_2px_#000]">
@@ -197,7 +260,7 @@ export default function Preview({
             {mode === 'live' && captions && scene?.voiceover_text && (
               <div className="pointer-events-none absolute inset-x-0 bottom-[6%] flex justify-center px-[8%]">
                 <p className="rounded bg-black/70 px-3 py-1.5 text-center text-[clamp(11px,1.6cqw,20px)] leading-snug text-white">
-                  {scene.voiceover_text}
+                  {withoutSpeakers(scene.voiceover_text).replace(AUDIO_TAG, ' ').replace(/\s+/g, ' ').trim()}
                 </p>
               </div>
             )}
@@ -276,6 +339,7 @@ export default function Preview({
         />
       ))}
       <audio ref={musicRef} preload="auto" />
+      <audio ref={ambienceRef} preload="auto" />
     </section>
   );
 }

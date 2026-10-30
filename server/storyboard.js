@@ -30,7 +30,14 @@ export const DEFAULT_SETTINGS = {
   image_check: true,
   image_check_model: 'gemini:gemini-flash-latest',
   image_check_retries: 2,
-  voice_id: 'JBFqnCBsd6RMkjVDRZzb', // ElevenLabs "George"
+  // Pictures made per scene / shot image, to pick from on the timeline. Free (local ComfyUI) models only,
+  // unless image_variants_paid: each variant from a paid model costs as much as one image.
+  image_variants: 6,
+  image_variants_paid: false,
+  voice_id: 'JBFqnCBsd6RMkjVDRZzb', // ElevenLabs "George"; the narrator's voice
+  // More voices for the narration, by speaker: [{ name, voice_id }]. A voiceover's "{Eli}" starts a part
+  // spoken in Eli's voice, "{Narrator}" goes back to voice_id (see speakerParts).
+  voices: [],
   tts_model: 'eleven_multilingual_v2',
   // Voice settings (stability, similarity_boost, style, use_speaker_boost, speed, seed). Unset = the voice's own.
   tts_params: {},
@@ -48,12 +55,16 @@ export const DEFAULT_SETTINGS = {
   captions: 'off',
   caption_position: 'bottom',
   sfx_volume: 0.35,
-  // Background music for the whole video (imported file, looped and faded)
+  // Background music for the whole video (imported, or generated with ElevenLabs Music; looped and faded)
   music_url: null,
   music_name: null,
   music_duration_sec: null,
   music_volume: 0.15,
   music_ducking: true, // lower the music while there's voiceover
+  // Generating the music: what it should sound like, the ElevenLabs Music model and the length in seconds.
+  music_prompt: '',
+  music_model: 'music_v1',
+  music_length_sec: 180,
 };
 
 /** Settings managed by upload endpoints rather than PUT /api/settings. */
@@ -69,6 +80,14 @@ export function sceneMotion(scene, settings, index) {
   const motion = scene.motion || settings.motion || 'none';
   if (motion === 'kenburns') return index % 2 === 0 ? 'zoom_in' : 'zoom_out';
   return motion;
+}
+
+export const MAX_IMAGE_VARIANTS = 12;
+
+/** How many variants to make of a scene or shot image with `model` (see image_variants). */
+export function imageVariantCount(settings, model) {
+  const n = Math.max(1, Math.min(MAX_IMAGE_VARIANTS, Math.round(Number(settings.image_variants ?? DEFAULT_SETTINGS.image_variants) || 1)));
+  return String(model).startsWith('comfyui:') || settings.image_variants_paid ? n : 1;
 }
 
 export const RESOLUTIONS = {
@@ -106,9 +125,38 @@ const WORDS_PER_SEC = 2.5;
 const PAUSE_TAG_SEC = 0.7;
 const normalizeWord = (w) => w.toLowerCase().replace(/[^\p{L}\p{N}']+/gu, '');
 
-/** The words of `text`, normalized, without audio tags. */
+// A speaker label in a voiceover: "{Eli} Eli to Mom, over. {Narrator} Every Saturday…". Not spoken.
+const SPEAKER_LABEL = /\{([^{}\n]{1,40})\}/g;
+export const withoutSpeakers = (text) => text.replace(SPEAKER_LABEL, ' ');
+
+/**
+ * A voiceover's parts by speaker, in order: [{ speaker, text }], speaker null for the narrator (the
+ * text before any label, and "{Narrator}" unless a voice is named that). Neighbouring parts by the
+ * same speaker are joined.
+ */
+export function speakerParts(text) {
+  const parts = [];
+  let speaker = null;
+  let from = 0;
+  const add = (piece) => {
+    const t = piece.trim();
+    if (!t) return;
+    const last = parts.at(-1);
+    if (last && last.speaker === speaker) last.text += ` ${t}`;
+    else parts.push({ speaker, text: t });
+  };
+  for (const m of text.matchAll(SPEAKER_LABEL)) {
+    add(text.slice(from, m.index));
+    speaker = m[1].trim();
+    from = m.index + m[0].length;
+  }
+  add(text.slice(from));
+  return parts;
+}
+
+/** The words of `text`, normalized, without audio tags or speaker labels. */
 function spokenWords(text) {
-  return text.replace(/\[[^\]\n]{1,60}\]/g, ' ').split(/\s+/).map(normalizeWord).filter(Boolean);
+  return withoutSpeakers(text).replace(/\[[^\]\n]{1,60}\]/g, ' ').split(/\s+/).map(normalizeWord).filter(Boolean);
 }
 
 /** Index of the first occurrence of `cue` (one or more words) in `words`, or -1. */
@@ -133,7 +181,7 @@ export function cueTime(scene, cue) {
     const i = findCue(timed.map((w) => normalizeWord(w.text)), cue);
     return i === -1 ? null : timed[i].start;
   }
-  const text = scene.voiceover_text || '';
+  const text = withoutSpeakers(scene.voiceover_text || '');
   const i = findCue(spokenWords(text), cue);
   if (i === -1) return null;
   // Tags before the cue that add a pause.
@@ -174,13 +222,19 @@ export function newShot(fields = {}) {
     motion: null, // camera motion (one of MOTIONS); null = the project's
     start_sec: 0,
     cue: null, // words of the narration it cuts to on, like a sound effect's cue
+    // The next frame of the picture before it: same framing, only the action moves on (several in a
+    // row play like a flipbook, a cheap stand-in for a video clip).
+    continues: false,
+    // Its own reference images (library asset ids), e.g. only the character this picture shows;
+    // null = the scene's. The project's every-scene references and style images are added either way.
+    reference_asset_ids: null,
     source_name: null, // original filename when imported
     ...fields,
   };
 }
 
 /** Fields of a shot that edits may change; its picture only changes by generating or importing. */
-export const SHOT_EDITABLE = ['image_prompt', 'motion', 'start_sec', 'cue'];
+export const SHOT_EDITABLE = ['image_prompt', 'motion', 'start_sec', 'cue', 'continues', 'reference_asset_ids'];
 
 /** At most this many pictures per scene (its own image plus extra shots). */
 export const MAX_SHOTS = 4;
@@ -238,8 +292,62 @@ export function newScene(id, fields = {}) {
     title_text: '',
     // Free-form notes for the editor (e.g. "import the drone clip here"); never sent to a generator.
     notes: '',
+    // The ambience bed (see newAmbience) playing under this scene, or null.
+    ambience_id: null,
     ...fields,
   };
+}
+
+/**
+ * An ambience bed: a looping background sound for a place (birdsong outside the house, a car's engine
+ * at night). Scenes pick one with `ambience_id`; neighbouring scenes with the same bed play it as one
+ * continuous loop, crossfading where the bed changes.
+ */
+export function newAmbience(fields = {}) {
+  return {
+    ambience_id: `m_${crypto.randomBytes(4).toString('hex')}`,
+    name: '',
+    prompt: '',
+    url: null,
+    duration_sec: null,
+    volume: 0.3,
+    source_name: null, // original filename when imported
+    ...fields,
+  };
+}
+
+/** Fields of a bed that edits may change; its sound only changes by generating or importing. */
+export const AMBIENCE_EDITABLE = ['name', 'prompt', 'volume'];
+
+/** The longest seamless loop ElevenLabs makes, so a bed repeats as rarely as possible. */
+export const AMBIENCE_LOOP_SEC = 30;
+
+/**
+ * Where each bed plays: runs of neighbouring scenes with the same bed, as
+ * [{ ambience, start, end, scene_ids }] in seconds from the start of the video.
+ */
+export function ambienceRuns(sb) {
+  const byId = new Map((sb.ambience || []).map((a) => [a.ambience_id, a]));
+  const runs = [];
+  let t = 0;
+  for (const scene of sb.scenes) {
+    const d = Math.max(0.5, Number(scene.duration_sec) || 5);
+    const bed = byId.get(scene.ambience_id);
+    const last = runs.at(-1);
+    if (bed && last?.ambience === bed && last.end === t) {
+      last.end = t + d;
+      last.scene_ids.push(scene.scene_id);
+    } else if (bed) runs.push({ ambience: bed, start: t, end: t + d, scene_ids: [scene.scene_id] });
+    t += d;
+  }
+  return runs;
+}
+
+/** Find an ambience bed. */
+export function findAmbience(sb, id) {
+  const bed = (sb.ambience || []).find((a) => a.ambience_id === id);
+  if (!bed) throw Object.assign(new Error(`Ambience ${id} not found`), { status: 404 });
+  return bed;
 }
 
 export function nextSceneId(storyboard) {
@@ -277,7 +385,9 @@ function normalize(sb) {
   const scenes = (sb.scenes || []).map((s, i) => newScene(s.scene_id ?? i + 1, s));
   // Uploaded files: { asset_id, name, type: image|video|audio, url, thumb_url, duration_sec, has_audio, size_bytes, added_at }
   const library = Array.isArray(sb.library) ? sb.library : [];
-  return { settings, scenes, library };
+  // Ambience beds (see newAmbience), shared by the scenes that pick them.
+  const ambience = Array.isArray(sb.ambience) ? sb.ambience.map((a) => newAmbience(a)) : [];
+  return { settings, scenes, library, ambience };
 }
 
 export async function readStoryboard() {

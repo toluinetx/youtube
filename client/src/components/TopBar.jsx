@@ -32,6 +32,7 @@ export default function TopBar({
             <KeyStatus ok={status.replicate} label="Replicate" />
             <KeyStatus ok={status.elevenlabs} label="ElevenLabs" />
             <KeyStatus ok={status.gemini} label="Gemini" />
+            {status.comfyui != null && <KeyStatus ok={status.comfyui} label="ComfyUI" title={status.comfyui ? 'ComfyUI is running' : "ComfyUI isn't running"} />}
             <KeyStatus ok={status.ffmpeg} label="FFmpeg" />
           </div>
         )}
@@ -126,9 +127,9 @@ export default function TopBar({
   );
 }
 
-function KeyStatus({ ok, label }) {
+function KeyStatus({ ok, label, title }) {
   return (
-    <span className="flex items-center gap-1.5" title={ok ? `${label} is configured` : `${label} is not configured. See .env.example`}>
+    <span className="flex items-center gap-1.5" title={title ?? (ok ? `${label} is configured` : `${label} is not configured. See .env.example`)}>
       <span className={`size-1.5 rounded-full ${ok ? 'bg-emerald-400' : 'bg-amber-400'}`} />
       {label}
     </span>

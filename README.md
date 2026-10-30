@@ -3,7 +3,8 @@
 A local web app for building YouTube videos out of scenes. Each scene has a visual (an image generated
 with Replicate or the Gemini API, a Gemini Omni video clip, or your own image or video clip), a voiceover (ElevenLabs text-to-speech or your
 own recording) and an optional sound effect (ElevenLabs or your own file). Add background music for the
-whole video, edit everything on a timeline, regenerate or replace just the pieces that look or sound
+whole video (generated with ElevenLabs Music, or your own track) and a looping ambience per location,
+edit everything on a timeline, regenerate or replace just the pieces that look or sound
 wrong, and export a single MP4 with FFmpeg.
 
 ```
@@ -73,10 +74,14 @@ It then hands the script to `timeline-generation`. The psychology behind each ru
 
 **Story-channel production.** The template's *Writing like a director* and *Presets* (e.g. **survival horror**) set
 up the whole pipeline in one go:
-- A **Cast & locations** list. Once you approve it and its estimated cost, Claude generates a character sheet per
-  character and an empty master plate per key place (`timeline.mjs references`). They go into the library as
+- A **Cast & locations** list. Once you approve it and its estimated cost, Claude generates a turnaround sheet per
+  character (front, three-quarter, side and back) and empty master plates per key place from the directions the
+  scenes look in, the reverse view generated from the first so it's the same place (`timeline.mjs references`). They go into the library as
   references, so faces, clothes and room layouts stay the same in every scene.
-- A **three-layer sound plan**: a drone as the music bed, room tone per scene, and precise event sounds timed to words.
+- A **three-layer sound plan**: a generated drone as the music, an ambience loop per location that plays on across the
+  cuts, and precise event sounds timed to words.
+- **Camera moves chosen per picture** (not one default on everything), and 2–3 pictures per narration line where it
+  helps. `retention.mjs` flags a move used too often or repeated 4 times in a row.
 - **Micro-motion** video prompts.
 - **Finishing**: grade, vignette, grain, captions, on-screen titles and shake.
 
@@ -178,6 +183,56 @@ The **Library** sidebar on the left holds every file you upload, grouped into **
 - Background music loops if it's shorter than the video, fades in and out, and (by default) is automatically
   lowered while the voiceover plays. That ducking is applied in the export only, not in the live preview.
 
+## Music and ambience
+
+The **Music** tab (right sidebar) holds the sound that runs under the scenes:
+
+- **Background music:** one track for the whole video. Write a prompt and click **Generate music** (ElevenLabs
+  Music, always instrumental, 10 s to 10 min; it loops if shorter than the video), or upload your own. Every take
+  stays in the library.
+- **Ambience:** a looping background sound per place, e.g. *Car at night* (engine idle, wind on the windows) or
+  *Suburb morning* (birdsong, a far sprinkler). Each is generated as a seamless 30-second loop (ElevenLabs sound
+  effects) or uploaded. Pick a scene's ambience in its **SFX** tab, or select scenes on the timeline and click
+  **Use for selected scenes**. Neighbouring scenes with the same ambience play it as one continuous loop and it
+  crossfades where the place changes; a scene with none is silent underneath (for planned silences). The
+  **Ambience** row on the timeline shows where each one plays.
+
+Both are listed under *Whole video* in **Generate missing**.
+
+**Flipbooks instead of video clips.** To show something happening without a video clip, give a scene 3–4
+pictures of the same framing, each a moment later: add shots and tick **Next frame of the picture before** on
+each. The picture before is then sent to the image model as the same shot a moment earlier, so only the action
+moves on. Keep their camera motion still (a zoom restarting on every frame jumps).
+
+ A scene's own **SFX** still plays on top: use it
+for what that moment adds (a heartbeat, a child breathing), not for the room tone the ambience already has.
+
+## Local images with ComfyUI
+
+Images can also come from a ComfyUI running on your own computer, for free. Each workflow in
+`comfyui-workflows/` shows up in the image model picker as **Local · ComfyUI** (`comfyui-workflows/qwen-image.json`
+is `comfyui:qwen-image`). The editor finds ComfyUI on port 8000 (ComfyUI Desktop) or 8188, or at `COMFYUI_URL`
+in `.env`; the top bar shows whether it's running.
+
+To add a workflow: in ComfyUI use **File → Export (API)** (turn on *Enable dev mode options* in Settings if it's
+missing), save it in `comfyui-workflows/`, and replace the prompt text with `{{prompt}}`. The editor sets the
+width and height of the `Empty…Latent…` node from the project format and a size in megapixels, and puts a random
+seed in every `seed` input. An optional `"_editor"` entry names the workflow and adds settings to its ⚙ panel, each
+pointing at the node inputs it sets (see `qwen-image.json`).
+
+A workflow takes reference images when its `"_editor"` has a `"references"` entry: the most it takes, a `LoadImage`
+node to copy, and the inputs each reference plugs into (`images.image_{n}` counts from 1, `{i}` from 0; see
+`qwen-image-edit.json`). Each run uploads the references to ComfyUI's input folder and puts one `LoadImage` per
+reference in place of the workflow's own. Such workflows are offered for **Model when references are used**; the
+others for scenes without references.
+
+Since local images are free, each scene or shot image is made in several **variants** (6 by default; set it in the
+Project panel under Images, and tick *Also with paid models* to make variants with paid models too, at the price of
+one image each). The library keeps them as one stacked item. Select a scene and the timeline shows its variants above
+the tracks; click one to use it there and everywhere else that picture is used. With the image check on, each variant
+is checked once rather than retried, and the first one shown is the first that passed (else the one with the fewest
+problems).
+
 ## Reference images (consistent characters and places)
 
 Give image generation reference pictures so a character, location or style stays the same from scene to scene.
@@ -266,7 +321,7 @@ The library lives in the same file as a `library` array:
 | GET | `/api/events` | server-sent events `{ type: "storyboard" \| "project", project, label, origin }` on every change |
 | GET | `/api/storyboard` | settings + all scenes of the open project |
 | PUT | `/api/settings` | update project settings |
-| PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references`, `shake`, `title_text`, `notes` |
+| PUT | `/api/scene/:id` | update `image_prompt`, `voiceover_text`, `sfx_prompt`, `duration_sec`, `video_start_sec`, `video_volume`, `reference_asset_ids`, `use_global_references`, `motion`, `shots`, `shake`, `title_text`, `ambience_id`, `notes` |
 | POST | `/api/scenes` | add a blank scene: at `index`, after `after_id`, or at the end |
 | POST | `/api/scene/:id/duplicate` | copy a scene's prompts |
 | DELETE | `/api/scene/:id` | delete a scene (its media is deleted once no undo step needs it) |
@@ -274,8 +329,8 @@ The library lives in the same file as a `library` array:
 | POST | `/api/scenes/paste-prompts` | replace several scenes' prompts: `{ "ids": [2, 3], "prompts": { "image_prompt", "voiceover_text", "sfx_prompt" } }` |
 | POST | `/api/scenes/delete` | delete several scenes: `{ "ids": [2, 3] }` |
 | POST | `/api/scenes/reorder` | `{ "order": [3, 1, 2] }` |
-| POST | `/api/scenes/import` | exact-timing import: `{ "mode": "append" \| "replace", "scenes": [{ "duration_sec", "image_prompt"?, "voiceover_text"?, "sfx_prompt"?, "reference_names"?, "title_text"?, "shake"?, "notes"? }], "settings"? }` (one undo step) |
-| POST | `/api/references/generate` | generate a reference image into the library: `{ "name", "prompt", "for_every_scene"? }` (replaces a same-named one as the reference) |
+| POST | `/api/scenes/import` | exact-timing import: `{ "mode": "append" \| "replace", "scenes": [{ "duration_sec", "image_prompt"?, "voiceover_text"?, "sfx_prompt"?, "shots"?, "motion"?, "reference_names"?, "ambience"? (a bed's name), "title_text"?, "shake"?, "notes"? }], "settings"?, "ambience"?: [{ "name", "prompt", "volume"? }] }` (one undo step) |
+| POST | `/api/references/generate` | generate a reference image into the library: `{ "name", "prompt", "for_every_scene"?, "based_on"? }` (`based_on`: library images by name it's drawn from, for another angle of the same place or person; replaces a same-named one as the reference) |
 | POST | `/api/scenes/import-script` | `{ "script": "...", "mode": "append" \| "replace" }` |
 | POST | `/api/scene/:id/regenerate-image` | Replicate |
 | POST | `/api/scene/:id/regenerate-audio` | ElevenLabs text-to-speech |
@@ -290,6 +345,12 @@ The library lives in the same file as a `library` array:
 | POST | `/api/scene/:id/use-asset` | `{ "asset_id", "slot": "image" | "voiceover" | "sfx" }` |
 | POST | `/api/scenes/from-asset` | new scene from an image/video asset: `{ "asset_id", "index"? }` |
 | PUT / DELETE | `/api/music` | set background music `{ "asset_id" }` / remove it |
+| POST | `/api/music/generate` | generate the background music from the settings' `music_prompt`, `music_model`, `music_length_sec` (ElevenLabs Music) |
+| POST | `/api/ambience` | add an ambience bed `{ "name"?, "prompt"?, "volume"? }`. The ambience routes answer `{ ambience, scenes: [{ scene_id, ambience_id }] }` |
+| PUT / DELETE | `/api/ambience/:id` | edit a bed's `name`, `prompt`, `volume` / delete it (its scenes get none) |
+| POST | `/api/ambience/assign` | play a bed under scenes: `{ "ambience_id" \| null, "ids": [2, 3] }` |
+| POST | `/api/ambience/:id/generate` | generate the bed's 30 s loop (ElevenLabs sound effects) |
+| POST | `/api/ambience/:id/use-asset` | use a library sound as the bed's loop: `{ "asset_id" }` |
 | DELETE | `/api/scene/:id/media/:slot` | remove a scene's image/video, voiceover or SFX |
 | POST | `/api/generate-missing/plan` | what Generate missing would make, with models and estimated costs: `{ "settings"? }` (unsaved changes to price with) |
 | POST | `/api/generate-missing` | background job: `{ "items": [plan item ids] }`, or `{ "kinds"? }` for every missing image/voiceover/sfx |

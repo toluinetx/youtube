@@ -48,6 +48,7 @@ function reportedText(e) {
   if (e.provider === 'gemini') {
     return `${num(u.input_tokens)} in · ${num(u.image_output_tokens)} image · ${num(u.text_output_tokens)} text tokens`;
   }
+  if (e.provider === 'comfyui') return `${u.width ?? '?'}×${u.height ?? '?'} · ${u.seconds?.toFixed(1) ?? '?'} s on this computer`;
   if (e.provider === 'replicate') return `${u.images ?? 1} image${u.predict_time != null ? ` · ${u.predict_time.toFixed(1)} s run` : ''}`;
   if (e.provider === 'elevenlabs') return `${u.credits != null ? `${num(u.credits)} credits` : 'credits not reported'}${u.characters ? ` · ${num(u.characters)} chars` : ''}`;
   return '';

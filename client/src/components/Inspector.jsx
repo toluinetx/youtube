@@ -4,7 +4,8 @@ import {
   Wand2, X,
 } from 'lucide-react';
 import {
-  ACCEPT, AUDIO_TAG, AUDIO_TAG_MODELS, MAX_SHOTS, MOTIONS, SHAKES, cueTime, formatTime, motionLabel, newShot, newSfxLayer, sceneTimeline,
+  ACCEPT, AUDIO_TAG, AUDIO_TAG_MODELS, MAX_SHOTS, MOTIONS, SHAKES, cueTime, formatTime, motionLabel, newShot, newSfxLayer, sceneTimeline, shotNumbers,
+  withoutSpeakers,
 } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
 import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
@@ -12,14 +13,14 @@ import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, Vo
 const WORDS_PER_SEC = 2.6;
 
 export default function Inspector({
-  scene, previousScene, tab, index, count, start, settings, library, busy, errors, onChange, onRegenerate, onUpload, onClear, onDelete, onDuplicate, onMove,
+  scene, previousScene, tab, index, count, start, settings, library, ambience = [], onEditAmbience, busy, errors, onChange, onRegenerate, onUpload, onClear, onDelete, onDuplicate, onMove,
   onRequestSnapshot, onUploadFiles, onSaveToLibrary, onOpenProject, onGenerateVideo, onChangeSettings, onGenerateSfxLayer, onUploadSfxLayer,
   onGenerateShot, onUploadShot,
 }) {
   const isBusy = (slot) => Boolean(busy[`${scene.scene_id}:${slot}`]);
   const errorFor = (slot) => errors[`${scene.scene_id}:${slot}`];
   // Audio tags like [whispers] are performed, not spoken, so they don't count as words.
-  const spoken = scene.voiceover_text.replace(AUDIO_TAG, ' ').trim();
+  const spoken = withoutSpeakers(scene.voiceover_text).replace(AUDIO_TAG, ' ').trim();
   const words = spoken ? spoken.split(/\s+/).length : 0;
   const tags = scene.voiceover_text.match(AUDIO_TAG) || [];
   const tagsReadAloud = tags.length > 0 && !AUDIO_TAG_MODELS.includes(settings.tts_model);
@@ -31,16 +32,33 @@ export default function Inspector({
   const projectRefs = (settings.reference_asset_ids || []).filter((id) => libraryIds.has(id));
   const styleRefs = (settings.style_references || []).map((r) => r.asset_id).filter((id) => libraryIds.has(id));
   const sceneRefs = scene.reference_asset_ids || [];
-  // On unless turned off (older scenes don't have the field): the project-wide references and style images.
+  // On unless turned off (older scenes don't have the field): the project-wide references, and the style
+  // images, which follow them unless the scene sets its own.
   const useProjectRefs = scene.use_global_references !== false;
+  const useStyleRefs = scene.use_style_references ?? useProjectRefs;
   // The previous scene's picture is sent too (for continuity) unless turned off.
   const previousPicture = previousScene && (previousScene.video_thumb_url || previousScene.image_url);
   const usePrevious = scene.use_previous_scene !== false;
   const refCount =
-    new Set([...sceneRefs.filter((id) => libraryIds.has(id)), ...(useProjectRefs ? [...projectRefs, ...styleRefs] : [])]).size +
+    new Set([...sceneRefs.filter((id) => libraryIds.has(id)), ...(useProjectRefs ? projectRefs : []), ...(useStyleRefs ? styleRefs : [])]).size +
     (usePrevious && previousPicture ? 1 : 0);
   const imageInLibrary = library.some((a) => a.url === scene.image_url);
   const [visualTab, setVisualTab] = useState(isVideo ? 'video' : 'image');
+  // Put "{Name} " at the cursor in the voiceover text, so what follows is spoken in that voice.
+  const voiceText = useRef(null);
+  const insertSpeaker = (name) => {
+    const el = voiceText.current;
+    const text = scene.voiceover_text;
+    const at = el ? el.selectionStart : text.length;
+    const before = text.slice(0, at);
+    const label = `${before && !/\s$/.test(before) ? ' ' : ''}{${name}} `;
+    onChange({ voiceover_text: before + label + text.slice(at) });
+    requestAnimationFrame(() => {
+      if (!el) return;
+      el.focus();
+      el.selectionStart = el.selectionEnd = at + label.length;
+    });
+  };
   const layers = scene.sfx_layers || [];
   const setLayers = (next) => onChange({ sfx_layers: next });
   const shots = scene.shots || [];
@@ -111,7 +129,7 @@ export default function Inspector({
       <Section
         icon={isVideo ? Film : ImageIcon}
         color="text-image"
-        title="Visual"
+        title={`Visual · ${index + 1}.1`}
         hint={isVideo ? 'Showing a video clip' : scene.image_url ? 'Showing an image' : 'Nothing yet'}
       >
         <div
@@ -172,7 +190,7 @@ export default function Inspector({
               <span className="text-xs font-medium text-zinc-400">References</span>
               <div className="flex items-center gap-3">
                 {previousScene && (
-                  <label className="flex items-center gap-1.5 text-[11px] text-zinc-400" title="Also send the previous scene's picture, to keep the shots continuous">
+                  <label className="flex items-center gap-1.5 text-[11px] text-zinc-400" title="Also send the picture before (the previous scene's, and for each shot the one before it), to keep the shots continuous. Flipbook frames always get theirs.">
                     <input
                       type="checkbox"
                       className="accent-indigo-500"
@@ -185,9 +203,8 @@ export default function Inspector({
                 <label
                   className="flex items-center gap-1.5 text-[11px] text-zinc-400"
                   title={
-                    'Also send the Project panel\'s images (left): ' +
-                    `${projectRefs.length} reference${projectRefs.length === 1 ? '' : 's'} for every scene and ` +
-                    `${styleRefs.length} style image${styleRefs.length === 1 ? '' : 's'}. Untick for a scene that should look different.`
+                    `Also send the Project panel's ${projectRefs.length} reference${projectRefs.length === 1 ? '' : 's'} for every scene (left). ` +
+                    'Untick for a scene that shouldn\'t show them, e.g. a character who isn\'t in it.'
                   }
                 >
                   <input
@@ -196,8 +213,22 @@ export default function Inspector({
                     checked={useProjectRefs}
                     onChange={(e) => onChange({ use_global_references: e.target.checked })}
                   />
-                  + project refs ({projectRefs.length}) &amp; style ({styleRefs.length})
+                  + project refs ({projectRefs.length})
                 </label>
+                {styleRefs.length > 0 && (
+                  <label
+                    className="flex items-center gap-1.5 text-[11px] text-zinc-400"
+                    title={`Also send the project's ${styleRefs.length} style image${styleRefs.length === 1 ? '' : 's'}, for its look. Untick for a scene that should look different.`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="accent-indigo-500"
+                      checked={useStyleRefs}
+                      onChange={(e) => onChange({ use_style_references: e.target.checked })}
+                    />
+                    + style ({styleRefs.length})
+                  </label>
+                )}
               </div>
             </div>
             <ReferenceList
@@ -370,7 +401,8 @@ export default function Inspector({
             <Shot
               key={shot.shot_id}
               shot={shot}
-              number={n + 2}
+              number={shotNumbers(scene).get(shot.shot_id) ?? n + 2}
+              pictureId={`${index + 1}.${shotNumbers(scene).get(shot.shot_id) ?? n + 2}`}
               cue={cueTime(scene, shot.cue)}
               shown={sceneTimeline(scene).find((p) => p.shot?.shot_id === shot.shot_id)}
               sceneDuration={scene.duration_sec}
@@ -378,6 +410,10 @@ export default function Inspector({
               busy={isBusy(`shot:${shot.shot_id}`)}
               error={errorFor(`shot:${shot.shot_id}`)}
               aspectRatio={settings.aspect_ratio}
+              sceneRefs={sceneRefs}
+              library={library}
+              onRequestSnapshot={onRequestSnapshot}
+              onUploadFiles={onUploadFiles}
               onEdit={(patch) => editShot(shot.shot_id, patch)}
               onRemove={() => onChange({ shots: shots.filter((s) => s.shot_id !== shot.shot_id) })}
               onGenerate={() => onGenerateShot(shot.shot_id)}
@@ -394,6 +430,7 @@ export default function Inspector({
       {tab === 'voice' && (
       <Section icon={AudioLines} color="text-voice" title="Voiceover" hint="ElevenLabs or upload">
         <textarea
+          ref={voiceText}
           rows={4}
           className="field resize-y"
           value={scene.voiceover_text}
@@ -401,6 +438,22 @@ export default function Inspector({
           onChange={(e) => onChange({ voiceover_text: e.target.value })}
           aria-label="Voiceover text"
         />
+        {settings.voices?.length > 0 && (
+          <div className="mt-1 flex flex-wrap items-center gap-1 text-[11px] text-zinc-600">
+            <span title="Put a speaker's label before their words; the rest is the narrator's. Labels aren't spoken.">Speakers:</span>
+            {[...settings.voices.map((v) => v.name).filter((n) => n.toLowerCase() !== 'narrator'), 'Narrator'].map((name) => (
+              <button
+                key={name}
+                type="button"
+                className="rounded bg-zinc-800 px-1.5 font-mono text-zinc-300 hover:bg-zinc-700"
+                title={`Insert {${name}}: what follows is spoken in ${name === 'Narrator' ? "the narrator's" : `${name}'s`} voice`}
+                onClick={() => insertSpeaker(name)}
+              >
+                {`{${name}}`}
+              </button>
+            ))}
+          </div>
+        )}
         <p className="mt-1 text-[11px] text-zinc-600">
           {words} words{tags.length ? ` + ${tags.length} audio tag${tags.length === 1 ? '' : 's'}` : ''} · ~{(words / WORDS_PER_SEC).toFixed(1)}s spoken
           {voLen ? ` · audio is ${voLen.toFixed(1)}s` : ''}
@@ -454,6 +507,23 @@ export default function Inspector({
         hint={layers.length ? 'All play at the same time' : 'ElevenLabs or upload'}
       >
         <SfxModelControl settings={settings} onChange={onChangeSettings} label="Model" hint="all scenes" />
+
+        <div className="mt-3 flex items-end gap-2">
+          <label className="min-w-0 flex-1">
+            <span className="label">Ambience: the place's background loop</span>
+            <select className="field" value={scene.ambience_id || ''} onChange={(e) => onChange({ ambience_id: e.target.value || null })}>
+              <option value="">None</option>
+              {ambience.map((a) => (
+                <option key={a.ambience_id} value={a.ambience_id}>
+                  {a.name || 'Untitled'}{a.url ? '' : ' (not generated yet)'}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button className="btn-ghost px-2 py-1.5 text-xs" onClick={onEditAmbience} title="Add or edit ambience in the Music tab">
+            {ambience.length ? 'Edit' : 'Add'}
+          </button>
+        </div>
 
         <div className={layers.length ? 'mt-3 rounded-md border border-zinc-800 p-2.5' : 'mt-3'}>
           {layers.length > 0 && <p className="mb-1.5 text-xs font-medium text-zinc-400">Sound 1</p>}
@@ -556,7 +626,10 @@ function Section({ icon: Icon, color, title, hint, children }) {
 }
 
 /** One extra picture in a scene: its prompt, image, camera motion and when it cuts in. */
-function Shot({ shot, number, cue, shown, sceneDuration, defaultMotion, busy, error, aspectRatio, onEdit, onRemove, onGenerate, onUpload }) {
+function Shot({
+  shot, number, pictureId, cue, shown, sceneDuration, defaultMotion, busy, error, aspectRatio, sceneRefs, library, onRequestSnapshot, onUploadFiles,
+  onEdit, onRemove, onGenerate, onUpload,
+}) {
   const id = `shot-${shot.shot_id}`;
   const start = cue ? cue.sec : shot.start_sec;
   const outside = start <= 0 || start >= sceneDuration;
@@ -564,7 +637,7 @@ function Shot({ shot, number, cue, shown, sceneDuration, defaultMotion, busy, er
     <div className="mt-2 rounded-md border border-zinc-800 p-2.5">
       <div className="mb-1.5 flex items-center justify-between">
         <span className="text-xs font-medium text-zinc-400">
-          Shot {number}
+          Shot {number} <span className="ml-1 rounded bg-zinc-800 px-1 font-semibold text-zinc-300 tabular-nums" title="Picture ID">{pictureId}</span>
           {shown && <span className="ml-1.5 font-normal text-zinc-600 tabular-nums">{shown.start.toFixed(1)}–{shown.end.toFixed(1)}s</span>}
         </span>
         <button className="icon-btn size-6 hover:!text-red-400" title="Remove this shot" onClick={onRemove} disabled={busy}>
@@ -634,6 +707,41 @@ function Shot({ shot, number, cue, shown, sceneDuration, defaultMotion, busy, er
           </select>
         </div>
       </div>
+      <label className="mt-2 flex items-start gap-2 text-xs text-zinc-300">
+        <input type="checkbox" className="mt-0.5 accent-indigo-500" checked={Boolean(shot.continues)} onChange={(e) => onEdit({ continues: e.target.checked })} />
+        <span>
+          Next frame of the picture before
+          <span className="block text-[11px] text-zinc-600">
+            Same framing, only the action moves on. 3–4 frames ~2 s apart play like a short clip; keep their camera motion still.
+          </span>
+        </span>
+      </label>
+      <label className="mt-2 flex items-start gap-2 text-xs text-zinc-300">
+        <input
+          type="checkbox"
+          className="mt-0.5 accent-indigo-500"
+          checked={Boolean(shot.reference_asset_ids)}
+          onChange={(e) => onEdit({ reference_asset_ids: e.target.checked ? [...sceneRefs] : null })}
+        />
+        <span>
+          Its own references
+          <span className="block text-[11px] text-zinc-600">
+            Instead of the scene's, e.g. only the character this picture shows. Project refs and style still follow the scene.
+          </span>
+        </span>
+      </label>
+      {shot.reference_asset_ids && (
+        <div className="mt-1.5">
+          <ReferenceList
+            ids={shot.reference_asset_ids}
+            library={library}
+            onChange={(ids) => onEdit({ reference_asset_ids: ids })}
+            onRequestSnapshot={onRequestSnapshot}
+            onUploadFiles={onUploadFiles}
+            emptyHint="Pick the characters and place this picture shows."
+          />
+        </div>
+      )}
       {outside && <p className="mt-1 text-[11px] text-amber-400">It has to start after 0s and before the scene ends ({sceneDuration}s) to be shown.</p>}
       {!outside && !shot.image_url && <p className="mt-1 text-[11px] text-zinc-600">Not shown until it has a picture.</p>}
       <Actions

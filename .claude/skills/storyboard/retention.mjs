@@ -14,7 +14,15 @@
 import fs from 'node:fs';
 
 const WORDS_PER_SEC = 2.5;
-const LIMITS = { interruptGap: 90, pictureCalm: 8, deadAir: 8, noOpenLoop: 15, hookLoop: 30 };
+const LIMITS = { interruptGap: 90, pictureCalm: 8, deadAir: 8, noOpenLoop: 15, hookLoop: 30, moveShare: 0.4, moveRun: 4 };
+
+// Camera moves as the template writes them ("Camera: zoom in", "Shot 2 (at "tea", pan left → right)").
+const MOVES = ['still', 'zoom in', 'zoom out', 'pan left → right', 'pan right → left', 'pan top → bottom', 'pan bottom → top', 'ken burns'];
+// A shot's cue words are quoted, so they're left out ("at "still counting", zoom in" is a zoom in).
+const moveOf = (text) => {
+  const t = text.replace(/["“'][^"”']*["”']/g, ' ').toLowerCase();
+  return MOVES.find((m) => t.includes(m)) ?? null;
+};
 
 const [file, flag] = process.argv.slice(2);
 if (!file) {
@@ -35,7 +43,8 @@ const clock = (s) => {
   const parts = s.trim().split(':').map(Number);
   return parts.reduce((t, p) => t * 60 + p, 0);
 };
-const withoutTags = (t) => t.replace(/\[[^\]\n]{1,60}\]/g, ' ');
+// Audio tags ([whispers]) and speaker labels ({Eli}) aren't spoken.
+const withoutTags = (t) => t.replace(/\[[^\]\n]{1,60}\]|\{[^{}\n]{1,40}\}/g, ' ');
 const words = (t) => withoutTags(t).split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w));
 const norm = (w) => w.toLowerCase().replace(/[^\p{L}\p{N}']+/gu, '');
 
@@ -118,20 +127,27 @@ function fieldTime(s, meta) {
 
 const interrupts = []; // { t, kind, scene }
 const pictures = []; // times a new picture appears
+const moves = []; // { t, move (null = the project's default), scene } per picture
 const loops = new Map(); // id → { id, label, open, close, openScene, closeScene }
 const warnings = [];
 const fmt = (sec) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
 
 for (const s of scenes) {
   const has = (k) => s.get(k).some((f) => f.value);
-  if (has('image') || has('video')) pictures.push(s.start);
+  const camera = s.get('camera').map((f) => f.value).join(' ');
+  if (has('image') || has('video')) {
+    pictures.push(s.start);
+    if (has('image') && !has('video')) moves.push({ t: s.start, move: moveOf(camera), scene: s.n });
+  }
   for (const shot of s.get('shot').filter((f) => f.value)) {
     const t = s.start + fieldTime(s, shot.meta);
     pictures.push(t);
+    moves.push({ t, move: moveOf(shot.meta), scene: s.n });
   }
   if (has('title')) interrupts.push({ t: s.start, kind: 'title card', scene: s.n });
   if (has('shake')) interrupts.push({ t: s.start, kind: 'shake', scene: s.n });
   if (has('video')) interrupts.push({ t: s.start, kind: 'video clip', scene: s.n });
+  if (s.get('shot').some((f) => /next frame/i.test(f.meta))) interrupts.push({ t: s.start, kind: 'flipbook', scene: s.n });
   for (const sfx of s.get('sfx').filter((f) => /^sfx\s*[2-4]/.test(f.key) && f.value)) {
     interrupts.push({ t: s.start + fieldTime(s, sfx.meta), kind: 'sound event', scene: s.n });
   }
@@ -211,6 +227,27 @@ for (let i = 1; i < pics.length; i++) {
 }
 if (longHolds > 5) warnings.push(`…and ${longHolds - 5} more pictures held longer than ${LIMITS.pictureCalm} s.`);
 
+// Camera moves: one default on everything, or the same move again and again, reads as a slideshow.
+moves.sort((a, b) => a.t - b.t);
+const moveCounts = Object.entries(moves.reduce((m, p) => ({ ...m, [p.move ?? 'project default']: (m[p.move ?? 'project default'] || 0) + 1 }), {}))
+  .sort((a, b) => b[1] - a[1]);
+if (moves.length >= 10) {
+  const unset = moves.filter((p) => !p.move).length;
+  if (unset) warnings.push(`${unset} of ${moves.length} pictures have no Camera / shot move, so they all get the project's default: give each the move its beat calls for.`);
+  const [top, n] = moveCounts.find(([m]) => m !== 'project default') ?? [];
+  if (top && n / moves.length > LIMITS.moveShare) {
+    warnings.push(`${Math.round((n / moves.length) * 100)}% of the pictures use "${top}": vary the camera (no move on more than ${LIMITS.moveShare * 100}%).`);
+  }
+  const runs = [];
+  for (let i = 0; i < moves.length; ) {
+    let j = i;
+    while (j + 1 < moves.length && moves[j + 1].move === moves[i].move) j++;
+    if (moves[i].move && moves[i].move !== 'still' && j - i + 1 >= LIMITS.moveRun) runs.push(`${j - i + 1}× "${moves[i].move}" from ${fmt(moves[i].t)} (scene ${moves[i].scene})`);
+    i = j + 1;
+  }
+  if (runs.length) warnings.push(`Same camera move on ${LIMITS.moveRun}+ pictures in a row: ${runs.slice(0, 4).join('; ')}${runs.length > 4 ? ` and ${runs.length - 4} more` : ''}. Alternate moves between neighbouring pictures.`);
+}
+
 // Voice: lines that won't fit, and dead air.
 let silentFrom = null;
 for (const s of scenes) {
@@ -231,6 +268,32 @@ for (const s of scenes) {
   }
 }
 
+// Narration style: stacked fragments ("Keys. Bag. Eli.") and numbers used as stats read choppy and
+// listy when they're on most lines. Spoken lines (dialogue in quotes) count like the rest.
+const NUMBER_WORDS = /\b(?:\d[\d.,]*|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million)\b/gi;
+const voiced = scenes.filter((s) => words(s.voice).length);
+// An ellipsis inside a sentence is a beat, not its end.
+const sentencesOf = (t) => withoutTags(t).split(/(?<=[.!?])\s+/).map((x) => x.trim()).filter((x) => words(x).length);
+const allSentences = voiced.flatMap((s) => sentencesOf(s.voice));
+const fragments = allSentences.filter((x) => words(x).length <= 4);
+if (allSentences.length >= 20 && fragments.length / allSentences.length > 0.2) {
+  const choppy = voiced.filter((s) => sentencesOf(s.voice).filter((x) => words(x).length <= 4).length >= 2).map((s) => s.n);
+  warnings.push(
+    `${fragments.length} of ${allSentences.length} narration sentences are 4 words or fewer (${Math.round((fragments.length / allSentences.length) * 100)}%): ` +
+      'it reads choppy. Join them into spoken sentences and keep a clipped line for the few real blows' +
+      (choppy.length ? `. Most in scene${choppy.length > 1 ? 's' : ''} ${choppy.slice(0, 12).join(', ')}${choppy.length > 12 ? ', …' : ''}.` : '.'),
+  );
+}
+const numbered = voiced.map((s) => ({ n: s.n, count: (withoutTags(s.voice).match(NUMBER_WORDS) || []).length })).filter((x) => x.count);
+if (voiced.length >= 10 && numbered.length / voiced.length > 0.3) {
+  const heavy = numbered.filter((x) => x.count >= 2).map((x) => x.n);
+  warnings.push(
+    `${numbered.length} of ${voiced.length} narration lines have a number: keep the story's clock and its one or two rules, ` +
+      'and say the rest as what it means ("the needle was already low", not "three-eighths of a tank")' +
+      (heavy.length ? `. Two or more in scene${heavy.length > 1 ? 's' : ''} ${heavy.slice(0, 12).join(', ')}${heavy.length > 12 ? ', …' : ''}.` : '.'),
+  );
+}
+
 // ---- Report ------------------------------------------------------------------------------------
 
 const loopList = [...loops.values()].sort((a, b) => a.open - b.open);
@@ -242,6 +305,7 @@ const report = {
   words: scenes.reduce((n, s) => n + words(s.voice).length, 0),
   interrupts: interrupts.length,
   interrupt_kinds: Object.fromEntries(kinds),
+  camera_moves: Object.fromEntries(moveCounts),
   loops: loopList.map((l) => ({ id: l.id, label: l.label, open: fmt(l.open), close: l.close == null ? null : fmt(l.close) })),
   warnings,
 };
@@ -251,6 +315,7 @@ if (flag === '--json') {
 } else {
   console.log(`Retention check: ${file}`);
   console.log(`  ${report.scenes} scenes · ${fmt(total)} · ${report.words} words · ${report.pictures} pictures (one every ${report.avg_picture_sec} s)`);
+  if (moves.length) console.log(`  camera: ${moveCounts.map(([m, n]) => `${n} ${m}`).join(', ')}`);
   console.log(`  ${report.interrupts} pattern interrupts: ${kinds.map(([k, n]) => `${n} ${k}`).join(', ') || 'none'}`);
   console.log(`  ${loopList.length} open loops:`);
   for (const l of loopList) console.log(`    ${l.id}  ${fmt(l.open)} → ${l.close == null ? 'never closed' : fmt(l.close)}  ${l.label}`);

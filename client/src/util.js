@@ -25,8 +25,12 @@ export const ASSETS = [
   { kind: 'sfx', has: (s) => s.sfx_url, prompt: 'sfx_prompt', label: 'Sound effect' },
 ];
 
-export function countMissing(scenes) {
+export function countMissing(scenes, sb = {}) {
   let n = 0;
+  // The whole video's sounds: the music, and each ambience bed a scene uses.
+  if (sb.settings?.music_prompt?.trim() && !sb.settings.music_url) n++;
+  const used = new Set(scenes.map((s) => s.ambience_id).filter(Boolean));
+  for (const bed of sb.ambience || []) if (used.has(bed.ambience_id) && bed.prompt?.trim() && !bed.url) n++;
   for (const s of scenes) {
     for (const a of ASSETS) if (s[a.prompt]?.trim() && !a.has(s)) n++;
     for (const l of s.sfx_layers || []) if (l.prompt?.trim() && !l.url) n++;
@@ -62,6 +66,7 @@ export const newShot = (startSec) => ({
   motion: null,
   start_sec: startSec,
   cue: null,
+  continues: false,
   source_name: null,
 });
 
@@ -82,7 +87,7 @@ export function sceneTimeline(scene) {
 const WORDS_PER_SEC_SPOKEN = 2.5;
 const PAUSE_TAG_SEC = 0.7;
 const normalizeWord = (w) => w.toLowerCase().replace(/[^\p{L}\p{N}']+/gu, '');
-const spokenWords = (text) => text.replace(/\[[^\]\n]{1,60}\]/g, ' ').split(/\s+/).map(normalizeWord).filter(Boolean);
+const spokenWords = (text) => withoutSpeakers(text).replace(/\[[^\]\n]{1,60}\]/g, ' ').split(/\s+/).map(normalizeWord).filter(Boolean);
 
 function findCue(words, cue) {
   const target = spokenWords(cue);
@@ -102,7 +107,7 @@ export function cueTime(scene, cue) {
     const i = findCue(timed.map((w) => normalizeWord(w.text)), cue);
     return i === -1 ? null : { sec: timed[i].start, exact: true };
   }
-  const text = scene.voiceover_text || '';
+  const text = withoutSpeakers(scene.voiceover_text || '');
   const i = findCue(spokenWords(text), cue);
   if (i === -1) return null;
   let count = 0;
@@ -212,8 +217,52 @@ export function motionTransform(motion, progress, amountPercent) {
   }
 }
 
+/**
+ * Where each ambience bed plays (as ambienceRuns in server/storyboard.js): runs of neighbouring scenes
+ * with the same bed, [{ ambience, color, start, end, from, to }] with `from` / `to` the first and last
+ * scene index. `starts` are the scenes' start times.
+ */
+export function ambienceRuns(scenes, ambience = [], starts) {
+  const byId = new Map(ambience.map((a, i) => [a.ambience_id, { bed: a, color: ambienceColor(i) }]));
+  const runs = [];
+  scenes.forEach((s, i) => {
+    const hit = byId.get(s.ambience_id);
+    const last = runs.at(-1);
+    const end = starts[i] + s.duration_sec;
+    if (hit && last?.ambience === hit.bed && last.to === i - 1) Object.assign(last, { end, to: i });
+    else if (hit) runs.push({ ambience: hit.bed, color: hit.color, start: starts[i], end, from: i, to: i });
+  });
+  return runs;
+}
+
+/**
+ * Picture numbers within a scene, for picture IDs like "4.2" (scene 4, picture 2): the scene's own image
+ * is 1 and its shots follow in the order they cut in. Returns shot_id → number.
+ */
+export function shotNumbers(scene) {
+  const sorted = [...(scene.shots || [])].sort((a, b) => a.start_sec - b.start_sec);
+  return new Map(sorted.map((s, i) => [s.shot_id, i + 2]));
+}
+
+/** A colour per ambience bed (by its place in the list), to tell them apart on the timeline. */
+export const ambienceColor = (i) => `hsl(${Math.round((i * 137.5 + 150) % 360)} 60% 62%)`;
+
+/** ElevenLabs Music models for the background music. */
+export const MUSIC_MODELS = [
+  ['music_v1', 'Music v1'],
+  ['music_v2', 'Music v2'],
+  ['music_v2_5', 'Music v2.5'],
+];
+
 /** ElevenLabs audio tags in voiceover text, e.g. [whispers]. Only these voice models perform them; others read them aloud. */
 export const AUDIO_TAG = /\[[^\]\n]{1,60}\]/g;
+
+// A speaker label in a voiceover ("{Eli} Eli to Mom, over. {Narrator} …"): not spoken. See speakerParts
+// in server/storyboard.js.
+export const SPEAKER_LABEL = /\{([^{}\n]{1,40})\}/g;
+export function withoutSpeakers(text) {
+  return text.replace(SPEAKER_LABEL, ' ');
+}
 export const AUDIO_TAG_MODELS = ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3'];
 
 export function isTyping(e) {
@@ -229,7 +278,7 @@ export function describeGeneration(result = {}) {
   const { generated = 0, failed = 0, total = generated + failed, out_of_credits: outOfCredits = [] } = result;
   const parts = [total && generated < total ? `Generated ${generated} of ${total}.` : `Generated ${generated} asset(s).`];
   for (const s of outOfCredits) {
-    parts.push(`${s.provider} ${s.reason === 'account' ? 'refused the API key' : 'ran out of credits'} at scene ${s.scene}${s.skipped ? ` (${s.skipped} more item${s.skipped > 1 ? 's' : ''} skipped)` : ''}.`);
+    parts.push(`${s.provider} ${s.reason === 'account' ? 'refused the API key' : 'ran out of credits'}${s.scene ? ` at scene ${s.scene}` : ''}${s.skipped ? ` (${s.skipped} more item${s.skipped > 1 ? 's' : ''} skipped)` : ''}.`);
   }
   const otherFailures = failed - outOfCredits.length;
   if (otherFailures > 0) parts.push(`${otherFailures} failed (see warnings).`);

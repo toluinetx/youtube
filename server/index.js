@@ -4,25 +4,27 @@ import path from 'node:path';
 import express from 'express';
 import { CLIENT_DIST, EXPORTS_DIR, MEDIA_DIR, PROJECT_ID } from './paths.js';
 import {
-  DEFAULT_SETTINGS, MAX_SHOTS, MOTIONS, READONLY_SETTINGS, RESOLUTIONS, SCENE_TEXT_FIELDS, SFX_LAYER_EDITABLE, SHOT_EDITABLE, findScene,
-  newShot, newSfxLayer, syncCues, newScene, nextSceneId, readStoryboard, redo, undo,
+  AMBIENCE_EDITABLE, DEFAULT_SETTINGS, MAX_SHOTS, MOTIONS, READONLY_SETTINGS, RESOLUTIONS, SCENE_TEXT_FIELDS, SFX_LAYER_EDITABLE, SHOT_EDITABLE,
+  findAmbience, findScene, newAmbience, newShot, newSfxLayer, syncCues, newScene, nextSceneId, readStoryboard, redo, undo,
   updateStoryboard,
 } from './storyboard.js';
 import { historyState } from './history.js';
 import { requestContext, subscribe } from './events.js';
 import { createProject, initProjects, listProjects, openProject, trackBusy } from './projects.js';
 import {
-  GENERATORS, generateReferenceImage, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo, imageReferenceCapacity,
+  GENERATORS, chooseImageVariant, generateAmbience, generateMusic, generateReferenceImage, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo,
+  imageReferenceCapacity,
 } from './generate.js';
 import { CAPTION_MODES, CAPTION_POSITIONS, LOOKS, SHAKES } from './finish.js';
 import {
-  addToLibrary, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
+  addToLibrary, ambienceFromAsset, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
   snapshotAsset, useAssetInScene,
 } from './uploads.js';
 import { listImageModels, modelParams } from './replicate.js';
 import { geminiParams, isGeminiModel, listGeminiModels } from './gemini.js';
+import { comfyParams, findComfyServer, isComfyModel, listComfyModels } from './comfyui.js';
 import { generationPlan, getJob, startExport, startGenerateMissing } from './jobs.js';
-import { listModels, listVoices } from './elevenlabs.js';
+import { MUSIC_MAX_SEC, MUSIC_MODELS, listModels, listVoices } from './elevenlabs.js';
 import { readPreferences, setStarred } from './preferences.js';
 import { accountBalances, setPrice, usageReport } from './usage.js';
 import { FFMPEG } from './ffmpeg.js';
@@ -93,8 +95,14 @@ function sanitizeScenePatch(body) {
   }
   if (body.reference_asset_ids !== undefined) patch.reference_asset_ids = sanitizeAssetIds(body.reference_asset_ids, 'reference_asset_ids');
   if (body.use_global_references !== undefined) patch.use_global_references = Boolean(body.use_global_references);
+  // The project's style images; unset, they follow use_global_references.
+  if (body.use_style_references !== undefined) patch.use_style_references = Boolean(body.use_style_references);
   if (body.use_previous_scene !== undefined) patch.use_previous_scene = Boolean(body.use_previous_scene);
   if (body.notes !== undefined) patch.notes = String(body.notes).slice(0, 2000);
+  if (body.ambience_id !== undefined) {
+    if (body.ambience_id !== null && typeof body.ambience_id !== 'string') throw badRequest('ambience_id must be null or an ambience id');
+    patch.ambience_id = body.ambience_id;
+  }
   if (typeof body.video_prompt === 'string') patch.video_prompt = body.video_prompt;
   if (body.sfx_layers !== undefined) patch.sfx_layers = sanitizeSfxLayers(body.sfx_layers);
   if (body.shots !== undefined) patch.shots = sanitizeShots(body.shots);
@@ -168,6 +176,10 @@ function sanitizeShots(value) {
       shot.start_sec = Math.round(t * 100) / 100;
     }
     if (typeof s.cue === 'string' && s.cue.trim()) shot.cue = s.cue.trim().slice(0, 200);
+    if (s.continues !== undefined) shot.continues = Boolean(s.continues);
+    if (s.reference_asset_ids !== undefined) {
+      shot.reference_asset_ids = s.reference_asset_ids === null ? null : sanitizeAssetIds(s.reference_asset_ids, `shots[${i}].reference_asset_ids`);
+    }
     return shot;
   });
 }
@@ -210,6 +222,7 @@ const EDIT_LABELS = {
   shots: 'Edit shots',
   reference_asset_ids: 'Change references',
   use_global_references: 'Change references',
+  use_style_references: 'Change references',
   use_previous_scene: 'Change references',
 };
 
@@ -275,6 +288,7 @@ const OBJECT_SETTINGS = ['image_params', 'video_params', 'tts_params', 'sfx_para
 app.put('/api/settings', async (req, res) => {
   if (req.body.reference_asset_ids !== undefined) req.body.reference_asset_ids = sanitizeAssetIds(req.body.reference_asset_ids, 'reference_asset_ids');
   if (req.body.style_references !== undefined) req.body.style_references = sanitizeStyleReferences(req.body.style_references);
+  if (req.body.voices !== undefined) req.body.voices = sanitizeVoices(req.body.voices);
   for (const key of OBJECT_SETTINGS) {
     if (req.body[key] !== undefined && !isPlainObject(req.body[key])) throw badRequest(`${key} must be an object`);
   }
@@ -315,12 +329,15 @@ function copyOf(sb, src) {
     ...Object.fromEntries(SCENE_TEXT_FIELDS.map((f) => [f, src[f]])),
     duration_sec: src.duration_sec,
     notes: src.notes,
+    ambience_id: src.ambience_id,
     video_prompt: src.video_prompt,
     motion: src.motion,
     shake: src.shake,
     title_text: src.title_text,
     sfx_layers: (src.sfx_layers || []).map((l) => newSfxLayer({ prompt: l.prompt, volume: l.volume, start_sec: l.start_sec, length_sec: l.length_sec, cue: l.cue })),
-    shots: (src.shots || []).map((s) => newShot({ image_prompt: s.image_prompt, motion: s.motion, start_sec: s.start_sec, cue: s.cue })),
+    shots: (src.shots || []).map((s) => newShot({
+      image_prompt: s.image_prompt, motion: s.motion, start_sec: s.start_sec, cue: s.cue, continues: s.continues, reference_asset_ids: s.reference_asset_ids ?? null,
+    })),
   });
 }
 
@@ -409,15 +426,34 @@ app.post('/api/scenes/import-script', async (req, res) => {
 });
 
 const IMPORT_SCENE_FIELDS = [
-  ...SCENE_TEXT_FIELDS, 'video_prompt', 'motion', 'shake', 'title_text', 'reference_names', 'sfx_layers', 'shots', 'duration_sec', 'notes',
+  ...SCENE_TEXT_FIELDS, 'video_prompt', 'motion', 'shake', 'title_text', 'reference_names', 'use_previous_scene', 'sfx_layers', 'shots', 'duration_sec', 'notes',
+  'ambience',
 ];
 const IMPORT_SETTINGS = Object.keys(DEFAULT_SETTINGS).filter((k) => !READONLY_SETTINGS.includes(k) && k !== 'reference_asset_ids' && k !== 'style_references');
 const SETTING_CHOICES = {
   aspect_ratio: Object.keys(RESOLUTIONS), motion: MOTIONS, look: Object.keys(LOOKS), captions: CAPTION_MODES, caption_position: CAPTION_POSITIONS,
+  music_model: MUSIC_MODELS,
 };
-const SETTING_RANGES = { motion_amount: [1, 40], vignette: [0, 1], grain: [0, 1], image_check_retries: [0, 5] };
+const SETTING_RANGES = {
+  motion_amount: [1, 40], vignette: [0, 1], grain: [0, 1], image_check_retries: [0, 5], music_length_sec: [10, MUSIC_MAX_SEC], music_volume: [0, 1],
+};
 
 /** Check an imported settings object; throws a 400 naming the problem. */
+/** The speakers setting: [{ name, voice_id }], names without braces and each used once. */
+function sanitizeVoices(value) {
+  if (!Array.isArray(value)) throw badRequest('voices must be a list of { name, voice_id }');
+  const seen = new Set();
+  return value.map((v, i) => {
+    if (!isPlainObject(v)) throw badRequest(`voices[${i}] must be { name, voice_id }`);
+    const name = String(v.name ?? '').replace(/[{}\n]/g, '').trim().slice(0, 40);
+    const voiceId = String(v.voice_id ?? '').trim().slice(0, 80);
+    if (!name) throw badRequest(`voices[${i}] needs a name`);
+    if (seen.has(name.toLowerCase())) throw badRequest(`Two voices are named "${name}"`);
+    seen.add(name.toLowerCase());
+    return { name, voice_id: voiceId };
+  });
+}
+
 function sanitizeImportSettings(settings = {}) {
   if (typeof settings !== 'object' || Array.isArray(settings)) throw badRequest('settings must be an object');
   for (const [key, value] of Object.entries(settings)) {
@@ -429,6 +465,7 @@ function sanitizeImportSettings(settings = {}) {
     const range = SETTING_RANGES[key];
     if (range && !(value >= range[0] && value <= range[1])) throw badRequest(`${key} must be between ${range[0]} and ${range[1]}`);
   }
+  if (settings.voices !== undefined) settings.voices = sanitizeVoices(settings.voices);
   return settings;
 }
 
@@ -438,8 +475,12 @@ function sanitizeImportSettings(settings = {}) {
  * shake, title_text, reference_names, notes }], settings? }.
  * reference_names: library images (by name) used as this scene's own references, e.g. ["Bunker kitchen"].
  * sfx_layers: extra sound effects playing at the same time, [{ prompt, volume?, start_sec?, length_sec?, cue? }];
- * shots: more pictures after the scene's own, [{ image_prompt, start_sec?, cue?, motion? }].
+ * shots: more pictures after the scene's own, [{ image_prompt, start_sec?, cue?, motion?, continues?, reference_names? }]
+ * (continues: the next frame of the picture before, same framing; reference_names: its own references
+ * instead of the scene's, e.g. only the character it shows).
  * A cue (words from voiceover_text) sets start_sec to when they're spoken.
+ * ambience: the name of an ambience bed to play under the scene; the beds are listed in the body's
+ * `ambience`, [{ name, prompt, volume? }] (a bed with the same name already in the project is reused).
  * Scenes are added with no media, ready to generate. One undo step.
  */
 app.post('/api/scenes/import', async (req, res) => {
@@ -447,7 +488,10 @@ app.post('/api/scenes/import', async (req, res) => {
   if (mode !== 'append' && mode !== 'replace') throw badRequest('mode must be "append" or "replace"');
   if (!Array.isArray(scenes) || !scenes.length) throw badRequest('scenes must be a non-empty list');
   if (scenes.length > 500) throw badRequest('At most 500 scenes per import');
-  const { library } = await readStoryboard();
+  const { library, ambience: existingBeds } = await readStoryboard();
+  const beds = sanitizeImportAmbience(req.body.ambience, existingBeds);
+  const bedKey = (name) => String(name).trim().toLowerCase();
+  const bedNames = new Set([...existingBeds, ...beds].map((b) => bedKey(b.name)));
   const patches = scenes.map((scene, i) => {
     const where = `Scene ${i + 1}`;
     if (!scene || typeof scene !== 'object') throw badRequest(`${where} must be an object`);
@@ -457,8 +501,22 @@ app.post('/api/scenes/import', async (req, res) => {
     for (const f of [...SCENE_TEXT_FIELDS, 'video_prompt', 'notes']) {
       if (scene[f] !== undefined && typeof scene[f] !== 'string') throw badRequest(`${where}: ${f} must be text`);
     }
+    if (scene.ambience !== undefined && scene.ambience !== null && !bedNames.has(bedKey(scene.ambience))) {
+      throw badRequest(`${where}: no ambience is named "${scene.ambience}" (list it in the body's ambience)`);
+    }
     try {
-      return { ...sanitizeScenePatch(scene), ...referencesByName(library, scene.reference_names) };
+      const { ambience: _, ...fields } = scene;
+      // A shot's reference_names become its own references, like the scene's.
+      if (Array.isArray(fields.shots)) {
+        fields.shots = fields.shots.map(({ reference_names: names, ...shot } = {}, n) => {
+          try {
+            return names === undefined ? shot : { ...shot, ...referencesByName(library, names) };
+          } catch (err) {
+            throw badRequest(`shot ${n + 2}: ${err.message}`);
+          }
+        });
+      }
+      return { ...sanitizeScenePatch(fields), ...referencesByName(library, scene.reference_names), ambience_name: scene.ambience ?? null };
     } catch (err) {
       throw badRequest(`${where}: ${err.message}`);
     }
@@ -467,10 +525,37 @@ app.post('/api/scenes/import', async (req, res) => {
   const sb = await updateStoryboard((sb) => {
     if (mode === 'replace') sb.scenes = [];
     Object.assign(sb.settings, settings);
-    for (const patch of patches) sb.scenes.push(syncCues(newScene(nextSceneId(sb), patch)));
+    for (const bed of beds) if (!sb.ambience.some((b) => bedKey(b.name) === bedKey(bed.name))) sb.ambience.push(newAmbience(bed));
+    const idOf = (name) => sb.ambience.find((b) => bedKey(b.name) === bedKey(name))?.ambience_id ?? null;
+    for (const { ambience_name: name, ...patch } of patches) {
+      sb.scenes.push(syncCues(newScene(nextSceneId(sb), { ...patch, ambience_id: name ? idOf(name) : null })));
+    }
   }, { label: `Import ${patches.length} scene${patches.length === 1 ? '' : 's'}` });
   res.json(sb);
 });
+
+/** The ambience beds an import lists: [{ name, prompt, volume }]. Names already in the project are kept as they are. */
+function sanitizeImportAmbience(value, existing) {
+  if (value === undefined) return [];
+  if (!Array.isArray(value)) throw badRequest('ambience must be a list of { name, prompt, volume? }');
+  return value.map((b, i) => {
+    if (!isPlainObject(b) || typeof b.name !== 'string' || !b.name.trim()) throw badRequest(`ambience[${i}] needs a name`);
+    return sanitizeAmbiencePatch(b, `ambience[${i}]`);
+  }).filter((b) => !existing.some((e) => e.name.trim().toLowerCase() === b.name.trim().toLowerCase()));
+}
+
+/** The editable fields of an ambience bed (see AMBIENCE_EDITABLE), checked. */
+function sanitizeAmbiencePatch(body, where = 'ambience') {
+  const patch = {};
+  if (body.name !== undefined) patch.name = String(body.name).trim().slice(0, 60);
+  if (body.prompt !== undefined) patch.prompt = String(body.prompt).slice(0, 2000);
+  if (body.volume !== undefined) {
+    const v = Number(body.volume);
+    if (!Number.isFinite(v) || v < 0 || v > 2) throw badRequest(`${where}.volume must be between 0 and 2`);
+    patch.volume = v;
+  }
+  return Object.fromEntries(Object.entries(patch).filter(([k]) => AMBIENCE_EDITABLE.includes(k)));
+}
 
 /** { reference_asset_ids } for library images named in `names` (case and extension don't matter), or {}. */
 function referencesByName(library, names) {
@@ -488,14 +573,17 @@ function referencesByName(library, names) {
 
 /**
  * Generate a reference image (a character or location master) into the library under `name`, and
- * with `for_every_scene`, add it to the project-wide references: { name, prompt, for_every_scene? }.
- * A library image with the same name is replaced as the reference.
+ * with `for_every_scene`, add it to the project-wide references: { name, prompt, for_every_scene?,
+ * based_on? }. based_on: library images (by name) it's drawn from, for another angle of the same
+ * character or place. A library image with the same name is replaced as the reference.
  */
 app.post('/api/references/generate', async (req, res) => {
   const name = String(req.body?.name || '').trim().slice(0, 80);
   const prompt = String(req.body?.prompt || '').trim().slice(0, 4000);
   if (!name || !prompt) throw badRequest('name and prompt are required');
-  res.status(201).json(await generateReferenceImage({ name, prompt, forEveryScene: Boolean(req.body.for_every_scene) }));
+  const { library } = await readStoryboard();
+  const basedOn = referencesByName(library, req.body.based_on).reference_asset_ids ?? [];
+  res.status(201).json(await generateReferenceImage({ name, prompt, forEveryScene: Boolean(req.body.for_every_scene), basedOn }));
 });
 
 // ---- Undo / redo ------------------------------------------------------------------------------
@@ -535,6 +623,9 @@ app.post('/api/library', async (req, res) => res.status(201).json(await addToLib
 
 app.patch('/api/library/:assetId', async (req, res) => res.json(await renameAsset(req.params.assetId, req.body.name)));
 
+// Show another of a generated image's variants ({ url }), everywhere it's used.
+app.post('/api/library/:assetId/variant', async (req, res) => res.json(await chooseImageVariant(req.params.assetId, String(req.body?.url || ''))));
+
 // Save one frame of a library video as a new library image.
 app.post('/api/library/:assetId/snapshot', async (req, res) => {
   res.status(201).json(await snapshotAsset(req.params.assetId, req.body.time_sec));
@@ -548,15 +639,18 @@ app.get('/api/model-info', async (req, res) => {
   res.json({ model: req.query.model, reference_capacity: await imageReferenceCapacity(String(req.query.model || '')) });
 });
 
-// Models to choose from (Replicate collections, Gemini API), and the settings a model offers.
+// Models to choose from (Replicate collections, Gemini API, ComfyUI workflows), and the settings a model offers.
 app.get('/api/image-models', async (_req, res) => res.json(await listImageModels()));
 
 app.get('/api/gemini-models', async (_req, res) => res.json(await listGeminiModels()));
 
+app.get('/api/comfyui-models', async (_req, res) => res.json(await listComfyModels()));
+
 app.get('/api/model-params', async (req, res) => {
   const model = String(req.query.model || '');
   if (isGeminiModel(model)) return res.json({ model, params: geminiParams(model) });
-  if (!model.includes('/')) throw badRequest('model must look like owner/name or gemini:model');
+  if (isComfyModel(model)) return res.json({ model, params: await comfyParams(model) });
+  if (!model.includes('/')) throw badRequest('model must look like owner/name, gemini:model or comfyui:workflow');
   res.json({ model, params: await modelParams(model) });
 });
 
@@ -579,6 +673,59 @@ app.post('/api/scenes/from-asset', async (req, res) => {
 app.put('/api/music', async (req, res) => res.json(await musicFromAsset(String(req.body.asset_id))));
 
 app.delete('/api/music', async (_req, res) => res.json(await removeMusic()));
+
+// Generate the background music from the project's music prompt. Responds with the settings.
+app.post('/api/music/generate', async (_req, res) => res.json(await generateMusic()));
+
+// ---- Ambience beds ----------------------------------------------------------------------------
+// Looping background sounds for places, shared by the scenes that pick them (scene.ambience_id).
+// Each route responds with the updated list of beds and scenes' choices: { ambience, scenes: [{ scene_id, ambience_id }] }.
+
+const ambienceState = (sb) => ({ ambience: sb.ambience, scenes: sb.scenes.map((s) => ({ scene_id: s.scene_id, ambience_id: s.ambience_id })) });
+
+app.post('/api/ambience', async (req, res) => {
+  const patch = sanitizeAmbiencePatch(req.body || {});
+  const sb = await updateStoryboard((sb) => void sb.ambience.push(newAmbience({ name: 'New ambience', ...patch })), { label: 'Add ambience' });
+  res.status(201).json(ambienceState(sb));
+});
+
+app.put('/api/ambience/:id', async (req, res) => {
+  const patch = sanitizeAmbiencePatch(req.body || {});
+  const sb = await updateStoryboard((sb) => void Object.assign(findAmbience(sb, req.params.id), patch), {
+    label: 'Edit ambience', key: `ambience:${req.params.id}:${Object.keys(patch).sort().join(',')}`,
+  });
+  res.json(ambienceState(sb));
+});
+
+app.delete('/api/ambience/:id', async (req, res) => {
+  const sb = await updateStoryboard((sb) => {
+    const bed = findAmbience(sb, req.params.id);
+    sb.ambience = sb.ambience.filter((b) => b !== bed);
+    for (const s of sb.scenes) if (s.ambience_id === bed.ambience_id) s.ambience_id = null;
+  }, { label: 'Delete ambience' });
+  res.json(ambienceState(sb));
+});
+
+// Play a bed (or none, with ambience_id null) under these scenes: { ambience_id, ids }.
+app.post('/api/ambience/assign', async (req, res) => {
+  const { ambience_id: id, ids } = req.body || {};
+  if (!Array.isArray(ids) || !ids.length) throw badRequest('ids must list at least one scene_id');
+  const sb = await updateStoryboard((sb) => {
+    if (id !== null) findAmbience(sb, id);
+    for (const sceneId of ids) findScene(sb, sceneId).ambience_id = id;
+  }, { label: id ? 'Set ambience' : 'Remove ambience' });
+  res.json(ambienceState(sb));
+});
+
+app.post('/api/ambience/:id/generate', async (req, res) => {
+  await generateAmbience(req.params.id);
+  res.json(ambienceState(await readStoryboard()));
+});
+
+app.post('/api/ambience/:id/use-asset', async (req, res) => {
+  await ambienceFromAsset(req.params.id, String(req.body.asset_id));
+  res.json(ambienceState(await readStoryboard()));
+});
 
 app.delete('/api/scene/:id/media/:slot', async (req, res) => {
   res.json(await clearSceneSlot(req.params.id, req.params.slot));
@@ -619,11 +766,14 @@ app.put('/api/preferences/starred', async (req, res) => {
   res.json(await setStarred(req.body.list, req.body.id, Boolean(req.body.starred)));
 });
 
-app.get('/api/status', (_req, res) => {
+app.get('/api/status', async (_req, res) => {
+  // ComfyUI: null without workflows (not set up), else whether it's running.
+  const comfyui = (await listComfyModels()).length ? Boolean(await findComfyServer()) : null;
   res.json({
     replicate: Boolean(process.env.REPLICATE_API_TOKEN),
     elevenlabs: Boolean(process.env.ELEVENLABS_API_KEY),
     gemini: Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY),
+    comfyui,
     ffmpeg: Boolean(FFMPEG && fs.existsSync(FFMPEG)),
   });
 });
