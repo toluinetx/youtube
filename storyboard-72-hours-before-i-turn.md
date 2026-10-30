@@ -39,8 +39,8 @@
 | 9:06 | HOUR 50: the words go (aphasia); Eli's scraped knee wakes the hunger; she cuffs herself to the wheel and gives Eli the key. He trusts her, no questions | Mind + moral | open/close L10, open L12 (will she hurt Eli?) | Heartbeat swell, ratchet | Horror |
 | 10:25 | HOUR 61 LOWEST POINT: twelve miles out, waiting for Tuesday; seizure, blackout, blood, the back seat empty; Eli outside, doors locked. It's her own blood. To Eli she's just very sick | Lowest point (~72%) | close L2 | Blackout silence, Shake (heavy) | Despair |
 | 11:38 | HOUR 66: the last tape ("For when you're older"), slipped into Eli's jacket lining; the dead gathered at the gate's generator | Calm before the climax | open L11 | Title, video | Dread |
-| 12:17 | HOUR 70 CLIMAX: 10 minutes, the field, "I'm not going without you." She can't tell him the truth: "I'll be right behind you." Eli walks in alone; she tapes the blue walkie into her hand, cuffs herself to the fence, throws the key inside; the dead pass her by | Climax | close L1, L9, L12, L11 | Klaxon, silence, ratchet | Peak |
-| 14:06 | HOUR 72: "Patient is…", her heart stops and restarts. HOUR 79: the tape unplayed in his pocket; "Eli to Mom. Over."; a spasm in her taped thumb: two clicks; "She's okay." He never knows | Peak-end | close L6 (he believes; we know) | Silence, static, clicks | Haunting |
+| 12:17 | HOUR 70 CLIMAX: 10 minutes, the field, "I'm not going without you." She can't tell him the truth: "I'll be right behind you." She asks for the key back and he hands it over, no questions. Eli walks in alone; she tapes the blue walkie into her hand, cuffs herself to the fence, throws the key inside; the dead pass her by | Climax | close L1, L9, L12, L11 | Klaxon, silence, ratchet | Peak |
+| 14:17 | HOUR 72: "Patient is…", her heart stops and restarts. HOUR 79: the tape unplayed in his pocket; "Eli to Mom. Over."; a spasm in her taped thumb: two clicks; "She's okay." He never knows | Peak-end | close L6 (he believes; we know) | Silence, static, clicks | Haunting |
 
 ---
 
@@ -681,7 +681,7 @@
 - **SFX:** Car interior at night, crickets
 - **Shot 2 (at "never"):** Close-up of Nora's face in moonlight, her grey-veined temple, looking straight at her son
 - **References:** Corolla interior
-- **Notes:** Setup: the rules Eli follows at Hour 61.
+- **Notes:** Setup: the rules Eli follows at Hour 61; Eli keeps the key until he hands it back at the gate.
 
 ### Scene 82 · 10:02–10:10.5
 - **Image:** Close-up of Eli's face in shadow, calm, nodding slowly
@@ -864,21 +864,32 @@
 - **References:** Corolla interior
 - **Notes:** He believes her.
 
-### Scene 108 · 13:12.5–13:19.5
+### Scene 108 · 13:12.5–13:23
+- **Image:** Nora alone in the driver's seat turned toward the back seat, holding out her open grey palm, a gentle forced smile, floodlight through the car window, dawn
+- **Voice:** [softly] I need the key back, baby. [pause] He dug it out of his pocket and put it in my hand. He didn't ask why.
+- **SFX:** Car interior, the generator drone muffled
+- **SFX 2 (at "my hand", 0.5s):** a tiny metal key dropping into a palm
+- **Shot 2 (at "He dug"):** Eli alone in the back seat digging in the pocket of his red rain jacket, his eyes on his mother, floodlight on his face
+- **Shot 3 (at "my hand"):** Close-up of Eli's small hand placing a tiny silver handcuff key into Nora's open grey palm, two hands: Eli's one hand and Nora's one hand, floodlight, dawn
+- **Shot 4 (at "ask why"):** Close-up of Nora alone closing her grey fingers around the key, eyes wet, floodlight through the window
+- **References:** Corolla interior
+- **Notes:** The key Eli has kept since Hour 50 comes back to her. He trusts her, no questions, one last time.
+
+### Scene 109 · 13:23–13:30
 - **Image:** Nora's grey left hand pushing the car's back door open from inside, the floodlit gate visible through the open door, dawn
 - **Voice:** [softly] Walk to the soldiers. Don't run. [pause] Two clicks when you're inside, and I'll click back.
 - **SFX:** Generator drone returning, groans getting closer
 - **SFX 2 (from 0s, 2s):** Car door opening
 - **References:** Corolla interior
 
-### Scene 109 · 13:19.5–13:27.5
+### Scene 110 · 13:30–13:38
 - **Image:** Eli alone walking toward the open gate across the dead grass, looking back over his shoulder, the yellow walkie on his chest, soldiers waiting at the gate, dawn
 - **Voice:** Eli walked. He looked back four times. [pause] I counted.
 - **SFX:** Generator drone, small footsteps on dry grass, soldiers shouting
 - **References:** Fort Calder gate
 - **Notes:** [close L9]
 
-### Scene 110 · 13:27.5–13:35
+### Scene 111 · 13:38–13:45.5
 - **Image:** Close-up of Nora's grey right hand wrapped in white medical tape and black zip ties around a small blue toy walkie-talkie, her thumb resting on the push-to-talk button, chain-link fence blurred behind, dawn light, Nora's one hand only
 - **Voice:** I taped the walkie into my hand. Medical tape. Zip ties. [pause] My thumb on the button.
 - **SFX:** Wind, the generator drone, groans far off
@@ -887,7 +898,7 @@
 - **References:** Fort Calder gate
 - **Notes:** Her thumb over the button: sets up the last two clicks.
 
-### Scene 111 · 13:35–13:43
+### Scene 112 · 13:45.5–13:53.5
 - **Image:** Close-up of Nora's grey left wrist as a steel handcuff snaps around a chain-link fence post, dawn light
 - **Voice:** Then I cuffed myself to the fence. Like the farmer. [pause] Where I couldn't follow.
 - **SFX:** Wind, the generator drone, groans
@@ -895,15 +906,15 @@
 - **References:** Fort Calder gate
 - **Notes:** Pays off the farmer who locked himself in (Hour 24).
 
-### Scene 112 · 13:43–13:49
+### Scene 113 · 13:53.5–13:59.5
 - **Image:** Close-up of a tiny silver handcuff key lying in the dead grass just inside the chain-link fence, floodlights glaring behind, dawn
 - **Voice:** And I threw the key over the gate. [pause] Into the grass. Inside.
 - **SFX:** Generator drone, soldiers' voices muffled
 - **SFX 2 (at "grass", 1s):** a tiny metal key landing in dry grass
 - **References:** Fort Calder gate
-- **Notes:** [close L12] She can't follow him now.
+- **Notes:** [close L12] The key he just gave back: now she can't follow him.
 
-### Scene 113 · 13:49–13:58.5
+### Scene 114 · 13:59.5–14:09
 - **Image:** Wide shot of the steel gate shut with Eli inside, grey figures streaming along the outside of the fence toward the generator, passing a lone woman cuffed to a fence post, dawn
 - **Voice:** The gate slammed shut at six-ten. The dead streamed past me, toward the sound. [pause] Like I was already one of them.
 - **SFX:** The generator drone, many groans
@@ -912,7 +923,7 @@
 - **References:** Fort Calder gate
 - **Notes:** [close L11]
 
-### Scene 114 · 13:58.5–14:06.5
+### Scene 115 · 14:09–14:17
 - **Image:** Nora alone sitting against the fence post, her left wrist cuffed to the fence, a small blue toy walkie-talkie taped into her right hand, dawn light, grey shapes passing far behind her out of focus
 - **Video:** Nora sits still, her taped thumb pressing the walkie button twice, dead grass sways, the low sun flares slowly; locked-off camera. No cuts, no new objects.
 - **Voice:** From inside, two clicks. [pause] I clicked back. Every thirty seconds. [pause] Slower each time.
@@ -922,7 +933,7 @@
 - **References:** Fort Calder gate
 - **Notes:** Her pulse slowing.
 
-### Scene 115 · 14:06.5–14:13.5
+### Scene 116 · 14:17–14:24
 - **Image:** Close-up of a grey hand resting in the dead grass beside the black dictaphone, its red record light glowing, golden morning light
 - **Voice:** [tired] Hour seventy-two. Patient is… [long pause]
 - **SFX:** Wind through dry grass, the generator far away
@@ -930,39 +941,39 @@
 - **Title:** HOUR 72
 - **Notes:** [interrupt: her voice stops mid-sentence] Planned silence.
 
-### Scene 116 · 14:13.5–14:20
+### Scene 117 · 14:24–14:30.5
 - **Image:** Extreme close-up of the dictaphone's red record light glowing in shadow, the tape still turning behind its little window
 - **SFX:** A dictaphone motor whirring, wind
 - **SFX 2 (from 0s, 3.5s):** a slow human heartbeat, slowing, then stopping
 - **SFX 3 (from 5.2s, 1s):** a single deep heartbeat thud in silence
 - **Notes:** Her heart stops for four minutes, then restarts: she has turned. Planned silence.
 
-### Scene 117 · 14:20–14:24
+### Scene 118 · 14:30.5–14:34.5
 - **Image:** Inside a crowded canvas army medical tent, Eli alone sitting on a cot in the foreground, other cots and figures far behind him out of focus, a small cassette tape tucked in the pocket of his red rain jacket, soft morning light through the canvas
 - **SFX:** Tent canvas flapping, distant camp sounds, murmured voices
 - **Title:** HOUR 79
 - **Notes:** Her tape stays in his pocket, unplayed: saved for later.
 
-### Scene 118 · 14:24–14:29
+### Scene 119 · 14:34.5–14:39.5
 - **Image:** Close-up of Eli alone holding his yellow toy walkie-talkie to his lips with both hands (two hands), eyes red, soft morning light in the tent
 - **Voice:** [childlike tone] [whispers] Eli to Mom. Over.
 - **SFX:** Tent canvas flapping, distant camp sounds
 - **SFX 2 (at "Over", 0.5s):** a toy walkie-talkie squelch beep
 - **Notes:** Bookends Hour 0: "Eli to Mom, over."
 
-### Scene 119 · 14:29–14:32
+### Scene 120 · 14:39.5–14:42.5
 - **Image:** Extreme close-up of the yellow walkie-talkie's small light blinking on
 - **SFX:** Silence, then a walkie-talkie static hiss rising
 - **Notes:** [interrupt: static, then two clicks]
 
-### Scene 120 · 14:32–14:35.5
+### Scene 121 · 14:42.5–14:46
 - **Image:** Extreme close-up of Nora's grey hand at the fence line, white medical tape wrapped around a small blue toy walkie-talkie, her taped thumb twitching against the push-to-talk button, dead grass, golden morning light
 - **SFX:** Wind through dry grass, the generator far away
 - **SFX 2 (from 1s, 1s):** two crisp walkie-talkie clicks
 - **References:** Fort Calder gate
 - **Notes:** [close L6] A post-mortem spasm presses her taped thumb: two clicks.
 
-### Scene 121 · 14:35.5–14:41
+### Scene 122 · 14:46–14:51.5
 - **Image:** Close-up of Eli alone in the tent, smiling through tears, wiping his cheek with the back of one hand, the yellow walkie-talkie in his other hand, soft morning light
 - **Voice:** [childlike tone] [whispers] She's okay.
 - **SFX:** Tent canvas flapping, distant camp sounds
