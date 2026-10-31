@@ -52,10 +52,11 @@ illness, pregnancy), a rule you can't break (no noise, no light), a scarce resou
      (light against dark, warm against cold), and one accent colour (a red alert light) on the subject.
    - A visible question: a threat half-seen, a door, a gauge in the red, a face reacting to something
      out of frame.
-   - Must read on a phone at about 160 px wide: no small details, and no text in the generated image.
+   - 16:9 (1280×720), like the video. Must read on a phone at about 160 px wide: no small details, and no text in the generated image.
 4. **Thumbnail text** (optional, added in the edit): ≤ 3 words, a number or an ominous fragment ("DAY
    214", "DON'T OPEN IT"), never the title.
-5. **Title:** ≤ 55 characters, so it isn't cut off. It leads with the premise and a number; no
+5. **Title:** 60–70 characters, never more than 70: long enough for the premise, its number and a
+   hook, short enough to stay readable in search and suggested videos. It leads with the premise and a number; no
    ALL CAPS and no emoji clutter. The first person ("I", "We") increases identification in story
    niches.
 6. **The promise test:** write one line saying what a viewer expects after clicking. If the video
