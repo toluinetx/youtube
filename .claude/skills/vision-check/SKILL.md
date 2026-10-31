@@ -17,8 +17,10 @@ Everything goes through `vision.mjs` (the editor's API), run from the repository
 node .claude/skills/vision-check/vision.mjs list [which] [--all | --flagged] [--ids]
 node .claude/skills/vision-check/vision.mjs record <results.json>
 node .claude/skills/vision-check/vision.mjs choose <picture> <url>
-node .claude/skills/vision-check/vision.mjs regenerate <picture> [--feedback "problem" ...]
+node .claude/skills/vision-check/vision.mjs regenerate <picture> [--feedback-file <problems.json>]
 ```
+
+The same commands work in PowerShell, cmd and bash (forward slashes are fine on Windows).
 
 - `which`: scene numbers **as the editor shows them** (`3`, `63-74,83`); with `--ids`, scene ids.
 - `list` prints JSON: one entry per picture (a scene's own image is shot 1; its extra shots follow)
@@ -28,10 +30,12 @@ node .claude/skills/vision-check/vision.mjs regenerate <picture> [--feedback "pr
   By default it lists only pictures **you** haven't checked yet; `--flagged` lists those whose last
   check failed (Gemini's or yours); `--all` lists everything.
 - `record` saves verdicts: `[{ "url": "...", "issues": [...], "people": 1, "hands": 2, "attempts": 1 }]`.
-  An empty `issues` list means it passed. Write the file to a scratch path (`$TMPDIR` or `/tmp`), not the repo.
+  An empty `issues` list means it passed. Write the file with the Write tool to the system temp folder
+  (`$env:TEMP` in PowerShell, `/tmp` on macOS and Linux), not the repo.
 - `choose` switches a picture to another of its variants (one undo step in the editor).
 - `regenerate` makes a new picture (or a new set of variants), adding "An earlier attempt was
-  rejected for: …" with your `--feedback` (up to 5 short sentences) to the prompt, and prints the
+  rejected for: …" with the problems in `--feedback-file` (a JSON list of up to 5 short sentences, written
+  with the Write tool like the results file) to the prompt, and prints the
   picture's new entry. It can take minutes. It costs whatever an image costs with the scene's model:
   free with a local ComfyUI model, paid with Replicate or Gemini (`reference_model` is used whenever the
   scene has references).
@@ -86,7 +90,7 @@ a picture that a viewer would find wrong fails even if Gemini passed it.
    - Another variant passed: `choose` the first one that passed. Prefer one that also keeps continuity
      with the neighbouring pictures (same people, clothes, place).
    - Nothing passed: `choose` the variant with the fewest issues (if it isn't the one in use), then
-     `regenerate` with that variant's issues as `--feedback`. Read the new picture (and its new
+     `regenerate` with that variant's issues in a `--feedback-file`. Read the new picture (and its new
      variants), record verdicts with `"attempts"` set to the generation number (2, 3, …), and repeat
      until one passes or the retries run out.
 3. A picture that still fails after the retries is a prompt problem, not bad luck. Don't edit the
@@ -112,10 +116,13 @@ prompt change). The warnings are also visible in the editor under each picture.
 
 Claude Code can run this on the machine that hosts the editor, without anyone at the keyboard:
 
-```
-claude -p "/vision-check 63-74 --fix" \
-  --allowedTools "Read" "Write" "Agent" "Bash(node .claude/skills/vision-check/vision.mjs:*)"
+```powershell
+cd C:\path\to\youtube
+claude -p "/vision-check 63-74 --fix" --allowedTools "Read" "Write" "Agent" "Bash(node .claude/skills/vision-check/vision.mjs:*)" "PowerShell(node .claude/skills/vision-check/vision.mjs:*)"
 ```
 
-Run it from the repository root while the editor is running. A cron job or a script can do the
-same after a generation run (for example `claude -p "/vision-check --flagged --fix"`).
+Run it from the repository root while the editor is running. Both shell rules are listed because
+Claude Code on Windows runs commands through Git Bash or PowerShell, depending on the setup; the one
+that doesn't apply is ignored. To split the command over several lines in PowerShell, end each line
+with a backtick (`` ` ``), not a backslash. Windows Task Scheduler (or a script after a generation run) can run
+the same command, e.g. `claude -p "/vision-check --flagged --fix" …`.

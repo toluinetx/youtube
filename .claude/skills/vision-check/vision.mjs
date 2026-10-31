@@ -5,7 +5,7 @@
 //   node vision.mjs list [which] [--all | --flagged] [--ids]
 //   node vision.mjs record <results.json>
 //   node vision.mjs choose <picture> <url>
-//   node vision.mjs regenerate <picture> [--feedback "problem" ...]
+//   node vision.mjs regenerate <picture> [--feedback-file <problems.json>] [--feedback "problem" ...]
 //
 // which:    scene numbers as the editor shows them ("3", "63-74,83"), or scene ids with --ids. Default: all.
 // picture:  a key from `list`: "63" for a scene's own picture, "63:s_ab12cd34" for one of its shots.
@@ -13,6 +13,8 @@
 //           (by any checker); --all: every picture.
 // results:  [{ "url": "/media/images/…png", "issues": ["…"], "people": 1, "hands": 2, "attempts": 1 }]
 //           (an empty issues list means it passed).
+// problems: ["A second hand reaches in from the right edge.", "…"]. A file avoids quoting differences
+//           between PowerShell, cmd and bash. JSON files may be UTF-8 (with or without BOM) or UTF-16.
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
@@ -53,6 +55,20 @@ function call(method, route, body) {
     if (data) req.write(data);
     req.end();
   });
+}
+
+/** Read a JSON file written by any tool: UTF-8 with or without a BOM, or UTF-16 (Windows PowerShell's default). */
+function readJson(file) {
+  const buf = fs.readFileSync(file);
+  let text;
+  if (buf[0] === 0xff && buf[1] === 0xfe) text = buf.subarray(2).toString('utf16le');
+  else if (buf[0] === 0xfe && buf[1] === 0xff) text = Buffer.from(buf.subarray(2)).swap16().toString('utf16le');
+  else text = buf.toString('utf8').replace(/^\uFEFF/, '');
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    fail(`${file} isn't valid JSON: ${err.message}`);
+  }
 }
 
 function fail(message) {
@@ -131,7 +147,7 @@ async function list(args) {
 
 async function record([file]) {
   if (!file) fail('Usage: node vision.mjs record <results.json>');
-  const results = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const results = readJson(file);
   for (const r of Array.isArray(results) ? results : [results]) {
     const saved = await call('POST', '/api/image-check', { ...r, checker: 'claude' });
     console.log(`${saved.ok ? 'passed' : 'flagged'}  ${r.url}${saved.issues.length ? `  (${saved.issues.join(' ')})` : ''}`);
@@ -161,7 +177,13 @@ async function choose([key, url]) {
 
 async function regenerate([key, ...rest]) {
   const feedback = [];
-  for (let i = 0; i < rest.length; i++) if (rest[i] === '--feedback' && rest[i + 1]) feedback.push(rest[++i]);
+  for (let i = 0; i < rest.length; i++) {
+    if (rest[i] === '--feedback' && rest[i + 1]) feedback.push(rest[++i]);
+    else if (rest[i] === '--feedback-file' && rest[i + 1]) {
+      const list = readJson(rest[++i]);
+      feedback.push(...(Array.isArray(list) ? list : list.issues || []).map(String));
+    }
+  }
   const { p } = await find(key);
   const shotId = key.includes(':') ? key.split(':')[1] : null;
   const route = shotId ? `/api/scene/${p.scene_id}/shots/${shotId}/generate` : `/api/scene/${p.scene_id}/regenerate-image`;
