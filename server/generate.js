@@ -230,7 +230,7 @@ const IMAGE_GUARDRAILS =
  * Resolves with { model, images: [{ buffer, ext, check }] }, where check is { ok, issues, people, hands,
  * attempts }, { error } if the check itself failed, or null if it's off.
  */
-async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = false } = {}) {
+async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = false, feedback = [] } = {}) {
   const { settings } = sb;
   // Scene references, then project ones, then style images, then the previous shot (dropped first if
   // the model takes fewer). An image that's both a reference and a style image is sent once, as style.
@@ -279,7 +279,8 @@ async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = 
   async function picture(n) {
     const pictureParams = n && seeded ? { ...params, seed: Number(params.seed) + n } : params;
     let best = null;
-    let problems = [];
+    // Problems an outside check (e.g. the vision-check skill) found in the picture this one replaces.
+    let problems = [...feedback];
     for (let attempt = 1; attempt <= tries; attempt++) {
       const retrying = problems.length > 0 && withoutPrevious.length > 0 && withoutPrevious.length < refs.length;
       const { refs: sent, basePrompt, references } = retrying ? (retryInputs ??= await inputsFor(withoutPrevious)) : first;
@@ -348,6 +349,40 @@ const bufferDataUri = (buffer, ext) => `data:${MIME[ext] || 'image/png'};base64,
 /** What's stored with a picture about its check: kept with its url, so a replaced picture's is ignored. */
 const checkRecord = (check, url) => (check ? { url, ...check } : null);
 
+/** Problems to avoid, from an outside check: up to 5 short sentences. */
+const cleanFeedback = (feedback) =>
+  (Array.isArray(feedback) ? feedback : []).map((t) => String(t).trim().slice(0, 300)).filter(Boolean).slice(0, 5);
+
+/**
+ * Record a check made outside the app (the vision-check skill: Claude Code looking at the picture) on
+ * the picture at `url`: on its library variant and on every scene or shot showing it, so it carries
+ * over when that variant is chosen. `check` is { ok, issues, people, hands, attempts, checker }.
+ */
+export async function recordImageCheck(url, check) {
+  if (!mediaUrlToPath(url)) throw badRequest('url must be a /media/ picture of the open project');
+  const issues = cleanFeedback(check.issues);
+  const record = {
+    url,
+    ok: issues.length === 0,
+    issues,
+    people: Number.isFinite(Number(check.people)) && check.people !== null ? Number(check.people) : null,
+    hands: Number.isFinite(Number(check.hands)) && check.hands !== null ? Number(check.hands) : null,
+    attempts: Math.max(1, Math.round(Number(check.attempts) || 1)),
+    checker: String(check.checker || 'claude').slice(0, 40),
+  };
+  return updateStoryboard((sb) => {
+    let found = 0;
+    for (const asset of sb.library) {
+      for (const v of asset.variants || []) if (v.url === url) { v.image_check = record; found++; }
+    }
+    for (const s of sb.scenes) {
+      for (const slot of [s, ...(s.shots || [])]) if (slot.image_url === url) { slot.image_check = record; found++; }
+    }
+    if (!found) throw Object.assign(new Error('No scene, shot or variant uses that picture'), { status: 404 });
+    return record;
+  }, { label: 'Record image check', key: `image-check:${url}` });
+}
+
 /**
  * Use another of a library image's variants (`url`) instead of the one it shows now: in the library
  * entry and wherever that picture is used (scenes and shots), as one undo step. Resolves with the entry.
@@ -414,12 +449,12 @@ export async function generateReferenceImage({ name, prompt, forEveryScene, base
   return { asset, check };
 }
 
-export async function generateSceneImage(sceneId) {
+export async function generateSceneImage(sceneId, { feedback } = {}) {
   const sb = await readStoryboard();
   const scene = findScene(sb, sceneId);
   if (!scene.image_prompt.trim()) throw badRequest('This scene has no image prompt');
 
-  const { model, images } = await generateImagesFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene), { variants: true });
+  const { model, images } = await generateImagesFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene), { variants: true, feedback: cleanFeedback(feedback) });
   const { file, url, check, variants } = await saveImages(scene.scene_id, images);
   const media = { file, kind: 'image', type: 'image', prompt: scene.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {
@@ -555,7 +590,7 @@ export function findShot(scene, shotId) {
 }
 
 /** Generate the picture of an extra shot, continuing from the picture shown just before it. */
-export async function generateSceneShotImage(sceneId, shotId) {
+export async function generateSceneShotImage(sceneId, shotId, { feedback } = {}) {
   const sb = await readStoryboard();
   const scene = findScene(sb, sceneId);
   const shot = findShot(scene, shotId);
@@ -570,7 +605,7 @@ export async function generateSceneShotImage(sceneId, shotId) {
     : scene.use_previous_scene !== false ? { label: 'Previous shot (the picture just before this one)', ...before } : null);
   // With its own references, the shot is made as if the scene had those.
   const asScene = shot.reference_asset_ids ? { ...scene, reference_asset_ids: shot.reference_asset_ids } : scene;
-  const { model, images } = await generateImagesFor(sb, asScene, shot.image_prompt.trim(), previous, { variants: true });
+  const { model, images } = await generateImagesFor(sb, asScene, shot.image_prompt.trim(), previous, { variants: true, feedback: cleanFeedback(feedback) });
   const { file, url, check, variants } = await saveImages(scene.scene_id, images);
   const media = { file, kind: 'image', type: 'image', prompt: shot.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {

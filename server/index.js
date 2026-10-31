@@ -12,7 +12,7 @@ import { historyState } from './history.js';
 import { requestContext, subscribe } from './events.js';
 import { createProject, initProjects, listProjects, openProject, trackBusy } from './projects.js';
 import {
-  GENERATORS, chooseImageVariant, generateAmbience, generateMusic, generateReferenceImage, generateSceneShotImage, generateSceneSfxLayer, generateSceneVideo,
+  GENERATORS, chooseImageVariant, generateAmbience, generateMusic, generateReferenceImage, generateSceneShotImage, recordImageCheck, generateSceneSfxLayer, generateSceneVideo,
   imageReferenceCapacity,
 } from './generate.js';
 import { CAPTION_MODES, CAPTION_POSITIONS, LOOKS, SHAKES } from './finish.js';
@@ -600,12 +600,17 @@ for (const [route, kind] of Object.entries(routes)) {
     // Optionally save edited prompt text in the same request.
     const patch = sanitizeScenePatch(req.body || {});
     if (Object.keys(patch).length) await updateStoryboard((sb) => applyScenePatch(findScene(sb, req.params.id), patch), sceneEditHistory(req.params.id, patch));
-    res.json(await GENERATORS[kind].fn(req.params.id));
+    // An image can be regenerated with the problems an outside check found ({ feedback: [...] }).
+    res.json(await GENERATORS[kind].fn(req.params.id, kind === 'image' ? { feedback: req.body?.feedback } : undefined));
   });
 }
 
 // Generate the picture of one of a scene's extra shots.
-app.post('/api/scene/:id/shots/:shotId/generate', async (req, res) => res.json(await generateSceneShotImage(req.params.id, req.params.shotId)));
+app.post('/api/scene/:id/shots/:shotId/generate', async (req, res) =>
+  res.json(await generateSceneShotImage(req.params.id, req.params.shotId, { feedback: req.body?.feedback })));
+
+// Record a check made outside the app (the vision-check skill) on a picture: { url, issues, people, hands, attempts, checker }.
+app.post('/api/image-check', async (req, res) => res.json(await recordImageCheck(String(req.body?.url || ''), req.body || {})));
 
 // Generate one of a scene's extra sound effect layers.
 app.post('/api/scene/:id/sfx-layers/:layerId/generate', async (req, res) => res.json(await generateSceneSfxLayer(req.params.id, req.params.layerId)));

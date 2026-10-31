@@ -912,7 +912,8 @@ function ImageCheck({ check, url }) {
         <span>The image check couldn't run: {check.error}</span>
       ) : (
         <span>
-          Still has problems after {check.attempts} {check.attempts === 1 ? 'try' : 'tries'}: {check.issues.join(' ')} Edit the prompt
+          {check.checker === 'claude' ? "Claude's check: still" : 'Still'} has problems after {check.attempts}{' '}
+          {check.attempts === 1 ? 'try' : 'tries'}: {check.issues.join(' ')} Edit the prompt
           (say who is in the frame and how many hands) and regenerate.
         </span>
       )}

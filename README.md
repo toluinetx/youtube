@@ -72,6 +72,15 @@ survival, 12 minutes"*). It works like a head writer, stopping for your choice a
 It then hands the script to `timeline-generation`. The psychology behind each rule is in
 [`.claude/skills/storyboard/playbook.md`](.claude/skills/storyboard/playbook.md).
 
+**Picture checks with Claude (`vision-check` skill).** Instead of (or as well as) the Gemini image check, Claude Code
+can look at the generated pictures itself: *"/vision-check 63-74"* checks those scenes' pictures and every variant
+against their image prompts (extra or missing hands and people, a missing subject, night instead of day) and records
+the verdicts in the editor, where failures show the usual warning under the picture. Add `--fix` to have it pick a
+passing variant or regenerate failures (up to `--retries N`, default 2), telling the image model what was wrong.
+It runs on the machine that hosts the editor, since it reads the picture files. Unattended, from the repository root:
+`claude -p "/vision-check --flagged --fix" --allowedTools "Read" "Write" "Agent" "Bash(node .claude/skills/vision-check/vision.mjs:*)"`.
+It uses `POST /api/image-check` to record a verdict and passes `{ "feedback": [...] }` to the regenerate routes.
+
 **Story-channel production.** The template's *Writing like a director* and *Presets* (e.g. **survival horror**) set
 up the whole pipeline in one go:
 - A **Cast & locations** list. Once you approve it and its estimated cost, Claude generates a turnaround sheet per
