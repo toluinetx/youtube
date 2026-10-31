@@ -76,6 +76,12 @@ export const api = {
   useAsset: (sceneId, assetId, slot, into = {}) =>
     request('POST', `/api/scene/${sceneId}/use-asset`, { asset_id: assetId, slot, layer_id: into.layerId, shot_id: into.shotId }),
   generateShot: (sceneId, shotId) => request('POST', `/api/scene/${sceneId}/shots/${shotId}/generate`),
+  // Claude Code (on the editor's machine) scores the picture; under the pass mark it's replaced or regenerated.
+  // The continuity bible (characters, props, places).
+  putContinuity: (list) => request('PUT', '/api/continuity', { continuity: list }),
+  sceneContinuity: (sceneId, shotId) => request('GET', `/api/scene/${sceneId}/continuity${shotId ? `?shot_id=${encodeURIComponent(shotId)}` : ''}`),
+  generateContinuityView: (entryId, viewId) => request('POST', `/api/continuity/${entryId}/views/${viewId}/generate`),
+  checkWithClaude: (sceneId, shotId) => request('POST', `/api/scene/${sceneId}/claude-check`, shotId ? { shot_id: shotId } : {}),
   generateSfxLayer: (sceneId, layerId) => request('POST', `/api/scene/${sceneId}/sfx-layers/${layerId}/generate`),
   sceneFromAsset: (assetId, index) => request('POST', '/api/scenes/from-asset', { asset_id: assetId, index }),
   renameAsset: (assetId, name) => request('PATCH', `/api/library/${assetId}`, { name }),

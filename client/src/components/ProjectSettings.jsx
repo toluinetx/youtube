@@ -6,6 +6,7 @@ import ReferenceList from './ReferenceList.jsx';
 import { ImageModelControl, SfxModelControl, SpeakersControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
 
 export default function ProjectSettings({ settings, onChange, status, library, onRequestSnapshot, onUploadFiles }) {
+  const claudeCheck = /^claude(?::|$)/.test(settings.image_check_model || '');
   return (
     <div className="space-y-5 px-4 py-4">
       <Field label="Video title">
@@ -66,19 +67,63 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             <input
               type="number"
               min={0}
-              max={5}
+              max={10}
               className="field inline-block !w-12 !px-1.5 !py-0 text-center"
               value={settings.image_check_retries}
               disabled={!settings.image_check}
-              onChange={(e) => onChange({ image_check_retries: Math.min(5, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
+              onChange={(e) => onChange({ image_check_retries: Math.min(10, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
             />{' '}
             times
             <span className="block text-[11px] text-zinc-600">
-              A Gemini vision model looks for extra hands or people and a missing subject. Each retry costs another image.
-              {status && !status.gemini && ' Needs GEMINI_API_KEY in .env; skipped until then.'}
+              {claudeCheck
+                ? `Claude Code on this machine scores each picture for adherence, logic and quality (an extra hand caps it at 35%). Under the pass mark, the image model makes it again, told what was wrong. Each retry costs another image (free with local models).`
+                : 'A Gemini vision model looks for extra hands or people and a missing subject. Each retry costs another image.'}
+              {' '}Retries stop early when two in a row don't improve on the best so far.
+              {status && claudeCheck && !status.claude && " Claude Code isn't available here: install it and sign in, then restart the editor."}
+              {status && !claudeCheck && !status.gemini && ' Needs GEMINI_API_KEY in .env; skipped until then.'}
             </span>
           </span>
         </label>
+        <div className="-mt-1 ml-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-zinc-300">
+          <label className="flex items-center gap-1.5">
+            Checked by
+            <select
+              className="field !w-auto !py-0.5"
+              value={claudeCheck ? 'claude' : 'gemini'}
+              onChange={(e) => onChange({ image_check_model: e.target.value === 'claude' ? 'claude' : 'gemini:gemini-flash-latest' })}
+            >
+              <option value="gemini">Gemini</option>
+              <option value="claude">Claude Code (this machine)</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5" title="Retries also stop early when two in a row don't improve on the best so far.">
+            give up after
+            <input
+              type="number"
+              min={0}
+              max={600}
+              className="field inline-block !w-14 !px-1.5 !py-0 text-center"
+              value={settings.image_check_time_limit_min ?? 0}
+              disabled={!settings.image_check}
+              onChange={(e) => onChange({ image_check_time_limit_min: Math.min(600, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
+            />
+            min per picture (0: no limit)
+          </label>
+          {claudeCheck && (
+            <label className="flex items-center gap-1.5">
+              pass mark
+              <input
+                type="number"
+                min={0}
+                max={100}
+                className="field inline-block !w-14 !px-1.5 !py-0 text-center"
+                value={settings.image_check_threshold ?? 80}
+                onChange={(e) => onChange({ image_check_threshold: Math.min(100, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
+              />
+              %
+            </label>
+          )}
+        </div>
         <div className="text-xs text-zinc-300">
           Make{' '}
           <input
@@ -91,8 +136,24 @@ export default function ProjectSettings({ settings, onChange, status, library, o
           />{' '}
           variants of each image with local (ComfyUI) models
           <span className="block text-[11px] text-zinc-600">
-            Pick the one to use on the timeline. Each variant is checked once instead of retried.
+            Pick the one to use on the timeline. Every variant is checked.
           </span>
+          <label className="mt-1.5 flex items-start gap-2">
+            <input
+              type="checkbox"
+              className="mt-0.5 accent-amber-400"
+              checked={settings.image_check_all_variants !== false}
+              disabled={!settings.image_check}
+              onChange={(e) => onChange({ image_check_all_variants: e.target.checked })}
+            />
+            <span>
+              All variants must pass the check
+              <span className="block text-[11px] text-zinc-600">
+                On: the ones that fail are made again (told what was wrong) until every variant passes, within the retries. Off: stop as
+                soon as one passes.
+              </span>
+            </span>
+          </label>
           <label className="mt-1.5 flex items-start gap-2">
             <input
               type="checkbox"

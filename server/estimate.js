@@ -44,7 +44,8 @@ export async function costEstimator(settings) {
       const variants = imageVariantCount(settings, picture.model);
       const times = (usd) => ({ ...picture, variants, usd: usd == null ? null : usd * variants });
       const checkModel = settings.image_check ? settings.image_check_model : null;
-      if (!checkModel || picture.usd == null) return times(picture.usd);
+      // A Claude Code check runs on the user's own Claude plan: not priced here.
+      if (!checkModel || picture.usd == null || /^claude(?::|$)/.test(checkModel)) return times(picture.usd);
       const p = table[checkModel];
       if (!p) return { ...picture, variants, usd: missing(checkModel) };
       return times(picture.usd + perM(CHECK_INPUT_TOKENS, p.input) + perM(CHECK_OUTPUT_TOKENS, p.text_output));

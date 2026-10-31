@@ -602,11 +602,19 @@ function VariantPicker({ scenes, sceneId, stacks, busy, onChoose }) {
                     onClick={() => !chosen && onChoose?.(asset.asset_id, v.url)}
                     className={`relative h-16 shrink-0 overflow-hidden rounded ${chosen ? 'ring-2 ring-indigo-400' : 'opacity-75 ring-1 ring-white/10 hover:opacity-100 hover:ring-white/40'}`}
                     style={{ aspectRatio: '16 / 9' }}
-                    title={`Variant ${n + 1}${chosen ? ' (in use)' : ', click to use it'}${issues.length ? `\nCheck found: ${issues.join(' ')}` : v.image_check?.ok ? '\nPassed the check' : ''}`}
+                    title={`Variant ${n + 1}${chosen ? ' (in use)' : ', click to use it'}${v.image_check?.score != null ? `\nClaude: ${v.image_check.score}%` : ''}${issues.length ? `\nCheck found: ${issues.join(' ')}` : v.image_check?.ok ? '\nPassed the check' : ''}`}
                   >
                     <img src={v.url} alt={`Variant ${n + 1}`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
                     <span className="absolute top-0.5 left-0.5 rounded bg-black/65 px-1 text-[9px] leading-3.5 font-semibold text-white tabular-nums">{n + 1}</span>
-                    {issues.length > 0 && <span className="absolute top-1 right-1 size-1.5 rounded-full bg-amber-400" />}
+                    {v.image_check?.score != null ? (
+                      <span
+                        className={`absolute right-0.5 bottom-0.5 rounded px-1 text-[9px] leading-3.5 font-semibold tabular-nums ${v.image_check.ok ? 'bg-emerald-600/85 text-white' : 'bg-amber-500/90 text-black'}`}
+                      >
+                        {v.image_check.score}%
+                      </span>
+                    ) : (
+                      issues.length > 0 && <span className="absolute top-1 right-1 size-1.5 rounded-full bg-amber-400" />
+                    )}
                   </button>
                 );
               })}
