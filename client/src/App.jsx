@@ -13,6 +13,7 @@ import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
 import ProjectSettings, { AmbienceSettings, MusicSettings } from './components/ProjectSettings.jsx';
 import LeftPanel from './components/LeftPanel.jsx';
+import ContinuityPanel from './components/ContinuityPanel.jsx';
 import PanelResizer from './components/PanelResizer.jsx';
 import { ModelCatalogProvider } from './components/ModelControls.jsx';
 import ScriptImport from './components/ScriptImport.jsx';
@@ -53,7 +54,7 @@ function withServerMedia(local = [], server = [], localPending, idKey, mediaKeys
 
 const MEDIA_FIELDS = [
   'image_url', 'voiceover_url', 'sfx_url', 'voiceover_duration_sec', 'sfx_duration_sec',
-  'video_url', 'video_thumb_url', 'video_duration_sec', 'video_has_audio', 'video_start_sec', 'source_names',
+  'video_url', 'video_thumb_url', 'video_duration_sec', 'video_has_audio', 'video_start_sec', 'source_names', 'image_check',
 ];
 
 export default function App() {
@@ -166,8 +167,16 @@ export default function App() {
     [],
   );
 
+  // Continuity edits not saved yet: kept over what the server sends until they are.
+  const continuityPending = useRef(null);
+  const continuityTimer = useRef(null);
   const applyServer = useCallback(
-    (data) => setSb({ ...data, scenes: data.scenes.map(overlayLocal), settings: { ...data.settings, ...pending.current.settings } }),
+    (data) => setSb({
+      ...data,
+      scenes: data.scenes.map(overlayLocal),
+      settings: { ...data.settings, ...pending.current.settings },
+      continuity: continuityPending.current ?? data.continuity ?? [],
+    }),
     [overlayLocal],
   );
 
@@ -207,6 +216,52 @@ export default function App() {
       queueSave(id, patch);
     },
     [queueSave],
+  );
+
+  /** Edit the continuity bible; saved as a whole a moment after the last change. */
+  const changeContinuity = useCallback(
+    (list) => {
+      continuityPending.current = list;
+      setSb((prev) => ({ ...prev, continuity: list }));
+      clearTimeout(continuityTimer.current);
+      continuityTimer.current = setTimeout(async () => {
+        const sent = continuityPending.current;
+        try {
+          await api.putContinuity(sent);
+        } catch (err) {
+          notify(`Save failed: ${err.message}`);
+        } finally {
+          if (continuityPending.current === sent) continuityPending.current = null;
+        }
+      }, SAVE_DELAY_MS);
+    },
+    [notify],
+  );
+  const [busyViews, setBusyViews] = useState(() => new Set());
+  /** Generate one reference view of a continuity entry (after saving pending edits to it). */
+  const generateContinuityView = useCallback(
+    async (entryId, viewId) => {
+      setBusyViews((b) => new Set(b).add(viewId));
+      try {
+        if (continuityPending.current) {
+          clearTimeout(continuityTimer.current);
+          await api.putContinuity(continuityPending.current);
+          continuityPending.current = null;
+        }
+        const { check } = await api.generateContinuityView(entryId, viewId);
+        applyServer(await api.storyboard());
+        if (check && check.ok === false) notify(`Generated, but the check found: ${(check.issues || []).join(' ') || check.error || 'problems'}`);
+      } catch (err) {
+        notify(`Couldn't generate it: ${err.message}`);
+      } finally {
+        setBusyViews((b) => {
+          const next = new Set(b);
+          next.delete(viewId);
+          return next;
+        });
+      }
+    },
+    [applyServer, notify],
   );
 
   const patchSettings = useCallback(
@@ -401,7 +456,7 @@ export default function App() {
                 ...s,
                 ...media,
                 sfx_layers: withServerMedia(s.sfx_layers, scene.sfx_layers, Boolean(pending.current[id]?.sfx_layers), 'layer_id', ['url', 'duration_sec', 'source_name']),
-                shots: withServerMedia(s.shots, scene.shots, Boolean(pending.current[id]?.shots), 'shot_id', ['image_url', 'source_name']),
+                shots: withServerMedia(s.shots, scene.shots, Boolean(pending.current[id]?.shots), 'shot_id', ['image_url', 'source_name', 'image_check']),
                 duration_sec: pending.current[id]?.duration_sec ?? scene.duration_sec,
               }
               : s,
@@ -433,6 +488,8 @@ export default function App() {
     });
   // Extra shots are busy under "shot:<shot id>".
   const generateShot = (sceneId, shotId) => mediaAction(sceneId, `shot:${shotId}`, () => api.generateShot(sceneId, shotId));
+  // Busy in the picture's own slot while Claude scores it (and the image model redoes it if it fails).
+  const checkWithClaude = (sceneId, shotId) => mediaAction(sceneId, shotId ? `shot:${shotId}` : 'image', () => api.checkWithClaude(sceneId, shotId));
   const uploadShot = (sceneId, shotId, file) =>
     mediaAction(sceneId, `shot:${shotId}`, async () => {
       const asset = await uploadOne(file);
@@ -1040,6 +1097,17 @@ export default function App() {
               onAssetMenu={(e, asset) => openMenu(e, assetMenuItems(asset))}
             />
           }
+          continuity={
+            <ContinuityPanel
+              continuity={sb.continuity || []}
+              scenes={scenes}
+              library={library}
+              busyViews={busyViews}
+              onChange={changeContinuity}
+              onGenerateView={generateContinuityView}
+            />
+          }
+          continuityCount={(sb.continuity || []).length}
           project={
             <ProjectSettings
               settings={sb.settings}
@@ -1185,6 +1253,10 @@ export default function App() {
                 onGenerateSfxLayer={(layerId) => generateSfxLayer(selected.scene_id, layerId)}
                 onUploadSfxLayer={(layerId, file) => uploadSfxLayer(selected.scene_id, layerId, file)}
                 onGenerateShot={(shotId) => generateShot(selected.scene_id, shotId)}
+                claudeReady={Boolean(status?.claude)}
+                continuity={sb.continuity || []}
+                scenes={scenes}
+                onCheckWithClaude={(shotId) => checkWithClaude(selected.scene_id, shotId)}
                 onUploadShot={(shotId, file) => uploadShot(selected.scene_id, shotId, file)}
                 onUpload={(slot, file) => uploadAndUse(selected.scene_id, slot, file)}
                 onClear={(slot) => clearSlot(selected.scene_id, slot)}

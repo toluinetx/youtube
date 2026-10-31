@@ -1,3 +1,4 @@
+import { newEntry } from './continuity.js';
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import { PROJECT_DIR, PROJECT_ID, STORYBOARD_PATH } from './paths.js';
@@ -30,6 +31,16 @@ export const DEFAULT_SETTINGS = {
   image_check: true,
   image_check_model: 'gemini:gemini-flash-latest',
   image_check_retries: 2,
+  // "claude" (or "claude:<model>") as image_check_model runs Claude Code on this machine instead: it scores
+  // each picture 0-100 for adherence, logic and quality (an extra hand caps it at 35), and anything under
+  // this pass mark goes back to the image model.
+  image_check_threshold: 80,
+  // With several variants per picture: keep making the missing ones until every variant passes the check
+  // (within the retries). Off: stop as soon as one passes.
+  image_check_all_variants: true,
+  // Give up retrying a picture after this many minutes (0: no limit). Retries also stop early when two passes
+  // in a row don't improve on the best so far.
+  image_check_time_limit_min: 0,
   // Pictures made per scene / shot image, to pick from on the timeline. Free (local ComfyUI) models only,
   // unless image_variants_paid: each variant from a paid model costs as much as one image.
   image_variants: 6,
@@ -228,13 +239,17 @@ export function newShot(fields = {}) {
     // Its own reference images (library asset ids), e.g. only the character this picture shows;
     // null = the scene's. The project's every-scene references and style images are added either way.
     reference_asset_ids: null,
+    // Continuity entries (see continuity.js) to apply to this picture even if its prompt doesn't name
+    // them, and ones to leave out even if it does ("Eli's empty booster seat" doesn't show Eli).
+    continuity_include: [],
+    continuity_exclude: [],
     source_name: null, // original filename when imported
     ...fields,
   };
 }
 
 /** Fields of a shot that edits may change; its picture only changes by generating or importing. */
-export const SHOT_EDITABLE = ['image_prompt', 'motion', 'start_sec', 'cue', 'continues', 'reference_asset_ids'];
+export const SHOT_EDITABLE = ['image_prompt', 'motion', 'start_sec', 'cue', 'continues', 'reference_asset_ids', 'continuity_include', 'continuity_exclude'];
 
 /** At most this many pictures per scene (its own image plus extra shots). */
 export const MAX_SHOTS = 4;
@@ -288,6 +303,12 @@ export function newScene(id, fields = {}) {
     use_previous_scene: true,
     motion: null, // camera motion for the image (one of MOTIONS); null = the project's
     shake: null, // camera shake on export for tense moments: null, 'light' or 'heavy'
+    // Continuity entries to add to / leave out of this scene's own picture (see newShot for shots).
+    continuity_include: [],
+    continuity_exclude: [],
+    // For a flash-forward or flashback: the scene whose point in the story this one shows, so the
+    // continuity states (the cuffs on the wheel, the soaked bandage) are those of that scene. null = its own.
+    continuity_at: null,
     // Big on-screen text shown for the first seconds of the scene on export (e.g. "DAY 12").
     title_text: '',
     // Free-form notes for the editor (e.g. "import the drone clip here"); never sent to a generator.
@@ -387,7 +408,9 @@ function normalize(sb) {
   const library = Array.isArray(sb.library) ? sb.library : [];
   // Ambience beds (see newAmbience), shared by the scenes that pick them.
   const ambience = Array.isArray(sb.ambience) ? sb.ambience.map((a) => newAmbience(a)) : [];
-  return { settings, scenes, library, ambience };
+  // The continuity bible: characters, props and places, how they look and where they are (continuity.js).
+  const continuity = Array.isArray(sb.continuity) ? sb.continuity.map((e) => newEntry(e)) : [];
+  return { settings, scenes, library, ambience, continuity };
 }
 
 export async function readStoryboard() {

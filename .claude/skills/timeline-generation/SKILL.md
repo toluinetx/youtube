@@ -188,8 +188,9 @@ Report problems as a short list and ask how to fix each. Don't silently change t
 
 When the user asks you to turn a story (or notes, an article, an outline) into a timeline:
 1. **Ask first** about anything that decides the result and isn't given: target length or number of
-   scenes, format (16:9 / 9:16), visual style (offer a preset when the genre fits, e.g. *survival
-   horror*), and whether to use **audio tags**. Tags need the Eleven v4 / v3 voice model. Recommend
+   scenes, visual style (offer a preset when the genre fits, e.g. *survival
+   horror*), and whether to use **audio tags**. Don't ask about the format: it's always YouTube 16:9
+   (`aspect_ratio: "16:9"`) unless the user explicitly asks for another. Tags need the Eleven v4 / v3 voice model. Recommend
    Eleven v4 when the story is narrative or dramatic.
 2. **Cast & locations first.** List the recurring characters (2+ scenes) and places (3+ scenes) with
    a full description each, as in the template's *Cast & locations*. Every scene prompt then calls
