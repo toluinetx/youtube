@@ -51,7 +51,9 @@ The same commands work in PowerShell, cmd and bash (forward slashes are fine on 
 - No scenes: the whole project. Scene numbers as in the editor.
 - Without `--fix`: **check only**. Record verdicts and report; don't choose or regenerate anything.
 - `--fix` (or the user asks to fix, regenerate or "make them pass"): choose passing variants and
-  regenerate failures, up to `--retries` new generations per picture (default 2, at most 5).
+  regenerate failures, up to `--retries` new generations per picture (default 2, at most 10). Stop
+  early when two generations in a row don't improve on the best so far (more passing variants, or a
+  higher best score): more of the same rarely helps, a prompt change does.
 - If the user didn't say, check only, then offer to fix.
 
 ## 1. Before you start

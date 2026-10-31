@@ -37,6 +37,9 @@ export const DEFAULT_SETTINGS = {
   // With several variants per picture: keep making the missing ones until every variant passes the check
   // (within the retries). Off: stop as soon as one passes.
   image_check_all_variants: true,
+  // Give up retrying a picture after this many minutes (0: no limit). Retries also stop early when two passes
+  // in a row don't improve on the best so far.
+  image_check_time_limit_min: 0,
   // Pictures made per scene / shot image, to pick from on the timeline. Free (local ComfyUI) models only,
   // unless image_variants_paid: each variant from a paid model costs as much as one image.
   image_variants: 6,

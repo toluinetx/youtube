@@ -19,9 +19,11 @@
     "image_guardrails": true,
     "image_check": true,
     "image_check_model": "claude",
-    "image_check_retries": 2,
+    "image_check_retries": 10,
     "image_check_threshold": 80,
-    "image_variants": 3,
+    "image_check_all_variants": true,
+    "image_check_time_limit_min": 0,
+    "image_variants": 6,
     "image_variants_paid": false,
     "voice_id": "Gsndh0O5AnuI2Hj3YUlA",
     "voices": [

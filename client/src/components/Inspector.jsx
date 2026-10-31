@@ -918,6 +918,7 @@ function ImageCheck({ check, url, passMark = 80, claudeReady, busy, onCheck }) {
   const scored = current?.score != null;
   const mark = current?.threshold ?? passMark;
   const passes = (n) => `${n} ${n === 1 ? 'pass' : 'passes'}`;
+  const why = { stalled: ', stopped when two passes in a row brought no improvement', time: ', stopped at the time limit' }[current?.stopped] || '';
   const subscores = scored && current.scores
     ? ` (adherence ${current.scores.adherence}, logic ${current.scores.logic}, quality ${current.scores.quality})`
     : '';
@@ -930,7 +931,7 @@ function ImageCheck({ check, url, passMark = 80, claudeReady, busy, onCheck }) {
             <span>The image check couldn't run: {current.error}</span>
           ) : scored ? (
             <span title={subscores.trim()}>
-              Claude scored this <b>{current.score}%</b> (pass mark {mark}%) after {passes(current.attempts || 1)}: {current.issues.join(' ')}{' '}
+              Claude scored this <b>{current.score}%</b> (pass mark {mark}%) after {passes(current.attempts || 1)}{why}: {current.issues.join(' ')}{' '}
               Edit the prompt (say who is in the frame and how many hands) and check again.
             </span>
           ) : (

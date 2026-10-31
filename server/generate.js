@@ -230,14 +230,16 @@ const IMAGE_GUARDRAILS =
 function imageChecker(settings, override = null) {
   const model = (override?.model ?? settings.image_check_model)?.trim();
   if (!(override || settings.image_check) || !model) return null;
-  const retries = Math.min(5, Math.max(0, Math.round(Number(override?.retries ?? settings.image_check_retries) || 0)));
+  const retries = Math.min(MAX_CHECK_RETRIES, Math.max(0, Math.round(Number(override?.retries ?? settings.image_check_retries) || 0)));
+  // Give up on a picture after this many minutes of passes (0: no limit).
+  const timeLimitMs = Math.max(0, Number(settings.image_check_time_limit_min) || 0) * 60_000;
   // With several variants per picture: keep making more until every one of them passes (else until one does).
   const allVariants = settings.image_check_all_variants !== false;
   if (isClaudeCheck(model)) {
     const threshold = Math.min(100, Math.max(0, Math.round(Number(settings.image_check_threshold ?? 80))));
-    return { kind: 'claude', model, retries, threshold, allVariants };
+    return { kind: 'claude', model, retries, threshold, allVariants, timeLimitMs };
   }
-  return hasGeminiKey() ? { kind: 'gemini', model, retries, allVariants } : null;
+  return hasGeminiKey() ? { kind: 'gemini', model, retries, allVariants, timeLimitMs } : null;
 }
 
 /** Look at one picture with `checker`, recording its usage. Resolves with a check record. */
@@ -252,6 +254,11 @@ async function runCheck(checker, { buffer, ext, file }, brief, sceneId) {
   recordUsage({ provider: 'gemini', kind: 'image check', model: checker.model, scene_id: sceneId, units: usage });
   return result;
 }
+
+/** Most retries a project can set. Passes also stop early when they stop helping (STALL_ROUNDS). */
+export const MAX_CHECK_RETRIES = 10;
+/** Stop retrying after this many passes in a row that didn't improve on the best so far. */
+const STALL_ROUNDS = 2;
 
 /**
  * What the failed pictures got wrong, worst first (an extra hand before a missing prop), each problem
@@ -365,7 +372,25 @@ async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = 
   const wanted = checker?.allVariants ? count : 1;
   let problems = [...feedback];
   let ran = 0;
-  for (let pass = 1; pass <= passes && passed() < wanted; pass++) {
+  // Progress: more pictures passing, else a better best score among the ones that failed. Passes stop
+  // when STALL_ROUNDS of them in a row bring none, or when the time limit is up.
+  const progress = () => {
+    const failing = all.filter((i) => !i.check?.ok).map((i) => checkRank(i.check));
+    return passed() * 100_000 + (failing.length ? Math.max(...failing) : 0);
+  };
+  let best = checker && all.length ? progress() : -Infinity;
+  let stalled = 0;
+  let stopped = 'retries';
+  const started = Date.now();
+  for (let pass = 1; pass <= passes; pass++) {
+    if (passed() >= wanted) {
+      stopped = null;
+      break;
+    }
+    if (pass > 1 && checker?.timeLimitMs && Date.now() - started > checker.timeLimitMs) {
+      stopped = 'time';
+      break;
+    }
     ran = pass;
     // Only as many as are still missing (all of them on the first pass, or without a check).
     const make = checker?.allVariants ? count - passed() : count;
@@ -380,17 +405,26 @@ async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = 
     all.push(...made);
     // No check, or one that couldn't run: nothing to go on for another pass.
     if (!checker || made.some((i) => i.check?.error)) break;
+    const now = progress();
+    if (now > best) {
+      best = now;
+      stalled = 0;
+    } else if (++stalled >= STALL_ROUNDS && passed() < wanted) {
+      stopped = 'stalled';
+      break;
+    }
     // Not enough passed: ask again, avoiding what the failed ones got wrong.
     const failed = failedProblems(made);
     if (failed.length) problems = failed;
   }
+  if (passed() >= wanted) stopped = null;
   // Keep the best `count` pictures (all of them if nothing was checked), best first.
   // `attempts` says how many passes it took (or were tried), `pass` which one made the picture.
   const images = checker
     ? [...all]
       .sort((a, b) => checkRank(b.check) - checkRank(a.check))
       .slice(0, count)
-      .map((i) => (i.check ? { ...i, check: { ...i.check, pass: i.check.attempts, attempts: Math.max(1, ran) } } : i))
+      .map((i) => (i.check ? { ...i, check: { ...i.check, pass: i.check.attempts, attempts: Math.max(1, ran), ...(stopped && { stopped }) } } : i))
     : all;
   return { model, images };
 }

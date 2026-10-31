@@ -436,7 +436,7 @@ const SETTING_CHOICES = {
   music_model: MUSIC_MODELS,
 };
 const SETTING_RANGES = {
-  motion_amount: [1, 40], vignette: [0, 1], grain: [0, 1], image_check_retries: [0, 5], image_check_threshold: [0, 100], music_length_sec: [10, MUSIC_MAX_SEC], music_volume: [0, 1],
+  motion_amount: [1, 40], vignette: [0, 1], grain: [0, 1], image_check_retries: [0, 10], image_check_threshold: [0, 100], image_check_time_limit_min: [0, 600], music_length_sec: [10, MUSIC_MAX_SEC], music_volume: [0, 1],
 };
 
 /** Check an imported settings object; throws a 400 naming the problem. */

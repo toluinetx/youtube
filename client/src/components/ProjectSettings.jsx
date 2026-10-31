@@ -67,17 +67,18 @@ export default function ProjectSettings({ settings, onChange, status, library, o
             <input
               type="number"
               min={0}
-              max={5}
+              max={10}
               className="field inline-block !w-12 !px-1.5 !py-0 text-center"
               value={settings.image_check_retries}
               disabled={!settings.image_check}
-              onChange={(e) => onChange({ image_check_retries: Math.min(5, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
+              onChange={(e) => onChange({ image_check_retries: Math.min(10, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
             />{' '}
             times
             <span className="block text-[11px] text-zinc-600">
               {claudeCheck
                 ? `Claude Code on this machine scores each picture for adherence, logic and quality (an extra hand caps it at 35%). Under the pass mark, the image model makes it again, told what was wrong. Each retry costs another image (free with local models).`
                 : 'A Gemini vision model looks for extra hands or people and a missing subject. Each retry costs another image.'}
+              {' '}Retries stop early when two in a row don't improve on the best so far.
               {status && claudeCheck && !status.claude && " Claude Code isn't available here: install it and sign in, then restart the editor."}
               {status && !claudeCheck && !status.gemini && ' Needs GEMINI_API_KEY in .env; skipped until then.'}
             </span>
@@ -94,6 +95,19 @@ export default function ProjectSettings({ settings, onChange, status, library, o
               <option value="gemini">Gemini</option>
               <option value="claude">Claude Code (this machine)</option>
             </select>
+          </label>
+          <label className="flex items-center gap-1.5" title="Retries also stop early when two in a row don't improve on the best so far.">
+            give up after
+            <input
+              type="number"
+              min={0}
+              max={600}
+              className="field inline-block !w-14 !px-1.5 !py-0 text-center"
+              value={settings.image_check_time_limit_min ?? 0}
+              disabled={!settings.image_check}
+              onChange={(e) => onChange({ image_check_time_limit_min: Math.min(600, Math.max(0, Math.round(Number(e.target.value) || 0))) })}
+            />
+            min per picture (0: no limit)
           </label>
           {claudeCheck && (
             <label className="flex items-center gap-1.5">
