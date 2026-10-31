@@ -9,7 +9,7 @@
     },
     "params": [
       {
-        "name": "prompt_enhancer", "type": "boolean", "title": "Prompt enhancer", "default": false,
+        "name": "prompt_enhancer", "type": "boolean", "title": "Prompt enhancer", "default": true,
         "description": "Qwen 3.5 looks at the references and rewrites the prompt as a precise edit instruction first. Slower and needs more VRAM.",
         "inputs": [["459:484", "switch"]]
       },
@@ -238,7 +238,7 @@
   },
   "459:484": {
     "inputs": {
-      "switch": false,
+      "switch": true,
       "on_false": "{{prompt}}",
       "on_true": [
         "459:500",

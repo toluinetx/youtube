@@ -4,7 +4,7 @@
     "description": "Local, via ComfyUI. Text to image only (no reference images).",
     "params": [
       {
-        "name": "prompt_enhancer", "type": "boolean", "title": "Prompt enhancer", "default": false,
+        "name": "prompt_enhancer", "type": "boolean", "title": "Prompt enhancer", "default": true,
         "description": "Qwen 3.5 rewrites the prompt into a long description first. Slower, needs more VRAM, and may drift from the prompt.",
         "inputs": [["459:474", "switch"]]
       },
@@ -216,7 +216,7 @@
   },
   "459:474": {
     "inputs": {
-      "switch": false,
+      "switch": true,
       "on_false": "{{prompt}}",
       "on_true": [
         "459:471",
