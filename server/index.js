@@ -12,9 +12,10 @@ import { historyState } from './history.js';
 import { requestContext, subscribe } from './events.js';
 import { createProject, initProjects, listProjects, openProject, trackBusy } from './projects.js';
 import {
-  GENERATORS, chooseImageVariant, generateAmbience, generateMusic, generateReferenceImage, generateSceneShotImage, recordImageCheck, generateSceneSfxLayer, generateSceneVideo,
+  GENERATORS, chooseImageVariant, generateAmbience, generateMusic, generateReferenceImage, generateSceneShotImage, recordImageCheck, checkPictureWithClaude, generateSceneSfxLayer, generateSceneVideo,
   imageReferenceCapacity,
 } from './generate.js';
+import { claudeStatus } from './claude.js';
 import { CAPTION_MODES, CAPTION_POSITIONS, LOOKS, SHAKES } from './finish.js';
 import {
   addToLibrary, ambienceFromAsset, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
@@ -435,7 +436,7 @@ const SETTING_CHOICES = {
   music_model: MUSIC_MODELS,
 };
 const SETTING_RANGES = {
-  motion_amount: [1, 40], vignette: [0, 1], grain: [0, 1], image_check_retries: [0, 5], music_length_sec: [10, MUSIC_MAX_SEC], music_volume: [0, 1],
+  motion_amount: [1, 40], vignette: [0, 1], grain: [0, 1], image_check_retries: [0, 5], image_check_threshold: [0, 100], music_length_sec: [10, MUSIC_MAX_SEC], music_volume: [0, 1],
 };
 
 /** Check an imported settings object; throws a 400 naming the problem. */
@@ -612,6 +613,10 @@ app.post('/api/scene/:id/shots/:shotId/generate', async (req, res) =>
 // Record a check made outside the app (the vision-check skill) on a picture: { url, issues, people, hands, attempts, checker }.
 app.post('/api/image-check', async (req, res) => res.json(await recordImageCheck(String(req.body?.url || ''), req.body || {})));
 
+// "Check with Claude": score a scene's picture (or a shot's, with { shot_id }) with Claude Code on this
+// machine; under the pass mark, use a better variant or regenerate with what was wrong. Responds with the scene.
+app.post('/api/scene/:id/claude-check', async (req, res) => res.json(await checkPictureWithClaude(req.params.id, req.body?.shot_id ? String(req.body.shot_id) : null)));
+
 // Generate one of a scene's extra sound effect layers.
 app.post('/api/scene/:id/sfx-layers/:layerId/generate', async (req, res) => res.json(await generateSceneSfxLayer(req.params.id, req.params.layerId)));
 
@@ -780,6 +785,7 @@ app.get('/api/status', async (_req, res) => {
     gemini: Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY),
     comfyui,
     ffmpeg: Boolean(FFMPEG && fs.existsSync(FFMPEG)),
+    claude: (await claudeStatus()).ok,
   });
 });
 

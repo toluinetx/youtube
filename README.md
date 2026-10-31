@@ -72,8 +72,8 @@ survival, 12 minutes"*). It works like a head writer, stopping for your choice a
 It then hands the script to `timeline-generation`. The psychology behind each rule is in
 [`.claude/skills/storyboard/playbook.md`](.claude/skills/storyboard/playbook.md).
 
-**Picture checks with Claude (`vision-check` skill).** Instead of (or as well as) the Gemini image check, Claude Code
-can look at the generated pictures itself: *"/vision-check 63-74"* checks those scenes' pictures and every variant
+**Picture checks with Claude (`vision-check` skill).** Besides the editor's own Claude check and its *Check with
+Claude* button (see *People and hands* below), you can review pictures with Claude in a Claude Code conversation: *"/vision-check 63-74"* checks those scenes' pictures and every variant
 against their image prompts (extra or missing hands and people, a missing subject, night instead of day) and records
 the verdicts in the editor, where failures show the usual warning under the picture. Add `--fix` to have it pick a
 passing variant or regenerate failures (up to `--retries N`, default 2), telling the image model what was wrong.
@@ -128,10 +128,26 @@ and the scene sidebar warns you when that would happen.
    **Generate**. Video clips are made last, so each starts from its scene's new image. If a voiceover runs longer than
    its scene, the scene is lengthened so the narration isn't cut off.
    **People and hands.** Image models sometimes add a second person or a third hand. Every image prompt gets a short
-   guardrail (only the people the scene describes, two hands each), and with a Gemini API key each new picture is
-   checked by a Gemini vision model. If it finds extra hands or people or a missing subject, the image is regenerated
-   (up to 2 more times by default), telling the model what was wrong. If problems remain, the scene shows a warning under
-   its image. Both are on the Project tab, under Images. Each retry costs another image.
+   guardrail (only the people the scene describes, two hands each), and each new picture can be checked by a vision
+   model, chosen on the Project tab under Images (*Checked by*):
+   - **Gemini** (needs a Gemini API key) looks for extra hands or people and a missing subject.
+   - **Claude Code (this machine)** runs the `claude` command on the editor's computer (install
+     [Claude Code](https://claude.com/claude-code) and sign in once). It scores each picture 0–100% for adherence,
+     logic and quality, and the worst problem caps the score: an extra or missing hand or finger at 35%, an extra or
+     missing person at 45%, garbled text at 60%, a missing prop or night instead of day at 70%. Anything under the
+     **pass mark** (80% by default) fails.
+
+   A failed picture goes back to the image model (your local Qwen, for example), told what was wrong, up to 2 more
+   times by default. With several variants per image, every variant is checked and, if none passes, a whole new set is
+   made; the best ones of all passes are kept, best first, with their scores on the variant strip. If problems remain,
+   the scene shows a warning under its image. Each retry costs another image (nothing with a local model).
+
+   **Check with Claude.** Each picture (and each shot) also has a **Check with Claude** button, whichever checker the
+   project uses: Claude scores the picture in use; under the pass mark it scores the other variants and switches to the
+   best one that passes, and if none does, the image model makes a new set with what was wrong and Claude scores those,
+   pass after pass. The button needs Claude Code on the machine that runs the editor's server. Settings in `.env`:
+   `CLAUDE_BIN` (path to `claude` if it isn't on the PATH), `CLAUDE_CHECK_CONCURRENCY` (pictures checked at once,
+   default 3), `CLAUDE_CHECK_TIMEOUT_SEC` (default 240).
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
    sidebar and click **Regenerate**. Only that asset is regenerated. Hover between two scenes on the Image track and click
    **+** to insert a blank scene there, or click the **+** box after the last scene. Drag a scene's right edge to change its length,

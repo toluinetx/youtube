@@ -30,6 +30,10 @@ export const DEFAULT_SETTINGS = {
   image_check: true,
   image_check_model: 'gemini:gemini-flash-latest',
   image_check_retries: 2,
+  // "claude" (or "claude:<model>") as image_check_model runs Claude Code on this machine instead: it scores
+  // each picture 0-100 for adherence, logic and quality (an extra hand caps it at 35), and anything under
+  // this pass mark goes back to the image model.
+  image_check_threshold: 80,
   // Pictures made per scene / shot image, to pick from on the timeline. Free (local ComfyUI) models only,
   // unless image_variants_paid: each variant from a paid model costs as much as one image.
   image_variants: 6,

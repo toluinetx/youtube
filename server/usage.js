@@ -97,6 +97,8 @@ const perM = (tokens, price) => ((tokens || 0) * (price || 0)) / 1e6;
 export function costOf(entry, table) {
   const u = entry.units || {};
   if (entry.provider === 'comfyui') return 0; // Runs on this computer.
+  // Claude Code reports what each run cost (with a subscription, what it would have cost).
+  if (entry.provider === 'claude') return u.usd ?? null;
   const p = entry.provider === 'elevenlabs' ? table.elevenlabs : table[entry.model];
   if (!p) return null;
   switch (entry.provider) {

@@ -53,7 +53,7 @@ function withServerMedia(local = [], server = [], localPending, idKey, mediaKeys
 
 const MEDIA_FIELDS = [
   'image_url', 'voiceover_url', 'sfx_url', 'voiceover_duration_sec', 'sfx_duration_sec',
-  'video_url', 'video_thumb_url', 'video_duration_sec', 'video_has_audio', 'video_start_sec', 'source_names',
+  'video_url', 'video_thumb_url', 'video_duration_sec', 'video_has_audio', 'video_start_sec', 'source_names', 'image_check',
 ];
 
 export default function App() {
@@ -401,7 +401,7 @@ export default function App() {
                 ...s,
                 ...media,
                 sfx_layers: withServerMedia(s.sfx_layers, scene.sfx_layers, Boolean(pending.current[id]?.sfx_layers), 'layer_id', ['url', 'duration_sec', 'source_name']),
-                shots: withServerMedia(s.shots, scene.shots, Boolean(pending.current[id]?.shots), 'shot_id', ['image_url', 'source_name']),
+                shots: withServerMedia(s.shots, scene.shots, Boolean(pending.current[id]?.shots), 'shot_id', ['image_url', 'source_name', 'image_check']),
                 duration_sec: pending.current[id]?.duration_sec ?? scene.duration_sec,
               }
               : s,
@@ -433,6 +433,8 @@ export default function App() {
     });
   // Extra shots are busy under "shot:<shot id>".
   const generateShot = (sceneId, shotId) => mediaAction(sceneId, `shot:${shotId}`, () => api.generateShot(sceneId, shotId));
+  // Busy in the picture's own slot while Claude scores it (and the image model redoes it if it fails).
+  const checkWithClaude = (sceneId, shotId) => mediaAction(sceneId, shotId ? `shot:${shotId}` : 'image', () => api.checkWithClaude(sceneId, shotId));
   const uploadShot = (sceneId, shotId, file) =>
     mediaAction(sceneId, `shot:${shotId}`, async () => {
       const asset = await uploadOne(file);
@@ -1185,6 +1187,8 @@ export default function App() {
                 onGenerateSfxLayer={(layerId) => generateSfxLayer(selected.scene_id, layerId)}
                 onUploadSfxLayer={(layerId, file) => uploadSfxLayer(selected.scene_id, layerId, file)}
                 onGenerateShot={(shotId) => generateShot(selected.scene_id, shotId)}
+                claudeReady={Boolean(status?.claude)}
+                onCheckWithClaude={(shotId) => checkWithClaude(selected.scene_id, shotId)}
                 onUploadShot={(shotId, file) => uploadShot(selected.scene_id, shotId, file)}
                 onUpload={(slot, file) => uploadAndUse(selected.scene_id, slot, file)}
                 onClear={(slot) => clearSlot(selected.scene_id, slot)}

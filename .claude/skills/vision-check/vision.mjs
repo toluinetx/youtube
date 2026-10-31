@@ -11,8 +11,9 @@
 // picture:  a key from `list`: "63" for a scene's own picture, "63:s_ab12cd34" for one of its shots.
 // list:     by default only pictures Claude hasn't checked yet; --flagged: pictures whose check failed
 //           (by any checker); --all: every picture.
-// results:  [{ "url": "/media/images/…png", "issues": ["…"], "people": 1, "hands": 2, "attempts": 1 }]
-//           (an empty issues list means it passed).
+// results:  [{ "url": "/media/images/…png", "adherence": 90, "logic": 40, "quality": 85, "people": 1, "hands": 3,
+//             "issues": [{ "text": "…", "type": "anatomy|cast|text|content|minor" }], "attempts": 1 }]
+//           (the editor computes the overall score and whether it passes the project's pass mark).
 // problems: ["A second hand reaches in from the right edge.", "…"]. A file avoids quoting differences
 //           between PowerShell, cmd and bash. JSON files may be UTF-8 (with or without BOM) or UTF-16.
 import fs from 'node:fs';
@@ -150,7 +151,8 @@ async function record([file]) {
   const results = readJson(file);
   for (const r of Array.isArray(results) ? results : [results]) {
     const saved = await call('POST', '/api/image-check', { ...r, checker: 'claude' });
-    console.log(`${saved.ok ? 'passed' : 'flagged'}  ${r.url}${saved.issues.length ? `  (${saved.issues.join(' ')})` : ''}`);
+    const score = saved.score != null ? ` ${saved.score}%` : '';
+    console.log(`${saved.ok ? 'passed' : 'flagged'}${score}  ${r.url}${saved.issues.length ? `  (${saved.issues.join(' ')})` : ''}`);
   }
 }
 

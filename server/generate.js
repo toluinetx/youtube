@@ -10,6 +10,7 @@ import { generateImage, referenceCapacity } from './replicate.js';
 import { OMNI_TOKENS_PER_SECOND, checkImage, generateGeminiImage, generateGeminiVideo, geminiReferenceCapacity, isGeminiModel } from './gemini.js';
 import { comfyReferenceCapacity, generateComfyImage, isComfyModel } from './comfyui.js';
 import { recordUsage } from './usage.js';
+import { checkImageWithClaude, isClaudeCheck, scoredCheck } from './claude.js';
 import { composeMusic, soundEffect, textToSpeech } from './elevenlabs.js';
 import { extractThumbnail, joinAudio, probe, probeDuration, referenceDataUri } from './ffmpeg.js';
 
@@ -222,15 +223,52 @@ const IMAGE_GUARDRAILS =
   'hands with five fingers each, all clearly attached to them';
 
 /**
- * Generate an image for `scene` from `imagePrompt`, with the scene's and project's references and the
- * `previous` shot (for continuity). If the project checks images, a vision model looks at each one and
- * it's regenerated (telling the model what went wrong) until it passes or the retries run out; the
- * attempt with the fewest problems is kept. With `variants`, makes as many pictures as the project asks
- * for with this model (see imageVariantCount), each checked once instead of retried.
- * Resolves with { model, images: [{ buffer, ext, check }] }, where check is { ok, issues, people, hands,
- * attempts }, { error } if the check itself failed, or null if it's off.
+ * The project's image check, or null when it's off: { kind: 'gemini' | 'claude', model, retries,
+ * threshold }. `override` turns it on for one call with another model (the "Check with Claude" button).
+ * Gemini needs an API key; Claude runs the `claude` command on this machine.
  */
-async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = false, feedback = [] } = {}) {
+function imageChecker(settings, override = null) {
+  const model = (override?.model ?? settings.image_check_model)?.trim();
+  if (!(override || settings.image_check) || !model) return null;
+  const retries = Math.min(5, Math.max(0, Math.round(Number(override?.retries ?? settings.image_check_retries) || 0)));
+  if (isClaudeCheck(model)) {
+    const threshold = Math.min(100, Math.max(0, Math.round(Number(settings.image_check_threshold ?? 80))));
+    return { kind: 'claude', model, retries, threshold };
+  }
+  return hasGeminiKey() ? { kind: 'gemini', model, retries } : null;
+}
+
+/** Look at one picture with `checker`, recording its usage. Resolves with a check record. */
+async function runCheck(checker, { buffer, ext, file }, brief, sceneId) {
+  if (checker.kind === 'claude') {
+    const { usage, ...result } = await checkImageWithClaude({ buffer, ext, file, brief, model: checker.model, threshold: checker.threshold });
+    recordUsage({ provider: 'claude', kind: 'image check', model: checker.model, scene_id: sceneId, units: usage });
+    return result;
+  }
+  const image = file ? `data:${MIME[path.extname(file).slice(1).toLowerCase()] || 'image/png'};base64,${(await fs.readFile(file)).toString('base64')}` : bufferDataUri(buffer, ext);
+  const { usage, ...result } = await checkImage({ image, brief, model: checker.model });
+  recordUsage({ provider: 'gemini', kind: 'image check', model: checker.model, scene_id: sceneId, units: usage });
+  return result;
+}
+
+/** How good a check says a picture is, higher is better: its score, else fewer issues. */
+const checkRank = (check) =>
+  !check || check.error ? -Infinity : check.score != null ? check.score + (check.ok ? 1000 : 0) : (check.ok ? 1000 : 0) - (check.issues?.length ?? 0) * 10;
+
+/**
+ * Generate an image for `scene` from `imagePrompt`, with the scene's and project's references and the
+ * `previous` shot (for continuity). If the project checks images (or `check` asks for it), each picture
+ * is looked at by the checker and, when it fails (Claude: scores under the pass mark), the image model
+ * is asked again, told what was wrong, until one passes or the passes run out.
+ * - One picture per generation: up to 1 + retries attempts; the best is kept.
+ * - With `variants` (several pictures per generation, e.g. a local Qwen model): every variant is checked;
+ *   if none passes, the whole set is made again with the best one's problems, up to 1 + retries passes,
+ *   and the best `count` pictures of all passes are kept as the variants.
+ * `feedback`: problems an earlier check found, to avoid from the first attempt.
+ * Resolves with { model, images: [{ buffer, ext, check }] }, where check is a check record (with
+ * `attempts`, the pass it came from), { error } if the check itself failed, or null if it's off.
+ */
+async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = false, feedback = [], check: checkOverride = null } = {}) {
   const { settings } = sb;
   // Scene references, then project ones, then style images, then the previous shot (dropped first if
   // the model takes fewer). An image that's both a reference and a style image is sent once, as style.
@@ -270,60 +308,69 @@ async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = 
   const provider = imageProvider(model);
   const generate = IMAGE_GENERATORS[provider];
   const count = variants ? imageVariantCount(settings, model) : 1;
-  const checkModel = settings.image_check && hasGeminiKey() ? settings.image_check_model?.trim() : null;
-  // Variants are each checked once: picking among them replaces retrying.
-  const tries = checkModel && count === 1 ? 1 + Math.min(5, Math.max(0, Math.round(Number(settings.image_check_retries) || 0))) : 1;
+  const checker = imageChecker(settings, checkOverride);
+  const passes = checker ? 1 + checker.retries : 1;
   const seeded = params.seed !== undefined && params.seed !== null && params.seed !== '';
 
-  /** One picture; variant `n` > 0 gets the next seed if a seed is set, so they don't all come out the same. */
-  async function picture(n) {
-    const pictureParams = n && seeded ? { ...params, seed: Number(params.seed) + n } : params;
-    let best = null;
-    // Problems an outside check (e.g. the vision-check skill) found in the picture this one replaces.
-    let problems = [...feedback];
-    for (let attempt = 1; attempt <= tries; attempt++) {
-      const retrying = problems.length > 0 && withoutPrevious.length > 0 && withoutPrevious.length < refs.length;
-      const { refs: sent, basePrompt, references } = retrying ? (retryInputs ??= await inputsFor(withoutPrevious)) : first;
-      const prompt = problems.length
-        ? `${basePrompt}\n\nAn earlier attempt at this image was rejected for: ${problems.join(' ')} Make sure this one doesn't have these problems.`
-        : basePrompt;
-      const { buffer, ext, usage } = await generate({
-        prompt, model, aspectRatio: settings.aspect_ratio, references, referenceLabels: sent.map((r) => r.label), params: pictureParams,
-      });
-      recordUsage({ provider, kind: 'image', model, scene_id: scene.scene_id, units: usage });
-      if (!checkModel) return { buffer, ext, check: null };
-
-      let check;
-      try {
-        const { usage: checkUsage, ...result } = await checkImage({ image: bufferDataUri(buffer, ext), brief: imagePrompt, model: checkModel });
-        recordUsage({ provider: 'gemini', kind: 'image check', model: checkModel, scene_id: scene.scene_id, units: checkUsage });
-        check = { ...result, attempts: attempt };
-      } catch (err) {
-        // A check that can't run mustn't lose an image that's already paid for.
-        console.warn(`Image check failed: ${err.message}`);
-        return { buffer, ext, check: { error: err.message, attempts: attempt } };
-      }
-      if (!best || check.issues.length < best.check.issues.length) best = { buffer, ext, check };
-      if (check.ok) return best;
-      problems = check.issues;
+  /**
+   * One picture, checked once. Variant `n` > 0 gets the next seed if a seed is set (and each pass moves
+   * the seeds on), so they don't all come out the same. `problems`: what the last attempt got wrong.
+   */
+  async function attempt(n, pass, problems) {
+    const offset = n + (pass - 1) * count;
+    const pictureParams = offset && seeded ? { ...params, seed: Number(params.seed) + offset } : params;
+    const retrying = problems.length > 0 && withoutPrevious.length > 0 && withoutPrevious.length < refs.length;
+    const { refs: sent, basePrompt, references } = retrying ? (retryInputs ??= await inputsFor(withoutPrevious)) : first;
+    const prompt = problems.length
+      ? `${basePrompt}\n\nAn earlier attempt at this image was rejected for: ${problems.join(' ')} Make sure this one doesn't have these problems.`
+      : basePrompt;
+    const { buffer, ext, usage } = await generate({
+      prompt, model, aspectRatio: settings.aspect_ratio, references, referenceLabels: sent.map((r) => r.label), params: pictureParams,
+    });
+    recordUsage({ provider, kind: 'image', model, scene_id: scene.scene_id, units: usage });
+    if (!checker) return { buffer, ext, check: null };
+    try {
+      return { buffer, ext, check: { ...(await runCheck(checker, { buffer, ext }, imagePrompt, scene.scene_id)), attempts: pass } };
+    } catch (err) {
+      // A check that can't run mustn't lose an image that's already made.
+      console.warn(`Image check failed: ${err.message}`);
+      return { buffer, ext, check: { error: err.message, attempts: pass } };
     }
-    return { ...best, check: { ...best.check, attempts: tries } };
   }
 
-  // All at once: a local ComfyUI queues them, a paid API runs them side by side. Variants that failed
-  // are left out, unless they all did.
-  const results = await Promise.allSettled(Array.from({ length: count }, (_, n) => picture(n)));
-  const images = results.filter((r) => r.status === 'fulfilled').map((r) => r.value);
-  if (!images.length) throw results[0].reason;
+  const all = [];
+  let problems = [...feedback];
+  let ran = 0;
+  for (let pass = 1; pass <= passes; pass++) {
+    ran = pass;
+    // All at once: a local ComfyUI queues them, a paid API runs them side by side. Variants that failed
+    // are left out, unless they all did.
+    const results = await Promise.allSettled(Array.from({ length: count }, (_, n) => attempt(n, pass, problems)));
+    const made = results.filter((r) => r.status === 'fulfilled').map((r) => r.value);
+    if (!made.length) {
+      if (all.length) break;
+      throw results[0].reason;
+    }
+    all.push(...made);
+    if (!checker || made.some((i) => i.check?.ok || i.check?.error)) break;
+    // Nothing passed: ask again, avoiding the problems of the best picture so far.
+    const best = all.reduce((a, b) => (checkRank(b.check) > checkRank(a.check) ? b : a));
+    problems = best.check?.issues?.length ? best.check.issues : problems;
+  }
+  // Keep the best `count` pictures (all of them if nothing was checked), best first.
+  // `attempts` says how many passes it took (or were tried), `pass` which one made the picture.
+  const images = checker
+    ? [...all]
+      .sort((a, b) => checkRank(b.check) - checkRank(a.check))
+      .slice(0, count)
+      .map((i) => (i.check ? { ...i, check: { ...i.check, pass: i.check.attempts, attempts: ran } } : i))
+    : all;
   return { model, images };
 }
 
-/** Index of the variant to show first: the first that passed its check, else the one with the fewest problems. */
+/** Index of the variant to show first: the best that passed its check, else the best of the rest. */
 function bestVariant(images) {
-  const passed = images.findIndex((i) => i.check?.ok);
-  if (passed !== -1) return passed;
-  const issues = (i) => (i.check?.issues ? i.check.issues.length : Infinity);
-  return images.reduce((best, img, n) => (issues(img) < issues(images[best]) ? n : best), 0);
+  return images.reduce((best, img, n) => (checkRank(img.check) > checkRank(images[best].check) ? n : best), 0);
 }
 
 /**
@@ -360,13 +407,20 @@ const cleanFeedback = (feedback) =>
  */
 export async function recordImageCheck(url, check) {
   if (!mediaUrlToPath(url)) throw badRequest('url must be a /media/ picture of the open project');
-  const issues = cleanFeedback(check.issues);
+  const sbNow = await readStoryboard();
+  const threshold = Math.min(100, Math.max(0, Math.round(Number(sbNow.settings.image_check_threshold ?? 80))));
+  // With sub-scores (adherence, logic, quality) it's scored like the app's own Claude check: typed issues
+  // cap the score (an extra hand caps it at 35) and it passes at the project's pass mark.
+  const scored = ['adherence', 'logic', 'quality'].some((k) => check[k] != null || check.scores?.[k] != null);
+  const base = scored
+    ? scoredCheck({ ...check.scores, ...check, issues: check.issues }, threshold)
+    : { ok: cleanFeedback(check.issues).length === 0, issues: cleanFeedback(check.issues) };
+  const count = (n) => (Number.isFinite(Number(n)) && n !== null && n !== undefined ? Number(n) : null);
   const record = {
+    ...base,
     url,
-    ok: issues.length === 0,
-    issues,
-    people: Number.isFinite(Number(check.people)) && check.people !== null ? Number(check.people) : null,
-    hands: Number.isFinite(Number(check.hands)) && check.hands !== null ? Number(check.hands) : null,
+    people: count(check.people),
+    hands: count(check.hands),
     attempts: Math.max(1, Math.round(Number(check.attempts) || 1)),
     checker: String(check.checker || 'claude').slice(0, 40),
   };
@@ -381,6 +435,46 @@ export async function recordImageCheck(url, check) {
     if (!found) throw Object.assign(new Error('No scene, shot or variant uses that picture'), { status: 404 });
     return record;
   }, { label: 'Record image check', key: `image-check:${url}` });
+}
+
+/**
+ * The "Check with Claude" button: Claude Code scores the picture a scene (or one of its shots) shows.
+ * If it's under the pass mark, the other variants made with it are scored too and the best passing one
+ * is used; if none passes, the image model makes a new set, told what was wrong, and Claude scores
+ * those, up to 1 + retries passes. Resolves with the scene.
+ */
+export async function checkPictureWithClaude(sceneId, shotId = null) {
+  const sb = await readStoryboard();
+  const scene = findScene(sb, sceneId);
+  const slot = shotId ? findShot(scene, shotId) : scene;
+  const url = slot.image_url;
+  const file = mediaUrlToPath(url);
+  if (!file) throw badRequest(`This ${shotId ? 'shot' : 'scene'} has no generated or imported picture to check`);
+  const brief = (slot.image_prompt || '').trim();
+  if (!brief) throw badRequest(`This ${shotId ? 'shot' : 'scene'} has no image prompt to check the picture against`);
+  const model = isClaudeCheck(sb.settings.image_check_model) ? sb.settings.image_check_model : 'claude';
+  const checker = imageChecker(sb.settings, { model });
+
+  // The picture in use, then (if it fails) the other variants made with it that Claude hasn't scored.
+  const asset = sb.library.find((a) => a.variants?.some((v) => v.url === url));
+  const scoreOne = async (u) => ({ url: u, check: await runCheck(checker, { file: mediaUrlToPath(u) }, brief, scene.scene_id) });
+  const results = [await scoreOne(url)];
+  if (!results[0].check.ok && asset) {
+    const others = asset.variants.filter((v) => v.url !== url && v.image_check?.checker !== 'claude' && mediaUrlToPath(v.url));
+    results.push(...(await Promise.all(others.map((v) => scoreOne(v.url)))));
+    // Variants Claude scored before count too.
+    for (const v of asset.variants) if (v.url !== url && v.image_check?.checker === 'claude') results.push({ url: v.url, check: v.image_check, known: true });
+  }
+  for (const r of results) if (!r.known) await recordImageCheck(r.url, { ...r.check, attempts: 1, checker: 'claude' });
+
+  const best = results.reduce((a, b) => (checkRank(b.check) > checkRank(a.check) ? b : a));
+  if (best.check.ok) {
+    if (best.url !== url) await chooseImageVariant(asset.asset_id, best.url);
+    return findScene(await readStoryboard(), sceneId);
+  }
+  // Nothing passed: back to the image model with what was wrong, Claude scoring each pass.
+  const generate = shotId ? (opts) => generateSceneShotImage(sceneId, shotId, opts) : (opts) => generateSceneImage(sceneId, opts);
+  return generate({ feedback: best.check.issues, check: { model } });
 }
 
 /**
@@ -449,16 +543,16 @@ export async function generateReferenceImage({ name, prompt, forEveryScene, base
   return { asset, check };
 }
 
-export async function generateSceneImage(sceneId, { feedback } = {}) {
+export async function generateSceneImage(sceneId, { feedback, check } = {}) {
   const sb = await readStoryboard();
   const scene = findScene(sb, sceneId);
   if (!scene.image_prompt.trim()) throw badRequest('This scene has no image prompt');
 
-  const { model, images } = await generateImagesFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene), { variants: true, feedback: cleanFeedback(feedback) });
-  const { file, url, check, variants } = await saveImages(scene.scene_id, images);
+  const { model, images } = await generateImagesFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene), { variants: true, feedback: cleanFeedback(feedback), check });
+  const { file, url, check: checked, variants } = await saveImages(scene.scene_id, images);
   const media = { file, kind: 'image', type: 'image', prompt: scene.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {
-    Object.assign(s, CLEAR_VIDEO, { image_url: url, image_check: check });
+    Object.assign(s, CLEAR_VIDEO, { image_url: url, image_check: checked });
     setSourceName(s, 'image', null);
   }, 'Generate image');
 }
@@ -590,7 +684,7 @@ export function findShot(scene, shotId) {
 }
 
 /** Generate the picture of an extra shot, continuing from the picture shown just before it. */
-export async function generateSceneShotImage(sceneId, shotId, { feedback } = {}) {
+export async function generateSceneShotImage(sceneId, shotId, { feedback, check } = {}) {
   const sb = await readStoryboard();
   const scene = findScene(sb, sceneId);
   const shot = findShot(scene, shotId);
@@ -605,13 +699,13 @@ export async function generateSceneShotImage(sceneId, shotId, { feedback } = {})
     : scene.use_previous_scene !== false ? { label: 'Previous shot (the picture just before this one)', ...before } : null);
   // With its own references, the shot is made as if the scene had those.
   const asScene = shot.reference_asset_ids ? { ...scene, reference_asset_ids: shot.reference_asset_ids } : scene;
-  const { model, images } = await generateImagesFor(sb, asScene, shot.image_prompt.trim(), previous, { variants: true, feedback: cleanFeedback(feedback) });
-  const { file, url, check, variants } = await saveImages(scene.scene_id, images);
+  const { model, images } = await generateImagesFor(sb, asScene, shot.image_prompt.trim(), previous, { variants: true, feedback: cleanFeedback(feedback), check });
+  const { file, url, check: checked, variants } = await saveImages(scene.scene_id, images);
   const media = { file, kind: 'image', type: 'image', prompt: shot.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {
     // The shot may have been removed while it was generating; then the image just goes to the library.
     const target = (s.shots || []).find((x) => x.shot_id === shotId);
-    if (target) Object.assign(target, { image_url: url, source_name: null, image_check: check });
+    if (target) Object.assign(target, { image_url: url, source_name: null, image_check: checked });
   }, 'Generate shot');
 }
 
