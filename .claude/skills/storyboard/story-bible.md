@@ -19,7 +19,7 @@ Use these formats at each step of the storyboard skill.
 ## Packaging (step 3)
 
 > **Pair A (recommended)**
-> - **Title:** Surviving 365 Days Underground With My Toddler (47 chars)
+> - **Title:** We Survived 365 Days Underground With My Toddler. Then Someone Knocked (70 chars)
 > - **Thumbnail:** a heavy steel bunker door in darkness, one red alert light above it, a toddler's
 >   stuffed rabbit on the concrete floor in front of the door. Cold blue shadows, the red light the
 >   only warm colour.

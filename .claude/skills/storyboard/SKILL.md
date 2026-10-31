@@ -30,9 +30,11 @@ strongest at each step and show you the result").
 Ask (one AskUserQuestion with up to 4 questions) only what isn't given:
 - **Genre and niche:** e.g. zombie survival, deep-sea horror, historical disaster, true crime, "what if".
 - **Length:** Shorts (30–60 s), mid (6–10 min), long (12–20 min). Default 10–12 min.
-- **Format:** 16:9 or 9:16.
 - **Point of view:** first-person survivor narrator (strongest for identification), or documentary
   narrator.
+
+Don't ask about the format: it is **always YouTube 16:9** (landscape, 1920×1080). Every image prompt,
+thumbnail and the Project section's **Format** use 16:9.
 
 If the user already has a premise, take it to step 2 and still run it through the scorecard.
 
@@ -52,12 +54,13 @@ or redirect.
 
 Design the click **before** the story, because the story has to deliver on it (`playbook.md` →
 *Packaging*):
-- **3 title + thumbnail pairs.** For each: the title (≤ 55 characters, a specific number or constraint,
-  complements the picture and never repeats it), the thumbnail concept (one focal subject, at most 3
+- **3 title + thumbnail pairs.** For each: the YouTube title (**60–70 characters, never more than
+  70**; show the count; a specific number or constraint; complements the picture and never repeats
+  it), the thumbnail concept (one focal subject, at most 3
   elements, a visible question or threat, readable on a phone), the thumbnail's text if any
   (≤ 3 words, never the title), and the **curiosity gap** it opens in one line.
-- A **thumbnail image prompt** for the image model: no text in the image (add it in the edit), high
-  contrast, the focal subject large, the frame left uncluttered where text goes.
+- A **thumbnail image prompt** for the image model: 16:9 (1280×720), no text in the image (add it in
+  the edit), high contrast, the focal subject large, the frame left uncluttered where text goes.
 - **The promise:** what a viewer who clicks expects to see. The first 5 seconds must confirm it.
 
 Recommend one pair. The user picks.
@@ -169,8 +172,9 @@ director* and these rules:
   cuts out]`. `retention.mjs` reads them. `timeline-generation` keeps them as notes.
 
 Save the storyboard where the user can open it (the repository root, e.g. `storyboard-<slug>.md`, unless
-they say otherwise), together with the packaging (title, thumbnail prompt and text, the description's
-first 2 lines).
+they say otherwise), together with the packaging: the **YouTube title** (60–70 characters, at most 70,
+with its count) at the top of the file, the thumbnail prompt and text, and the description's first 2
+lines. The Project section's **Format** is always 16:9.
 
 ## 7. Retention audit
 
@@ -190,6 +194,8 @@ It does its own checks, cast & location references, estimate and import.
 
 ## Rules
 
+- **Every story gets a YouTube title** of 60–70 characters (never over 70), and **every video is
+  YouTube 16:9**. Don't offer 9:16 or ask about the format.
 - **Deliver the promise.** Never package what the story doesn't contain. Clickbait that the video
   doesn't pay off loses viewers in the first minute and makes YouTube recommend the video less.
   Big claims are fine when the video backs them up.
