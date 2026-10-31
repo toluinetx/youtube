@@ -138,14 +138,16 @@ and the scene sidebar warns you when that would happen.
      **pass mark** (80% by default) fails.
 
    A failed picture goes back to the image model (your local Qwen, for example), told what was wrong, up to 2 more
-   times by default. With several variants per image, every variant is checked and, if none passes, a whole new set is
-   made; the best ones of all passes are kept, best first, with their scores on the variant strip. If problems remain,
+   times by default. With several variants per image, every variant is checked, and with **All variants must pass**
+   (on by default) only the failed ones are made again, told what they got wrong, until every variant passes or the
+   retries run out; turned off, it stops as soon as one passes. The best ones of all passes are kept, best first, with
+   their scores on the variant strip. If problems remain,
    the scene shows a warning under its image. Each retry costs another image (nothing with a local model).
 
    **Check with Claude.** Each picture (and each shot) also has a **Check with Claude** button, whichever checker the
-   project uses: Claude scores the picture in use; under the pass mark it scores the other variants and switches to the
-   best one that passes, and if none does, the image model makes a new set with what was wrong and Claude scores those,
-   pass after pass. The button needs Claude Code on the machine that runs the editor's server. Settings in `.env`:
+   project uses: Claude scores the picture in use and its other variants. If enough of them pass (all of them, with
+   *All variants must pass*), the best is used; if not, the passing ones are kept and the image model makes only the
+   missing ones, told what the failed ones got wrong, and Claude scores those, pass after pass. The button needs Claude Code on the machine that runs the editor's server. Settings in `.env`:
    `CLAUDE_BIN` (path to `claude` if it isn't on the PATH), `CLAUDE_CHECK_CONCURRENCY` (pictures checked at once,
    default 3), `CLAUDE_CHECK_TIMEOUT_SEC` (default 240).
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the

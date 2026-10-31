@@ -122,8 +122,24 @@ export default function ProjectSettings({ settings, onChange, status, library, o
           />{' '}
           variants of each image with local (ComfyUI) models
           <span className="block text-[11px] text-zinc-600">
-            Pick the one to use on the timeline. Every variant is checked; if none passes, a new set is made, up to the retries.
+            Pick the one to use on the timeline. Every variant is checked.
           </span>
+          <label className="mt-1.5 flex items-start gap-2">
+            <input
+              type="checkbox"
+              className="mt-0.5 accent-amber-400"
+              checked={settings.image_check_all_variants !== false}
+              disabled={!settings.image_check}
+              onChange={(e) => onChange({ image_check_all_variants: e.target.checked })}
+            />
+            <span>
+              All variants must pass the check
+              <span className="block text-[11px] text-zinc-600">
+                On: the ones that fail are made again (told what was wrong) until every variant passes, within the retries. Off: stop as
+                soon as one passes.
+              </span>
+            </span>
+          </label>
           <label className="mt-1.5 flex items-start gap-2">
             <input
               type="checkbox"

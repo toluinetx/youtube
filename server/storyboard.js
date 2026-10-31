@@ -34,6 +34,9 @@ export const DEFAULT_SETTINGS = {
   // each picture 0-100 for adherence, logic and quality (an extra hand caps it at 35), and anything under
   // this pass mark goes back to the image model.
   image_check_threshold: 80,
+  // With several variants per picture: keep making the missing ones until every variant passes the check
+  // (within the retries). Off: stop as soon as one passes.
+  image_check_all_variants: true,
   // Pictures made per scene / shot image, to pick from on the timeline. Free (local ComfyUI) models only,
   // unless image_variants_paid: each variant from a paid model costs as much as one image.
   image_variants: 6,
