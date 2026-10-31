@@ -21,7 +21,7 @@
     "image_check_model": "claude",
     "image_check_retries": 2,
     "image_check_threshold": 80,
-    "image_variants": 6,
+    "image_variants": 3,
     "image_variants_paid": false,
     "voice_id": "Gsndh0O5AnuI2Hj3YUlA",
     "voices": [
