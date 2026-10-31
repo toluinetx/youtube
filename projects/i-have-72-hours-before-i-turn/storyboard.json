@@ -1,6 +1,6 @@
 {
   "settings": {
-    "title": "I Have 72 Hours Before I Turn",
+    "title": "I Have 48 Hours Before I Turn",
     "aspect_ratio": "16:9",
     "fps": 30,
     "image_model": "comfyui:qwen-image",
@@ -64,7 +64,7 @@
     {
       "scene_id": 1,
       "image_prompt": "Extreme close-up taken from the front passenger seat at night, the camera low at the height of the steering wheel rim and facing left toward the driver's side. Nora's left forearm only (one arm, one hand), the only body part in the frame: it rests across the top of the steering wheel rim, running horizontally from her elbow at the left edge of the frame to her limp hand at the right. Her hoodie sleeve is pushed up past the elbow. The white gauze bandage around the forearm is stained dark brown-red; thin black veins spread from under its edge toward the wrist. A steel handcuff is locked around her left wrist, its short chain running to the second cuff locked around the wheel rim. Fingernails grey and cracked. Lit only from below by the dim red-orange glow of the instrument cluster, out of frame below the bottom edge. Everything beyond the arm falls into black darkness. No gauges or dashboard visible, no face, no second hand, no text.",
-      "voiceover_text": "{Nora} Hour sixty-one. Patient is a thirty-six-year-old female, bite to the left forearm.",
+      "voiceover_text": "{Nora} Hour thirty-seven. Patient is a thirty-six-year-old female, bite to the left forearm.",
       "sfx_prompt": "",
       "video_prompt": "",
       "duration_sec": 7,
@@ -185,7 +185,7 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
-      "title_text": "HOUR 61",
+      "title_text": "HOUR 37",
       "notes": "Confirms the thumbnail in the first frame. Cold open on the worst stretch of the story.",
       "ambience_id": "m_e2eb122c",
       "image_check": {
@@ -875,7 +875,7 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
-      "title_text": "61 HOURS EARLIER",
+      "title_text": "37 HOURS EARLIER",
       "notes": "[interrupt: hard cut from night to morning]",
       "ambience_id": "m_364e3c29",
       "image_check": {
@@ -1034,7 +1034,7 @@
       "motion": "zoom_in",
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the walkie ritual (pays off at Hour 79).",
+      "notes": "Setup: the walkie ritual (pays off at Hour 55).",
       "ambience_id": "m_364e3c29",
       "image_check": {
         "url": "/media/images/scene-8-1793346457311-kkc4.png",
@@ -1161,7 +1161,7 @@
       "motion": "pan_left",
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the handcuffs (driving cuffed from Hour 50, the fence at Hour 70). Explains why an ER nurse has them.",
+      "notes": "Setup: the handcuffs (driving cuffed from Hour 33, the fence at Hour 46). Explains why an ER nurse has them.",
       "ambience_id": "m_364e3c29",
       "image_check": {
         "url": "/media/images/scene-9-1793346679499-7tzc.png",
@@ -2726,7 +2726,7 @@
     {
       "scene_id": 20,
       "image_prompt": "Wide shot taken from the middle of a long hospital corridor at night, the camera at standing height facing straight down its length toward a dark far end. Gurneys line both walls nose to tail, receding into the distance, each holding a still figure completely covered by a white sheet. A pale green-grey linoleum floor with long reflections, handrails along the walls, closed doors. Overhead, rectangular fluorescent ceiling panels run down the centre: most glow cold white-green, one in the middle distance flickers half-dark, and the far end of the corridor sinks into shadow. Cold and empty, nobody standing, no staff. Sheets cover every figure completely. No faces, no blood, no readable signs, text or numbers on walls or doors.",
-      "voiceover_text": "Every bitten patient she'd seen that week had turned within about three days.",
+      "voiceover_text": "Every bitten patient she'd seen that week had turned within about two days.",
       "sfx_prompt": "",
       "video_prompt": "",
       "duration_sec": 8,
@@ -2836,7 +2836,7 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
-      "title_text": "72 HOURS",
+      "title_text": "48 HOURS",
       "notes": "[interrupt: flashback cut to the ER]",
       "ambience_id": "m_f1856627",
       "image_check": {
@@ -3051,10 +3051,10 @@
     {
       "scene_id": 22,
       "image_prompt": "Medium close-up taken from the front passenger seat, the camera at eye level facing left toward the driver's seat. Nora, alone, the only person in the frame, driving, seen from the chest up in three-quarter profile, facing the windshield on the right of the frame, eyes fixed on the road ahead, jaw set. Both hands on the steering wheel (two hands), its rim across the lower part of the frame in front of her; the clean white gauze bandage on her left forearm visible on the far side of the wheel. Charcoal-grey zip hoodie, open, left sleeve pushed up, over navy scrubs. Behind her, the driver's side window at the left of the frame with blurred grey fields. Grey overcast morning daylight through that side window edges her cheek and loose hair; soft fill from the windshield. No gauges beside her head, no other person, no text.",
-      "voiceover_text": "Seventy-two hours from the bite meant Tuesday morning. [pause] She had until then.",
+      "voiceover_text": "Forty-eight hours from the bite meant Monday morning. [pause] She had until then.",
       "sfx_prompt": "",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 7.5,
       "image_url": "/media/images/scene-22-1793348243301-igzp.png",
       "voiceover_url": "/media/voiceover/scene-22-1793369991176-p61v.mp3",
       "sfx_url": null,
@@ -3294,10 +3294,10 @@
     {
       "scene_id": 24,
       "image_prompt": "Distant wide shot at dawn (matching the Fort Calder gate reference), taken from the far edge of a wide field of dead grass, the camera at standing height facing a military perimeter about three hundred metres away. A double chain-link fence topped with coiled razor wire stretches across the whole frame from left to right, tall floodlight poles along it, their lights still burning white. In the centre, a sandbagged vehicle gate with a heavy steel sliding gate, a small scanner booth and a diesel generator beside it. The empty field of pale dead grass fills the foreground and middle ground. Behind the fence, low grey army tents and a watchtower. Pale cold dawn light low from the right horizon, out of frame, thin mist over the field. No people, no vehicles in the field, no flags, signs, text or numbers.",
-      "voiceover_text": "The next intake was Tuesday at six A.M., when the gate opened for ten minutes. [pause] An hour and forty minutes before she'd turn.",
+      "voiceover_text": "The next intake was Monday at six A.M., when the gate opened for ten minutes. [pause] An hour and forty minutes before she'd turn.",
       "sfx_prompt": "Wind blowing steadily across a wide open field of dead grass at dawn, a soft hollow rush with gentle gusts, cold, empty and exposed, no birds, no voices, no music",
       "video_prompt": "",
-      "duration_sec": 10.5,
+      "duration_sec": 12,
       "image_url": "/media/images/scene-24-1793374089290-v6sx.png",
       "voiceover_url": "/media/voiceover/scene-24-1793369995645-009g.mp3",
       "sfx_url": "/media/sfx/scene-24-1793370272818-nala.mp3",
@@ -3471,8 +3471,8 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
-      "title_text": "TUESDAY 6:00 AM",
-      "notes": "Only one intake before she turns: explains why they wait at the farm.",
+      "title_text": "MONDAY 6:00 AM",
+      "notes": "Only one intake before she turns, so arriving early buys nothing.",
       "ambience_id": "m_ac0be2a5",
       "image_check": {
         "url": "/media/images/scene-24-1793374089290-v6sx.png",
@@ -3674,10 +3674,10 @@
     {
       "scene_id": 26,
       "image_prompt": "Extreme close-up taken from the front passenger seat, the camera close to the centre of the dashboard and level with the car radio, facing it. The radio's small display glows warm amber, blurred, with no readable characters; around it the dashboard plastic is dark grey, nearly black in the shadow under the windshield. Nora's right hand only (one hand) enters from the left of the frame, her thumb and two fingers on the round volume knob, turning it up; the amber glow lights her fingertips and knuckles. Short plain nails, olive skin. Faint grey overcast daylight from the windshield, out of frame above, barely reaches the dashboard, so the radio glow is the brightest thing in the frame. No gauges, no second hand, no readable text, numbers or logos.",
-      "voiceover_text": "[quietly] Bites caught within seventy-two hours could be treated. [pause] She wanted it to be true so badly.",
+      "voiceover_text": "[quietly] Bites caught within forty-eight hours could be treated. [pause] She wanted it to be true so badly.",
       "sfx_prompt": "An old car radio hissing softly, a gentle steady static from a tinny dashboard speaker with occasional faint crackles, heard close inside a moving car, no clear words, no music",
       "video_prompt": "",
-      "duration_sec": 8,
+      "duration_sec": 9,
       "image_url": "/media/images/scene-26-1793348737550-3ufw.png",
       "voiceover_url": "/media/voiceover/scene-26-1793370000422-661k.mp3",
       "sfx_url": "/media/sfx/scene-26-1793370280120-7b2u.mp3",
@@ -5318,7 +5318,7 @@
       "motion": "pan_right",
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the two-click code (pays off at Hour 70 and Hour 79).",
+      "notes": "Setup: the two-click code (pays off at Hour 46 and Hour 55).",
       "ambience_id": "m_74b631e3",
       "image_check": {
         "url": "/media/images/scene-37-1793349647008-nlcr.png",
@@ -6674,7 +6674,7 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
-      "title_text": "HOUR 19",
+      "title_text": "HOUR 16",
       "notes": "",
       "ambience_id": "m_e2eb122c",
       "image_check": {
@@ -6951,7 +6951,7 @@
       "use_previous_scene": false,
       "motion": "pan_down",
       "shake": null,
-      "title_text": "TYLENOL: 16",
+      "title_text": "TYLENOL: 8",
       "notes": "Setup: the Tylenol is how she means to pass the gate's 100.4°F scan.",
       "ambience_id": "m_e2eb122c",
       "image_check": {
@@ -6969,10 +6969,10 @@
     {
       "scene_id": 50,
       "image_prompt": "Close-up at night from Nora's point of view in the driver's seat, the camera at her eye level looking forward and slightly down. Nora's left hand only (one hand) is held open, palm up, in the centre of the frame, a single white tablet resting in the middle of the palm; the hand trembles slightly, the fingers a little unsteady. The zipped charcoal-grey hoodie cuff covers her wrist. Behind the hand, out of focus: the centre of the dashboard with the dark car radio, and on the flat top of the dashboard just below the windshield, a small white plastic pill bottle standing upright, its label turned away. Beyond: the windshield and the moonlit field. The steering wheel and gauges are out of frame to the left. Light: cold blue moonlight through the windshield in front of the camera, catching the tablet. No second hand, no readable text, label or numbers.",
-      "voiceover_text": "There weren't enough pills to last until Tuesday, [pause] so she started taking half.",
+      "voiceover_text": "There weren't enough pills to last until Monday, [pause] so she started taking half.",
       "sfx_prompt": "",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 7.5,
       "image_url": "/media/images/scene-50-1793351415056-pksn.png",
       "voiceover_url": "/media/voiceover/scene-50-1793370045227-tn47.mp3",
       "sfx_url": null,
@@ -7075,7 +7075,7 @@
       "motion": "none",
       "shake": null,
       "title_text": "",
-      "notes": "Rationed: 16 at Hour 19 → 9 at Hour 61.",
+      "notes": "Rationed: 8 at Hour 16 → 3 at Hour 37.",
       "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-50-1793351415056-pksn.png",
@@ -7454,7 +7454,7 @@
       "motion": "zoom_in",
       "shake": null,
       "title_text": "",
-      "notes": "A lie so he can hope. Answered at Hour 79.",
+      "notes": "A lie so he can hope. Answered at Hour 55.",
       "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-53-1793351909491-fjje.png",
@@ -8809,7 +8809,7 @@
     {
       "scene_id": 63,
       "image_prompt": "Wide shot of the barn interior at night, taken from a high position just inside the closed front doors, the camera looking down the length of the barn. Two people only, about eight metres apart. Frame left, middle ground: Eli asleep on his side on a low platform of hay bales, under a brown wool blanket pulled to his chin, his curly light-brown hair and red jacket collar showing. Directly above him an oil lantern hangs from a beam, throwing a warm pool of light over him. Frame right, against the far right plank wall in much dimmer light: Nora sitting on the dirt floor, her legs stretched out in front of her, her back to the wall, her face turned left toward Eli. Background centre, in deep shadow between them: the rear of the silver sedan, parked facing away from the camera. The plank gaps are black. Nora is pale and sweating, a stained bandage on her left forearm. No third person.",
-      "voiceover_text": "The gate was a day's drive away and didn't open until Tuesday, so they hid in the barn and slept in the hay, [pause] her on the far side.",
+      "voiceover_text": "They'd barely slept, and the gate didn't open until Monday, so they hid in the barn to rest, [pause] her on the far side of the hay.",
       "sfx_prompt": "",
       "video_prompt": "",
       "duration_sec": 14,
@@ -8986,7 +8986,7 @@
       "motion": "none",
       "shake": null,
       "title_text": "",
-      "notes": "Why they wait here: the gate is a day's drive on, and there's only one intake before she turns.",
+      "notes": "Why they stop here: gas, sleep, and the gate doesn't open until Monday.",
       "ambience_id": "m_d957b6b7",
       "image_check": {
         "url": "/media/images/scene-63-1793352444687-2khj.png",
@@ -9000,10 +9000,10 @@
     {
       "scene_id": 64,
       "image_prompt": "Point-of-view shot from inside the barn through a narrow vertical gap between two wall planks, the camera right up against the wood and facing out across the yard. The left and right edges of the frame are filled by the dark, rough, out-of-focus boards; through the bright vertical slit in the middle: a muddy farmyard and, about forty metres away, the old white two-storey farmhouse, its covered front porch with the porch light still glowing yellow, and the front door shut, a frosted glass panel in its upper half. Light: flat grey overcast daylight outside; the inside faces of the planks almost black. Grey sky above the roofline, a bare tree at the side of the house. The farmhouse is small, sharp and centred in the gap. No people outside, no figure visible behind the glass, no animals, no text.",
-      "voiceover_text": "From the house, the thudding never stopped. It went on every few seconds, all day.",
+      "voiceover_text": "From the house, the thudding never stopped. It went on every few seconds, all morning.",
       "sfx_prompt": "",
       "video_prompt": "",
-      "duration_sec": 7.5,
+      "duration_sec": 8,
       "image_url": "/media/images/scene-64-1793376555723-vah3.png",
       "voiceover_url": "/media/voiceover/scene-64-1793370075124-158b.mp3",
       "sfx_url": null,
@@ -9437,10 +9437,10 @@
     {
       "scene_id": 67,
       "image_prompt": "Wide shot inside the dark barn at night, the camera standing between the barn's back wall and the front of the parked silver sedan, slightly toward the car's driver side, facing the car's front at standing height. The sedan fills the middle of the frame nose-on: grey bonnet, headlights switched off, the windshield with a crack across its upper part on the frame-left side (the car's passenger side). Through the windshield, on the frame-right side: Nora, alone, sitting in the driver's seat behind the steering wheel, her face turned down toward the centre of the dashboard, her hands in her lap. The only light: the small amber glow of the car radio in the centre of the dashboard, seen through the glass, lighting her face from below and from her right. Around the car: dark hay bales, timber posts, black plank walls, rain dripping through a gap in the roof in thin silver threads. No other people, no headlights on, no lit lantern, no text.",
-      "voiceover_text": "That night, while Eli slept in the hay, [pause] the first official broadcast came in from Fort Calder.",
+      "voiceover_text": "Around noon a storm turned the barn dark as night, [pause] and while Eli slept, the first official broadcast came in from Fort Calder.",
       "sfx_prompt": "A car radio scanning through static in a dark barn at night, hissing and crackling from a tinny dashboard speaker as stations come and go, close and eerie, no clear words, no music",
       "video_prompt": "",
-      "duration_sec": 9.5,
+      "duration_sec": 12,
       "image_url": "/media/images/scene-67-1793353158391-0gfd.png",
       "voiceover_url": "/media/voiceover/scene-67-1793370082018-cwo9.mp3",
       "sfx_url": "/media/sfx/scene-67-1793370393600-tu5w.mp3",
@@ -9540,8 +9540,8 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
-      "title_text": "HOUR 38",
-      "notes": "Eli sleeps through the statement: he never learns the bitten are shot. The first official word from the camp (the cure was a rumour).",
+      "title_text": "HOUR 30",
+      "notes": "The storm explains the dark barn at midday. Eli sleeps through the statement: he never learns the bitten are shot. The first official word from the camp (the cure was a rumour).",
       "ambience_id": "m_530f3b18",
       "image_check": {
         "url": "/media/images/scene-67-1793353158391-0gfd.png",
@@ -10116,10 +10116,10 @@
     {
       "scene_id": 72,
       "image_prompt": "Close-up of Eli, alone, the only person in the frame, asleep on his side on the hay bales, taken at hay level from about half a metre in front of his face, the camera looking slightly down. He lies curled under the brown wool blanket, his cheek on the hay, his mouth slightly open, eyes closed, curly light-brown hair falling over his forehead. Both of his small hands (two hands) hug the yellow toy walkie-talkie against his chest, its lanyard looped around his neck; the collar of his red rain jacket shows above the blanket. Background: soft dark hay and the darkness of the barn. Light: warm golden oil lantern light from above, the lantern hanging out of frame beyond the top edge, falling across his face and curls. Night, rain on the roof. No adult, no second walkie-talkie.",
-      "voiceover_text": "Now she had a day and a half to make her son walk away from her, [pause] without telling him why.",
+      "voiceover_text": "Now she had sixteen hours to make her son walk away from her, [pause] without telling him why.",
       "sfx_prompt": "",
       "video_prompt": "",
-      "duration_sec": 9,
+      "duration_sec": 9.5,
       "image_url": "/media/images/scene-72-1793353736630-r97x.png",
       "voiceover_url": "/media/voiceover/scene-72-1793370091831-mysx.mp3",
       "sfx_url": null,
@@ -10740,7 +10740,7 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
-      "title_text": "HOUR 50",
+      "title_text": "HOUR 33",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
       "image_check": {
@@ -10994,6 +10994,293 @@
         "people": 0,
         "hands": 1,
         "issues": [],
+        "attempts": 1
+      }
+    },
+    {
+      "scene_id": 83,
+      "image_prompt": "Close-up of the small black dictaphone lying flat on top of the dashboard just below the windshield, taken at dashboard level from the driver's side, the camera facing forward. The dictaphone is in the centre of the frame and sharp, its tiny cassette window facing up toward the camera: inside it the tape is fully rewound, the left spool fat with tape, the right spool empty. Beyond it, out of focus, the windshield: a misty field in pale early morning light, the crack across the upper right of the glass. Light: cold, pale grey-blue dawn light through the windshield, backlighting the dictaphone and glinting along its edges; its red record light is off. No hands, no people, no readable text, labels or numbers.",
+      "voiceover_text": "At the next stop the tape was rewound again. [pause] She wasn't the one who should be keeping this chart anymore.",
+      "sfx_prompt": "The first birds starting at dawn outside a parked car, a few sparse chirps and a distant songbird, faint through the closed windows, quiet and cold, no voices, no music",
+      "video_prompt": "",
+      "duration_sec": 10.5,
+      "image_url": "/media/images/scene-83-1793377046173-hm3y.png",
+      "voiceover_url": "/media/voiceover/scene-83-1793370117298-4lv6.mp3",
+      "sfx_url": "/media/sfx/scene-83-1793370431240-1uvb.mp3",
+      "voiceover_duration_sec": 6.69,
+      "voiceover_words": [
+        {
+          "text": "In",
+          "start": 0,
+          "end": 0.08
+        },
+        {
+          "text": "the",
+          "start": 0.16,
+          "end": 0.24
+        },
+        {
+          "text": "morning",
+          "start": 0.36,
+          "end": 0.8
+        },
+        {
+          "text": "the",
+          "start": 0.88,
+          "end": 0.96
+        },
+        {
+          "text": "tape",
+          "start": 1.04,
+          "end": 1.28
+        },
+        {
+          "text": "was",
+          "start": 1.4,
+          "end": 1.52
+        },
+        {
+          "text": "rewound",
+          "start": 1.68,
+          "end": 2
+        },
+        {
+          "text": "again.",
+          "start": 2.08,
+          "end": 3.31
+        },
+        {
+          "text": "She",
+          "start": 3.44,
+          "end": 3.6
+        },
+        {
+          "text": "wasn't",
+          "start": 3.68,
+          "end": 3.92
+        },
+        {
+          "text": "the",
+          "start": 3.96,
+          "end": 4
+        },
+        {
+          "text": "one",
+          "start": 4.08,
+          "end": 4.24
+        },
+        {
+          "text": "who",
+          "start": 4.32,
+          "end": 4.4
+        },
+        {
+          "text": "should",
+          "start": 4.48,
+          "end": 4.56
+        },
+        {
+          "text": "be",
+          "start": 4.6,
+          "end": 4.64
+        },
+        {
+          "text": "keeping",
+          "start": 4.72,
+          "end": 4.96
+        },
+        {
+          "text": "this",
+          "start": 5.08,
+          "end": 5.2
+        },
+        {
+          "text": "chart",
+          "start": 5.36,
+          "end": 5.52
+        },
+        {
+          "text": "anymore.",
+          "start": 5.6,
+          "end": 6.72
+        }
+      ],
+      "sfx_duration_sec": 9.04,
+      "sfx_layers": [
+        {
+          "layer_id": "l_0dcdb77b",
+          "prompt": "A cassette tape in a small dictaphone fast-rewinding, a high mechanical whirr of the reels spinning, close and tinny, no voices, no music",
+          "url": "/media/sfx/scene-83-1793370433422-45x6.mp3",
+          "duration_sec": 1.65,
+          "volume": 1,
+          "start_sec": 1.68,
+          "length_sec": 1.6,
+          "cue": "rewound",
+          "source_name": null
+        },
+        {
+          "layer_id": "l_0c095223",
+          "prompt": "A small dictaphone's rewind stopping at the start of the tape, one sharp plastic mechanical clunk, close and dry, no voices, no music",
+          "url": "/media/sfx/scene-83-1793370435433-trze.mp3",
+          "duration_sec": 0.63,
+          "volume": 1,
+          "start_sec": 3.4,
+          "length_sec": 0.6,
+          "cue": null,
+          "source_name": null
+        }
+      ],
+      "shots": [
+        {
+          "shot_id": "s_2087d8a9",
+          "image_prompt": "Close-up taken from the front passenger seat, the camera at chest height facing left toward the driver. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her head bowed, staring down at the small black dictaphone in her right hand only (one hand), held in front of her chest; the hand trembles, its fingernails grey and cracked. Her face: sickly pale, sweat, dark circles, the left iris faintly clouding grey, a dark grey vein on her neck, her expression hollow. Her left wrist, still cuffed to the steering wheel rim, is a dim shape at the lower edge of the frame. Behind her: the driver's side window, fogged at its edges, and a misty field at dawn. Light: cold, pale early morning light through the windshield at frame right, lighting her face from the side. No gauges beside her head, no second person, no readable text.",
+          "image_url": "/media/images/scene-83-1793355671394-9kit.png",
+          "motion": "zoom_out",
+          "start_sec": 3.68,
+          "cue": "wasn't the one",
+          "source_name": null,
+          "continues": false,
+          "reference_asset_ids": [
+            "a_8747ca4b",
+            "a_5f2bc0bb",
+            "a_91f52959"
+          ],
+          "image_check": {
+            "url": "/media/images/scene-83-1793355671394-9kit.png",
+            "ok": false,
+            "people": 1,
+            "hands": 1,
+            "issues": [
+              "The cuff is on the right wrist rather than the left wrist being cuffed to the steering wheel rim."
+            ],
+            "attempts": 1
+          }
+        }
+      ],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_8747ca4b"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": false,
+      "motion": "pan_right",
+      "shake": null,
+      "title_text": "",
+      "notes": "Moved before the scraped knee so the cuffing lands at nightfall.",
+      "ambience_id": "m_e2eb122c",
+      "image_check": {
+        "url": "/media/images/scene-83-1793377046173-hm3y.png",
+        "ok": true,
+        "people": 0,
+        "hands": 0,
+        "issues": [],
+        "attempts": 1
+      }
+    },
+    {
+      "scene_id": 84,
+      "image_prompt": "Close-up of Nora's right hand only (one hand), open and palm up in the middle of the frame, taken from above, the camera looking straight down from her eye level as she looks into her own hand. A small white plastic pill bottle stands upright in her palm with its cap off; looking down into its open mouth, only a few white tablets lie at the bottom, the rest of the bottle empty. Her fingers are curled slightly around it and trembling, the fingernails grey, cracked and split. Below the hand, out of focus: her navy scrub trousers on her lap and the edge of the grey cloth driver's seat. Light: pale grey early morning daylight from the windshield in front of her, soft and cold. The bottle's label is turned away. No readable text or numbers, no second hand, no face.",
+      "voiceover_text": "The pills were nearly gone, and the fever was still climbing.",
+      "sfx_prompt": "A few last pills rattling inside a nearly empty plastic pill bottle, shaken in a trembling hand, sparse dry clicks, close-miked inside a quiet car, no voices, no music",
+      "video_prompt": "",
+      "duration_sec": 6,
+      "image_url": "/media/images/scene-84-1793355783229-apkv.png",
+      "voiceover_url": "/media/voiceover/scene-84-1793370118915-v1ox.mp3",
+      "sfx_url": "/media/sfx/scene-84-1793370438823-yypt.mp3",
+      "voiceover_duration_sec": 4.21,
+      "voiceover_words": [
+        {
+          "text": "The",
+          "start": 0,
+          "end": 0.08
+        },
+        {
+          "text": "pills",
+          "start": 0.24,
+          "end": 0.56
+        },
+        {
+          "text": "were",
+          "start": 0.64,
+          "end": 0.72
+        },
+        {
+          "text": "nearly",
+          "start": 0.8,
+          "end": 1.12
+        },
+        {
+          "text": "gone,",
+          "start": 1.32,
+          "end": 1.76
+        },
+        {
+          "text": "and",
+          "start": 1.8,
+          "end": 1.84
+        },
+        {
+          "text": "the",
+          "start": 1.92,
+          "end": 2.08
+        },
+        {
+          "text": "fever",
+          "start": 2.16,
+          "end": 2.4
+        },
+        {
+          "text": "was",
+          "start": 2.48,
+          "end": 2.64
+        },
+        {
+          "text": "still",
+          "start": 2.8,
+          "end": 3.04
+        },
+        {
+          "text": "climbing.",
+          "start": 3.12,
+          "end": 4.16
+        }
+      ],
+      "sfx_duration_sec": 6.03,
+      "sfx_layers": [],
+      "shots": [],
+      "video_url": null,
+      "video_thumb_url": null,
+      "video_duration_sec": null,
+      "video_has_audio": false,
+      "video_start_sec": 0,
+      "video_volume": 1,
+      "source_names": {},
+      "reference_asset_ids": [
+        "a_8747ca4b",
+        "a_5f2bc0bb",
+        "a_91f52959"
+      ],
+      "use_global_references": true,
+      "use_previous_scene": false,
+      "motion": "pan_down",
+      "shake": null,
+      "title_text": "TYLENOL: 3",
+      "notes": "",
+      "ambience_id": "m_e2eb122c",
+      "image_check": {
+        "url": "/media/images/scene-84-1793355783229-apkv.png",
+        "ok": false,
+        "people": 1,
+        "hands": 1,
+        "issues": [
+          "Fingernails are drawn on the palmar surface of the fingers."
+        ],
         "attempts": 1
       }
     },
@@ -11624,7 +11911,7 @@
       "motion": "pan_down",
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the rules Eli follows at Hour 61; Eli keeps the key until he hands it back at the gate.",
+      "notes": "Setup: the rules Eli follows at Hour 37; Eli keeps the key until he hands it back at the gate.",
       "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-81-1793355274880-77xo.png",
@@ -11797,299 +12084,12 @@
       }
     },
     {
-      "scene_id": 83,
-      "image_prompt": "Close-up of the small black dictaphone lying flat on top of the dashboard just below the windshield, taken at dashboard level from the driver's side, the camera facing forward. The dictaphone is in the centre of the frame and sharp, its tiny cassette window facing up toward the camera: inside it the tape is fully rewound, the left spool fat with tape, the right spool empty. Beyond it, out of focus, the windshield: a misty field in pale early morning light, the crack across the upper right of the glass. Light: cold, pale grey-blue dawn light through the windshield, backlighting the dictaphone and glinting along its edges; its red record light is off. No hands, no people, no readable text, labels or numbers.",
-      "voiceover_text": "At the next stop the tape was rewound again. [pause] She wasn't the one who should be keeping this chart anymore.",
-      "sfx_prompt": "The first birds starting at dawn outside a parked car, a few sparse chirps and a distant songbird, faint through the closed windows, quiet and cold, no voices, no music",
-      "video_prompt": "",
-      "duration_sec": 10.5,
-      "image_url": "/media/images/scene-83-1793377046173-hm3y.png",
-      "voiceover_url": "/media/voiceover/scene-83-1793370117298-4lv6.mp3",
-      "sfx_url": "/media/sfx/scene-83-1793370431240-1uvb.mp3",
-      "voiceover_duration_sec": 6.69,
-      "voiceover_words": [
-        {
-          "text": "In",
-          "start": 0,
-          "end": 0.08
-        },
-        {
-          "text": "the",
-          "start": 0.16,
-          "end": 0.24
-        },
-        {
-          "text": "morning",
-          "start": 0.36,
-          "end": 0.8
-        },
-        {
-          "text": "the",
-          "start": 0.88,
-          "end": 0.96
-        },
-        {
-          "text": "tape",
-          "start": 1.04,
-          "end": 1.28
-        },
-        {
-          "text": "was",
-          "start": 1.4,
-          "end": 1.52
-        },
-        {
-          "text": "rewound",
-          "start": 1.68,
-          "end": 2
-        },
-        {
-          "text": "again.",
-          "start": 2.08,
-          "end": 3.31
-        },
-        {
-          "text": "She",
-          "start": 3.44,
-          "end": 3.6
-        },
-        {
-          "text": "wasn't",
-          "start": 3.68,
-          "end": 3.92
-        },
-        {
-          "text": "the",
-          "start": 3.96,
-          "end": 4
-        },
-        {
-          "text": "one",
-          "start": 4.08,
-          "end": 4.24
-        },
-        {
-          "text": "who",
-          "start": 4.32,
-          "end": 4.4
-        },
-        {
-          "text": "should",
-          "start": 4.48,
-          "end": 4.56
-        },
-        {
-          "text": "be",
-          "start": 4.6,
-          "end": 4.64
-        },
-        {
-          "text": "keeping",
-          "start": 4.72,
-          "end": 4.96
-        },
-        {
-          "text": "this",
-          "start": 5.08,
-          "end": 5.2
-        },
-        {
-          "text": "chart",
-          "start": 5.36,
-          "end": 5.52
-        },
-        {
-          "text": "anymore.",
-          "start": 5.6,
-          "end": 6.72
-        }
-      ],
-      "sfx_duration_sec": 9.04,
-      "sfx_layers": [
-        {
-          "layer_id": "l_0dcdb77b",
-          "prompt": "A cassette tape in a small dictaphone fast-rewinding, a high mechanical whirr of the reels spinning, close and tinny, no voices, no music",
-          "url": "/media/sfx/scene-83-1793370433422-45x6.mp3",
-          "duration_sec": 1.65,
-          "volume": 1,
-          "start_sec": 1.68,
-          "length_sec": 1.6,
-          "cue": "rewound",
-          "source_name": null
-        },
-        {
-          "layer_id": "l_0c095223",
-          "prompt": "A small dictaphone's rewind stopping at the start of the tape, one sharp plastic mechanical clunk, close and dry, no voices, no music",
-          "url": "/media/sfx/scene-83-1793370435433-trze.mp3",
-          "duration_sec": 0.63,
-          "volume": 1,
-          "start_sec": 3.4,
-          "length_sec": 0.6,
-          "cue": null,
-          "source_name": null
-        }
-      ],
-      "shots": [
-        {
-          "shot_id": "s_2087d8a9",
-          "image_prompt": "Close-up taken from the front passenger seat, the camera at chest height facing left toward the driver. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her head bowed, staring down at the small black dictaphone in her right hand only (one hand), held in front of her chest; the hand trembles, its fingernails grey and cracked. Her face: sickly pale, sweat, dark circles, the left iris faintly clouding grey, a dark grey vein on her neck, her expression hollow. Her left wrist, still cuffed to the steering wheel rim, is a dim shape at the lower edge of the frame. Behind her: the driver's side window, fogged at its edges, and a misty field at dawn. Light: cold, pale early morning light through the windshield at frame right, lighting her face from the side. No gauges beside her head, no second person, no readable text.",
-          "image_url": "/media/images/scene-83-1793355671394-9kit.png",
-          "motion": "zoom_out",
-          "start_sec": 3.68,
-          "cue": "wasn't the one",
-          "source_name": null,
-          "continues": false,
-          "reference_asset_ids": [
-            "a_8747ca4b",
-            "a_5f2bc0bb",
-            "a_91f52959"
-          ],
-          "image_check": {
-            "url": "/media/images/scene-83-1793355671394-9kit.png",
-            "ok": false,
-            "people": 1,
-            "hands": 1,
-            "issues": [
-              "The cuff is on the right wrist rather than the left wrist being cuffed to the steering wheel rim."
-            ],
-            "attempts": 1
-          }
-        }
-      ],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
-      "video_start_sec": 0,
-      "video_volume": 1,
-      "source_names": {},
-      "reference_asset_ids": [
-        "a_8747ca4b"
-      ],
-      "use_global_references": true,
-      "use_previous_scene": false,
-      "motion": "pan_right",
-      "shake": null,
-      "title_text": "",
-      "notes": "",
-      "ambience_id": "m_e2eb122c",
-      "image_check": {
-        "url": "/media/images/scene-83-1793377046173-hm3y.png",
-        "ok": true,
-        "people": 0,
-        "hands": 0,
-        "issues": [],
-        "attempts": 1
-      }
-    },
-    {
-      "scene_id": 84,
-      "image_prompt": "Close-up of Nora's right hand only (one hand), open and palm up in the middle of the frame, taken from above, the camera looking straight down from her eye level as she looks into her own hand. A small white plastic pill bottle stands upright in her palm with its cap off; looking down into its open mouth, only a few white tablets lie at the bottom, the rest of the bottle empty. Her fingers are curled slightly around it and trembling, the fingernails grey, cracked and split. Below the hand, out of focus: her navy scrub trousers on her lap and the edge of the grey cloth driver's seat. Light: pale grey early morning daylight from the windshield in front of her, soft and cold. The bottle's label is turned away. No readable text or numbers, no second hand, no face.",
-      "voiceover_text": "The pills were nearly gone, and the fever was still climbing.",
-      "sfx_prompt": "A few last pills rattling inside a nearly empty plastic pill bottle, shaken in a trembling hand, sparse dry clicks, close-miked inside a quiet car, no voices, no music",
-      "video_prompt": "",
-      "duration_sec": 6,
-      "image_url": "/media/images/scene-84-1793355783229-apkv.png",
-      "voiceover_url": "/media/voiceover/scene-84-1793370118915-v1ox.mp3",
-      "sfx_url": "/media/sfx/scene-84-1793370438823-yypt.mp3",
-      "voiceover_duration_sec": 4.21,
-      "voiceover_words": [
-        {
-          "text": "The",
-          "start": 0,
-          "end": 0.08
-        },
-        {
-          "text": "pills",
-          "start": 0.24,
-          "end": 0.56
-        },
-        {
-          "text": "were",
-          "start": 0.64,
-          "end": 0.72
-        },
-        {
-          "text": "nearly",
-          "start": 0.8,
-          "end": 1.12
-        },
-        {
-          "text": "gone,",
-          "start": 1.32,
-          "end": 1.76
-        },
-        {
-          "text": "and",
-          "start": 1.8,
-          "end": 1.84
-        },
-        {
-          "text": "the",
-          "start": 1.92,
-          "end": 2.08
-        },
-        {
-          "text": "fever",
-          "start": 2.16,
-          "end": 2.4
-        },
-        {
-          "text": "was",
-          "start": 2.48,
-          "end": 2.64
-        },
-        {
-          "text": "still",
-          "start": 2.8,
-          "end": 3.04
-        },
-        {
-          "text": "climbing.",
-          "start": 3.12,
-          "end": 4.16
-        }
-      ],
-      "sfx_duration_sec": 6.03,
-      "sfx_layers": [],
-      "shots": [],
-      "video_url": null,
-      "video_thumb_url": null,
-      "video_duration_sec": null,
-      "video_has_audio": false,
-      "video_start_sec": 0,
-      "video_volume": 1,
-      "source_names": {},
-      "reference_asset_ids": [
-        "a_8747ca4b",
-        "a_5f2bc0bb",
-        "a_91f52959"
-      ],
-      "use_global_references": true,
-      "use_previous_scene": false,
-      "motion": "pan_down",
-      "shake": null,
-      "title_text": "TYLENOL: 9",
-      "notes": "",
-      "ambience_id": "m_e2eb122c",
-      "image_check": {
-        "url": "/media/images/scene-84-1793355783229-apkv.png",
-        "ok": false,
-        "people": 1,
-        "hands": 1,
-        "issues": [
-          "Fingernails are drawn on the palmar surface of the fingers."
-        ],
-        "attempts": 1
-      }
-    },
-    {
       "scene_id": 85,
       "image_prompt": "Wide shot at night from outside the car, the camera low on the gravel about thirty metres behind the silver sedan and off to its left, facing forward the same way the car faces. The sedan sits small in the lower middle of the frame on a gravel patch at the bottom of a highway off-ramp, parked, headlights and taillights off, a faint red-orange glow inside the cabin. At frame right, the concrete ramp with a steel guardrail curves up and away into the dark. Beyond the car: a flat black field and a low treeline. Above the near horizon, the undersides of low clouds glow a dull amber from distant floodlights hidden below the horizon, the only real light, silhouetting the car's roof. The upper sky is black. Nobody outside the car. No streetlights on, no other vehicles, no readable signs or text.",
-      "voiceover_text": "By hour sixty-one they were close enough to see the floodlights glowing on the clouds. [pause] They parked to wait for morning.",
+      "voiceover_text": "By hour thirty-seven they were close enough to see the floodlights glowing on the clouds. [pause] They parked to wait for morning.",
       "sfx_prompt": "A large generator humming far away across open fields at night, a low steady drone carried on the wind, distant and constant, heard outdoors beside a parked car, no voices, no music",
       "video_prompt": "",
-      "duration_sec": 10,
+      "duration_sec": 11,
       "image_url": "/media/images/scene-85-1793377105029-87cj.png",
       "voiceover_url": "/media/voiceover/scene-85-1793370121900-fp1t.mp3",
       "sfx_url": "/media/sfx/scene-85-1793370441786-rfhx.mp3",
@@ -12257,7 +12257,7 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
-      "title_text": "HOUR 61",
+      "title_text": "HOUR 37",
       "notes": "",
       "ambience_id": "m_e2eb122c",
       "image_check": {
@@ -13521,10 +13521,10 @@
     {
       "scene_id": 95,
       "image_prompt": "Wide shot taken from the middle of the empty road about fifteen metres behind the car, the camera low at bumper height, facing forward in the direction the car is driving. The silver 2009 sedan, centred in the frame, is seen from directly behind, its red taillights glowing, its headlight beams reaching ahead along the two-lane asphalt. No people visible; the rear window is dark. The road runs straight ahead to the horizon between flat fields of dead grass on the left and right, a faded white centre line down the middle. Far ahead on the horizon, a long chain-link fence line glows white under a row of tall floodlights, small and distant. Light: blue pre-dawn, the sky deep blue overhead fading to a pale band at the horizon; the floodlights are the brightest point in the frame. No other vehicles, no road signs, a blank licence plate, no figures on the road.",
-      "voiceover_text": "At hour sixty-six she recorded the last tape she could still say all the words on.",
+      "voiceover_text": "At hour forty-two she recorded the last tape she could still say all the words on.",
       "sfx_prompt": "A large generator humming far away across open country, a low steady drone carried on the wind, distant and constant, heard from an empty road, no voices, no music",
       "video_prompt": "",
-      "duration_sec": 7,
+      "duration_sec": 8.5,
       "image_url": "/media/images/scene-95-1793377388166-oyuf.png",
       "voiceover_url": "/media/voiceover/scene-95-1793370140527-1uug.mp3",
       "sfx_url": "/media/sfx/scene-95-1793370473013-i5zz.mp3",
@@ -13626,7 +13626,7 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
-      "title_text": "HOUR 66",
+      "title_text": "HOUR 42",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
       "image_check": {
@@ -13901,7 +13901,7 @@
       "motion": "pan_down",
       "shake": null,
       "title_text": "",
-      "notes": "The gift is a separate tape; she keeps one blank tape for her own log (Hour 72).",
+      "notes": "The gift is a separate tape; she keeps one blank tape for her own log (Hour 48).",
       "ambience_id": "m_ac0be2a5",
       "image_check": {
         "url": "/media/images/scene-97-1793357650230-f3pr.png",
@@ -14352,7 +14352,7 @@
       "use_previous_scene": false,
       "motion": "pan_up",
       "shake": "light",
-      "title_text": "HOUR 70 · 6:00 AM",
+      "title_text": "HOUR 46 · 6:00 AM",
       "notes": "",
       "ambience_id": "m_ef7f1df0",
       "image_check": {
@@ -15450,7 +15450,7 @@
       "motion": "zoom_in",
       "shake": null,
       "title_text": "",
-      "notes": "The key Eli has kept since Hour 50 comes back to her: she's cuffed to the wheel and needs it to get out. He thinks it's to park the car. He trusts her, no questions, one last time.",
+      "notes": "The key Eli has kept since Hour 33 comes back to her: she's cuffed to the wheel and needs it to get out. He thinks it's to park the car. He trusts her, no questions, one last time.",
       "ambience_id": "m_ef7f1df0",
       "image_check": {
         "url": "/media/images/scene-108-1793358722200-rvt4.png",
@@ -16170,7 +16170,7 @@
       "motion": "pan_down",
       "shake": null,
       "title_text": "",
-      "notes": "[close L12] Why she took the key back: Eli has kept it since Hour 50, and with it he could come back and free her. Now no one can.",
+      "notes": "[close L12] Why she took the key back: Eli has kept it since Hour 33, and with it he could come back and free her. Now no one can.",
       "ambience_id": "m_ef7f1df0",
       "image_check": {
         "url": "/media/images/scene-113-1793378189477-ic67.png",
@@ -16555,7 +16555,7 @@
     {
       "scene_id": 116,
       "image_prompt": "Close-up taken at ground level, the camera low in the dead grass beside the bottom of the fence post, looking slightly down. Nora's left hand only (one hand) lies palm up in the dry golden dead grass, fingers slack and slightly curled, her skin grey, her nails grey and cracked, black veins at the wrist. The steel handcuff is still locked around her wrist, its chain leading out of the frame at the top left to the foot of the fence post. Just beyond her fingertips, on the right, the small black dictaphone lies in the grass, its red record light glowing, its tiny cassette window visible. Light: golden morning sun, low from the left, long shadows of grass blades across her palm. No face, no second hand, no walkie-talkie, no readable text.",
-      "voiceover_text": "{Nora} [tired] Hour seventy-two. Patient is… [long pause]",
+      "voiceover_text": "{Nora} [tired] Hour forty-eight. Patient is… [long pause]",
       "sfx_prompt": "Wind blowing gently through dry dead grass at ground level, a soft papery rustle in slow gusts, close and lonely, outdoors at dawn, no birds, no voices, no music",
       "video_prompt": "",
       "duration_sec": 7,
@@ -16615,7 +16615,7 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
-      "title_text": "HOUR 72",
+      "title_text": "HOUR 48",
       "notes": "[interrupt: her voice stops mid-sentence] Planned silence.",
       "ambience_id": null,
       "image_check": {
@@ -16731,7 +16731,7 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
-      "title_text": "HOUR 79",
+      "title_text": "HOUR 55",
       "notes": "Her tape stays in his pocket, unplayed: saved for later.",
       "ambience_id": "m_43519e53",
       "image_check": {
