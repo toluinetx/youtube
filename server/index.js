@@ -12,10 +12,11 @@ import { historyState } from './history.js';
 import { requestContext, subscribe } from './events.js';
 import { createProject, initProjects, listProjects, openProject, trackBusy } from './projects.js';
 import {
-  GENERATORS, chooseImageVariant, generateAmbience, generateMusic, generateReferenceImage, generateSceneShotImage, recordImageCheck, checkPictureWithClaude, generateSceneSfxLayer, generateSceneVideo,
+  GENERATORS, chooseImageVariant, generateAmbience, generateMusic, generateReferenceImage, generateSceneShotImage, recordImageCheck, checkPictureWithClaude, generateContinuityView, generateSceneSfxLayer, generateSceneVideo,
   imageReferenceCapacity,
 } from './generate.js';
 import { claudeStatus } from './claude.js';
+import { continuityFor, sanitizeContinuity, withContinuity } from './continuity.js';
 import { CAPTION_MODES, CAPTION_POSITIONS, LOOKS, SHAKES } from './finish.js';
 import {
   addToLibrary, ambienceFromAsset, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
@@ -116,6 +117,17 @@ function sanitizeScenePatch(body) {
     patch.shake = body.shake;
   }
   if (body.title_text !== undefined) patch.title_text = String(body.title_text ?? '').slice(0, 80);
+  if (body.continuity_at !== undefined) {
+    if (body.continuity_at !== null && (typeof body.continuity_at !== 'number' && typeof body.continuity_at !== 'string')) {
+      throw badRequest('continuity_at must be null or a scene id');
+    }
+    patch.continuity_at = body.continuity_at === '' ? null : body.continuity_at;
+  }
+  for (const key of ['continuity_include', 'continuity_exclude']) {
+    if (body[key] === undefined) continue;
+    if (!Array.isArray(body[key])) throw badRequest(`${key} must be a list of continuity entry ids`);
+    patch[key] = [...new Set(body[key].map(String).filter((v) => /^c_[\w-]{1,24}$/.test(v)))];
+  }
   if (body.video_volume !== undefined) {
     const v = Number(body.video_volume);
     if (!Number.isFinite(v) || v < 0 || v > 2) throw badRequest('video_volume must be between 0 and 2');
@@ -178,6 +190,11 @@ function sanitizeShots(value) {
     }
     if (typeof s.cue === 'string' && s.cue.trim()) shot.cue = s.cue.trim().slice(0, 200);
     if (s.continues !== undefined) shot.continues = Boolean(s.continues);
+    // Kept as they are unless the client sends them.
+    for (const key of ['continuity_include', 'continuity_exclude']) {
+      if (Array.isArray(s[key])) shot[key] = [...new Set(s[key].map(String).filter((v) => /^c_[\w-]{1,24}$/.test(v)))];
+      else delete shot[key];
+    }
     if (s.reference_asset_ids !== undefined) {
       shot.reference_asset_ids = s.reference_asset_ids === null ? null : sanitizeAssetIds(s.reference_asset_ids, `shots[${i}].reference_asset_ids`);
     }
@@ -190,7 +207,8 @@ function mergeById(current = [], incoming, idKey, editable) {
   const byId = new Map(current.map((x) => [x[idKey], x]));
   return incoming.map((x) => {
     const existing = byId.get(x[idKey]);
-    return existing ? { ...existing, ...Object.fromEntries(editable.map((k) => [k, x[k]])) } : x;
+    // Fields the client left out (undefined) keep the server's value.
+    return existing ? { ...existing, ...Object.fromEntries(editable.filter((k) => x[k] !== undefined).map((k) => [k, x[k]])) } : x;
   });
 }
 
@@ -585,6 +603,34 @@ app.post('/api/references/generate', async (req, res) => {
   const { library } = await readStoryboard();
   const basedOn = referencesByName(library, req.body.based_on).reference_asset_ids ?? [];
   res.status(201).json(await generateReferenceImage({ name, prompt, forEveryScene: Boolean(req.body.for_every_scene), basedOn }));
+});
+
+// ---- Continuity bible ---------------------------------------------------------------------------
+// Characters, props and places, how they look and where they are (see continuity.js).
+
+// Replace the whole bible: { continuity: [entries] }. Responds with it.
+app.put('/api/continuity', async (req, res) => {
+  const list = sanitizeContinuity(req.body?.continuity);
+  const sb = await updateStoryboard((sb) => {
+    sb.continuity = list;
+  }, { label: 'Edit continuity', key: 'continuity' });
+  res.json(sb.continuity);
+});
+
+// What the continuity bible adds to a scene's picture (or a shot's, with ?shot_id=): the entries
+// (detected in the prompt, included), the text block and the reference images, plus the full prompt.
+app.get('/api/scene/:id/continuity', async (req, res) => {
+  const sb = await readStoryboard();
+  const scene = findScene(sb, req.params.id);
+  const slot = req.query.shot_id ? (scene.shots || []).find((x) => x.shot_id === String(req.query.shot_id)) : scene;
+  if (!slot) throw Object.assign(new Error('No such shot'), { status: 404 });
+  const result = continuityFor(sb, scene, slot, slot.image_prompt || '');
+  res.json({ ...result, prompt: withContinuity((slot.image_prompt || '').trim(), result.text) });
+});
+
+// Generate one of an entry's reference views into the library. Responds with { entry, asset, check }.
+app.post('/api/continuity/:entryId/views/:viewId/generate', async (req, res) => {
+  res.status(201).json(await generateContinuityView(req.params.entryId, req.params.viewId));
 });
 
 // ---- Undo / redo ------------------------------------------------------------------------------

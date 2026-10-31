@@ -13,6 +13,7 @@ import Timeline from './components/Timeline.jsx';
 import Inspector from './components/Inspector.jsx';
 import ProjectSettings, { AmbienceSettings, MusicSettings } from './components/ProjectSettings.jsx';
 import LeftPanel from './components/LeftPanel.jsx';
+import ContinuityPanel from './components/ContinuityPanel.jsx';
 import PanelResizer from './components/PanelResizer.jsx';
 import { ModelCatalogProvider } from './components/ModelControls.jsx';
 import ScriptImport from './components/ScriptImport.jsx';
@@ -166,8 +167,16 @@ export default function App() {
     [],
   );
 
+  // Continuity edits not saved yet: kept over what the server sends until they are.
+  const continuityPending = useRef(null);
+  const continuityTimer = useRef(null);
   const applyServer = useCallback(
-    (data) => setSb({ ...data, scenes: data.scenes.map(overlayLocal), settings: { ...data.settings, ...pending.current.settings } }),
+    (data) => setSb({
+      ...data,
+      scenes: data.scenes.map(overlayLocal),
+      settings: { ...data.settings, ...pending.current.settings },
+      continuity: continuityPending.current ?? data.continuity ?? [],
+    }),
     [overlayLocal],
   );
 
@@ -207,6 +216,52 @@ export default function App() {
       queueSave(id, patch);
     },
     [queueSave],
+  );
+
+  /** Edit the continuity bible; saved as a whole a moment after the last change. */
+  const changeContinuity = useCallback(
+    (list) => {
+      continuityPending.current = list;
+      setSb((prev) => ({ ...prev, continuity: list }));
+      clearTimeout(continuityTimer.current);
+      continuityTimer.current = setTimeout(async () => {
+        const sent = continuityPending.current;
+        try {
+          await api.putContinuity(sent);
+        } catch (err) {
+          notify(`Save failed: ${err.message}`);
+        } finally {
+          if (continuityPending.current === sent) continuityPending.current = null;
+        }
+      }, SAVE_DELAY_MS);
+    },
+    [notify],
+  );
+  const [busyViews, setBusyViews] = useState(() => new Set());
+  /** Generate one reference view of a continuity entry (after saving pending edits to it). */
+  const generateContinuityView = useCallback(
+    async (entryId, viewId) => {
+      setBusyViews((b) => new Set(b).add(viewId));
+      try {
+        if (continuityPending.current) {
+          clearTimeout(continuityTimer.current);
+          await api.putContinuity(continuityPending.current);
+          continuityPending.current = null;
+        }
+        const { check } = await api.generateContinuityView(entryId, viewId);
+        applyServer(await api.storyboard());
+        if (check && check.ok === false) notify(`Generated, but the check found: ${(check.issues || []).join(' ') || check.error || 'problems'}`);
+      } catch (err) {
+        notify(`Couldn't generate it: ${err.message}`);
+      } finally {
+        setBusyViews((b) => {
+          const next = new Set(b);
+          next.delete(viewId);
+          return next;
+        });
+      }
+    },
+    [applyServer, notify],
   );
 
   const patchSettings = useCallback(
@@ -1042,6 +1097,17 @@ export default function App() {
               onAssetMenu={(e, asset) => openMenu(e, assetMenuItems(asset))}
             />
           }
+          continuity={
+            <ContinuityPanel
+              continuity={sb.continuity || []}
+              scenes={scenes}
+              library={library}
+              busyViews={busyViews}
+              onChange={changeContinuity}
+              onGenerateView={generateContinuityView}
+            />
+          }
+          continuityCount={(sb.continuity || []).length}
           project={
             <ProjectSettings
               settings={sb.settings}
@@ -1188,6 +1254,8 @@ export default function App() {
                 onUploadSfxLayer={(layerId, file) => uploadSfxLayer(selected.scene_id, layerId, file)}
                 onGenerateShot={(shotId) => generateShot(selected.scene_id, shotId)}
                 claudeReady={Boolean(status?.claude)}
+                continuity={sb.continuity || []}
+                scenes={scenes}
                 onCheckWithClaude={(shotId) => checkWithClaude(selected.scene_id, shotId)}
                 onUploadShot={(shotId, file) => uploadShot(selected.scene_id, shotId, file)}
                 onUpload={(slot, file) => uploadAndUse(selected.scene_id, slot, file)}

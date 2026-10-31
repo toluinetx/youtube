@@ -26,7 +26,8 @@ The same commands work in PowerShell, cmd and bash (forward slashes are fine on 
 
 - `which`: scene numbers **as the editor shows them** (`3`, `63-74,83`); with `--ids`, scene ids.
 - `list` prints JSON: one entry per picture (a scene's own image is shot 1; its extra shots follow)
-  with `key` (`63`, or `63:s_ab12cd34` for a shot), `label`, `prompt` (the brief), `narration`,
+  with `key` (`63`, or `63:s_ab12cd34` for a shot), `label`, `prompt`, `brief` (the prompt plus the
+  continuity bible's facts for this picture: score against this), `narration`,
   `url`, `file` (the PNG on disk), `check` (the current verdict, if any) and `variants` (every
   picture made in the same generation, the one in use included, or null).
   By default it lists only pictures **you** haven't checked yet; `--flagged` lists those whose last
@@ -68,7 +69,7 @@ The same commands work in PowerShell, cmd and bash (forward slashes are fine on 
 ## 2. Score each picture
 
 For each picture, **Read its `file`** (and each variant's `file`), then score it against its
-`prompt`. Use the narration only to understand the scene. Three sub-scores, each 0–100:
+`brief` (the prompt plus its continuity facts: a prop in the wrong place or state is a `content` issue). Use the narration only to understand the scene. Three sub-scores, each 0–100:
 
 - **adherence:** how well it shows what the prompt asks for: the subjects, how many people, key props
   (handcuffs, the walkie-talkie, the dictaphone), framing and camera position, **time of day**, and the

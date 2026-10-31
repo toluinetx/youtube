@@ -138,6 +138,12 @@ async function list(args) {
     if (flagged) return p.check && !p.check.ok;
     return p.check?.checker !== 'claude';
   });
+  // The brief to score against: the prompt plus the continuity bible's facts for this picture.
+  for (const p of items) {
+    const shotId = p.key.includes(':') ? p.key.split(':')[1] : null;
+    const c = await call('GET', `/api/scene/${p.scene_id}/continuity${shotId ? `?shot_id=${encodeURIComponent(shotId)}` : ''}`).catch(() => null);
+    p.brief = c?.prompt || p.prompt;
+  }
   const missing = items.filter((p) => !fs.existsSync(p.file));
   console.log(JSON.stringify({ project: ctx.open, count: items.length, pictures: items }, null, 2));
   if (missing.length) {

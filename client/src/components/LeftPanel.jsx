@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Library, Loader2, PanelLeftClose, Settings2 } from 'lucide-react';
+import { BookMarked, Library, Loader2, PanelLeftClose, Settings2 } from 'lucide-react';
 import PanelResizer from './PanelResizer.jsx';
 
 const hasFiles = (e) => [...e.dataTransfer.types].includes('Files');
 
 const TABS = [
   { key: 'library', label: 'Library', icon: Library },
-  { key: 'project', label: 'Project Settings', icon: Settings2 },
+  { key: 'continuity', label: 'Continuity', icon: BookMarked },
+  { key: 'project', label: 'Project', icon: Settings2 },
 ];
 
 /**
@@ -15,7 +16,7 @@ const TABS = [
  * into the library.
  */
 export default function LeftPanel({
-  tab, onTab, collapsed, onToggle, width, onResize, resize, libraryCount, uploading, onUploadFiles, library, project,
+  tab, onTab, collapsed, onToggle, width, onResize, resize, libraryCount, uploading, onUploadFiles, library, project, continuity, continuityCount = 0,
 }) {
   const [dropping, setDropping] = useState(false);
 
@@ -71,13 +72,14 @@ export default function LeftPanel({
           >
             <Icon className="size-4 shrink-0" /> <span className="truncate">{label}</span>
             {key === 'library' && <span className="text-xs font-normal text-zinc-500 tabular-nums">{libraryCount}</span>}
+            {key === 'continuity' && continuityCount > 0 && <span className="text-xs font-normal text-zinc-500 tabular-nums">{continuityCount}</span>}
           </button>
         ))}
         <button className="icon-btn shrink-0" title="Hide this panel" aria-label="Hide this panel" onClick={onToggle}>
           <PanelLeftClose className="size-4" />
         </button>
       </div>
-      {tab === 'library' ? library : <div className="min-h-0 flex-1 overflow-y-auto">{project}</div>}
+      {tab === 'library' ? library : <div className="min-h-0 flex-1 overflow-y-auto">{tab === 'continuity' ? continuity : project}</div>}
     </aside>
   );
 }

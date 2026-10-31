@@ -150,6 +150,19 @@ and the scene sidebar warns you when that would happen.
    missing ones, told what the failed ones got wrong, and Claude scores those, pass after pass. The button needs Claude Code on the machine that runs the editor's server. Settings in `.env`:
    `CLAUDE_BIN` (path to `claude` if it isn't on the PATH), `CLAUDE_CHECK_CONCURRENCY` (pictures checked at once,
    default 3), `CLAUDE_CHECK_TIMEOUT_SEC` (default 240).
+
+   **Continuity bible.** The **Continuity** tab (left panel) keeps how every character, prop and place looks and
+   where it is, in one place instead of scattered across the prompts: each entry has the words that mean it in a
+   prompt, a description ("the booster seat is behind the front passenger seat; facing back from the windshield it's
+   on the LEFT of the frame"), its **changes as the story goes on** ("from scene 80: one cuff on her left wrist, the
+   other on the top of the steering wheel rim") and its **reference views** (a turnaround, a prop sheet, a plate per
+   direction, a top-down layout), each with a Generate button. Every picture whose prompt names an entry gets a
+   *Continuity* block with its description and its state at that point, and the image check scores against it too,
+   so a prop in the wrong place fails. Props also send their first reference image (*attach*). Under each image
+   prompt, chips show the entries in that picture: click one to leave it out (a prompt that names Eli without showing
+   him), *+ add* one it doesn't name, *show text* to see exactly what's added, and set *Story time* on a flash-forward
+   so it gets the states of the scene it shows. The `continuity` skill builds the bible from the story and audits every
+   prompt against it (*"use continuity: audit the prompts"*).
 4. **Review and fix.** Press <kbd>Space</kbd> to play. Click a scene on the timeline, edit its prompt in the
    sidebar and click **Regenerate**. Only that asset is regenerated. Hover between two scenes on the Image track and click
    **+** to insert a blank scene there, or click the **+** box after the last scene. Drag a scene's right edge to change its length,

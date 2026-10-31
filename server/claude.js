@@ -26,7 +26,7 @@ export const SCORE_CAPS = {
   anatomy: 35, // extra or missing arms, hands, fingers or legs; limbs attached to no one; merged or duplicated bodies or faces
   cast: 45, // more or fewer people than described, someone else's hands in a solo shot, the wrong or a missing main character
   text: 60, // garbled, misspelled or unwanted readable text
-  content: 70, // a key prop or subject missing, night instead of day (or the reverse), something excluded that is prominent
+  content: 70, // a key prop or subject missing, night instead of day (or the reverse), something excluded that is prominent, a continuity fact broken
   minor: 100, // a small deviation a viewer might notice; costs points through the sub-scores only
 };
 const ISSUE_TYPES = Object.keys(SCORE_CAPS);
@@ -42,7 +42,7 @@ Then list every issue a viewer could notice, each as one short sentence an image
 - anatomy: extra or missing arms, hands, fingers or legs; a limb attached to no one; merged or duplicated bodies or faces
 - cast: more or fewer people than the brief describes; another person's hands or arms in a shot of a character described as alone; the wrong or a missing main character; the same character twice
 - text: garbled, misspelled or unwanted readable text
-- content: a key prop or subject missing or plainly different; night instead of day or the reverse; something the brief excludes that is prominent
+- content: a key prop or subject missing or plainly different; night instead of day or the reverse; something the brief excludes that is prominent; anything that contradicts the brief's Continuity facts (a prop in the wrong place or state, a character in the wrong seat)
 - minor: a small deviation a viewer might notice
 
 Count the people and the hands you can see. Don't list matters of taste or details no viewer would notice. Be strict about hands and people: zoom in on every hand and count fingers.`;

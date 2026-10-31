@@ -8,6 +8,8 @@ import {
   withoutSpeakers,
 } from '../util.js';
 import ReferenceList from './ReferenceList.jsx';
+import { entriesFor } from '../continuity.js';
+import { api } from '../api.js';
 import { ImageModelControl, SfxModelControl, VideoModelControl, VoiceControl, VoiceModelControl } from './ModelControls.jsx';
 
 const WORDS_PER_SEC = 2.6;
@@ -15,7 +17,7 @@ const WORDS_PER_SEC = 2.6;
 export default function Inspector({
   scene, previousScene, tab, index, count, start, settings, library, ambience = [], onEditAmbience, busy, errors, onChange, onRegenerate, onUpload, onClear, onDelete, onDuplicate, onMove,
   onRequestSnapshot, onUploadFiles, onSaveToLibrary, onOpenProject, onGenerateVideo, onChangeSettings, onGenerateSfxLayer, onUploadSfxLayer,
-  onGenerateShot, onUploadShot, claudeReady = false, onCheckWithClaude,
+  onGenerateShot, onUploadShot, claudeReady = false, onCheckWithClaude, continuity = [], scenes = [],
 }) {
   const isBusy = (slot) => Boolean(busy[`${scene.scene_id}:${slot}`]);
   const errorFor = (slot) => errors[`${scene.scene_id}:${slot}`];
@@ -279,6 +281,14 @@ export default function Inspector({
                 + project style: {settings.style_prompt}
               </p>
             )}
+            <ContinuityChips
+              continuity={continuity}
+              slot={scene}
+              prompt={scene.image_prompt}
+              sceneId={scene.scene_id}
+              scenes={scenes}
+              onChange={onChange}
+            />
             <Actions
               has={Boolean(scene.image_url)}
               secondary={isVideo}
@@ -427,6 +437,8 @@ export default function Inspector({
               passMark={settings.image_check_threshold ?? 80}
               claudeReady={claudeReady}
               onCheck={onCheckWithClaude && (() => onCheckWithClaude(shot.shot_id))}
+              continuity={continuity}
+              sceneId={scene.scene_id}
               onUpload={(file) => onUploadShot(shot.shot_id, file)}
             />
           ))}
@@ -638,7 +650,7 @@ function Section({ icon: Icon, color, title, hint, children }) {
 /** One extra picture in a scene: its prompt, image, camera motion and when it cuts in. */
 function Shot({
   shot, number, pictureId, cue, shown, sceneDuration, defaultMotion, busy, error, aspectRatio, sceneRefs, library, onRequestSnapshot, onUploadFiles,
-  onEdit, onRemove, onGenerate, onUpload, passMark, claudeReady, onCheck,
+  onEdit, onRemove, onGenerate, onUpload, passMark, claudeReady, onCheck, continuity, sceneId,
 }) {
   const id = `shot-${shot.shot_id}`;
   const start = cue ? cue.sec : shot.start_sec;
@@ -671,6 +683,7 @@ function Shot({
         onChange={(e) => onEdit({ image_prompt: e.target.value })}
         aria-label={`Shot ${number} image prompt`}
       />
+      <ContinuityChips continuity={continuity} slot={shot} prompt={shot.image_prompt} sceneId={sceneId} shotId={shot.shot_id} onChange={onEdit} />
       <label className="label mt-2" htmlFor={`${id}-cue`}>Cut in on words in the narration</label>
       <input
         id={`${id}-cue`}
@@ -999,6 +1012,90 @@ function BusyOverlay() {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black/60">
       <Loader2 className="size-5 animate-spin text-white" />
+    </div>
+  );
+}
+
+/**
+ * The continuity bible's entries in one picture: the ones its prompt names (click to leave one out)
+ * and any added by hand, the facts they add, and (for a scene) which point in the story it shows.
+ */
+function ContinuityChips({ continuity, slot, prompt, sceneId, shotId, scenes, onChange }) {
+  const [preview, setPreview] = useState(null);
+  if (!continuity.length) return null;
+  const rows = entriesFor(continuity, slot, prompt);
+  const include = slot.continuity_include || [];
+  const exclude = slot.continuity_exclude || [];
+  const set = (patch) => {
+    setPreview(null);
+    onChange(patch);
+  };
+  const others = rows.filter((r) => !r.included && !r.detected);
+  const showPreview = async () => {
+    if (preview) return setPreview(null);
+    try {
+      setPreview((await api.sceneContinuity(sceneId, shotId)).text || 'Nothing from the continuity bible applies to this picture.');
+    } catch (err) {
+      setPreview(`Couldn't load it: ${err.message}`);
+    }
+  };
+  return (
+    <div className="mt-1.5 mb-1">
+      <div className="flex flex-wrap items-center gap-1 text-[11px]">
+        <span className="text-zinc-500">Continuity:</span>
+        {rows.filter((r) => r.included || r.detected).map(({ entry, detected, included }) => (
+          <button
+            key={entry.entry_id}
+            className={`rounded px-1.5 py-px ring-1 ${included ? 'bg-zinc-800 text-zinc-200 ring-zinc-700 hover:ring-red-400/60' : 'text-zinc-600 line-through ring-zinc-800 hover:text-zinc-300'}`}
+            title={
+              included
+                ? detected
+                  ? `The prompt names ${entry.name}: its facts are added. Click to leave it out of this picture (e.g. it's only mentioned, not shown).`
+                  : `Added by hand. Click to remove.`
+                : `Left out of this picture. Click to add it back.`
+            }
+            onClick={() => {
+              if (included && detected) set({ continuity_exclude: [...exclude, entry.entry_id] });
+              else if (included) set({ continuity_include: include.filter((id) => id !== entry.entry_id) });
+              else set({ continuity_exclude: exclude.filter((id) => id !== entry.entry_id) });
+            }}
+          >
+            {entry.name}
+            {included && !detected && ' +'}
+          </button>
+        ))}
+        {others.length > 0 && (
+          <select
+            className="rounded bg-transparent px-1 py-px text-zinc-500 ring-1 ring-zinc-800 hover:text-zinc-300"
+            value=""
+            aria-label="Add a continuity entry to this picture"
+            onChange={(e) => e.target.value && set({ continuity_include: [...include, e.target.value], continuity_exclude: exclude.filter((id) => id !== e.target.value) })}
+          >
+            <option value="">+ add</option>
+            {others.map(({ entry }) => <option key={entry.entry_id} value={entry.entry_id}>{entry.name}</option>)}
+          </select>
+        )}
+        <button className="ml-auto text-zinc-500 underline-offset-2 hover:text-zinc-300 hover:underline" onClick={showPreview}>
+          {preview ? 'hide text' : 'show text'}
+        </button>
+      </div>
+      {!shotId && scenes && (
+        <label className="mt-1 flex items-center gap-1.5 text-[11px] text-zinc-500">
+          Story time:
+          <select
+            className="rounded bg-transparent px-1 py-px ring-1 ring-zinc-800"
+            value={slot.continuity_at ?? ''}
+            onChange={(e) => set({ continuity_at: e.target.value === '' ? null : scenes.find((s) => String(s.scene_id) === e.target.value)?.scene_id ?? null })}
+            title="For a flash-forward or flashback: take the continuity states (where the props are, how hurt she is) from the scene it shows."
+          >
+            <option value="">this scene</option>
+            {scenes.map((s, i) => s.scene_id !== sceneId && (
+              <option key={s.scene_id} value={s.scene_id}>as in scene {i + 1}{s.title_text ? ` · ${s.title_text}` : ''}</option>
+            ))}
+          </select>
+        </label>
+      )}
+      {preview && <pre className="mt-1 max-h-48 overflow-auto rounded bg-zinc-900 p-2 text-[11px] whitespace-pre-wrap text-zinc-400">{preview}</pre>}
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { OMNI_TOKENS_PER_SECOND, checkImage, generateGeminiImage, generateGemini
 import { comfyReferenceCapacity, generateComfyImage, isComfyModel } from './comfyui.js';
 import { recordUsage } from './usage.js';
 import { SCORE_CAPS, checkImageWithClaude, isClaudeCheck, scoredCheck } from './claude.js';
+import { continuityFor, withContinuity } from './continuity.js';
 import { composeMusic, soundEffect, textToSpeech } from './elevenlabs.js';
 import { extractThumbnail, joinAudio, probe, probeDuration, referenceDataUri } from './ffmpeg.js';
 
@@ -294,18 +295,29 @@ const checkRank = (check) =>
  *   only if none passed. Up to 1 + retries passes; the best `count` pictures of all passes are kept.
  * `feedback`: problems an earlier check found, to avoid from the first attempt.
  * `keep`: pictures that already passed ([{ buffer, ext, check }]), counted towards `count` and kept.
+ * `slot`: the scene or shot the picture is for (its continuity include / exclude lists). The continuity
+ * bible's entries the prompt mentions add their facts to the prompt and to the check's brief, and
+ * attached entries their reference image.
  * Resolves with { model, images: [{ buffer, ext, check }] }, where check is a check record (with
  * `attempts`, the pass it came from), { error } if the check itself failed, or null if it's off.
  */
-async function generateImagesFor(sb, scene, imagePrompt, previous, { variants = false, feedback = [], check: checkOverride = null, keep = [] } = {}) {
+async function generateImagesFor(sb, scene, scenePrompt, previous, { variants = false, feedback = [], check: checkOverride = null, keep = [], slot = null } = {}) {
   const { settings } = sb;
+  // Reference sheets are drawn from their own prompt only; pictures for the video get the continuity facts.
+  const continuity = scene.scene_id === 'reference' ? null : continuityFor(sb, scene, slot ?? scene, scenePrompt);
+  const imagePrompt = withContinuity(scenePrompt, continuity?.text);
   // Scene references, then project ones, then style images, then the previous shot (dropped first if
   // the model takes fewer). An image that's both a reference and a style image is sent once, as style.
   const styleImages = styleReferences(sb, scene);
   const styleIds = new Set(styleImages.map((r) => r.asset.asset_id));
-  let refs = sceneReferences(sb, scene)
-    .filter((a) => !styleIds.has(a.asset_id))
-    .map((a) => ({ label: refLabel(a), path: mediaUrlToPath(a.url) }));
+  const own = sceneReferences(sb, scene).filter((a) => !styleIds.has(a.asset_id));
+  // Then the continuity bible's attached entries (a prop sheet), after the scene's own references.
+  const byId = new Map(sb.library.map((a) => [a.asset_id, a]));
+  const ownIds = new Set(own.map((a) => a.asset_id));
+  const extra = (continuity?.referenceIds || [])
+    .map((assetId) => byId.get(assetId))
+    .filter((a) => a && !ownIds.has(a.asset_id) && !styleIds.has(a.asset_id) && mediaUrlToPath(a.url));
+  let refs = [...own, ...extra].map((a) => ({ label: refLabel(a), path: mediaUrlToPath(a.url) }));
   refs.push(...styleImages.map(styleRef));
   if (previous) refs.push({ ...previous, previous: true });
   const model = (refs.length ? settings.reference_model : settings.image_model)?.trim();
@@ -512,8 +524,10 @@ export async function checkPictureWithClaude(sceneId, shotId = null) {
   const url = slot.image_url;
   const file = mediaUrlToPath(url);
   if (!file) throw badRequest(`This ${shotId ? 'shot' : 'scene'} has no generated or imported picture to check`);
-  const brief = (slot.image_prompt || '').trim();
-  if (!brief) throw badRequest(`This ${shotId ? 'shot' : 'scene'} has no image prompt to check the picture against`);
+  const prompt = (slot.image_prompt || '').trim();
+  if (!prompt) throw badRequest(`This ${shotId ? 'shot' : 'scene'} has no image prompt to check the picture against`);
+  // Checked against the continuity facts too (the cuffs at the top of the wheel rim, not the bottom).
+  const brief = withContinuity(prompt, continuityFor(sb, scene, slot, prompt).text);
   const model = isClaudeCheck(sb.settings.image_check_model) ? sb.settings.image_check_model : 'claude';
   const checker = imageChecker(sb.settings, { model });
 
@@ -620,12 +634,38 @@ export async function generateReferenceImage({ name, prompt, forEveryScene, base
   return { asset, check };
 }
 
+/**
+ * Generate one reference view of a continuity entry (a character turnaround, a prop sheet, a plate) from
+ * its prompt into the library as "<entry> - <view>", drawn from the views it's `based_on`, and point
+ * the view at it. Resolves with { entry, asset, check }.
+ */
+export async function generateContinuityView(entryId, viewId) {
+  const sb = await readStoryboard();
+  const entry = sb.continuity.find((e) => e.entry_id === entryId);
+  if (!entry) throw Object.assign(new Error('No such continuity entry'), { status: 404 });
+  const view = entry.views.find((v) => v.view_id === viewId);
+  if (!view) throw Object.assign(new Error('No such view'), { status: 404 });
+  if (!view.prompt.trim()) throw badRequest('This view has no prompt');
+  const basedOn = view.based_on
+    .map((id) => entry.views.find((v) => v.view_id === id)?.asset_id)
+    .filter((id) => id && sb.library.some((a) => a.asset_id === id));
+  const name = `${entry.name} - ${view.label}`.replace(/[\\/:*?"<>|]+/g, ' ').trim();
+  const { asset, check } = await generateReferenceImage({ name, prompt: view.prompt, basedOn });
+  const updated = await updateStoryboard((sb2) => {
+    const e = sb2.continuity.find((x) => x.entry_id === entryId);
+    const v = e?.views.find((x) => x.view_id === viewId);
+    if (v) v.asset_id = asset.asset_id;
+    return e;
+  }, { label: `Generate "${name}"` });
+  return { entry: updated, asset, check };
+}
+
 export async function generateSceneImage(sceneId, { feedback, check, keep } = {}) {
   const sb = await readStoryboard();
   const scene = findScene(sb, sceneId);
   if (!scene.image_prompt.trim()) throw badRequest('This scene has no image prompt');
 
-  const { model, images } = await generateImagesFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene), { variants: true, feedback: cleanFeedback(feedback), check, keep });
+  const { model, images } = await generateImagesFor(sb, scene, scene.image_prompt.trim(), previousSceneReference(sb, scene), { variants: true, feedback: cleanFeedback(feedback), check, keep, slot: scene });
   const { file, url, check: checked, variants } = await saveImages(scene.scene_id, images);
   const media = { file, kind: 'image', type: 'image', prompt: scene.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {
@@ -776,7 +816,7 @@ export async function generateSceneShotImage(sceneId, shotId, { feedback, check,
     : scene.use_previous_scene !== false ? { label: 'Previous shot (the picture just before this one)', ...before } : null);
   // With its own references, the shot is made as if the scene had those.
   const asScene = shot.reference_asset_ids ? { ...scene, reference_asset_ids: shot.reference_asset_ids } : scene;
-  const { model, images } = await generateImagesFor(sb, asScene, shot.image_prompt.trim(), previous, { variants: true, feedback: cleanFeedback(feedback), check, keep });
+  const { model, images } = await generateImagesFor(sb, asScene, shot.image_prompt.trim(), previous, { variants: true, feedback: cleanFeedback(feedback), check, keep, slot: shot });
   const { file, url, check: checked, variants } = await saveImages(scene.scene_id, images);
   const media = { file, kind: 'image', type: 'image', prompt: shot.image_prompt.trim(), model, variants };
   return commitGenerated(scene.scene_id, media, (s) => {

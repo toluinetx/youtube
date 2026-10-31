@@ -188,6 +188,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": 85,
       "title_text": "HOUR 37",
       "notes": "Confirms the thumbnail in the first frame. Cold open on the worst stretch of the story.",
       "ambience_id": "m_e2eb122c",
@@ -315,6 +318,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": 85,
       "title_text": "",
       "notes": "Stakes by 0:13: the dependent and the secret.",
       "ambience_id": "m_e2eb122c",
@@ -462,6 +468,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": 85,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -478,7 +487,7 @@
     },
     {
       "scene_id": 4,
-      "image_prompt": "Close-up taken from just in front of the windshield at night, the camera facing backward into the car at Nora's chest height. In the sharp foreground, Nora's left hand only (one hand), raised in front of her face, palm toward the camera, fingers slightly spread and trembling; the fingertips and the pad of the thumb smeared with fresh wet blood. A steel handcuff on her left wrist, its chain hanging down out of frame toward the steering wheel; grey cracked fingernails; the top edge of the stained gauze bandage on her forearm at the bottom of the frame. Behind the hand, her face is blurred and out of focus: the dark shapes of her eyes staring at her fingers. Behind her, the driver's headrest and the black back seat. Lit from below by the red-orange glow of the instrument cluster, out of frame below the bottom edge. Nora alone in the frame. No gauges or dashboard visible, no second hand, no text.",
+      "image_prompt": "Close-up taken from just in front of the windshield at night, the camera facing backward into the car at Nora's chest height. In the sharp foreground, Nora's left hand only (one hand), raised in front of her face, palm toward the camera, fingers slightly spread and trembling; the fingertips and the pad of the thumb smeared with fresh wet blood. A steel handcuff on her left wrist, its short chain running down out of frame to the other cuff, locked on the top of the steering wheel rim; grey cracked fingernails; the top edge of the stained gauze bandage on her forearm at the bottom of the frame. Behind the hand, her face is blurred and out of focus: the dark shapes of her eyes staring at her fingers. Behind her, the driver's headrest and the black back seat. Lit from below by the red-orange glow of the instrument cluster, out of frame below the bottom edge. Nora alone in the frame. No gauges or dashboard visible, no second hand, no text.",
       "voiceover_text": "And she's just woken up with blood on her mouth, [whispers] and she doesn't know whose it is.",
       "sfx_prompt": "A frightened woman's shaky, uneven breathing very close to the microphone, short trembling inhales and unsteady exhales, slightly wet and catching in the throat, intimate and tense inside a quiet car at night, no words, no crying, no music",
       "video_prompt": "",
@@ -635,6 +644,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": "light",
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": 88,
       "title_text": "",
       "notes": "[open L2: whose blood is on her mouth?]",
       "ambience_id": "m_e2eb122c",
@@ -836,6 +848,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": 88,
       "title_text": "",
       "notes": "[open L1: what will she tell Eli at the gate?] Central loop, planted at 0:28.",
       "ambience_id": "m_e2eb122c",
@@ -878,6 +893,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "37 HOURS EARLIER",
       "notes": "[interrupt: hard cut from night to morning]",
       "ambience_id": "m_364e3c29",
@@ -1036,6 +1054,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Setup: the walkie ritual (pays off at Hour 50).",
       "ambience_id": "m_364e3c29",
@@ -1163,6 +1184,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Setup: the handcuffs (driving cuffed from Hour 33, the fence at Hour 46). Explains why an ER nurse has them.",
       "ambience_id": "m_364e3c29",
@@ -1322,6 +1346,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[interrupt: emergency alert tones break the warmth] The alert text could be added as an overlay in the edit (text in images often comes out misspelled).",
       "ambience_id": "m_364e3c29",
@@ -1485,6 +1512,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_364e3c29",
@@ -1686,6 +1716,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_364e3c29",
@@ -1867,6 +1900,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_364e3c29",
@@ -2026,6 +2062,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": "heavy",
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_364e3c29",
@@ -2108,6 +2147,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 0 · 7:40 AM",
       "notes": "[interrupt: everything drops to a ringing silence]",
       "ambience_id": null,
@@ -2277,6 +2319,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L3: did Eli see the bite?]",
       "ambience_id": "m_ac0be2a5",
@@ -2406,7 +2451,10 @@
             "hands": 2,
             "issues": [],
             "attempts": 1
-          }
+          },
+          "continuity_exclude": [
+            "c_03006c85"
+          ]
         }
       ],
       "video_url": null,
@@ -2425,6 +2473,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -2561,6 +2612,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Music: a single low piano note at \"lie\".",
       "ambience_id": "m_ac0be2a5",
@@ -2712,6 +2766,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Setup: the tapes are the narration.",
       "ambience_id": "m_ac0be2a5",
@@ -2839,6 +2896,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "48 HOURS",
       "notes": "[interrupt: flashback cut to the ER]",
       "ambience_id": "m_f1856627",
@@ -3039,6 +3099,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_f1856627",
@@ -3163,6 +3226,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -3282,6 +3348,9 @@
       "use_previous_scene": false,
       "motion": "pan_up",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "FORT CALDER · 212 MI",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -3474,6 +3543,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "MONDAY 6:00 AM",
       "notes": "Only one intake before she turns, so arriving early buys nothing.",
       "ambience_id": "m_ac0be2a5",
@@ -3660,6 +3732,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "100.4°F",
       "notes": "The cure claim comes from a stranger on a ham frequency, not the official broadcast, so the midpoint doesn't contradict it.",
       "ambience_id": "m_ac0be2a5",
@@ -3806,6 +3881,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L4: is the cure at Fort Calder real?]",
       "ambience_id": "m_ac0be2a5",
@@ -3925,6 +4003,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "FUEL: 3/8",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -4067,6 +4148,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 2",
       "notes": "",
       "ambience_id": "m_e8ca5b1a",
@@ -4215,6 +4299,11 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [
+        "c_ec88c0e5"
+      ],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_e8ca5b1a",
@@ -4308,6 +4397,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Eli counts when he's scared (pays off: \"I counted\").",
       "ambience_id": "m_e8ca5b1a",
@@ -4464,6 +4556,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": "light",
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_e8ca5b1a",
@@ -4606,6 +4701,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "+38 MILES",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -4748,6 +4846,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L5: where will they get gas?]",
       "ambience_id": "m_ac0be2a5",
@@ -4893,6 +4994,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -5020,6 +5124,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 9",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -5142,6 +5249,9 @@
       "use_previous_scene": false,
       "motion": "pan_down",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -5320,6 +5430,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Setup: the two-click code (pays off at Hour 46 and Hour 50).",
       "ambience_id": "m_74b631e3",
@@ -5445,6 +5558,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -5566,6 +5682,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -5705,6 +5824,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -5853,6 +5975,9 @@
       "use_previous_scene": false,
       "motion": "pan_up",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -5920,7 +6045,10 @@
             "hands": 4,
             "issues": [],
             "attempts": 1
-          }
+          },
+          "continuity_exclude": [
+            "c_03006c85"
+          ]
         },
         {
           "shot_id": "s_d80bfa2c",
@@ -5939,7 +6067,10 @@
             "hands": 4,
             "issues": [],
             "attempts": 1
-          }
+          },
+          "continuity_exclude": [
+            "c_03006c85"
+          ]
         },
         {
           "shot_id": "s_ae5345ac",
@@ -5958,7 +6089,10 @@
             "hands": 6,
             "issues": [],
             "attempts": 1
-          }
+          },
+          "continuity_exclude": [
+            "c_03006c85"
+          ]
         }
       ],
       "video_url": null,
@@ -5975,6 +6109,11 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": "heavy",
+      "continuity_include": [],
+      "continuity_exclude": [
+        "c_03006c85"
+      ],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -6143,6 +6282,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -6290,6 +6432,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_74b631e3",
@@ -6417,6 +6562,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -6537,6 +6685,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L3] [close L5] Two gallons buys them time, not the whole distance. Music: a low warm piano note.",
       "ambience_id": "m_ac0be2a5",
@@ -6677,6 +6828,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 16",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -6801,6 +6955,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "101.2°F",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -6954,6 +7111,9 @@
       "use_previous_scene": false,
       "motion": "pan_down",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "TYLENOL: 8",
       "notes": "Setup: the Tylenol is how she means to pass the gate's 100.4°F scan.",
       "ambience_id": "m_e2eb122c",
@@ -7077,6 +7237,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Rationed: 8 at Hour 16 → 3 at Hour 37.",
       "ambience_id": "m_e2eb122c",
@@ -7220,6 +7383,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Plants the flu lie from the cold open. Eli copies what she does when he's sick. He doesn't know.",
       "ambience_id": "m_e2eb122c",
@@ -7328,6 +7494,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L6: do they remember people?] Stays open to the last shot on purpose. Music: a low warm piano note.",
       "ambience_id": "m_e2eb122c",
@@ -7456,6 +7625,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "A lie so he can hope. Answered at Hour 50.",
       "ambience_id": "m_e2eb122c",
@@ -7654,6 +7826,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L7: who keeps rewinding the tape?]",
       "ambience_id": "m_e2eb122c",
@@ -7773,6 +7948,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": null,
@@ -7958,6 +8136,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L7] Her own fugues rewind the tape: an instinct to anchor her fading identity.",
       "ambience_id": null,
@@ -8127,6 +8308,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": null,
@@ -8266,6 +8450,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 24",
       "notes": "",
       "ambience_id": "m_d6519637",
@@ -8425,6 +8612,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": "light",
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L8: will the thing in the farmhouse get out?]",
       "ambience_id": "m_d6519637",
@@ -8572,6 +8762,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "The keys in the inside lock (in the picture) show he locked himself in. Setup: mirrors Nora cuffing herself to the fence at the gate.",
       "ambience_id": "m_d6519637",
@@ -8681,6 +8874,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_d957b6b7",
@@ -8797,6 +8993,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "+15 GALLONS",
       "notes": "",
       "ambience_id": "m_d957b6b7",
@@ -8988,6 +9187,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Why they stop here: gas, sleep, and the gate doesn't open until Monday.",
       "ambience_id": "m_d957b6b7",
@@ -9117,6 +9319,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_d957b6b7",
@@ -9285,6 +9490,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Relief before the midpoint drop. Music: a low warm piano note.",
       "ambience_id": "m_d957b6b7",
@@ -9423,6 +9631,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Warmth with dread underneath (the hunger is coming).",
       "ambience_id": "m_d957b6b7",
@@ -9543,6 +9754,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 30",
       "notes": "Eli sleeps through the statement: he never learns the bitten are shot. The first official word from the camp (the cure was a rumour).",
       "ambience_id": "m_530f3b18",
@@ -9721,6 +9935,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L4] [interrupt: radio static cuts to silence] Midpoint reversal (~54%).",
       "ambience_id": "m_530f3b18",
@@ -9814,6 +10031,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": null,
@@ -9948,6 +10168,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_530f3b18",
@@ -10104,6 +10327,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_530f3b18",
@@ -10270,6 +10496,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L9: how will she get Eli to go in without her?] Music: a low warm piano note.",
       "ambience_id": "m_530f3b18",
@@ -10425,6 +10654,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "The Tylenol now buys motor control until the gate.",
       "ambience_id": "m_530f3b18",
@@ -10594,6 +10826,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L8]",
       "ambience_id": "m_530f3b18",
@@ -10743,6 +10978,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 33",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -10854,6 +11092,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -10988,6 +11229,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ac0be2a5",
@@ -11174,6 +11418,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Moved before the scraped knee so the cuffing lands at nightfall.",
       "ambience_id": "m_d6519637",
@@ -11273,6 +11520,9 @@
       "use_previous_scene": false,
       "motion": "pan_down",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "TYLENOL: 3",
       "notes": "",
       "ambience_id": "m_d6519637",
@@ -11453,6 +11703,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_d6519637",
@@ -11588,7 +11841,9 @@
               "The framing is a medium shot showing the character's full face, mouth, and hands instead of an extreme close-up of only the eyes and brow."
             ],
             "attempts": 1
-          }
+          },
+          "continuity_include": [],
+          "continuity_exclude": []
         },
         {
           "shot_id": "s_29f5e70a",
@@ -11626,6 +11881,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": "light",
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L10: what woke up in her?]",
       "ambience_id": null,
@@ -11642,7 +11900,7 @@
     },
     {
       "scene_id": 80,
-      "image_prompt": "Medium shot at night, taken from the front passenger seat, the camera at shoulder height facing left toward the driver's seat. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her body facing the windshield at frame right, her head bowed toward her wrist. Her left wrist is locked in one ring of a steel handcuff; the short chain runs to the other ring, closed around the steering wheel rim at the nine o'clock position, in the lower part of the frame in front of her. The steel cuff gleams. Her right hand rests in her lap. Behind her: the driver's side window, a moonlit field beyond. Light: cold blue moonlight through the windshield from frame right, catching the steel cuff and her cheek; a faint orange glow from the instrument cluster, low behind the wheel and out of frame. Stained bandage on her left forearm, a dark grey vein on her neck. No second person, no gauges beside her head.",
+      "image_prompt": "Medium shot at night, taken from the front passenger seat, the camera at shoulder height facing left toward the driver's seat. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her body facing the windshield at frame right, her head bowed toward her wrist. Her left wrist is locked in one ring of a steel handcuff; the short chain runs to the other ring, closed around the top of the steering wheel rim (twelve o'clock), in the lower part of the frame in front of her. The steel cuff gleams. Her right hand rests in her lap. Behind her: the driver's side window, a moonlit field beyond. Light: cold blue moonlight through the windshield from frame right, catching the steel cuff and her cheek; a faint orange glow from the instrument cluster, low behind the wheel and out of frame. Stained bandage on her left forearm, a dark grey vein on her neck. No second person, no gauges beside her head.",
       "voiceover_text": "From then on she drove cuffed to the steering wheel, [pause] and she gave Eli the key.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -11754,6 +12012,9 @@
       "use_previous_scene": false,
       "motion": "pan_left",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L10] It was the hunger, and she answers it with the cuffs: from here on she drives cuffed to the wheel (as in the cold open and at the gate). [open L12: will she hurt Eli?]",
       "ambience_id": "m_e2eb122c",
@@ -11913,6 +12174,9 @@
       "use_previous_scene": false,
       "motion": "pan_down",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Setup: the rules Eli follows at Hour 37; Eli keeps the key until he hands it back at the gate.",
       "ambience_id": "m_e2eb122c",
@@ -12074,6 +12338,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "He doesn't know. He trusts her.",
       "ambience_id": "m_e2eb122c",
@@ -12260,6 +12527,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 37",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -12325,6 +12595,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": "heavy",
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[interrupt: hard cut to silence, the blackout]",
       "ambience_id": null,
@@ -12378,6 +12651,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Planned 5 s blackout, no narration.",
       "ambience_id": null,
@@ -12394,7 +12670,7 @@
     },
     {
       "scene_id": 88,
-      "image_prompt": "Close-up taken from the windshield looking back at the driver, the camera in front of Nora at chest height, facing backward into the dark car. Nora, alone, the only person in the frame. Her left hand only (one hand) is raised in the foreground, sharp, on the right side of the frame, palm and fingertips turned toward the camera, fingers slightly curled; the pads of her index and middle fingers are smeared with fresh dark red blood. A steel handcuff is locked around her left wrist, its chain hanging down out of the bottom edge toward the steering wheel; black veins run up from the bottom edge toward the wrist. Behind the hand, out of focus: her face, staring at her fingers, a dark smear of blood at her mouth; behind her, the driver's headrest and the black back seat. Light: red-orange glow from the instrument cluster, out of frame below the bottom edge, lighting hand and face from below. No dashboard, gauges or steering wheel in the frame.",
+      "image_prompt": "Close-up taken from the windshield looking back at the driver, the camera in front of Nora at chest height, facing backward into the dark car. Nora, alone, the only person in the frame. Her left hand only (one hand) is raised in the foreground, sharp, on the right side of the frame, palm and fingertips turned toward the camera, fingers slightly curled; the pads of her index and middle fingers are smeared with fresh dark red blood. A steel handcuff is locked around her left wrist, its short chain running down out of the bottom edge to the other cuff, locked on the top of the steering wheel rim; black veins run up from the bottom edge toward the wrist. Behind the hand, out of focus: her face, staring at her fingers, a dark smear of blood at her mouth; behind her, the driver's headrest and the black back seat. Light: red-orange glow from the instrument cluster, out of frame below the bottom edge, lighting hand and face from below. No dashboard, gauges or steering wheel in the frame.",
       "voiceover_text": "She woke up with blood on her mouth, [pause] and the back seat was empty.",
       "sfx_prompt": "A woman's ragged, heavy breathing just after waking from a seizure, deep shaky gasps and wet exhales, very close inside a dark car, frightened, no words, no music",
       "video_prompt": "",
@@ -12510,7 +12786,10 @@
             "hands": 0,
             "issues": [],
             "attempts": 1
-          }
+          },
+          "continuity_exclude": [
+            "c_ec88c0e5"
+          ]
         }
       ],
       "video_url": null,
@@ -12528,6 +12807,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "The cold-open image again: we've caught up.",
       "ambience_id": "m_e2eb122c",
@@ -12685,6 +12967,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -12828,6 +13113,11 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [
+        "c_ec88c0e5"
+      ],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -12987,6 +13277,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L2]",
       "ambience_id": "m_e2eb122c",
@@ -13135,6 +13428,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Lowest point (~74%).",
       "ambience_id": "m_e2eb122c",
@@ -13261,6 +13557,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Music: a low warm piano note.",
       "ambience_id": "m_e2eb122c",
@@ -13472,6 +13771,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -13517,6 +13819,9 @@
       "use_previous_scene": true,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Plant: the dead pass the nearly turned by (pays off at the fence: \"like she was already one of them\").",
       "ambience_id": "m_e2eb122c"
@@ -13629,6 +13934,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 42",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -13783,6 +14091,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "The last tape. Eli never plays it in the video.",
       "ambience_id": "m_e2eb122c",
@@ -13903,6 +14214,9 @@
       "use_previous_scene": false,
       "motion": "pan_down",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "The gift is a separate tape; she keeps one blank tape for her own log (Hour 48).",
       "ambience_id": "m_e2eb122c",
@@ -14062,6 +14376,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_e2eb122c",
@@ -14230,6 +14547,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[open L11: can they get through the dead to the gate?]",
       "ambience_id": "m_ef7f1df0",
@@ -14355,6 +14675,9 @@
       "use_previous_scene": false,
       "motion": "pan_up",
       "shake": "light",
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 46 · 6:00 AM",
       "notes": "",
       "ambience_id": "m_ef7f1df0",
@@ -14506,6 +14829,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ef7f1df0",
@@ -14637,6 +14963,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "8 MIN",
       "notes": "",
       "ambience_id": "m_ef7f1df0",
@@ -14758,6 +15087,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ef7f1df0",
@@ -14834,6 +15166,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ef7f1df0",
@@ -14964,6 +15299,11 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [
+        "c_ec88c0e5"
+      ],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": null,
@@ -15126,7 +15466,10 @@
             "hands": 0,
             "issues": [],
             "attempts": 1
-          }
+          },
+          "continuity_exclude": [
+            "c_ec88c0e5"
+          ]
         }
       ],
       "video_url": null,
@@ -15145,6 +15488,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L1] What she tells him: a lie, so he can walk away believing she's coming.",
       "ambience_id": "m_ef7f1df0",
@@ -15205,6 +15551,9 @@
       "use_previous_scene": false,
       "motion": "pan_up",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "He believes her.",
       "ambience_id": "m_ef7f1df0",
@@ -15452,6 +15801,11 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [
+        "c_ec88c0e5"
+      ],
+      "continuity_at": null,
       "title_text": "",
       "notes": "The key Eli has kept since Hour 33 comes back to her: she's cuffed to the wheel and needs it to get out. He thinks it's to park the car. He trusts her, no questions, one last time.",
       "ambience_id": "m_ef7f1df0",
@@ -15610,6 +15964,11 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [
+        "c_ec88c0e5"
+      ],
+      "continuity_at": null,
       "title_text": "",
       "notes": "",
       "ambience_id": "m_ef7f1df0",
@@ -15750,6 +16109,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L9]",
       "ambience_id": "m_ef7f1df0",
@@ -15908,6 +16270,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Her thumb over the button: sets up the last two clicks.",
       "ambience_id": "m_ef7f1df0",
@@ -16055,6 +16420,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Away from the gate and the soldiers. Pays off the farmer who locked himself in (Hour 24).",
       "ambience_id": "m_ef7f1df0",
@@ -16172,6 +16540,9 @@
       "use_previous_scene": false,
       "motion": "pan_down",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L12] Why she took the key back: Eli has kept it since Hour 33, and with it he could come back and free her. Now no one can.",
       "ambience_id": "m_ef7f1df0",
@@ -16363,6 +16734,9 @@
       "use_previous_scene": false,
       "motion": "pan_right",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L11]",
       "ambience_id": "m_ef7f1df0",
@@ -16541,6 +16915,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Her pulse slowing.",
       "ambience_id": "m_ef7f1df0",
@@ -16618,6 +16995,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 48",
       "notes": "[interrupt: her voice stops mid-sentence] Planned silence.",
       "ambience_id": null,
@@ -16693,6 +17073,11 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [
+        "c_03006c85"
+      ],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Her heart stops for four minutes, then restarts: she has turned. Planned silence.",
       "ambience_id": null,
@@ -16734,6 +17119,9 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "HOUR 50",
       "notes": "Her tape stays in his pocket, unplayed: saved for later.",
       "ambience_id": "m_43519e53",
@@ -16808,6 +17196,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "Bookends Hour 0: \"Eli to Mom, over.\"",
       "ambience_id": "m_43519e53",
@@ -16849,6 +17240,9 @@
       "use_previous_scene": false,
       "motion": "none",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[interrupt: static, then two clicks]",
       "ambience_id": null,
@@ -16914,6 +17308,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "[close L6] Two clicks from her taped thumb. Spasm or memory? Never answered: the viewer decides.",
       "ambience_id": null,
@@ -16989,6 +17386,9 @@
       "use_previous_scene": false,
       "motion": "zoom_in",
       "shake": null,
+      "continuity_include": [],
+      "continuity_exclude": [],
+      "continuity_at": null,
       "title_text": "",
       "notes": "He believes she's alive; the viewer knows she turned. Cut to black on the last frame. No outro.",
       "ambience_id": "m_43519e53",
@@ -48052,6 +48452,505 @@
       "duration_sec": 30.04,
       "volume": 0.35,
       "source_name": null
+    }
+  ],
+  "continuity": [
+    {
+      "entry_id": "c_03006c85",
+      "name": "Nora",
+      "kind": "character",
+      "aliases": [],
+      "description": "Nora, 36, tired and lean, olive skin, faint freckles, dark circles under her eyes, dark brown hair in a messy low bun with loose strands; a navy blue hospital scrub top and trousers, worn white sneakers, and (see the changes) a charcoal-grey zip hoodie over them. The bite is on her LEFT forearm.",
+      "states": [
+        {
+          "state_id": "t_a7238f35",
+          "from_scene_id": null,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Worn out after a twelve-hour night shift; clear brown eyes."
+        },
+        {
+          "state_id": "t_c87eb64b",
+          "from_scene_id": 17,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Pale and shaken; a white gauze bandage on her left forearm; clear brown eyes."
+        },
+        {
+          "state_id": "t_3de7405c",
+          "from_scene_id": 47,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Feverish: sweat on her forehead and neck, bloodshot eyes; both irises still brown."
+        },
+        {
+          "state_id": "t_d7fea506",
+          "from_scene_id": 48,
+          "text": "The charcoal-grey hoodie zipped up to her chin against the chills, the cuffs over her wrists. Feverish: sweat on her forehead and neck, bloodshot eyes; both irises still brown."
+        },
+        {
+          "state_id": "t_7458f1fb",
+          "from_scene_id": 52,
+          "text": "No hoodie: it's over Eli as a blanket, so she wears only the navy scrub top, bare forearms. Feverish: sweat on her forehead and neck, bloodshot eyes; both irises still brown."
+        },
+        {
+          "state_id": "t_c7c3c726",
+          "from_scene_id": 60,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Feverish and pale, sweat at her hairline; both irises still brown."
+        },
+        {
+          "state_id": "t_ec696766",
+          "from_scene_id": 66,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Pale and sweaty; the faintest milky grey haze at the rim of her LEFT iris, the right iris clear brown."
+        },
+        {
+          "state_id": "t_a98fa1a8",
+          "from_scene_id": 79,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Pale clammy skin, a dark grey vein on the side of her neck; her LEFT iris partly clouded grey and spreading, the right iris dark with at most a faint haze at its rim."
+        },
+        {
+          "state_id": "t_e8ea4186",
+          "from_scene_id": 95,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Skin turning grey, grey cracked fingernails; her LEFT iris half clouded grey, the right one hazing."
+        },
+        {
+          "state_id": "t_867922ed",
+          "from_scene_id": 100,
+          "text": "Open charcoal-grey zip hoodie over her scrubs. Grey skin, grey cracked fingernails, both irises clouded grey."
+        }
+      ],
+      "views": [
+        {
+          "view_id": "v_noraturn",
+          "label": "Turnaround",
+          "prompt": "Character turnaround sheet of the same woman as the reference, Nora: 36 years old, tired and lean, olive skin, faint freckles, dark circles under her eyes, dark brown hair in a messy low bun with loose strands, wearing a navy blue hospital scrub top and matching loose navy blue scrub trousers under an open charcoal-grey zip hoodie, worn white sneakers. The same woman shown four times side by side in one row, evenly spaced, not overlapping, from left to right: front view, three-quarter view turned to her left, side profile facing left, back view showing the low bun and the back of the hoodie. Full body in every view, standing, neutral pose, arms relaxed at her sides, identical face, hair, clothing and proportions in all four. Plain light grey background, even soft light, no text, no labels.",
+          "asset_id": "a_91f52959",
+          "based_on": []
+        },
+        {
+          "view_id": "v_48a17abb",
+          "label": "Face close-up",
+          "prompt": "Close-up portrait of Nora: 36, olive skin, faint freckles, dark circles under her eyes, dark brown hair in a messy low bun with loose strands, the collar of an open charcoal-grey zip hoodie over a navy scrub top; head and shoulders, three-quarter view, neutral tired expression, clear brown eyes, plain light grey background, even soft light",
+          "asset_id": null,
+          "based_on": [
+            "v_noraturn"
+          ]
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_ec88c0e5",
+      "name": "Eli",
+      "kind": "character",
+      "aliases": [],
+      "description": "Eli, 8, small for his age, curly light-brown hair, big brown eyes, a gap in his front teeth; an oversized red rain jacket over a green dinosaur T-shirt, jeans and small sneakers; his yellow toy walkie-talkie hangs on a lanyard around his neck. In the car he always rides in his booster seat behind the front passenger seat.",
+      "states": [
+        {
+          "state_id": "t_23620e07",
+          "from_scene_id": 52,
+          "text": "Asleep or curled up under his mother's charcoal-grey hoodie, spread over him like a blanket."
+        },
+        {
+          "state_id": "t_586d62e1",
+          "from_scene_id": 58,
+          "text": "His red rain jacket on as usual, no hoodie."
+        }
+      ],
+      "views": [
+        {
+          "view_id": "v_eliturn",
+          "label": "Turnaround",
+          "prompt": "Character turnaround sheet of the same boy as the reference, Eli: 8 years old, small for his age, curly light-brown hair, big brown eyes, a gap in his front teeth, wearing an oversized red rain jacket over a green dinosaur T-shirt, jeans and small sneakers, a yellow toy walkie-talkie on a lanyard around his neck. The same boy shown four times side by side in one row, evenly spaced, not overlapping, from left to right: front view, three-quarter view turned to his left, side profile facing left, back view showing his curly hair and the back of the red jacket. Full body in every view, standing, neutral pose, arms relaxed at his sides, identical face, hair, clothing and proportions in all four. Plain light grey background, even soft light, no text, no labels.",
+          "asset_id": "a_859cb9b4",
+          "based_on": []
+        },
+        {
+          "view_id": "v_be032d5b",
+          "label": "Face close-up",
+          "prompt": "Close-up portrait of Eli: 8 years old, curly light-brown hair, big brown eyes, a gap in his front teeth, the collar of an oversized red rain jacket over a green dinosaur T-shirt, the yellow toy walkie-talkie lanyard at his neck; head and shoulders, three-quarter view, a small shy smile, plain light grey background, even soft light",
+          "asset_id": null,
+          "based_on": [
+            "v_eliturn"
+          ]
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_334442ee",
+      "name": "Corolla interior",
+      "kind": "place",
+      "aliases": [
+        "Corolla",
+        "sedan",
+        "back seat",
+        "booster seat",
+        "driver's seat",
+        "passenger seat",
+        "steering wheel",
+        "dashboard",
+        "windshield",
+        "rearview mirror",
+        "instrument cluster"
+      ],
+      "description": "Inside the silver 2009 sedan. Left-hand drive: the driver's seat (Nora's) is front left, the front passenger seat front right. Eli's booster seat sits on the back seat directly behind the front passenger seat (rear right); the seat behind the driver is empty. Worn grey cloth seats, a crack across the upper right of the windshield (seen facing forward), a red-orange glowing instrument cluster, crumpled paper food wrappers on the floor. Facing back from the windshield, the booster seat is on the LEFT of the frame; facing forward from the back seat, on the RIGHT; in the rearview mirror, on the RIGHT.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_carfwd",
+          "label": "Facing forward",
+          "prompt": "Empty interior of a 2009 silver sedan, left-hand drive with the steering wheel on the left, seen from the middle of the back seat looking straight forward between the two front seats toward the windshield, natural perspective: worn grey cloth seats, a cracked windshield, a softly glowing dashboard, a child's booster seat on the back seat behind the front passenger seat on the right, crumpled plain unbranded paper food wrappers and a plain brown paper bag on the floor, no logos or writing anywhere; wide angle, eye level, no people",
+          "asset_id": "a_8747ca4b",
+          "based_on": []
+        },
+        {
+          "view_id": "v_carback",
+          "label": "Facing back",
+          "prompt": "The same empty car interior as the reference, now seen from the opposite direction: the camera is just behind the windshield at the centre of the dashboard, at seated eye level, facing straight backward toward the rear of the car. It is a left-hand-drive car, so looking backward the driver's seat appears on the RIGHT of the frame and the front passenger seat on the LEFT. Foreground, along the bottom edge: the top of the dark dashboard. Middle: the fronts of the two front seats in worn grey cloth with their headrests, the gear stick and centre console between them; the steering wheel rim just visible at the lower right edge in front of the driver's seat. Behind them: the grey cloth back seat bench; the child's booster seat sits on the back seat behind the front passenger seat, so it appears on the LEFT of the frame; the empty seat behind the driver on the right; crumpled plain paper food wrappers and a plain brown paper bag on the rear floor. The rear window across the back, dark night outside. The dome light in the roof centre glows dim warm yellow. Same materials, colours and wear as the reference. Wide angle, no people, no text, no logos.",
+          "asset_id": "a_5f2bc0bb",
+          "based_on": []
+        },
+        {
+          "view_id": "v_929d9b8c",
+          "label": "Top-down layout",
+          "prompt": "Top-down cutaway view of the same empty car interior as the references, the roof removed, seen from directly above with the front of the car at the top of the image: left-hand drive, the steering wheel and driver's seat at the front left, the front passenger seat at the front right, the gear stick and centre console between them, the back seat across the rear with a child's booster seat on its right side directly behind the front passenger seat, the left rear seat empty, crumpled paper food wrappers on the floor; clean and readable, no people",
+          "asset_id": null,
+          "based_on": [
+            "v_carfwd",
+            "v_carback"
+          ]
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_3dd496cf",
+      "name": "Handcuffs",
+      "kind": "prop",
+      "aliases": [
+        "handcuff",
+        "handcuffs",
+        "handcuffed",
+        "cuffed"
+      ],
+      "description": "Steel police handcuffs: two polished steel cuffs joined by a short chain of three links.",
+      "states": [
+        {
+          "state_id": "t_ce0a72e8",
+          "from_scene_id": 9,
+          "text": "In the pocket of Nora's navy scrub top (a cop left them on a gurney during her night shift)."
+        },
+        {
+          "state_id": "t_4078ab4a",
+          "from_scene_id": 80,
+          "text": "One cuff locked on Nora's LEFT wrist, the other locked around the TOP of the steering wheel rim (twelve o'clock), the short chain between them; her left hand rests on top of the wheel. She drives and sleeps like this."
+        },
+        {
+          "state_id": "t_2ee1051e",
+          "from_scene_id": 109,
+          "text": "Off the wheel and unlocked, in Nora's hoodie pocket; a raw red mark around her left wrist where the cuff was."
+        },
+        {
+          "state_id": "t_673c211d",
+          "from_scene_id": 112,
+          "text": "One cuff locked on Nora's LEFT wrist, the other around a thin galvanised steel post of the outer perimeter fence, away from the gate."
+        }
+      ],
+      "views": [
+        {
+          "view_id": "v_cuffsheet",
+          "label": "Prop sheet",
+          "prompt": "Prop reference sheet of steel police handcuffs: two polished steel cuffs joined by a short chain of three links; the same object shown four times side by side on a plain light grey background: front view, side view, back view and a close-up of the keyhole and ratchet teeth; even soft light, no hands, no people, no text or logos",
+          "asset_id": null,
+          "based_on": []
+        },
+        {
+          "view_id": "v_5e7d161a",
+          "label": "On the wheel",
+          "prompt": "Close-up of the same steel handcuffs as the reference: one cuff locked around a woman's left wrist, the other locked around the top of a car steering wheel rim at twelve o'clock, the short chain between them, her left hand resting on top of the wheel; a white gauze bandage on her forearm; seen from the front passenger seat, plain dark car interior, even soft light, one hand only",
+          "asset_id": null,
+          "based_on": [
+            "v_cuffsheet"
+          ]
+        }
+      ],
+      "attach": true
+    },
+    {
+      "entry_id": "c_0067dac4",
+      "name": "Handcuff key",
+      "kind": "prop",
+      "aliases": [
+        "handcuff key",
+        "cuff key"
+      ],
+      "description": "A tiny silver handcuff key, about as long as a thumbnail, with a round bow and a short barrel.",
+      "states": [
+        {
+          "state_id": "t_172b4f2f",
+          "from_scene_id": 80,
+          "text": "Eli keeps it in his jacket pocket."
+        },
+        {
+          "state_id": "t_92131761",
+          "from_scene_id": 108,
+          "text": "In Nora's hand: Eli gave it back."
+        },
+        {
+          "state_id": "t_da70d3dc",
+          "from_scene_id": 113,
+          "text": "Lying in the dead grass inside the fence, out of reach."
+        }
+      ],
+      "views": [
+        {
+          "view_id": "v_df15035c",
+          "label": "Prop sheet",
+          "prompt": "Prop reference sheet of a tiny silver handcuff key with a round bow and a short barrel; the same object shown four times side by side on a plain light grey background: front view, side view, back view and a close-up of its bit; even soft light, no hands, no people, no text or logos",
+          "asset_id": null,
+          "based_on": []
+        }
+      ],
+      "attach": true
+    },
+    {
+      "entry_id": "c_cac25bca",
+      "name": "Yellow walkie-talkie",
+      "kind": "prop",
+      "aliases": [
+        "yellow toy walkie-talkie",
+        "yellow walkie-talkie",
+        "yellow walkie"
+      ],
+      "description": "Eli's toy walkie-talkie: small and yellow, a stubby black antenna, a round speaker grille and a push-to-talk button on its left side; always on a lanyard around Eli's neck.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_yellowsheet",
+          "label": "Prop sheet",
+          "prompt": "Prop reference sheet of a small yellow toy walkie-talkie with a stubby black antenna, a round speaker grille and a push-to-talk button on its left side, a black lanyard loop at the bottom; the same object shown four times side by side on a plain light grey background: front view, side view, back view and a close-up of the push-to-talk button; even soft light, no hands, no people, no text or logos",
+          "asset_id": null,
+          "based_on": []
+        }
+      ],
+      "attach": true
+    },
+    {
+      "entry_id": "c_ddf00295",
+      "name": "Blue walkie-talkie",
+      "kind": "prop",
+      "aliases": [
+        "blue toy walkie-talkie",
+        "blue walkie-talkie",
+        "blue walkie"
+      ],
+      "description": "Nora's toy walkie-talkie: the other half of Eli's set, exactly the same model in blue (stubby black antenna, round speaker grille, push-to-talk button on its left side).",
+      "states": [
+        {
+          "state_id": "t_90f7ab12",
+          "from_scene_id": null,
+          "text": "Nora carries it in her hoodie pocket, or in her hand when she talks to Eli."
+        },
+        {
+          "state_id": "t_e4103abb",
+          "from_scene_id": 111,
+          "text": "Bound into Nora's RIGHT hand with white medical tape wound around her palm and two black zip ties across her fingers, her thumb on the push-to-talk button."
+        }
+      ],
+      "views": [
+        {
+          "view_id": "v_bluesheet",
+          "label": "Prop sheet",
+          "prompt": "Prop reference sheet of a small blue toy walkie-talkie: stubby black antenna, round speaker grille, push-to-talk button on its left side; the same object shown four times side by side on a plain light grey background: front view, side view, back view and a close-up of the push-to-talk button; even soft light, no hands, no people, no text or logos",
+          "asset_id": null,
+          "based_on": []
+        },
+        {
+          "view_id": "v_65bd0baa",
+          "label": "Taped in hand",
+          "prompt": "Close-up of a woman's right hand bound around the same blue toy walkie-talkie as the reference with white medical tape wound several times around her palm and two black zip ties across her fingers, her thumb on the push-to-talk button; plain dark background, even soft light, one hand only",
+          "asset_id": null,
+          "based_on": [
+            "v_bluesheet"
+          ]
+        }
+      ],
+      "attach": true
+    },
+    {
+      "entry_id": "c_9f1573f4",
+      "name": "Dictaphone",
+      "kind": "prop",
+      "aliases": [
+        "dictaphone",
+        "tape recorder"
+      ],
+      "description": "Nora's symptom log: a small black handheld cassette dictaphone with a tiny cassette window, a red record light and chunky silver buttons; kept in her hoodie pocket.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_7220e958",
+          "label": "Prop sheet",
+          "prompt": "Prop reference sheet of a small black handheld cassette dictaphone with a tiny cassette window showing two spools, a red record light and chunky silver buttons; the same object shown four times side by side on a plain light grey background: front view, side view, back view and a close-up of the cassette window and record light; even soft light, no hands, no people, no text or logos",
+          "asset_id": null,
+          "based_on": []
+        }
+      ],
+      "attach": true
+    },
+    {
+      "entry_id": "c_73e8e77a",
+      "name": "Bandage",
+      "kind": "prop",
+      "aliases": [
+        "bandage",
+        "gauze"
+      ],
+      "description": "The white gauze bandage wrapped around Nora's LEFT forearm, over the bite.",
+      "states": [
+        {
+          "state_id": "t_39416a54",
+          "from_scene_id": null,
+          "text": "Not there yet: her left forearm is unhurt."
+        },
+        {
+          "state_id": "t_b9b29d5a",
+          "from_scene_id": 17,
+          "text": "Fresh white gauze, a small red spot seeping through."
+        },
+        {
+          "state_id": "t_52dd7d48",
+          "from_scene_id": 43,
+          "text": "Soaked through bright red where the wound tore."
+        },
+        {
+          "state_id": "t_318a419c",
+          "from_scene_id": 47,
+          "text": "Stained dark red, dried at the edges."
+        },
+        {
+          "state_id": "t_26c5c039",
+          "from_scene_id": 75,
+          "text": "Stained dark brown-red; thin black veins spread from under its lower edge toward the wrist."
+        },
+        {
+          "state_id": "t_ba128af5",
+          "from_scene_id": 95,
+          "text": "Stained dark brown; black veins reach the wrist and the back of her hand, the skin around it grey."
+        }
+      ],
+      "views": [
+        {
+          "view_id": "v_75ba9ee9",
+          "label": "Stages",
+          "prompt": "Reference sheet of the same woman's left forearm shown four times side by side, wrapped in white gauze, from left to right: fresh gauze with a small red spot; soaked through bright red; stained dark brown-red with thin black veins spreading from under its edge toward the wrist; dark brown with black veins reaching the back of the hand and grey skin; plain light grey background, even soft light, one arm per view, no text",
+          "asset_id": null,
+          "based_on": []
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_dc30f5e8",
+      "name": "Farm barn",
+      "kind": "place",
+      "aliases": [
+        "barn",
+        "hay"
+      ],
+      "description": "An old wooden barn: stacked hay bales, a single oil lantern hanging from a beam, a workbench with hand tools, thin slats of light through gaps in the plank walls; the silver sedan is parked inside.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_3d04482c",
+          "label": "Main view",
+          "prompt": "Empty establishing shot of an old wooden barn interior: stacked hay bales, a single hanging oil lantern, a workbench with hand tools, thin slats of light through gaps in the plank walls; wide angle, eye level, no people",
+          "asset_id": "a_b1cbd038",
+          "based_on": []
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_bba11d55",
+      "name": "Fort Calder gate",
+      "kind": "place",
+      "aliases": [
+        "Fort Calder",
+        "perimeter",
+        "scanner booth",
+        "razor wire"
+      ],
+      "description": "A military perimeter: a double chain-link fence topped with razor wire, tall floodlight poles, a sandbagged steel vehicle gate with a small scanner booth and a boxy diesel generator just inside on the right, a wide field of dead grass in front.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_06f857aa",
+          "label": "Main view",
+          "prompt": "Empty establishing shot of a military perimeter at dawn: a double chain-link fence topped with razor wire, tall floodlight poles, a sandbagged vehicle gate with a small scanner booth and a diesel generator, a wide field of dead grass in the foreground; wide angle, eye level, no people",
+          "asset_id": "a_e1336dc6",
+          "based_on": []
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_aaf035da",
+      "name": "Gas station",
+      "kind": "place",
+      "aliases": [
+        "gas station",
+        "school bus",
+        "pumps"
+      ],
+      "description": "A small rural two-pump gas station on an empty two-lane road: peeling white paint, a dark shop window, a yellow school bus abandoned beside the pumps.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_64644d61",
+          "label": "Main view",
+          "prompt": "Empty establishing shot of a small rural two-pump gas station on an empty two-lane road at dusk: peeling white paint, a dark shop window, a yellow school bus abandoned beside the pumps; wide angle, eye level, no people",
+          "asset_id": "a_32c4b39f",
+          "based_on": []
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_ab558d8b",
+      "name": "Farmhouse",
+      "kind": "place",
+      "aliases": [
+        "farmhouse",
+        "porch"
+      ],
+      "description": "An old white two-storey farmhouse: a wooden front porch with a glowing yellow porch light, a front door with a frosted glass panel, a gravel yard, the barn to one side.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_f187e594",
+          "label": "Main view",
+          "prompt": "Empty establishing shot of an old white two-storey farmhouse on a grey morning: a wooden front porch with a glowing porch light, a front door with a frosted glass panel, a gravel yard in front, an old wooden barn to one side; wide angle, eye level, no people",
+          "asset_id": "a_ad9fc1f9",
+          "based_on": []
+        }
+      ],
+      "attach": false
+    },
+    {
+      "entry_id": "c_c7a15ee4",
+      "name": "Kitchen",
+      "kind": "place",
+      "aliases": [
+        "kitchen"
+      ],
+      "description": "Nora and Eli's small sunlit suburban kitchen: white cabinets, a small table by a window, a stove with a frying pan, a counter with a coffee mug.",
+      "states": [],
+      "views": [
+        {
+          "view_id": "v_b5ab3c1e",
+          "label": "Main view",
+          "prompt": "Empty establishing shot of a small sunlit suburban kitchen in the morning: a small table by a window, a stove with a frying pan, a counter with a coffee mug, morning light through the window; wide angle, eye level, no people",
+          "asset_id": "a_d46dfbb9",
+          "based_on": []
+        }
+      ],
+      "attach": false
     }
   ]
 }
