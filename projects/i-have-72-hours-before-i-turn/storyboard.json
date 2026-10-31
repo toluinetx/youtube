@@ -1034,7 +1034,7 @@
       "motion": "zoom_in",
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the walkie ritual (pays off at Hour 55).",
+      "notes": "Setup: the walkie ritual (pays off at Hour 50).",
       "ambience_id": "m_364e3c29",
       "image_check": {
         "url": "/media/images/scene-8-1793346457311-kkc4.png",
@@ -5318,7 +5318,7 @@
       "motion": "pan_right",
       "shake": null,
       "title_text": "",
-      "notes": "Setup: the two-click code (pays off at Hour 46 and Hour 55).",
+      "notes": "Setup: the two-click code (pays off at Hour 46 and Hour 50).",
       "ambience_id": "m_74b631e3",
       "image_check": {
         "url": "/media/images/scene-37-1793349647008-nlcr.png",
@@ -7454,7 +7454,7 @@
       "motion": "zoom_in",
       "shake": null,
       "title_text": "",
-      "notes": "A lie so he can hope. Answered at Hour 55.",
+      "notes": "A lie so he can hope. Answered at Hour 50.",
       "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-53-1793351909491-fjje.png",
@@ -8808,7 +8808,7 @@
     },
     {
       "scene_id": 63,
-      "image_prompt": "Wide shot of the barn interior at night, taken from a high position just inside the closed front doors, the camera looking down the length of the barn. Two people only, about eight metres apart. Frame left, middle ground: Eli asleep on his side on a low platform of hay bales, under a brown wool blanket pulled to his chin, his curly light-brown hair and red jacket collar showing. Directly above him an oil lantern hangs from a beam, throwing a warm pool of light over him. Frame right, against the far right plank wall in much dimmer light: Nora sitting on the dirt floor, her legs stretched out in front of her, her back to the wall, her face turned left toward Eli. Background centre, in deep shadow between them: the rear of the silver sedan, parked facing away from the camera. The plank gaps are black. Nora is pale and sweating, a stained bandage on her left forearm. No third person.",
+      "image_prompt": "Wide shot of the barn interior in the late morning, taken from a high position just inside the closed front doors, the camera looking down the length of the barn. Two people only, about eight metres apart. Frame left, middle ground: Eli asleep on his side on a low platform of hay bales, under a brown wool blanket pulled to his chin, his curly light-brown hair and red jacket collar showing. Directly above him an oil lantern hangs from a beam, throwing a warm pool of light over him. Frame right, against the far right plank wall in much dimmer light: Nora sitting on the dirt floor, her legs stretched out in front of her, her back to the wall, her face turned left toward Eli. Background centre, in deep shadow between them: the rear of the silver sedan, parked facing away from the camera. The plank gaps are black. Nora is pale and sweating, a stained bandage on her left forearm. No third person.",
       "voiceover_text": "They'd barely slept, and the gate didn't open until Monday, so they hid in the barn to rest, [pause] her on the far side of the hay.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -8929,7 +8929,7 @@
       "shots": [
         {
           "shot_id": "s_c8f262bf",
-          "image_prompt": "The same wide shot of the barn interior at night, same high camera position just inside the closed front doors and same framing, a little later. Two people only, about eight metres apart. Frame left, middle ground: Eli asleep on his side on the low platform of hay bales under the brown wool blanket, exactly as before, his curly hair and red jacket collar showing. Above him the oil lantern hangs from the same beam, but it is now turned low: its pool of warm light is smaller and dimmer. Frame right, against the far right plank wall: Nora still sits on the floor with her back to the wall, but she has now drawn her knees up to her chest and wrapped her arms around them, her face still turned left toward Eli. Background centre in deep shadow: the rear of the silver sedan. Black plank gaps. Only the lantern brightness and Nora's knees have changed. No third person.",
+          "image_prompt": "The same wide shot of the barn interior in the late morning, same high camera position just inside the closed front doors and same framing, a little later. Two people only, about eight metres apart. Frame left, middle ground: Eli asleep on his side on the low platform of hay bales under the brown wool blanket, exactly as before, his curly hair and red jacket collar showing. Above him the oil lantern hangs from the same beam, but it is now turned low: its pool of warm light is smaller and dimmer. Frame right, against the far right plank wall: Nora still sits on the floor with her back to the wall, but she has now drawn her knees up to her chest and wrapped her arms around them, her face still turned left toward Eli. Background centre in deep shadow: the rear of the silver sedan. Black plank gaps. Only the lantern brightness and Nora's knees have changed. No third person.",
           "image_url": "/media/images/scene-63-1793352570340-yjyt.png",
           "motion": "none",
           "start_sec": 4.36,
@@ -8948,7 +8948,7 @@
         },
         {
           "shot_id": "s_869a0bff",
-          "image_prompt": "Medium close-up of Nora, alone, the only person in the frame, taken from the middle of the barn at her seated eye level, the camera facing the far right plank wall. She sits on the dirt floor with her back against the weathered vertical planks, knees drawn up to her chest, both arms wrapped around her shins, the stained white gauze bandage on her left forearm visible across her knees. Her eyes look just past the camera, across the barn toward her sleeping son, who is out of frame behind the camera. Behind her: the grey planks, the narrow gaps between them black with night. Light: a weak warm glow from the oil lantern hanging across the barn, out of frame behind the camera, touching her face and knees from the front; the wall around her falls into shadow. She is sickly pale, sweat at her hairline, a messy dark low bun, navy scrubs and an open charcoal-grey hoodie. No second person, no lantern in the frame.",
+          "image_prompt": "Medium close-up of Nora, alone, the only person in the frame, taken from the middle of the barn at her seated eye level, the camera facing the far right plank wall. She sits on the dirt floor with her back against the weathered vertical planks, knees drawn up to her chest, both arms wrapped around her shins, the stained white gauze bandage on her left forearm visible across her knees. Her eyes look just past the camera, across the barn toward her sleeping son, who is out of frame behind the camera. Behind her: the grey planks, thin slats of pale grey daylight glowing through the narrow gaps between them. Light: a weak warm glow from the oil lantern hanging across the barn, out of frame behind the camera, touching her face and knees from the front; the wall around her falls into shadow. She is sickly pale, sweat at her hairline, a messy dark low bun, navy scrubs and an open charcoal-grey hoodie. No second person, no lantern in the frame.",
           "image_url": "/media/images/scene-63-1793352670465-30zv.png",
           "motion": "zoom_in",
           "start_sec": 6,
@@ -9128,7 +9128,7 @@
     },
     {
       "scene_id": 65,
-      "image_prompt": "Medium shot of Eli, alone, the only person in the frame, taken at his eye level from about a metre in front of him and slightly to his right. He sits cross-legged on top of a hay bale, his oversized red rain jacket open over his green dinosaur T-shirt. His right hand holds the small yellow toy walkie-talkie up near his chin, his right thumb pressing its side button; its lanyard runs up around his neck; his left hand rests on his left knee. He grins wide, showing the gap in his front teeth, his big brown eyes looking past the camera across the barn. Behind him: more hay bales stacked high, fading into the dark barn. Light: a warm oil lantern hanging from a beam above and to the left, just out of frame beyond the top left edge, lighting his face and curls from above. Evening; the plank gaps behind him are dark. No adult, no second walkie-talkie in the frame.",
+      "image_prompt": "Medium shot of Eli, alone, the only person in the frame, taken at his eye level from about a metre in front of him and slightly to his right. He sits cross-legged on top of a hay bale, his oversized red rain jacket open over his green dinosaur T-shirt. His right hand holds the small yellow toy walkie-talkie up near his chin, his right thumb pressing its side button; its lanyard runs up around his neck; his left hand rests on his left knee. He grins wide, showing the gap in his front teeth, his big brown eyes looking past the camera across the barn. Behind him: more hay bales stacked high, fading into the dark barn. Light: a warm oil lantern hanging from a beam above and to the left, just out of frame beyond the top left edge, lighting his face and curls from above. Rainy midday; thin slats of pale grey daylight glow through the plank gaps behind him. No adult, no second walkie-talkie in the frame.",
       "voiceover_text": "Eli made up a game: two clicks from across the barn, [pause] and she had to answer every time.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -9246,7 +9246,7 @@
       "shots": [
         {
           "shot_id": "s_c800a703",
-          "image_prompt": "Medium shot of Nora, alone, the only person in the frame, taken at her seated eye level from about a metre in front of her, the camera facing the far right plank wall of the barn. She sits on the dirt floor with her back against the planks, knees up. Her right hand holds the small blue toy walkie-talkie close to her mouth, her right thumb pressing its button; her left forearm, wrapped in the stained gauze bandage, rests across her knees. She smiles softly, tired eyes looking just past the camera across the barn toward her son, who is out of frame behind the camera. Behind her: weathered grey planks with dark gaps between them. Light: the warm glow of the oil lantern hanging across the barn, out of frame behind the camera, lighting her face from the front; deep shadow behind her. Sickly pale, sweat at her temples, messy low bun, navy scrubs, open charcoal-grey hoodie. No second person, no yellow walkie-talkie.",
+          "image_prompt": "Medium shot of Nora, alone, the only person in the frame, taken at her seated eye level from about a metre in front of her, the camera facing the far right plank wall of the barn. She sits on the dirt floor with her back against the planks, knees up. Her right hand holds the small blue toy walkie-talkie close to her mouth, her right thumb pressing its button; her left forearm, wrapped in the stained gauze bandage, rests across her knees. She smiles softly, tired eyes looking just past the camera across the barn toward her son, who is out of frame behind the camera. Behind her: weathered grey planks with thin pale grey slats of rainy daylight between them. Light: the warm glow of the oil lantern hanging across the barn, out of frame behind the camera, lighting her face from the front; deep shadow behind her. Sickly pale, sweat at her temples, messy low bun, navy scrubs, open charcoal-grey hoodie. No second person, no yellow walkie-talkie.",
           "image_url": "/media/images/scene-65-1793352882673-i6fg.png",
           "motion": "zoom_in",
           "start_sec": 4.64,
@@ -9298,7 +9298,7 @@
     },
     {
       "scene_id": 66,
-      "image_prompt": "Medium close-up of Eli, alone, the only person in the frame, taken at his eye level from directly in front of him. He sits on a hay bale with a brown wool blanket around his shoulders over his red rain jacket. His left hand holds an open metal can of peaches at chest height, its lid bent back; the fingers of his right hand lift a dripping slice of peach to his open mouth. Peach syrup shines on his chin. His eyes are half closed with happiness. Beside him on the bale, at frame right: two empty opened cans. The yellow walkie-talkie hangs on its lanyard against his chest. Behind him: stacked hay bales and the dark barn. Light: warm oil lantern light from above and to the left, the lantern itself out of frame beyond the top left edge. Night, the gaps in the plank walls black. No adult, no labels or readable text on the cans.",
+      "image_prompt": "Medium close-up of Eli, alone, the only person in the frame, taken at his eye level from directly in front of him. He sits on a hay bale with a brown wool blanket around his shoulders over his red rain jacket. His left hand holds an open metal can of peaches at chest height, its lid bent back; the fingers of his right hand lift a dripping slice of peach to his open mouth. Peach syrup shines on his chin. His eyes are half closed with happiness. Beside him on the bale, at frame right: two empty opened cans. The yellow walkie-talkie hangs on its lanyard against his chest. Behind him: stacked hay bales and the dark barn. Light: warm oil lantern light from above and to the left, the lantern itself out of frame beyond the top left edge. Rainy midday, thin pale grey daylight in the gaps of the plank walls. No adult, no labels or readable text on the cans.",
       "voiceover_text": "He ate peaches straight out of the can. [pause] She wasn't hungry. Not for peaches.",
       "sfx_prompt": "A metal spoon scraping the inside of a tin can, slow scrapes and small clinks as a child eats canned peaches, close and quiet inside a barn, no voices, no music",
       "video_prompt": "",
@@ -9436,11 +9436,11 @@
     },
     {
       "scene_id": 67,
-      "image_prompt": "Wide shot inside the dark barn at night, the camera standing between the barn's back wall and the front of the parked silver sedan, slightly toward the car's driver side, facing the car's front at standing height. The sedan fills the middle of the frame nose-on: grey bonnet, headlights switched off, the windshield with a crack across its upper part on the frame-left side (the car's passenger side). Through the windshield, on the frame-right side: Nora, alone, sitting in the driver's seat behind the steering wheel, her face turned down toward the centre of the dashboard, her hands in her lap. The only light: the small amber glow of the car radio in the centre of the dashboard, seen through the glass, lighting her face from below and from her right. Around the car: dark hay bales, timber posts, black plank walls, rain dripping through a gap in the roof in thin silver threads. No other people, no headlights on, no lit lantern, no text.",
-      "voiceover_text": "Around noon a storm turned the barn dark as night, [pause] and while Eli slept, the first official broadcast came in from Fort Calder.",
-      "sfx_prompt": "A car radio scanning through static in a dark barn at night, hissing and crackling from a tinny dashboard speaker as stations come and go, close and eerie, no clear words, no music",
+      "image_prompt": "Wide shot inside the dim barn at a grey rainy midday, the camera standing between the barn's back wall and the front of the parked silver sedan, slightly toward the car's driver side, facing the car's front at standing height. The sedan fills the middle of the frame nose-on: grey bonnet, headlights switched off, the windshield with a crack across its upper part on the frame-left side (the car's passenger side). Through the windshield, on the frame-right side: Nora, alone, sitting in the driver's seat behind the steering wheel, her face turned down toward the centre of the dashboard, her hands in her lap. The only light: the small amber glow of the car radio in the centre of the dashboard, seen through the glass, lighting her face from below and from her right. Around the car: dark hay bales, timber posts, dark plank walls with thin pale grey slats of daylight between the boards, rain dripping through a gap in the roof in thin silver threads. No other people, no headlights on, no lit lantern, no text.",
+      "voiceover_text": "Around noon, with rain drumming on the roof and Eli asleep in the hay, [pause] the first official broadcast came in from Fort Calder.",
+      "sfx_prompt": "A car radio scanning through static in a dim barn on a rainy day, hissing and crackling from a tinny dashboard speaker as stations come and go, close and eerie, no clear words, no music",
       "video_prompt": "",
-      "duration_sec": 12,
+      "duration_sec": 10,
       "image_url": "/media/images/scene-67-1793353158391-0gfd.png",
       "voiceover_url": "/media/voiceover/scene-67-1793370082018-cwo9.mp3",
       "sfx_url": "/media/sfx/scene-67-1793370393600-tu5w.mp3",
@@ -9541,7 +9541,7 @@
       "motion": "zoom_out",
       "shake": null,
       "title_text": "HOUR 30",
-      "notes": "The storm explains the dark barn at midday. Eli sleeps through the statement: he never learns the bitten are shot. The first official word from the camp (the cure was a rumour).",
+      "notes": "Eli sleeps through the statement: he never learns the bitten are shot. The first official word from the camp (the cure was a rumour).",
       "ambience_id": "m_530f3b18",
       "image_check": {
         "url": "/media/images/scene-67-1793353158391-0gfd.png",
@@ -9554,7 +9554,7 @@
     },
     {
       "scene_id": 68,
-      "image_prompt": "Close-up of the car radio in the centre of the dark dashboard, taken from between the two front seats at seat height, the camera facing straight forward. The radio fills the middle of the frame: a rectangular unit with two round knobs and a row of small buttons, its narrow display glowing soft amber, showing only a blank bar of light. Around it the dashboard is black plastic in deep shadow; the top of the gear stick pokes up at the lower edge of the frame; above the dashboard the inside of the windshield is black, with the faint shapes of barn beams beyond. Light: only the radio's own amber glow, spilling onto the surrounding plastic and fading to black within a hand's width. Night, the car parked inside the barn. No people, no hands, no readable text or numbers on the display or buttons, no gauges in the frame.",
+      "image_prompt": "Close-up of the car radio in the centre of the dark dashboard, taken from between the two front seats at seat height, the camera facing straight forward. The radio fills the middle of the frame: a rectangular unit with two round knobs and a row of small buttons, its narrow display glowing soft amber, showing only a blank bar of light. Around it the dashboard is black plastic in deep shadow; the top of the gear stick pokes up at the lower edge of the frame; above the dashboard the inside of the windshield is black, with the faint shapes of barn beams beyond. Light: only the radio's own amber glow, spilling onto the surrounding plastic and fading to black within a hand's width. Grey rainy midday outside, the car parked inside the dim barn. No people, no hands, no readable text or numbers on the display or buttons, no gauges in the frame.",
       "voiceover_text": "[flatly] There is no treatment. [pause] Anyone bitten will be shot at the perimeter.",
       "sfx_prompt": "A car radio hissing with soft static under a broadcast, a gentle constant crackle from a tinny dashboard speaker, close inside a dark barn at night, no music",
       "video_prompt": "",
@@ -9686,7 +9686,7 @@
         },
         {
           "shot_id": "s_d189bf0a",
-          "image_prompt": "The same close-up of the car radio in the centre of the dashboard, taken from between the two front seats at seat height, the camera facing straight forward, same framing as before. The radio sits in the middle of the frame with its two round knobs and its row of small buttons, but its display is now completely dark, with no glow at all. The surrounding dashboard is black; the top of the gear stick is a faint shape at the lower edge; through the windshield above, the barn is pitch black. Light: almost none, only a very faint cold grey sheen on the radio's edges and knobs, so the shapes are barely readable against the black. Night, the car parked inside the barn. No people, no hands, no readable text or numbers, no gauges in the frame, no glow from any light.",
+          "image_prompt": "The same close-up of the car radio in the centre of the dashboard, taken from between the two front seats at seat height, the camera facing straight forward, same framing as before. The radio sits in the middle of the frame with its two round knobs and its row of small buttons, but its display is now completely dark, with no glow at all. The surrounding dashboard is black; the top of the gear stick is a faint shape at the lower edge; through the windshield above, the barn is pitch black. Light: almost none, only a very faint cold grey sheen on the radio's edges and knobs, so the shapes are barely readable against the black. Grey rainy midday outside, the car parked inside the dim barn. No people, no hands, no readable text or numbers, no gauges in the frame, no glow from any light.",
           "image_url": "/media/images/scene-68-1793376895230-0hdf.png",
           "motion": "zoom_out",
           "start_sec": 6,
@@ -9732,7 +9732,7 @@
     },
     {
       "scene_id": 69,
-      "image_prompt": "Close-up of Nora, alone, the only person in the frame, taken from the windshield looking back at the driver: the camera sits just in front of her face, facing backward into the dark car. She sits completely still in the driver's seat, both hands out of frame in her lap, her face slightly lowered, eyes open, staring at nothing just below the camera. Behind her: the grey driver's headrest, then the black back seat and rear window, with the dark barn beyond. Light: the dim amber glow of the car radio, which is in the centre of the dashboard and out of frame below the lower left corner, lighting her chin, cheek and the underside of her nose from below and from frame left; the rest of her face falls into shadow. She is sickly pale, a sheen of sweat on her skin, dark circles, loose strands from her messy dark bun, the charcoal-grey hoodie collar. No dashboard, gauges or steering wheel in the frame, no second person.",
+      "image_prompt": "Close-up of Nora, alone, the only person in the frame, taken from the windshield looking back at the driver: the camera sits just in front of her face, facing backward into the dark car. She sits completely still in the driver's seat, both hands out of frame in her lap, her face slightly lowered, eyes open, staring at nothing just below the camera. Behind her: the grey driver's headrest, then the black back seat and rear window, with the dim barn beyond, pale grey rainy daylight through the plank gaps. Light: the dim amber glow of the car radio, which is in the centre of the dashboard and out of frame below the lower left corner, lighting her chin, cheek and the underside of her nose from below and from frame left; the rest of her face falls into shadow. She is sickly pale, a sheen of sweat on her skin, dark circles, loose strands from her messy dark bun, the charcoal-grey hoodie collar. No dashboard, gauges or steering wheel in the frame, no second person.",
       "voiceover_text": "[long pause] So that was it. There had never been a cure.",
       "sfx_prompt": "Rain slowly returning on an old wooden barn roof at night, starting from near silence with a few scattered drops and building into a soft steady patter, close and intimate, no thunder, no voices, no music",
       "video_prompt": "",
@@ -9827,7 +9827,7 @@
     },
     {
       "scene_id": 70,
-      "image_prompt": "Wide shot inside the barn at night, taken low from behind Nora's right shoulder, the camera at seated height and facing across the barn toward the far side where Eli sleeps. Two people only. Foreground right: Nora sitting on the dirt floor, seen from behind in three-quarter, her back leaning against a single hay bale, her head turned toward Eli, her right hand resting on the floor beside her, her stained bandaged left forearm resting on her knee. Middle ground left, about eight metres away: Eli asleep on his side on the low platform of hay bales under the brown wool blanket, beneath the oil lantern hanging from a beam above him in a warm pool of light. Between them: dark open floor with scattered straw. Light: the lantern above Eli is the only light; Nora is mostly a dark silhouette, rim-lit by it along her cheek and shoulder. Rain streaks glint through the black gaps in the plank walls; a drip falls from a roof beam. No third person.",
+      "image_prompt": "Wide shot inside the dim barn at a grey rainy midday, taken low from behind Nora's right shoulder, the camera at seated height and facing across the barn toward the far side where Eli sleeps. Two people only. Foreground right: Nora sitting on the dirt floor, seen from behind in three-quarter, her back leaning against a single hay bale, her head turned toward Eli, her right hand resting on the floor beside her, her stained bandaged left forearm resting on her knee. Middle ground left, about eight metres away: Eli asleep on his side on the low platform of hay bales under the brown wool blanket, beneath the oil lantern hanging from a beam above him in a warm pool of light. Between them: dark open floor with scattered straw. Light: the lantern above Eli and thin pale grey daylight through the plank gaps; Nora is mostly a dark silhouette, rim-lit by it along her cheek and shoulder. Rain streaks glint through the pale grey gaps in the plank walls; a drip falls from a roof beam. No third person.",
       "voiceover_text": "She'd driven all that way toward a bullet, [pause] so she changed the plan.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -9908,7 +9908,7 @@
       "shots": [
         {
           "shot_id": "s_b1ac7c86",
-          "image_prompt": "Close-up of Nora, alone, the only person in the frame, taken at her seated eye level from directly in front of her, the camera facing the far right plank wall of the barn. She presses the heel of her right hand against her right eye, wiping away tears; her left eye is open, wet and red-rimmed, looking just past the camera. Her jaw is set hard, lips pressed together, a decision forming. Her left hand is out of frame. Behind her: weathered grey vertical planks with thin black gaps between them, rain glistening on their outer edges. Light: the warm glow of the oil lantern hanging across the barn, out of frame behind the camera, lighting her face from the front and slightly above. She is sickly pale with sweat on her forehead, dark circles, loose strands of dark hair, the charcoal-grey hoodie open over navy scrubs. No second person, no lantern in the frame.",
+          "image_prompt": "Close-up of Nora, alone, the only person in the frame, taken at her seated eye level from directly in front of her, the camera facing the far right plank wall of the barn. She presses the heel of her right hand against her right eye, wiping away tears; her left eye is open, wet and red-rimmed, looking just past the camera. Her jaw is set hard, lips pressed together, a decision forming. Her left hand is out of frame. Behind her: weathered grey vertical planks with thin pale grey gaps of rainy daylight between them, rain glistening on their outer edges. Light: the warm glow of the oil lantern hanging across the barn, out of frame behind the camera, lighting her face from the front and slightly above. She is sickly pale with sweat on her forehead, dark circles, loose strands of dark hair, the charcoal-grey hoodie open over navy scrubs. No second person, no lantern in the frame.",
           "image_url": "/media/images/scene-70-1793353448909-8y6j.png",
           "motion": "zoom_in",
           "start_sec": 3.6,
@@ -9959,7 +9959,7 @@
     },
     {
       "scene_id": 71,
-      "image_prompt": "Close-up of Nora's lower face and both of her hands (two hands), taken from slightly below and in front of her at chin level in the dark barn, the camera facing her. Both hands cup the small black dictaphone just in front of her lips, her right thumb on the record button; its tiny red record light glows, throwing a faint red tint onto her fingertips, lips and chin. Her lips are parted, whispering. Her left wrist and the edge of the stained gauze bandage show at the lower right of the frame. Only her mouth, chin, jaw and hands are in the frame; her eyes are cropped off above the top edge. Background: the pure darkness of the barn at night, the gaps in the plank walls faintly visible and wet with rain. Light: the tiny red record light, plus a very faint warm spill from a lantern turned low, out of frame behind the camera. Sickly pale skin, sweat. No second person, no readable text on the dictaphone.",
+      "image_prompt": "Close-up of Nora's lower face and both of her hands (two hands), taken from slightly below and in front of her at chin level in the dark barn, the camera facing her. Both hands cup the small black dictaphone just in front of her lips, her right thumb on the record button; its tiny red record light glows, throwing a faint red tint onto her fingertips, lips and chin. Her lips are parted, whispering. Her left wrist and the edge of the stained gauze bandage show at the lower right of the frame. Only her mouth, chin, jaw and hands are in the frame; her eyes are cropped off above the top edge. Background: the dim barn at a grey rainy midday, thin pale grey daylight in the gaps of the plank walls, wet with rain. Light: the tiny red record light, soft grey daylight, plus a faint warm spill from a lantern turned low, out of frame behind the camera. Sickly pale skin, sweat. No second person, no readable text on the dictaphone.",
       "voiceover_text": "[whispers] The new plan was that Eli would go in, and she wouldn't. [pause] He'd walk through that gate alone.",
       "sfx_prompt": "The small electric motor of a cassette dictaphone whirring softly as it records, a thin steady hum with a faint tape flutter, close and dry in a dark barn, no clicks, no voices, no music",
       "video_prompt": "",
@@ -10115,7 +10115,7 @@
     },
     {
       "scene_id": 72,
-      "image_prompt": "Close-up of Eli, alone, the only person in the frame, asleep on his side on the hay bales, taken at hay level from about half a metre in front of his face, the camera looking slightly down. He lies curled under the brown wool blanket, his cheek on the hay, his mouth slightly open, eyes closed, curly light-brown hair falling over his forehead. Both of his small hands (two hands) hug the yellow toy walkie-talkie against his chest, its lanyard looped around his neck; the collar of his red rain jacket shows above the blanket. Background: soft dark hay and the darkness of the barn. Light: warm golden oil lantern light from above, the lantern hanging out of frame beyond the top edge, falling across his face and curls. Night, rain on the roof. No adult, no second walkie-talkie.",
+      "image_prompt": "Close-up of Eli, alone, the only person in the frame, asleep on his side on the hay bales, taken at hay level from about half a metre in front of his face, the camera looking slightly down. He lies curled under the brown wool blanket, his cheek on the hay, his mouth slightly open, eyes closed, curly light-brown hair falling over his forehead. Both of his small hands (two hands) hug the yellow toy walkie-talkie against his chest, its lanyard looped around his neck; the collar of his red rain jacket shows above the blanket. Background: soft dark hay and the darkness of the barn. Light: warm golden oil lantern light from above, the lantern hanging out of frame beyond the top edge, falling across his face and curls. Grey rainy midday, rain on the roof, pale daylight in the plank gaps behind. No adult, no second walkie-talkie.",
       "voiceover_text": "Now she had sixteen hours to make her son walk away from her, [pause] without telling him why.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -10231,7 +10231,7 @@
       "shots": [
         {
           "shot_id": "s_cf906fac",
-          "image_prompt": "Close-up of Nora's face, Nora alone in the frame, taken at her seated eye level from directly in front of her, the camera facing the far right plank wall of the barn. She sits very still, looking just past the camera toward frame left, across the barn at her sleeping son, who is out of frame. Her eyes are wet, tears pooled on the lower lids and one tear running down her right cheek; her mouth is soft and closed. Behind her: weathered grey planks with thin black gaps between them, damp with rain. Light: the warm glow of the oil lantern across the barn, out of frame behind the camera, lighting her face from the front, the wall behind her falling into shadow. She is sickly pale with a sheen of sweat, dark circles, loose strands from her messy dark bun, the charcoal-grey hoodie open over navy scrubs. No hands in the frame, no second person.",
+          "image_prompt": "Close-up of Nora's face, Nora alone in the frame, taken at her seated eye level from directly in front of her, the camera facing the far right plank wall of the barn. She sits very still, looking just past the camera toward frame left, across the barn at her sleeping son, who is out of frame. Her eyes are wet, tears pooled on the lower lids and one tear running down her right cheek; her mouth is soft and closed. Behind her: weathered grey planks with thin pale grey gaps of rainy daylight between them, damp with rain. Light: the warm glow of the oil lantern across the barn, out of frame behind the camera, lighting her face from the front, the wall behind her falling into shadow. She is sickly pale with a sheen of sweat, dark circles, loose strands from her messy dark bun, the charcoal-grey hoodie open over navy scrubs. No hands in the frame, no second person.",
           "image_url": "/media/images/scene-72-1793353824409-u8ss.png",
           "motion": "zoom_in",
           "start_sec": 4.48,
@@ -10283,7 +10283,7 @@
     },
     {
       "scene_id": 73,
-      "image_prompt": "Close-up of Nora's left hand only (one hand), taken from in front of her at chest height, the camera facing her. Her left hand is raised in the centre of the frame, the back of the hand toward the camera, fingers up, holding a single small white tablet pinched between the tips of her thumb and index finger so the tablet shows clearly above them. The fingers tremble, slightly blurred with the tremor. Under her fingernails a first faint grey shadow is creeping in from the nail beds. Below the wrist, the white gauze bandage wrapped around her forearm, stained dark rusty red, runs down out of the bottom edge. Background: her navy scrub top and open charcoal-grey hoodie, dark and out of focus, then the black barn. Light: warm oil lantern light from the upper left, the lantern out of frame. Night, inside the barn. No right hand, no face, no pill bottle, no text.",
+      "image_prompt": "Close-up of Nora's left hand only (one hand), taken from in front of her at chest height, the camera facing her. Her left hand is raised in the centre of the frame, the back of the hand toward the camera, fingers up, holding a single small white tablet pinched between the tips of her thumb and index finger so the tablet shows clearly above them. The fingers tremble, slightly blurred with the tremor. Under her fingernails a first faint grey shadow is creeping in from the nail beds. Below the wrist, the white gauze bandage wrapped around her forearm, stained dark rusty red, runs down out of the bottom edge. Background: her navy scrub top and open charcoal-grey hoodie, dark and out of focus, then the dim barn. Light: warm oil lantern light from the upper left, the lantern out of frame. Grey rainy midday, inside the dim barn. No right hand, no face, no pill bottle, no text.",
       "voiceover_text": "The Tylenol wasn't for the scanner anymore. [pause] It was to keep her hands and her head her own until the gate opened.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -10389,7 +10389,7 @@
       "shots": [
         {
           "shot_id": "s_7c6f5d5f",
-          "image_prompt": "Close-up of both of Nora's hands (two hands), the camera in front of her and above her hands, angled down toward them and facing her. She holds both hands out flat, palms down, side by side in the middle of the frame, fingers spread, a few centimetres above her knees in navy scrub trousers. The fingers tremble, their tips slightly blurred. Under every fingernail a grey shadow is creeping up from the nail bed; the skin of the hands is sickly pale. Her left hand is on the right side of the frame, the edge of the stained gauze bandage at its wrist; her right hand is on the left side. Below the hands, out of focus: her knees and straw on the barn floor. Light: warm oil lantern light from behind the camera and above, the lantern out of frame, casting soft shadows of the fingers onto her knees. Night. No face, no pill, no third hand.",
+          "image_prompt": "Close-up of both of Nora's hands (two hands), the camera in front of her and above her hands, angled down toward them and facing her. She holds both hands out flat, palms down, side by side in the middle of the frame, fingers spread, a few centimetres above her knees in navy scrub trousers. The fingers tremble, their tips slightly blurred. Under every fingernail a grey shadow is creeping up from the nail bed; the skin of the hands is sickly pale. Her left hand is on the right side of the frame, the edge of the stained gauze bandage at its wrist; her right hand is on the left side. Below the hands, out of focus: her knees and straw on the barn floor. Light: warm oil lantern light from behind the camera and above, the lantern out of frame, casting soft shadows of the fingers onto her knees. Grey rainy midday. No face, no pill, no third hand.",
           "image_url": "/media/images/scene-73-1793354020369-q37p.png",
           "motion": "none",
           "start_sec": 3.12,
@@ -10438,7 +10438,7 @@
     },
     {
       "scene_id": 74,
-      "image_prompt": "Point-of-view shot at night from inside the barn through a narrow vertical gap between two wall planks, the camera right against the wood and facing out across the yard. The left and right edges of the frame are filled with dark, rough, out-of-focus boards, wet along their edges. Through the slit in the middle: steady rain falling in thin bright streaks, a muddy yard with puddles, and, about forty metres away, the farmhouse's covered front porch under its glowing yellow porch light, the front door shut and dark, a frosted glass panel in its upper half with a vague dark shape just behind it. Light: the porch light is the only light, its reflection shimmering in the puddles; everything else is black. No people outside, no figures in the yard, no animals, no text.",
+      "image_prompt": "Point-of-view shot at a dark grey rainy midday from inside the barn through a narrow vertical gap between two wall planks, the camera right against the wood and facing out across the yard. The left and right edges of the frame are filled with dark, rough, out-of-focus boards, wet along their edges. Through the slit in the middle: steady rain falling in thin bright streaks, a muddy yard with puddles, and, about forty metres away, the farmhouse's covered front porch its yellow porch light still glowing in the gloom, the front door shut and dark, a frosted glass panel in its upper half with a vague dark shape just behind it. Light: the porch light is the only light, its reflection shimmering in the puddles; everything else is black. No people outside, no figures in the yard, no animals, no text.",
       "voiceover_text": "Across the yard, the farmer kept walking into his door, and the door held. [pause] She understood him now.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -10999,9 +10999,9 @@
     },
     {
       "scene_id": 83,
-      "image_prompt": "Close-up of the small black dictaphone lying flat on top of the dashboard just below the windshield, taken at dashboard level from the driver's side, the camera facing forward. The dictaphone is in the centre of the frame and sharp, its tiny cassette window facing up toward the camera: inside it the tape is fully rewound, the left spool fat with tape, the right spool empty. Beyond it, out of focus, the windshield: a misty field in pale early morning light, the crack across the upper right of the glass. Light: cold, pale grey-blue dawn light through the windshield, backlighting the dictaphone and glinting along its edges; its red record light is off. No hands, no people, no readable text, labels or numbers.",
+      "image_prompt": "Close-up of the small black dictaphone lying flat on top of the dashboard just below the windshield, taken at dashboard level from the driver's side, the camera facing forward. The dictaphone is in the centre of the frame and sharp, its tiny cassette window facing up toward the camera: inside it the tape is fully rewound, the left spool fat with tape, the right spool empty. Beyond it, out of focus, the windshield: a misty field in pale grey late-afternoon light, the crack across the upper right of the glass. Light: cold, pale grey overcast late-afternoon light through the windshield, backlighting the dictaphone and glinting along its edges; its red record light is off. No hands, no people, no readable text, labels or numbers.",
       "voiceover_text": "At the next stop the tape was rewound again. [pause] She wasn't the one who should be keeping this chart anymore.",
-      "sfx_prompt": "The first birds starting at dawn outside a parked car, a few sparse chirps and a distant songbird, faint through the closed windows, quiet and cold, no voices, no music",
+      "sfx_prompt": "Crows calling far off across open fields in the late afternoon, heard faintly through the closed windows of a parked car, a light wind pressing on the glass, quiet and bleak, no voices, no music",
       "video_prompt": "",
       "duration_sec": 10.5,
       "image_url": "/media/images/scene-83-1793377046173-hm3y.png",
@@ -11133,7 +11133,7 @@
       "shots": [
         {
           "shot_id": "s_2087d8a9",
-          "image_prompt": "Close-up taken from the front passenger seat, the camera at chest height facing left toward the driver. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her head bowed, staring down at the small black dictaphone in her right hand only (one hand), held in front of her chest; the hand trembles, its fingernails grey and cracked. Her face: sickly pale, sweat, dark circles, the left iris faintly clouding grey, a dark grey vein on her neck, her expression hollow. Her left wrist, still cuffed to the steering wheel rim, is a dim shape at the lower edge of the frame. Behind her: the driver's side window, fogged at its edges, and a misty field at dawn. Light: cold, pale early morning light through the windshield at frame right, lighting her face from the side. No gauges beside her head, no second person, no readable text.",
+          "image_prompt": "Close-up taken from the front passenger seat, the camera at chest height facing left toward the driver. Nora, alone, the only person in the frame, sits in the driver's seat in three-quarter view, her head bowed, staring down at the small black dictaphone in her right hand only (one hand), held in front of her chest; the hand trembles, its fingernails grey and cracked. Her face: sickly pale, sweat, dark circles, the left iris faintly clouding grey, a dark grey vein on her neck, her expression hollow. Her left wrist, still cuffed to the steering wheel rim, is a dim shape at the lower edge of the frame. Behind her: the driver's side window, fogged at its edges, and a misty field in the late afternoon. Light: cold, pale grey late-afternoon light through the windshield at frame right, lighting her face from the side. No gauges beside her head, no second person, no readable text.",
           "image_url": "/media/images/scene-83-1793355671394-9kit.png",
           "motion": "zoom_out",
           "start_sec": 3.68,
@@ -11173,7 +11173,7 @@
       "shake": null,
       "title_text": "",
       "notes": "Moved before the scraped knee so the cuffing lands at nightfall.",
-      "ambience_id": "m_e2eb122c",
+      "ambience_id": "m_d6519637",
       "image_check": {
         "url": "/media/images/scene-83-1793377046173-hm3y.png",
         "ok": true,
@@ -11272,7 +11272,7 @@
       "shake": null,
       "title_text": "TYLENOL: 3",
       "notes": "",
-      "ambience_id": "m_e2eb122c",
+      "ambience_id": "m_d6519637",
       "image_check": {
         "url": "/media/images/scene-84-1793355783229-apkv.png",
         "ok": false,
@@ -13520,7 +13520,7 @@
     },
     {
       "scene_id": 95,
-      "image_prompt": "Wide shot taken from the middle of the empty road about fifteen metres behind the car, the camera low at bumper height, facing forward in the direction the car is driving. The silver 2009 sedan, centred in the frame, is seen from directly behind, its red taillights glowing, its headlight beams reaching ahead along the two-lane asphalt. No people visible; the rear window is dark. The road runs straight ahead to the horizon between flat fields of dead grass on the left and right, a faded white centre line down the middle. Far ahead on the horizon, a long chain-link fence line glows white under a row of tall floodlights, small and distant. Light: blue pre-dawn, the sky deep blue overhead fading to a pale band at the horizon; the floodlights are the brightest point in the frame. No other vehicles, no road signs, a blank licence plate, no figures on the road.",
+      "image_prompt": "Wide shot taken from the middle of the empty road about fifteen metres behind the car, the camera low at bumper height, facing forward along the road. The silver 2009 sedan, centred in the frame, is parked on the gravel shoulder at the right side of the road, seen from directly behind, engine off, its taillights and headlights dark; only a faint orange-red glow from the instrument cluster shows through the rear window. No people visible. The road runs straight ahead to the horizon between flat fields of dead grass on the left and right, a faded white centre line down the middle. Far ahead on the horizon, a long chain-link fence line glows white under a row of tall floodlights, small and distant. Light: deep night, a black sky with a faint cold moonlight; the floodlights are the brightest point in the frame. No other vehicles, no road signs, a blank licence plate, no figures on the road.",
       "voiceover_text": "At hour forty-two she recorded the last tape she could still say all the words on.",
       "sfx_prompt": "A large generator humming far away across open country, a low steady drone carried on the wind, distant and constant, heard from an empty road, no voices, no music",
       "video_prompt": "",
@@ -13628,7 +13628,7 @@
       "shake": null,
       "title_text": "HOUR 42",
       "notes": "",
-      "ambience_id": "m_ac0be2a5",
+      "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-95-1793377388166-oyuf.png",
         "ok": true,
@@ -13640,7 +13640,7 @@
     },
     {
       "scene_id": 96,
-      "image_prompt": "Close-up taken from between the front seats, the camera at the height of the centre console, facing backward into the back seat. Two people: Nora (her hand only) and Eli. In the foreground on the right of the frame, Nora's right hand only (one hand) reaches in from the right edge holding the small black dictaphone upright, its red record light glowing, the tiny cassette visible in its window; her skin is grey, her fingernails grey and cracked, the charcoal hoodie cuff at her wrist. Behind it, soft and out of focus, Eli sits asleep in his booster seat on the LEFT of the frame, head tilted against the rear side window, red rain jacket, curly light-brown hair. The empty left-rear seat is on the right of the background, the rear window behind. Blue pre-dawn light comes through the rear and side windows from behind Eli. Nora's face not in frame, no third person, no readable text.",
+      "image_prompt": "Close-up taken from between the front seats, the camera at the height of the centre console, facing backward into the back seat. Two people: Nora (her hand only) and Eli. In the foreground on the right of the frame, Nora's right hand only (one hand) reaches in from the right edge holding the small black dictaphone upright, its red record light glowing, the tiny cassette visible in its window; her skin is grey, her fingernails grey and cracked, the charcoal hoodie cuff at her wrist. Behind it, soft and out of focus, Eli sits asleep in his booster seat on the LEFT of the frame, head tilted against the rear side window, red rain jacket, curly light-brown hair. The empty left-rear seat is on the right of the background, the rear window behind. Faint cold blue moonlight comes through the rear and side windows from behind Eli. Nora's face not in frame, no third person, no readable text.",
       "voiceover_text": "{Nora} [softly] This one's for you, Eli, for when you're older. [pause] You were braver than me. You always were.",
       "sfx_prompt": "The small electric motor of a cassette dictaphone whirring softly as it records, a thin steady hum with a faint tape flutter, close and dry inside a car, no clicks, no voices, no music",
       "video_prompt": "",
@@ -13741,7 +13741,7 @@
       "shots": [
         {
           "shot_id": "s_72a834a7",
-          "image_prompt": "Close-up taken from between the front seats, the camera facing backward toward Eli's booster seat on the right rear of the car, which appears on the LEFT of the frame. Eli, alone, the only person in the frame, sleeps in the booster seat, his head tilted to the left of the frame against the rear side window, mouth slightly open, eyelashes on his cheeks, curls flattened on one side. His left hand only (one hand) rests on the small yellow toy walkie-talkie lying on his chest on its lanyard; his other hand is out of frame in his lap. Behind him, the window glass shows a blue pre-dawn sky over dark fields. Soft blue pre-dawn light falls on his face from that window, from behind and beside him; the car interior is dim. Oversized red rain jacket over a green dinosaur T-shirt, worn grey cloth seat. No adult, no other hands, no readable text.",
+          "image_prompt": "Close-up taken from between the front seats, the camera facing backward toward Eli's booster seat on the right rear of the car, which appears on the LEFT of the frame. Eli, alone, the only person in the frame, sleeps in the booster seat, his head tilted to the left of the frame against the rear side window, mouth slightly open, eyelashes on his cheeks, curls flattened on one side. His left hand only (one hand) rests on the small yellow toy walkie-talkie lying on his chest on its lanyard; his other hand is out of frame in his lap. Behind him, the window glass shows a black night sky over dark fields. Faint cold blue moonlight falls on his face from that window, from behind and beside him; the car interior is dim. Oversized red rain jacket over a green dinosaur T-shirt, worn grey cloth seat. No adult, no other hands, no readable text.",
           "image_url": "/media/images/scene-96-1793357533511-4gy3.png",
           "motion": "zoom_out",
           "start_sec": 4.24,
@@ -13782,7 +13782,7 @@
       "shake": null,
       "title_text": "",
       "notes": "The last tape. Eli never plays it in the video.",
-      "ambience_id": "m_ac0be2a5",
+      "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-96-1793357438461-iak0.png",
         "ok": true,
@@ -13794,7 +13794,7 @@
     },
     {
       "scene_id": 97,
-      "image_prompt": "Close-up looking down at Eli's chest from just above it, the camera between the front seats leaning into the back seat, facing down and backward. In the frame: the front of Eli's oversized red rain jacket hanging open over his green dinosaur T-shirt; its left front panel is folded back to show the dark grey nylon lining and a small inside pocket. Nora's right hand only (one hand) enters from the bottom edge of the frame and slips a small clear cassette tape halfway into that inside lining pocket. Her skin is grey, her nails grey and cracked, black veins faint at the wrist, the charcoal hoodie cuff at her wrist. Eli's face is out of frame above; his chest is still in sleep; the yellow toy walkie-talkie lies on the T-shirt near the top edge of the frame. Light: soft blue pre-dawn from the rear window, out of frame. No faces, no second hand, no readable text on the cassette.",
+      "image_prompt": "Close-up looking down at Eli's chest from just above it, the camera between the front seats leaning into the back seat, facing down and backward. In the frame: the front of Eli's oversized red rain jacket hanging open over his green dinosaur T-shirt; its left front panel is folded back to show the dark grey nylon lining and a small inside pocket. Nora's right hand only (one hand) enters from the bottom edge of the frame and slips a small clear cassette tape halfway into that inside lining pocket. Her skin is grey, her nails grey and cracked, black veins faint at the wrist, the charcoal hoodie cuff at her wrist. Eli's face is out of frame above; his chest is still in sleep; the yellow toy walkie-talkie lies on the T-shirt near the top edge of the frame. Light: faint cold blue moonlight from the rear window, out of frame. No faces, no second hand, no readable text on the cassette.",
       "voiceover_text": "She slipped the cassette into the lining of his jacket while he slept, [pause] and loaded the last blank tape for herself.",
       "sfx_prompt": "A child's nylon rain jacket rustling softly as a hand slips something into its lining, gentle crinkling of thin waterproof fabric, very close and careful inside a quiet car, no voices, no music",
       "video_prompt": "",
@@ -13902,7 +13902,7 @@
       "shake": null,
       "title_text": "",
       "notes": "The gift is a separate tape; she keeps one blank tape for her own log (Hour 48).",
-      "ambience_id": "m_ac0be2a5",
+      "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-97-1793357650230-f3pr.png",
         "ok": true,
@@ -13914,7 +13914,7 @@
     },
     {
       "scene_id": 98,
-      "image_prompt": "Close-up looking down at the back seat cushion, the camera between the front seats facing backward and down. Two hands only: Nora's right hand, reaching in from the bottom edge of the frame, and Eli's small left hand. Eli's hand lies limp, palm up, on the worn grey cloth seat beside his booster seat, fingers half curled in sleep, the cuff of his red rain jacket at his wrist. Nora's hand gently holds it from underneath, her thumb over his knuckles; her skin is grey, her nails grey and cracked, faint black veins at her wrist under the charcoal hoodie cuff. In the background, out of focus: the base of the booster seat and a crumpled paper wrapper on the floor. Soft blue pre-dawn light from the rear window, out of frame above. No faces, no third hand, no readable text.",
+      "image_prompt": "Close-up looking down at the back seat cushion, the camera between the front seats facing backward and down. Two hands only: Nora's right hand, reaching in from the bottom edge of the frame, and Eli's small left hand. Eli's hand lies limp, palm up, on the worn grey cloth seat beside his booster seat, fingers half curled in sleep, the cuff of his red rain jacket at his wrist. Nora's hand gently holds it from underneath, her thumb over his knuckles; her skin is grey, her nails grey and cracked, faint black veins at her wrist under the charcoal hoodie cuff. In the background, out of focus: the base of the booster seat and a crumpled paper wrapper on the floor. Faint cold blue moonlight from the rear window, out of frame above. No faces, no third hand, no readable text.",
       "voiceover_text": "She still didn't know what she'd say at the gate, [pause] and she had four hours to find it.",
       "sfx_prompt": "A small child's slow, deep breathing in his sleep, soft even breaths, close and peaceful inside a quiet car, no snoring, no words, no music",
       "video_prompt": "",
@@ -14020,7 +14020,7 @@
       "shots": [
         {
           "shot_id": "s_9b60efc7",
-          "image_prompt": "Close-up taken from the back seat looking forward, over Nora's right shoulder. Nora, alone, the only person in the frame, sits in the driver's seat on the left of the frame: her right cheek, ear, messy dark bun and the edge of her eye are seen from behind and to the side as she stares straight ahead through the windshield. The grey cloth driver's headrest is beside her head. Beyond her, through the windshield in the upper middle of the frame: flat dark land and, far away on the horizon, a thin floodlit fence line glowing white. A crack runs across the upper right of the windshield. One hand visible: her left wrist cuffed to the top of the steering wheel rim at the lower left. Light: cold blue pre-dawn through the windshield, lighting the edge of her face; the dashboard is dark. Grey skin on her neck with a dark grey vein. No second person, no readable text.",
+          "image_prompt": "Close-up taken from the back seat looking forward, over Nora's right shoulder. Nora, alone, the only person in the frame, sits in the driver's seat on the left of the frame: her right cheek, ear, messy dark bun and the edge of her eye are seen from behind and to the side as she stares straight ahead through the windshield. The grey cloth driver's headrest is beside her head. Beyond her, through the windshield in the upper middle of the frame: flat dark land and, far away on the horizon, a thin floodlit fence line glowing white. A crack runs across the upper right of the windshield. One hand visible: her left wrist cuffed to the top of the steering wheel rim at the lower left. Light: faint cold blue moonlight through the windshield, lighting the edge of her face; the dashboard is dark. Grey skin on her neck with a dark grey vein. No second person, no readable text.",
           "image_url": "/media/images/scene-98-1793357842358-lk01.png",
           "motion": "zoom_in",
           "start_sec": 3.28,
@@ -14061,7 +14061,7 @@
       "shake": null,
       "title_text": "",
       "notes": "",
-      "ambience_id": "m_ac0be2a5",
+      "ambience_id": "m_e2eb122c",
       "image_check": {
         "url": "/media/images/scene-98-1793357752931-z421.png",
         "ok": false,
@@ -14076,7 +14076,7 @@
     },
     {
       "scene_id": 99,
-      "image_prompt": "Wide shot taken from a low rise in a field of dead grass about three hundred metres from the fence, the camera at standing eye level facing the Fort Calder gate. The double chain-link fence, topped with razor wire, runs straight across the middle of the frame from the left edge to the right edge. In the centre stands the sandbagged vehicle gate, shut; to its right, inside the fence, a small scanner booth and a boxy diesel generator. Tall floodlight poles stand along the fence, glowing white and casting haze. Along the outside of the fence, on the near side, a crowd of grey figures stands packed together, thickest near the generator, all small dark silhouettes. In the foreground, empty dead grass slopes down toward them. Light: early dawn, the sky pale blue-grey, the floodlights the brightest points. No vehicles, no soldiers visible, no readable signs.",
+      "image_prompt": "Wide shot taken from a low rise in a field of dead grass about three hundred metres from the fence, the camera at standing eye level facing the Fort Calder gate. The double chain-link fence, topped with razor wire, runs straight across the middle of the frame from the left edge to the right edge. In the centre stands the sandbagged vehicle gate, shut; to its right, inside the fence, a small scanner booth and a boxy diesel generator. Tall floodlight poles stand along the fence, glowing white and casting haze. Along the outside of the fence, on the near side, a crowd of grey figures stands packed together, thickest near the generator, all small dark silhouettes. In the foreground, empty dead grass slopes down toward them. Light: deep night, the sky black, the floodlights the brightest points. No vehicles, no soldiers visible, no readable signs.",
       "voiceover_text": "But the gate's generator was loud, [pause] and the dead had been listening to it all night.",
       "sfx_prompt": "",
       "video_prompt": "",
@@ -14172,7 +14172,7 @@
       "shots": [
         {
           "shot_id": "s_ee8c0126",
-          "image_prompt": "Medium shot taken standing just outside the fence, the camera at head height looking along the fence line. The chain-link fence runs from the right foreground into the distance on the right half of the frame, razor wire against the sky. Packed shoulder to shoulder along its outside, on the left half of the frame, stands a row of grey figures, the dead: grey skin, slack faces, torn everyday clothes, seen from the side and from behind, all facing right through the wire toward a boxy diesel generator inside the fence in the right background. The nearest figures are large in the left foreground, the row shrinking into the distance. Light: a floodlight on a tall pole above the fence, out of frame top right, throws cold white light down on their shoulders; pale dawn sky. No living people, no soldiers, no blood, no readable signs.",
+          "image_prompt": "Medium shot taken standing just outside the fence, the camera at head height looking along the fence line. The chain-link fence runs from the right foreground into the distance on the right half of the frame, razor wire against the sky. Packed shoulder to shoulder along its outside, on the left half of the frame, stands a row of grey figures, the dead: grey skin, slack faces, torn everyday clothes, seen from the side and from behind, all facing right through the wire toward a boxy diesel generator inside the fence in the right background. The nearest figures are large in the left foreground, the row shrinking into the distance. Light: a floodlight on a tall pole above the fence, out of frame top right, throws cold white light down on their shoulders; black night sky. No living people, no soldiers, no blood, no readable signs.",
           "image_url": "/media/images/scene-99-1793377555800-kb0v.png",
           "motion": "none",
           "start_sec": 3.01,
@@ -14193,7 +14193,7 @@
         },
         {
           "shot_id": "s_54b2cff7",
-          "image_prompt": "The same view along the fence, same camera position and framing, a moment later: the chain-link fence still runs from the right foreground into the distance on the right half of the frame, razor wire against the sky; the row of grey figures, the dead, still stands packed along its outside on the left half, facing right through the wire toward the boxy diesel generator in the right background. What changed: the row has shifted along the wire by half a step, and three of the nearest figures in the left foreground have turned their heads toward the camera, their pale clouded eyes looking straight out of the frame; all the others still face the generator. Light unchanged: cold white floodlight from a pole out of frame top right, pale dawn sky. No living people, no soldiers, no blood, no readable signs.",
+          "image_prompt": "The same view along the fence, same camera position and framing, a moment later: the chain-link fence still runs from the right foreground into the distance on the right half of the frame, razor wire against the sky; the row of grey figures, the dead, still stands packed along its outside on the left half, facing right through the wire toward the boxy diesel generator in the right background. What changed: the row has shifted along the wire by half a step, and three of the nearest figures in the left foreground have turned their heads toward the camera, their pale clouded eyes looking straight out of the frame; all the others still face the generator. Light unchanged: cold white floodlight from a pole out of frame top right, black night sky. No living people, no soldiers, no blood, no readable signs.",
           "image_url": "/media/images/scene-99-1793377645663-h06t.png",
           "motion": "none",
           "start_sec": 4.2,
@@ -16731,7 +16731,7 @@
       "use_previous_scene": false,
       "motion": "zoom_out",
       "shake": null,
-      "title_text": "HOUR 55",
+      "title_text": "HOUR 50",
       "notes": "Her tape stays in his pocket, unplayed: saved for later.",
       "ambience_id": "m_43519e53",
       "image_check": {
