@@ -19,6 +19,8 @@ import { ModelCatalogProvider } from './components/ModelControls.jsx';
 import ScriptImport from './components/ScriptImport.jsx';
 import GenerateDialog from './components/GenerateDialog.jsx';
 import ContextMenu from './components/ContextMenu.jsx';
+import ReviewPanel, { PickOverlay } from './components/ReviewPanel.jsx';
+import { spoken, useReview } from './review.js';
 
 const SAVE_DELAY_MS = 600;
 const MOD_KEY = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘' : 'Ctrl+';
@@ -358,6 +360,73 @@ export default function App() {
     },
     [focusScene],
   );
+
+  // ---- Review Wizard ----------------------------------------------------------------------------
+
+  const review = useReview(sb ? currentProject() : null);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [picking, setPicking] = useState(null); // key of the review item being chosen
+  const playRange = useRef(null); // { start, end } while playing just one scene
+
+  const { comments, items } = review.review;
+  const waiting = review.pending;
+  const openSceneIds = useMemo(() => {
+    const ids = new Set([...comments, ...waiting].map((x) => x.scene_id));
+    return scenes.filter((s) => ids.has(s.scene_id)).map((s) => s.scene_id);
+  }, [scenes, comments, waiting]);
+
+  /** Play the selected scene and stop at its end, back at its start. */
+  const playScene = () => {
+    const start = starts[selectedIndex];
+    playRange.current = { start, end: start + Number(selected.duration_sec) };
+    setPreviewMode('live');
+    seek(start + 0.001);
+    setPlaying(true);
+  };
+
+  useEffect(() => {
+    const range = playRange.current;
+    if (!range) return;
+    if (!playing) playRange.current = null;
+    else if (time >= range.end - 0.05) {
+      playRange.current = null;
+      setPlaying(false);
+      seek(range.start + 0.001);
+    }
+  }, [time, playing, seek]);
+
+  // Full screen there's no timeline to select on: the wizard follows the player's scrubber and skip buttons.
+  useEffect(() => {
+    if (!reviewOpen) return;
+    const at = scenes[sceneIndexAt(starts, scenes, time)];
+    if (at && at.scene_id !== selectedId) selectScene(at.scene_id, { seekTo: false });
+  }, [reviewOpen, time, scenes, starts, selectedId, selectScene]);
+
+  const nextOpenScene = () => {
+    const after = [...scenes.slice(selectedIndex + 1), ...scenes.slice(0, selectedIndex + 1)];
+    const next = after.find((s) => openSceneIds.includes(s.scene_id));
+    if (next) selectScene(next.scene_id);
+  };
+
+  /** Go straight to a picture waiting for a choice. */
+  const pickItem = (key) => {
+    const item = items.find((x) => x.key === key);
+    setReviewOpen(true);
+    setPicking(key);
+    if (scenes.some((s) => s.scene_id === item?.scene_id)) selectScene(item.scene_id);
+  };
+
+  const openBell = () => (waiting.length ? pickItem(waiting[0].key) : setReviewOpen(true));
+
+  // The wizard is full screen: everything else stays mounted, just hidden.
+  const editorOnly = reviewOpen ? 'hidden' : 'contents';
+
+  const decidePick = (decision) => {
+    review.decide(picking, decision);
+    const next = waiting.find((x) => x.key !== picking);
+    if (next) pickItem(next.key);
+    else setPicking(null);
+  };
 
   // Latest scene actions for the keyboard shortcuts and context menus, which are bound once.
   const actions = useRef({});
@@ -1047,6 +1116,7 @@ export default function App() {
 
   return (
     <div className="flex h-full flex-col">
+      <div className={editorOnly}>
       <TopBar
         title={sb.settings.title}
         status={status}
@@ -1064,10 +1134,15 @@ export default function App() {
         redoShortcut={MOD_KEY === '⌘' ? '⇧⌘Z' : 'Ctrl+Y'}
         onUndo={() => actions.current.undo()}
         onRedo={() => actions.current.redo()}
+        reviewPending={waiting.length}
+        onOpenReview={() => setReviewOpen(true)}
+        onBell={openBell}
       />
+      </div>
 
       <ModelCatalogProvider status={status} onError={notify}>
       <div className="flex min-h-0 flex-1">
+        <div className={editorOnly}>
         <LeftPanel
           tab={leftTab}
           onTab={showLeftTab}
@@ -1119,6 +1194,7 @@ export default function App() {
             />
           }
         />
+        </div>
         <main className="flex min-w-0 flex-1 flex-col">
           <Preview
             scenes={scenes}
@@ -1136,6 +1212,7 @@ export default function App() {
             setMode={setPreviewMode}
             exportUrl={exportUrl}
           />
+          <div className={editorOnly}>
           <Timeline
             scenes={scenes}
             starts={starts}
@@ -1161,9 +1238,30 @@ export default function App() {
             library={sb.library}
             onChooseVariant={chooseVariant}
           />
+          </div>
         </main>
 
-        <aside className="relative flex shrink-0 flex-col border-l border-zinc-800 bg-zinc-900/40" style={{ width: rightWidth }}>
+        {reviewOpen && (
+          <aside className="flex w-[30rem] shrink-0 flex-col border-l border-zinc-800 bg-zinc-900/40">
+            <ReviewPanel
+              scene={selected}
+              index={selectedIndex}
+              count={scenes.length}
+              openSceneIds={openSceneIds}
+              playing={playing}
+              review={review}
+              onGo={(i) => selectScene(scenes[i].scene_id)}
+              onNextOpen={nextOpenScene}
+              onPlay={playScene}
+              onStop={() => setPlaying(false)}
+              onPick={pickItem}
+              onBell={openBell}
+              onClose={() => setReviewOpen(false)}
+            />
+          </aside>
+        )}
+
+        <aside className={`relative shrink-0 flex-col border-l border-zinc-800 bg-zinc-900/40 ${reviewOpen ? 'hidden' : 'flex'}`} style={{ width: rightWidth }}>
           <PanelResizer edge="left" width={rightWidth} onResize={setRightWidth} {...RIGHT_PANEL} />
           <div className="flex shrink-0 gap-1 border-b border-zinc-800 p-1.5" role="tablist">
             {[
@@ -1294,6 +1392,19 @@ export default function App() {
       )}
 
       {menu && <ContextMenu key={`${menu.x},${menu.y}`} x={menu.x} y={menu.y} items={menu.items} onClose={closeMenu} />}
+
+      {picking && items.some((x) => x.key === picking) && (
+        <PickOverlay
+          key={picking}
+          item={items.find((x) => x.key === picking)}
+          position={waiting.findIndex((x) => x.key === picking) + 1}
+          count={waiting.length}
+          narration={spoken(scenes.find((s) => s.scene_id === items.find((x) => x.key === picking).scene_id)?.voiceover_text)}
+          decision={review.decisions[picking]}
+          onDecide={decidePick}
+          onClose={() => setPicking(null)}
+        />
+      )}
 
       {showImport && <ScriptImport hasScenes={scenes.length > 0} onClose={() => setShowImport(false)} onImport={importScript} />}
 

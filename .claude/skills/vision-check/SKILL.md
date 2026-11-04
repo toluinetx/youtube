@@ -27,7 +27,7 @@ The same commands work in PowerShell, cmd and bash (forward slashes are fine on 
 - `which`: scene numbers **as the editor shows them** (`3`, `63-74,83`); with `--ids`, scene ids.
 - `list` prints JSON: one entry per picture (a scene's own image is shot 1; its extra shots follow)
   with `key` (`63`, or `63:s_ab12cd34` for a shot), `label`, `prompt`, `brief` (the prompt plus the
-  continuity bible's facts for this picture: score against this), `narration`,
+  continuity bible's facts for this picture and the video's art style: score against this), `narration`,
   `url`, `file` (the PNG on disk), `check` (the current verdict, if any) and `variants` (every
   picture made in the same generation, the one in use included, or null).
   By default it lists only pictures **you** haven't checked yet; `--flagged` lists those whose last
@@ -85,18 +85,15 @@ overall score, however good the rest is:
 
 | type | what | caps the score at |
 |---|---|---|
-| `anatomy` | extra or missing arms, hands, fingers or legs; a limb attached to no one; merged or duplicated bodies or faces | 35% |
+| `anatomy` | a wrong count of arms, hands, fingers or legs; a limb attached to no one; merged or duplicated bodies or faces. Count the fingers of every hand in view: fewer than four fingers and a thumb is `anatomy` unless something plainly hides the rest. All five there but soft or blurred is `minor`. A torso that doesn't line up with the legs, or body parts that can't belong to one body, is `anatomy` too | 35% |
 | `cast` | more or fewer people than described; someone else's hands in a solo shot; the wrong or a missing main character; the same character twice | 45% |
 | `text` | garbled, misspelled or unwanted readable text | 60% |
-| `content` | a key prop or subject missing or plainly different; night instead of day or the reverse; something excluded that is prominent | 70% |
-| `minor` | a small deviation a viewer might notice | no cap |
+| `content` | only a story-critical fact that is wrong: a key prop or main subject missing or plainly different; night instead of day or the reverse; something excluded that is prominent; a continuity fact broken so a viewer would notice (a prop in the wrong place or state, the wrong seat or clothes, the bandage on the wrong arm) | 70% |
+| `minor` | any other deviation a viewer might notice: camera height or framing a little off, how far a blanket is pulled up, exactly where a lantern hangs or an object lies, a secondary detail of the setting, soft or indistinct fingers | no cap |
 
 The overall score is 45% adherence + 35% logic + 20% quality, capped by the worst issue; the editor
 computes it. Don't list matters of taste or details no viewer would notice. Be strict about hands and
 people: look at every hand and count the fingers. Count the people and the hands you can see.
-
-Be honest in both directions: a picture that's fine passes even if an earlier check flagged it, and
-a picture that a viewer would find wrong fails even if Gemini passed it.
 
 ## 3. Record, then fix (only with `--fix`)
 

@@ -142,7 +142,7 @@ async function list(args) {
   for (const p of items) {
     const shotId = p.key.includes(':') ? p.key.split(':')[1] : null;
     const c = await call('GET', `/api/scene/${p.scene_id}/continuity${shotId ? `?shot_id=${encodeURIComponent(shotId)}` : ''}`).catch(() => null);
-    p.brief = c?.prompt || p.prompt;
+    p.brief = c?.brief || c?.prompt || p.prompt;
   }
   const missing = items.filter((p) => !fs.existsSync(p.file));
   console.log(JSON.stringify({ project: ctx.open, count: items.length, pictures: items }, null, 2));

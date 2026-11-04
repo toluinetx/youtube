@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ChevronDown, Clapperboard, Download, FileText, Loader2, Redo2, Sparkles, TriangleAlert, Undo2, X } from 'lucide-react';
+import { ChevronDown, ClipboardCheck, Clapperboard, Download, FileText, Loader2, Redo2, Sparkles, TriangleAlert, Undo2, X } from 'lucide-react';
+import { ReviewBell } from './ReviewPanel.jsx';
 import { UsageButton } from './Usage.jsx';
 import { describeGeneration } from '../util.js';
 
@@ -8,7 +9,7 @@ const downloadUrl = (url) => `${url}${url.includes('?') ? '&' : '?'}download=1`;
 
 export default function TopBar({
   title, status, job, missing, videos, exportUrl, onImport, onGenerateMissing, onExport, onDismissJob, history, undoShortcut, redoShortcut, onUndo, onRedo,
-  onOpenProjects,
+  onOpenProjects, reviewPending, onOpenReview, onBell,
 }) {
   const running = job?.status === 'running';
   const [showWarnings, setShowWarnings] = useState(false);
@@ -58,6 +59,10 @@ export default function TopBar({
               <Redo2 className="size-4" />
             </button>
           </div>
+          <ReviewBell count={reviewPending} onClick={onBell} />
+          <button className="btn-secondary" onClick={onOpenReview}>
+            <ClipboardCheck className="size-4" /> Review Wizard
+          </button>
           <button className="btn-ghost" onClick={onImport} disabled={running}>
             <FileText className="size-4" /> Import script
           </button>

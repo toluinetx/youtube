@@ -133,3 +133,12 @@ export function continuityFor(sb, scene, slot, prompt) {
 
 /** The image prompt with its continuity block, as sent to the image model and the image check. */
 export const withContinuity = (prompt, block) => (block ? `${prompt}\n\n${block}` : prompt);
+
+/** A style text for a `daylight` scene: the video's night palette would turn its daytime into night. */
+export const daylightStyle = (text, scene) => (scene?.daylight ? text.replace(/cold (desaturated )?blue night palette( and warm amber glow of practical lights)?/gi, 'the same inked graphic-novel rendering in muted daylight colours, never photographic') : text);
+
+/** What a check scores against: the picture's text plus the art style of `scene`, which reaches the image model separately and mustn't be marked as a fault. */
+export function checkBrief(settings, text, scene) {
+  const style = daylightStyle(settings.style_prompt?.trim() || '', scene);
+  return style ? `${text}\n\nArt style of this video (intended, not a fault): ${style}` : text;
+}

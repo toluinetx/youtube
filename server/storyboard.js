@@ -301,6 +301,8 @@ export function newScene(id, fields = {}) {
     use_global_references: true, // also send the project-wide references
     // Also send the previous scene's picture (a video's last shown frame), for continuity between shots.
     use_previous_scene: true,
+    // A daytime scene in a video styled for night: the style's night palette is left out of its prompt.
+    daylight: false,
     motion: null, // camera motion for the image (one of MOTIONS); null = the project's
     shake: null, // camera shake on export for tense moments: null, 'light' or 'heavy'
     // Continuity entries to add to / leave out of this scene's own picture (see newShot for shots).

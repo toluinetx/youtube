@@ -10,8 +10,8 @@ import { generateImage, referenceCapacity } from './replicate.js';
 import { OMNI_TOKENS_PER_SECOND, checkImage, generateGeminiImage, generateGeminiVideo, geminiReferenceCapacity, isGeminiModel } from './gemini.js';
 import { comfyReferenceCapacity, generateComfyImage, isComfyModel } from './comfyui.js';
 import { recordUsage } from './usage.js';
-import { SCORE_CAPS, checkImageWithClaude, isClaudeCheck, scoredCheck } from './claude.js';
-import { continuityFor, withContinuity } from './continuity.js';
+import { SCORE_CAPS, checkImageWithClaude, checkImagesWithClaude, isClaudeCheck, scoredCheck } from './claude.js';
+import { checkBrief, continuityFor, daylightStyle, withContinuity } from './continuity.js';
 import { composeMusic, soundEffect, textToSpeech } from './elevenlabs.js';
 import { extractThumbnail, joinAudio, probe, probeDuration, referenceDataUri } from './ffmpeg.js';
 
@@ -114,7 +114,7 @@ export function styleReferences(sb, scene) {
   if (!(scene.use_style_references ?? scene.use_global_references !== false)) return [];
   const byId = new Map(sb.library.map((a) => [a.asset_id, a]));
   return (sb.settings.style_references || [])
-    .map((r) => ({ asset: byId.get(r.asset_id), caption: r.caption?.trim() || '' }))
+    .map((r) => ({ asset: byId.get(r.asset_id), caption: daylightStyle(r.caption?.trim() || '', scene) }))
     .filter((r) => r.asset?.type === 'image' && mediaUrlToPath(r.asset.url));
 }
 
@@ -149,7 +149,7 @@ function pictureBefore(scene, atSec) {
  * The previous scene's last picture on screen, if this scene uses it: its image or last extra shot,
  * or the last frame of its video that's shown. Resolves with { label, path, atSec } or null.
  */
-function previousSceneReference(sb, scene) {
+export function previousSceneReference(sb, scene) {
   if (scene.use_previous_scene === false) return null;
   const i = sb.scenes.indexOf(scene);
   const prev = sb.scenes[i - 1];
@@ -176,8 +176,9 @@ function referencePrompt(scenePrompt, style, refs, guardrails) {
       `Treat ${only ? 'the reference images' : `reference${design.length > 1 ? 's' : ''} ${design.map(n).join(', ')}`} as the exact design for this image. ` +
         'Every character must look exactly as in the references: same face, hair, body, clothing and colours. The setting must ' +
         'also be the same: same place, architecture, furniture, props, materials, lighting and art style. Change only what the ' +
-        'scene below calls for, such as action, pose, facial expression, camera angle and framing. Where the scene text ' +
-        'describes appearance differently from the references, follow the references.',
+        'scene below calls for, such as action, pose, facial expression, camera angle and framing. Where the scene text or ' +
+        "its Continuity notes describe an injury, a change in skin, eyes or clothes, or a prop's state, follow them; " +
+        'where they describe appearance differently in any other way, follow the references.',
     styles.length &&
       (styles.length > 1
         ? `References ${styles.map(n).join(', ')} show the art style of this video. Match their medium, linework, colour palette, ` +
@@ -256,6 +257,32 @@ async function runCheck(checker, { buffer, ext, file }, brief, sceneId) {
   return result;
 }
 
+/**
+ * Look at several pictures of the same `brief`: in one run with Claude, so they share its startup cost.
+ * Resolves with a check record per picture, or { error } if it couldn't run: a picture that's already
+ * made mustn't be lost to a check.
+ */
+async function runChecks(checker, pictures, brief, sceneId) {
+  try {
+    if (checker.kind === 'claude') {
+      const { checks, usage } = await checkImagesWithClaude(pictures.map((p) => ({ ...p, brief })), { model: checker.model, threshold: checker.threshold });
+      recordUsage({ provider: 'claude', kind: 'image check', model: checker.model, scene_id: sceneId, units: { ...usage, pictures: pictures.length } });
+      if (pictures.length === 1) return checks;
+      // A batch passes some pictures a check on its own fails, so confirm what it would use, best first.
+      const passing = checks.map((check, i) => ({ check, i })).filter((p) => p.check.ok).sort((a, b) => b.check.score - a.check.score);
+      for (const { i } of passing) {
+        checks[i] = await runCheck(checker, pictures[i], brief, sceneId);
+        if (checks[i].ok && !checker.allVariants) break;
+      }
+      return checks;
+    }
+    return await Promise.all(pictures.map((p) => runCheck(checker, p, brief, sceneId)));
+  } catch (err) {
+    console.warn(`Image check failed: ${err.message}`);
+    return pictures.map(() => ({ error: err.message }));
+  }
+}
+
 /** Most retries a project can set. Passes also stop early when they stop helping (STALL_ROUNDS). */
 export const MAX_CHECK_RETRIES = 10;
 /** Stop retrying after this many passes in a row that didn't improve on the best so far. */
@@ -301,7 +328,7 @@ const checkRank = (check) =>
  * Resolves with { model, images: [{ buffer, ext, check }] }, where check is a check record (with
  * `attempts`, the pass it came from), { error } if the check itself failed, or null if it's off.
  */
-async function generateImagesFor(sb, scene, scenePrompt, previous, { variants = false, feedback = [], check: checkOverride = null, keep = [], slot = null } = {}) {
+export async function generateImagesFor(sb, scene, scenePrompt, previous, { variants = false, feedback = [], check: checkOverride = null, keep = [], slot = null } = {}) {
   const { settings } = sb;
   // Reference sheets are drawn from their own prompt only; pictures for the video get the continuity facts.
   const continuity = scene.scene_id === 'reference' ? null : continuityFor(sb, scene, slot ?? scene, scenePrompt);
@@ -329,7 +356,7 @@ async function generateImagesFor(sb, scene, scenePrompt, previous, { variants = 
   }
 
   const guardrails = settings.image_guardrails !== false;
-  const style = settings.style_prompt?.trim();
+  const style = daylightStyle(settings.style_prompt?.trim() || '', scene);
   /** The prompt and reference images for a list of references. */
   const inputsFor = async (list) => ({
     refs: list,
@@ -354,8 +381,8 @@ async function generateImagesFor(sb, scene, scenePrompt, previous, { variants = 
   const seeded = params.seed !== undefined && params.seed !== null && params.seed !== '';
 
   /**
-   * One picture, checked once. Variant `n` > 0 gets the next seed if a seed is set (and each pass moves
-   * the seeds on), so they don't all come out the same. `problems`: what the last attempt got wrong.
+   * One picture. Variant `n` > 0 gets the next seed if a seed is set (and each pass moves the seeds
+   * on), so they don't all come out the same. `problems`: what the last attempt got wrong.
    */
   async function attempt(n, pass, problems) {
     const offset = n + (pass - 1) * count;
@@ -369,14 +396,7 @@ async function generateImagesFor(sb, scene, scenePrompt, previous, { variants = 
       prompt, model, aspectRatio: settings.aspect_ratio, references, referenceLabels: sent.map((r) => r.label), params: pictureParams,
     });
     recordUsage({ provider, kind: 'image', model, scene_id: scene.scene_id, units: usage });
-    if (!checker) return { buffer, ext, check: null };
-    try {
-      return { buffer, ext, check: { ...(await runCheck(checker, { buffer, ext }, imagePrompt, scene.scene_id)), attempts: pass } };
-    } catch (err) {
-      // A check that can't run mustn't lose an image that's already made.
-      console.warn(`Image check failed: ${err.message}`);
-      return { buffer, ext, check: { error: err.message, attempts: pass } };
-    }
+    return { buffer, ext, check: null };
   }
 
   const all = checker ? keep.filter((k) => k.check?.ok).slice(0, count) : [];
@@ -413,6 +433,10 @@ async function generateImagesFor(sb, scene, scenePrompt, previous, { variants = 
     if (!made.length) {
       if (all.length) break;
       throw results[0].reason;
+    }
+    if (checker) {
+      const checks = await runChecks(checker, made.map(({ buffer, ext }) => ({ buffer, ext })), checkBrief(settings, imagePrompt, scene), scene.scene_id);
+      made.forEach((image, i) => (image.check = { ...checks[i], attempts: pass }));
     }
     all.push(...made);
     // No check, or one that couldn't run: nothing to go on for another pass.
@@ -485,8 +509,10 @@ export async function recordImageCheck(url, check) {
   // With sub-scores (adherence, logic, quality) it's scored like the app's own Claude check: typed issues
   // cap the score (an extra hand caps it at 35) and it passes at the project's pass mark.
   const scored = ['adherence', 'logic', 'quality'].some((k) => check[k] != null || check.scores?.[k] != null);
+  // Issues come as plain text with their types alongside (the app's check), or as { text, type } (the skill).
+  const issues = (check.issues || []).map((text, i) => (typeof text === 'string' && check.issue_types?.[i] ? { text, type: check.issue_types[i] } : text));
   const base = scored
-    ? scoredCheck({ ...check.scores, ...check, issues: check.issues }, threshold)
+    ? scoredCheck({ ...check.scores, ...check, issues }, threshold)
     : { ok: cleanFeedback(check.issues).length === 0, issues: cleanFeedback(check.issues) };
   const count = (n) => (Number.isFinite(Number(n)) && n !== null && n !== undefined ? Number(n) : null);
   const record = {
@@ -527,7 +553,7 @@ export async function checkPictureWithClaude(sceneId, shotId = null) {
   const prompt = (slot.image_prompt || '').trim();
   if (!prompt) throw badRequest(`This ${shotId ? 'shot' : 'scene'} has no image prompt to check the picture against`);
   // Checked against the continuity facts too (the cuffs at the top of the wheel rim, not the bottom).
-  const brief = withContinuity(prompt, continuityFor(sb, scene, slot, prompt).text);
+  const brief = checkBrief(sb.settings, withContinuity(prompt, continuityFor(sb, scene, slot, prompt).text), scene);
   const model = isClaudeCheck(sb.settings.image_check_model) ? sb.settings.image_check_model : 'claude';
   const checker = imageChecker(sb.settings, { model });
 
@@ -545,7 +571,13 @@ export async function checkPictureWithClaude(sceneId, shotId = null) {
     const others = asset.variants.filter((v) => v.url !== url && mediaUrlToPath(v.url));
     const known = (v) => v.image_check?.checker === 'claude' && v.image_check.threshold === checker.threshold && v.image_check.score != null;
     results.push(...others.filter(known).map((v) => ({ url: v.url, check: v.image_check, known: true })));
-    results.push(...(await Promise.all(others.filter((v) => !known(v)).map((v) => scoreOne(v.url)))));
+    const unknown = others.filter((v) => !known(v)).map((v) => v.url);
+    if (unknown.length) {
+      const checks = await runChecks(checker, unknown.map((u) => ({ file: mediaUrlToPath(u) })), brief, scene.scene_id);
+      const failed = checks.find((c) => c.error);
+      if (failed) throw new Error(failed.error);
+      results.push(...unknown.map((u, i) => ({ url: u, check: checks[i] })));
+    }
   }
   for (const r of results) if (!r.known) await recordImageCheck(r.url, { ...r.check, attempts: 1, checker: 'claude' });
 

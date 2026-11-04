@@ -16,7 +16,7 @@ import {
   imageReferenceCapacity,
 } from './generate.js';
 import { claudeStatus } from './claude.js';
-import { continuityFor, sanitizeContinuity, withContinuity } from './continuity.js';
+import { checkBrief, continuityFor, sanitizeContinuity, withContinuity } from './continuity.js';
 import { CAPTION_MODES, CAPTION_POSITIONS, LOOKS, SHAKES } from './finish.js';
 import {
   addToLibrary, ambienceFromAsset, clearSceneSlot, deleteAsset, musicFromAsset, removeMusic, renameAsset, saveSceneVisualToLibrary, sceneFromAsset,
@@ -100,6 +100,7 @@ function sanitizeScenePatch(body) {
   // The project's style images; unset, they follow use_global_references.
   if (body.use_style_references !== undefined) patch.use_style_references = Boolean(body.use_style_references);
   if (body.use_previous_scene !== undefined) patch.use_previous_scene = Boolean(body.use_previous_scene);
+  if (body.daylight !== undefined) patch.daylight = Boolean(body.daylight);
   if (body.notes !== undefined) patch.notes = String(body.notes).slice(0, 2000);
   if (body.ambience_id !== undefined) {
     if (body.ambience_id !== null && typeof body.ambience_id !== 'string') throw badRequest('ambience_id must be null or an ambience id');
@@ -243,6 +244,7 @@ const EDIT_LABELS = {
   use_global_references: 'Change references',
   use_style_references: 'Change references',
   use_previous_scene: 'Change references',
+  daylight: 'Change references',
 };
 
 /** Undo label + merge key for a scene edit: successive edits of the same fields of one scene merge. */
@@ -625,7 +627,8 @@ app.get('/api/scene/:id/continuity', async (req, res) => {
   const slot = req.query.shot_id ? (scene.shots || []).find((x) => x.shot_id === String(req.query.shot_id)) : scene;
   if (!slot) throw Object.assign(new Error('No such shot'), { status: 404 });
   const result = continuityFor(sb, scene, slot, slot.image_prompt || '');
-  res.json({ ...result, prompt: withContinuity((slot.image_prompt || '').trim(), result.text) });
+  const prompt = withContinuity((slot.image_prompt || '').trim(), result.text);
+  res.json({ ...result, prompt, brief: checkBrief(sb.settings, prompt, scene) });
 });
 
 // Generate one of an entry's reference views into the library. Responds with { entry, asset, check }.

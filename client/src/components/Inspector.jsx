@@ -231,6 +231,18 @@ export default function Inspector({
                     + style ({styleRefs.length})
                   </label>
                 )}
+                <label
+                  className="flex items-center gap-1.5 text-[11px] text-zinc-400"
+                  title="A daytime scene: leaves the video's night palette out of this scene's style."
+                >
+                  <input
+                    type="checkbox"
+                    className="accent-indigo-500"
+                    checked={Boolean(scene.daylight)}
+                    onChange={(e) => onChange({ daylight: e.target.checked })}
+                  />
+                  Daylight
+                </label>
               </div>
             </div>
             <ReferenceList
