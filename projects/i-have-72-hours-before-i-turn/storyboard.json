@@ -11453,7 +11453,7 @@
     },
     {
       "scene_id": 66,
-      "image_prompt": "Medium close-up of Eli, alone, the only person in the frame, taken at his eye level from directly in front of him. He sits on a hay bale with a brown wool blanket around his shoulders over his red rain jacket. His left hand holds an open metal can of peaches at chest height, its lid bent back; the fingers of his right hand lift a dripping slice of peach to his open mouth. Peach syrup shines on his chin. His eyes are half closed with happiness. Beside him on the bale, at frame right: two empty opened cans. The yellow walkie-talkie hangs on its lanyard against his chest. Behind him: stacked hay bales and the dark barn. Light: warm oil lantern light from above and to the left, the lantern itself out of frame beyond the top left edge. Rainy midday, thin pale grey daylight in the gaps of the plank walls. No adult, no labels or readable text on the cans.",
+      "image_prompt": "Medium close-up of Eli, alone, the only person in the frame, taken at his eye level from directly in front of him. He sits on a hay bale with a brown wool blanket around his shoulders over his red rain jacket. His left hand holds an open metal can of peaches at chest height, its lid bent back; the fingers of his right hand lift a dripping slice of peach to his open mouth. Peach syrup shines on his chin. Both eyes are open, round and bright, looking down at the peach slice, crinkled at the corners by a big happy smile; normal child eyes, both the same size. Beside him on the bale, at frame right: two empty opened cans. The yellow walkie-talkie hangs on its lanyard against his chest. Behind him: stacked hay bales and the dark barn. Light: warm oil lantern light from above and to the left, the lantern itself out of frame beyond the top left edge. Rainy midday, thin pale grey daylight in the gaps of the plank walls. No adult, no labels or readable text on the cans.",
       "voiceover_text": "He ate peaches straight out of the can. [pause] She wasn't hungry. Not for peaches.",
       "sfx_prompt": "A metal spoon scraping the inside of a tin can, slow scrapes and small clinks as a child eats canned peaches, close and quiet inside a barn, no voices, no music",
       "video_prompt": "",
@@ -11592,7 +11592,9 @@
       "video_has_audio": false,
       "video_start_sec": 0,
       "video_volume": 1,
-      "source_names": {},
+      "source_names": {
+        "image": "Scene 66 image - Medium close-up of Eli, alone, the.png"
+      },
       "reference_asset_ids": [
         "a_b1cbd038",
         "a_859cb9b4"
@@ -11608,36 +11610,7 @@
       "title_text": "",
       "notes": "Warmth with dread underneath (the hunger is coming).",
       "ambience_id": "m_d957b6b7",
-      "image_check": {
-        "ok": false,
-        "score": 70,
-        "threshold": 80,
-        "scores": {
-          "adherence": 55,
-          "logic": 85,
-          "quality": 85
-        },
-        "issues": [
-          "The brown blanket lies on the hay bale beside him instead of being wrapped around his shoulders.",
-          "The yellow walkie-talkie lies loose on the hay at bottom right instead of hanging on its lanyard against his chest.",
-          "The lit oil lantern is visible in the top-left corner instead of staying out of frame.",
-          "The window at upper right is dark with no pale daylight showing through, reading as night rather than rainy midday."
-        ],
-        "issue_types": [
-          "content",
-          "content",
-          "content",
-          "minor"
-        ],
-        "people": 1,
-        "hands": 2,
-        "checker": "claude",
-        "model": "default",
-        "attempts": 1,
-        "pass": 1,
-        "stopped": "retries",
-        "url": "/media/images/scene-66-1793524527175-u3v6.png"
-      }
+      "image_check": null
     },
     {
       "scene_id": 67,
@@ -110619,6 +110592,122 @@
         },
         {
           "url": "/media/images/scene-65-1793772374370-cdrq.png",
+          "image_check": null
+        }
+      ]
+    },
+    {
+      "asset_id": "a_dbd1bffb",
+      "name": "Scene 65 image - Medium close-up of Eli, alone, the.png",
+      "type": "image",
+      "url": "/media/images/scene-66-1793772794925-y883.png",
+      "thumb_url": "/media/images/scene-66-1793772794925-y883.png",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 2053666,
+      "added_at": "2026-11-04T06:13:14.939Z",
+      "generated": {
+        "kind": "image",
+        "model": "comfyui:qwen-image-edit",
+        "prompt": "Medium close-up of Eli, alone, the only person in the frame, taken at his eye level from directly in front of him. He sits on a hay bale with a brown wool blanket around his shoulders over his red rain jacket. His left hand holds an open metal can of peaches at chest height, its lid bent back; the fingers of his right hand lift a dripping slice of peach to his open mouth. Peach syrup shines on his chin. Both eyes are open, round and bright, looking down at the peach slice, crinkled at the corners by a big happy smile; normal child eyes, both the same size. Beside him on the bale, at frame right: two empty opened cans. The yellow walkie-talkie hangs on its lanyard against his chest. Behind him: stacked hay bales and the dark barn. Light: warm oil lantern light from above and to the left, the lantern itself out of frame beyond the top left edge. Rainy midday, thin pale grey daylight in the gaps of the plank walls. No adult, no labels or readable text on the cans."
+      },
+      "variants": [
+        {
+          "url": "/media/images/scene-66-1793772794925-y883.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794927-4cfp.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794928-4eif.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794929-bq6j.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794930-livb.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794931-8x8v.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794932-o593.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794933-4t9n.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794934-8fss.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794935-5v9g.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794936-z1sz.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772794937-radm.png",
+          "image_check": null
+        }
+      ]
+    },
+    {
+      "asset_id": "a_2bda6644",
+      "name": "Scene 65 image - Medium close-up of Eli, alone, the.png",
+      "type": "image",
+      "url": "/media/images/scene-66-1793772916651-bhbs.png",
+      "thumb_url": "/media/images/scene-66-1793772916651-bhbs.png",
+      "duration_sec": null,
+      "has_audio": false,
+      "size_bytes": 2009958,
+      "added_at": "2026-11-04T06:15:16.669Z",
+      "generated": {
+        "kind": "image",
+        "model": "comfyui:qwen-image-edit",
+        "prompt": "Medium close-up of Eli, alone, the only person in the frame, taken at his eye level from directly in front of him. He sits on a hay bale with a brown wool blanket around his shoulders over his red rain jacket. His left hand holds an open metal can of peaches at chest height, its lid bent back; the fingers of his right hand lift a dripping slice of peach to his open mouth. Peach syrup shines on his chin. Both eyes are open, round and bright, looking down at the peach slice, crinkled at the corners by a big happy smile; normal child eyes, both the same size. Beside him on the bale, at frame right: two empty opened cans. The yellow walkie-talkie hangs on its lanyard against his chest. Behind him: stacked hay bales and the dark barn. Light: warm oil lantern light from above and to the left, the lantern itself out of frame beyond the top left edge. Rainy midday, thin pale grey daylight in the gaps of the plank walls. No adult, no labels or readable text on the cans."
+      },
+      "variants": [
+        {
+          "url": "/media/images/scene-66-1793772916651-bhbs.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772916661-lcyu.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772916662-q9zh.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772916663-g0x6.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772916664-5z6h.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772916665-tbuz.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772916666-m2ud.png",
+          "image_check": null
+        },
+        {
+          "url": "/media/images/scene-66-1793772916667-51xb.png",
           "image_check": null
         }
       ]
